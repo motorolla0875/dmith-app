@@ -68,6 +68,7 @@ for slug, a in APPS.items():
   .feats {{ list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }}
   .feats li {{ padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }}
   .feats li::before {{ content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: {a["color"]}; }}
+  .soon-note {{ display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }}
   .back {{ color: var(--muted); text-decoration: none; font-size: 15px; }}
   .back:hover {{ color: var(--ink); }}
   @media (max-width: 640px) {{
@@ -92,7 +93,7 @@ for slug, a in APPS.items():
     <div>
       <h1>{a["name"]}</h1>
       <p>{a["tagline"]}</p>
-      <div class="stores">{soon("Google Play")}{soon("App Store")}</div>
+      <span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span>
     </div>
   </section>
 

@@ -41,7 +41,9 @@
   .status.live { color: var(--mint); }
   .more { justify-self: end; font: 700 15px/1 var(--body); color: var(--deep); background: var(--ink); text-decoration: none; padding: 12px 18px; border-radius: 12px; white-space: nowrap; }
   .more:hover { background: var(--gold); }
-  .row .stores { justify-content: flex-end; max-width: 380px; }
+  .row .stores { justify-content: flex-end; align-items: center; max-width: 380px; }
+  .badge { display: inline-block; line-height: 0; }
+  .badge img { height: 50px; width: auto; }
 
   @media (max-width: 820px) {
     .hero { grid-template-columns: 1fr; gap: 32px; padding: 16px 0 44px; }
@@ -144,8 +146,7 @@
         <span class="status live"><span data-l="es">Disponible en Android y en la web</span><span data-l="en">Available on Android and the web</span><span data-l="pt">Disponível para Android e na web</span></span>
       </div>
       <div class="stores">
-        <a class="store" href="https://play.google.com/store/apps/details?id=io.mireparto.app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Disponible en</small><small data-l="en">Get it on</small><small data-l="pt">Disponível no</small><strong>Google Play</strong></span></a>
-        <span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>App Store</strong></span></span>
+        <a class="badge" href="https://play.google.com/store/apps/details?id=io.mireparto.app" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
         <a class="store web" href="https://mireparto.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small data-l="es">Versión web</small><small data-l="en">Web version</small><small data-l="pt">Versão web</small><strong>mireparto.io</strong></span></a>
       </div>
     </article>
@@ -161,8 +162,6 @@
         <span class="status live"><span data-l="es">Disponible en la web. Pronto en iPhone y Android</span><span data-l="en">Available on the web. Soon on iPhone and Android</span><span data-l="pt">Disponível na web. Em breve para iPhone e Android</span></span>
       </div>
       <div class="stores">
-        <span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>Google Play</strong></span></span>
-        <span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>App Store</strong></span></span>
         <a class="store web" href="https://cajaviva.app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small data-l="es">Versión web</small><small data-l="en">Web version</small><small data-l="pt">Versão web</small><strong>cajaviva.app</strong></span></a>
       </div>
     </article>
