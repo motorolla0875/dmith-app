@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tintix · Juego de bloques</title>
+<link rel="icon" href="icon.png">
+<meta property="og:title" content="Tintix · Encajá bloques, juntá colores">
+<meta property="og:description" content="Juego de bloques con niveles, liga semanal y duelos con amigos.">
+<meta property="og:image" content="https://dmith.app/tintix/icon.png">
+<style>
+  :root { box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+  * { box-sizing:inherit; margin:0; padding:0; }
+  body { min-height:100vh; padding:38px 22px 60px; color:#F4F2FF; text-align:center;
+    font:16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(ellipse 62% 78% at 50% 6%, #1B4FA8 0%, #123D8A 26%, transparent 72%),
+                radial-gradient(ellipse 50% 60% at 6% 48%, #232257 0%, transparent 70%),
+                linear-gradient(178deg, #0F1B4E 0%, #0C1B4C 34%, #08143C 68%, #061030 100%);
+    background-attachment: fixed; }
+  .caja { max-width:440px; margin:0 auto; }
+  .icono { width:132px; height:132px; border-radius:30px; box-shadow:0 16px 40px rgba(0,0,0,.55); }
+  h1 { font-size:38px; margin:20px 0 6px; letter-spacing:-.5px; }
+  .bajada { color:#A9B8E8; font-size:17px; margin-bottom:34px; }
+  .btn { display:flex; align-items:center; justify-content:center; gap:11px;
+    text-decoration:none; font-weight:700; font-size:19px; padding:17px 20px;
+    border-radius:16px; margin-bottom:13px; transition:transform .12s; }
+  .btn:active { transform:translateY(2px); }
+  .ios { background:#fff; color:#111; box-shadow:0 6px 0 #B9B9C4, 0 14px 30px rgba(0,0,0,.4); }
+  .android { background:linear-gradient(180deg,#5BE07A,#27A84C); color:#fff;
+    box-shadow:0 6px 0 #17853A, 0 14px 30px rgba(0,0,0,.4); }
+  .jugar { background:rgba(255,255,255,.12); color:#fff; box-shadow:inset 0 0 0 2px rgba(255,255,255,.22); }
+  .pronto { opacity:.45; pointer-events:none; }
+  .chip { font-size:12px; font-weight:700; background:rgba(0,0,0,.28); padding:3px 9px; border-radius:99px; }
+  .redes { margin-top:34px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .redes a { color:#8FB4FF; text-decoration:none; font-size:15px; font-weight:600; }
+  footer { margin-top:38px; color:#6E7FB0; font-size:13px; }
+  footer a { color:#8FB4FF; }
+</style>
+</head>
+<body>
+<div class="caja">
+
+  <img class="icono" src="icon.png" alt="Tintix">
+  <h1>Tintix</h1>
+  <p class="bajada" id="bajada">Encajá bloques, juntá colores y hacé un FULL COLOR</p>
+
+  <a class="btn ios pronto" id="btnIos" href="#"> Descargar para iPhone <span class="chip" id="chipIos">pronto</span></a>
+  <a class="btn android pronto" id="btnAnd" href="#">▶ Descargar para Android <span class="chip" id="chipAnd">pronto</span></a>
+  <a class="btn jugar" id="btnApk" href="descargar/">📥 Versión de prueba (APK)</a>
+
+  <div class="redes">
+    <a href="https://www.instagram.com/dmith.builds" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.tiktok.com/@dmith.builds" target="_blank" rel="noopener">TikTok</a>
+    <a href="mailto:dmith.builds@gmail.com">Escribinos</a>
+  </div>
+
+  <footer>
+    <a href="privacy/">Política de privacidad</a><br><br>
+    © 2026 dmith.builds
+  </footer>
+
+</div>
+
+<script>
+  // enlaces de las tiendas: cuando esten publicadas, se completan aca
+  var IOS = '';        // ej: https://apps.apple.com/app/id6814691734
+  var ANDROID = '';    // ej: https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix
+
+  var ua = navigator.userAgent || '';
+  var esIphone  = /iPhone|iPad|iPod/i.test(ua);
+  var esAndroid = /Android/i.test(ua);
+
+  function activar(id, chipId, url) {
+    var b = document.getElementById(id);
+    if (!url) return;
+    b.href = url; b.classList.remove('pronto');
+    document.getElementById(chipId).remove();
+  }
+  activar('btnIos', 'chipIos', IOS);
+  activar('btnAnd', 'chipAnd', ANDROID);
+
+  // el boton del sistema del visitante va primero
+  var caja = document.querySelector('.caja');
+  if (esAndroid) caja.insertBefore(document.getElementById('btnAnd'), document.getElementById('btnIos'));
+
+  // si ya esta en la tienda y entra desde el celular, lo mando derecho
+  var directo = esIphone ? IOS : (esAndroid ? ANDROID : '');
+  if (directo && location.hash !== '#quedate') location.replace(directo);
+
+  // en computadora no tiene sentido ofrecer el APK
+  if (!esAndroid) document.getElementById('btnApk').style.display = 'none';
+</script>
+</body>
+</html>

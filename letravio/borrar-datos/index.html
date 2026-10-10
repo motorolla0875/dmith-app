@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Letravio · Cómo borrar tus datos</title>
+<meta name="description" content="Como pedir que se borren tus datos de Letravio, el juego de palabras de dmith.builds.">
+<link rel="icon" href="../icon.png">
+<style>
+  :root{
+    --fondo:#F3FBFB; --papel:#FFFFFF; --tinta:#143A3F; --suave:#5C7F84;
+    --borde:#D9ECEC; --acento:#0E7C86;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --fondo:#0C1E21; --papel:#122A2E; --tinta:#E6F4F4; --suave:#9FBDC0;
+      --borde:#1E3D42; --acento:#4FC3CE;
+    }
+  }
+  :root[data-theme="dark"]{
+    --fondo:#0C1E21; --papel:#122A2E; --tinta:#E6F4F4; --suave:#9FBDC0;
+    --borde:#1E3D42; --acento:#4FC3CE;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--fondo); color:var(--tinta);
+    font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding:32px 16px 64px; }
+  main{ max-width:680px; margin:0 auto; }
+  .ico{ width:72px; height:72px; border-radius:16px; display:block; margin:0 auto 14px; }
+  .tabs{ display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; justify-content:center; }
+  .tabs button{ font:inherit; font-weight:600; cursor:pointer; padding:8px 16px; border-radius:999px;
+    border:1px solid var(--borde); background:var(--papel); color:var(--suave); }
+  .tabs button[aria-selected="true"]{ background:var(--acento); border-color:var(--acento); color:#fff; }
+  section{ background:var(--papel); border:1px solid var(--borde); border-radius:16px; padding:28px 24px; }
+  section[hidden]{ display:none; }
+  h1{ font-size:25px; line-height:1.25; margin:0 0 4px; text-align:center; }
+  .quien{ text-align:center; color:var(--suave); margin:0 0 26px; font-weight:600; }
+  h2{ font-size:18px; margin:26px 0 10px; }
+  h2:first-of-type{ margin-top:0; }
+  p{ margin:0 0 14px; }
+  ol, ul{ margin:0 0 14px; padding-left:22px; }
+  li{ margin-bottom:8px; }
+  a{ color:var(--acento); }
+  table{ border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px; }
+  th, td{ border:1px solid var(--borde); padding:9px 11px; text-align:left; vertical-align:top; }
+  th{ background:rgba(14,124,134,0.07); font-weight:700; }
+  .pie{ color:var(--suave); font-size:14px; margin-top:24px; }
+  @media (max-width:520px){
+    body{ padding:20px 12px 48px; } section{ padding:22px 18px; } h1{ font-size:21px; }
+    table, th, td{ font-size:14px; } th, td{ padding:7px 8px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <img class="ico" src="../icon.png" alt="Letravio">
+  <nav class="tabs">
+    <button data-ir="es">Español</button><button data-ir="en">English</button><button data-ir="pt">Português</button>
+  </nav>
+
+  <section data-lang="es">
+    <h1>Cómo borrar tus datos de Letravio</h1>
+    <p class="quien">Letravio · desarrollada por dmith.builds</p>
+
+    <h2>Borrar lo que está guardado en tu teléfono</h2>
+    <p>No hace falta pedírnoslo: lo hacés vos, al instante, desde el juego.</p>
+    <ol>
+      <li>Abrí <strong>Letravio</strong>.</li>
+      <li>Tocá <strong>Políticas y datos</strong>, abajo del todo en el menú principal.</li>
+      <li>Al final de esa pantalla, tocá <strong>Borrar todos mis datos</strong> y confirmá con <strong>Borrar todo</strong>.</li>
+    </ol>
+    <p>Se borra todo de una vez y no se puede deshacer.</p>
+
+    <h2>Borrar lo que está guardado en nuestro servidor</h2>
+    <p>Esto lo hacemos nosotros, a pedido tuyo.</p>
+    <ol>
+      <li>Escribinos a <strong><a href="mailto:dmith.builds@gmail.com?subject=Borrar%20mis%20datos%20de%20Letravio">dmith.builds@gmail.com</a></strong> con el asunto <em>Borrar mis datos de Letravio</em>.</li>
+      <li>Decinos el <strong>apodo</strong> que usás en el Torneo, que es lo que nos permite encontrar tus datos. Si no jugaste al Torneo, no tenemos nada tuyo que borrar.</li>
+      <li>Te confirmamos por mail cuando esté hecho.</li>
+    </ol>
+    <p>Respondemos dentro de las 24 horas y borramos dentro de los <strong>30 días</strong> de tu pedido.</p>
+
+    <h2>Qué se borra y qué se conserva</h2>
+    <table>
+      <tr><th>Dato</th><th>Dónde está</th><th>Qué pasa</th></tr>
+      <tr><td>Monedas, estrellas por nivel, álbum, racha, idioma, sonido, jugadores bloqueados</td><td>Solo en tu teléfono</td><td>Lo borrás vos desde el juego, al instante</td></tr>
+      <tr><td>Identificador anónimo (una cadena al azar, no dice nada de vos ni de tu teléfono)</td><td>Tu teléfono y nuestro servidor</td><td>Se borra dentro de los 30 días de pedirlo</td></tr>
+      <tr><td>Apodo y avatar del Torneo</td><td>Nuestro servidor</td><td>Se borra dentro de los 30 días de pedirlo</td></tr>
+      <tr><td>Puntajes del Torneo</td><td>Nuestro servidor</td><td>Se borra dentro de los 30 días de pedirlo</td></tr>
+      <tr><td>Denuncias que hiciste sobre otros jugadores</td><td>Nuestro servidor</td><td><strong>Se conservan hasta 12 meses</strong>, sin tu identificador, para poder seguir moderando a quien denunciaste</td></tr>
+      <tr><td>Historial de compras</td><td>Google Play / App Store y RevenueCat</td><td><strong>Se conserva</strong>: lo exigen las tiendas y la ley fiscal, y es lo que permite restaurar tus compras si reinstalás</td></tr>
+    </table>
+    <p>Letravio nunca te pide mail, teléfono ni documento, así que no hay nada de eso guardado en ningún lado.</p>
+    <p class="pie">Dudas o pedidos: <a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a> · <a href="../privacy/">Política de privacidad</a></p>
+  </section>
+
+  <section data-lang="en" hidden>
+    <h1>How to delete your Letravio data</h1>
+    <p class="quien">Letravio · developed by dmith.builds</p>
+
+    <h2>Deleting what is stored on your phone</h2>
+    <p>You don't need to ask us: you do it yourself, instantly, from inside the game.</p>
+    <ol>
+      <li>Open <strong>Letravio</strong>.</li>
+      <li>Tap <strong>Privacy &amp; data</strong>, at the bottom of the main menu.</li>
+      <li>At the end of that screen, tap <strong>Delete all my data</strong> and confirm with <strong>Delete everything</strong>.</li>
+    </ol>
+    <p>Everything is erased at once and it cannot be undone.</p>
+
+    <h2>Deleting what is stored on our server</h2>
+    <p>This one we do for you, on request.</p>
+    <ol>
+      <li>Write to <strong><a href="mailto:dmith.builds@gmail.com?subject=Delete%20my%20Letravio%20data">dmith.builds@gmail.com</a></strong> with the subject <em>Delete my Letravio data</em>.</li>
+      <li>Tell us the <strong>nickname</strong> you use in the Tournament, which is how we find your data. If you never played the Tournament, we hold nothing of yours to delete.</li>
+      <li>We confirm by email once it is done.</li>
+    </ol>
+    <p>We reply within 24 hours and delete within <strong>30 days</strong> of your request.</p>
+
+    <h2>What is deleted and what is kept</h2>
+    <table>
+      <tr><th>Data</th><th>Where it lives</th><th>What happens</th></tr>
+      <tr><td>Coins, stars per level, album, streak, language, sound, blocked players</td><td>Your phone only</td><td>You delete it yourself from the game, instantly</td></tr>
+      <tr><td>Anonymous identifier (a random string; it says nothing about you or your phone)</td><td>Your phone and our server</td><td>Deleted within 30 days of your request</td></tr>
+      <tr><td>Tournament nickname and avatar</td><td>Our server</td><td>Deleted within 30 days of your request</td></tr>
+      <tr><td>Tournament scores</td><td>Our server</td><td>Deleted within 30 days of your request</td></tr>
+      <tr><td>Reports you filed about other players</td><td>Our server</td><td><strong>Kept for up to 12 months</strong>, stripped of your identifier, so we can keep moderating the player you reported</td></tr>
+      <tr><td>Purchase history</td><td>Google Play / App Store and RevenueCat</td><td><strong>Kept</strong>: required by the stores and by tax law, and it is what lets your purchases be restored if you reinstall</td></tr>
+    </table>
+    <p>Letravio never asks for your email, phone number or ID, so none of that is stored anywhere.</p>
+    <p class="pie">Questions or requests: <a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a> · <a href="../privacy/">Privacy policy</a></p>
+  </section>
+
+  <section data-lang="pt" hidden>
+    <h1>Como apagar seus dados do Letravio</h1>
+    <p class="quien">Letravio · desenvolvido por dmith.builds</p>
+
+    <h2>Apagar o que está guardado no seu celular</h2>
+    <p>Você não precisa pedir: faz sozinho, na hora, dentro do jogo.</p>
+    <ol>
+      <li>Abra o <strong>Letravio</strong>.</li>
+      <li>Toque em <strong>Privacidade e dados</strong>, lá embaixo no menu principal.</li>
+      <li>No final dessa tela, toque em <strong>Apagar todos os meus dados</strong> e confirme com <strong>Apagar tudo</strong>.</li>
+    </ol>
+    <p>Apaga tudo de uma vez e não dá para desfazer.</p>
+
+    <h2>Apagar o que está guardado no nosso servidor</h2>
+    <p>Isso fazemos nós, a seu pedido.</p>
+    <ol>
+      <li>Escreva para <strong><a href="mailto:dmith.builds@gmail.com?subject=Apagar%20meus%20dados%20do%20Letravio">dmith.builds@gmail.com</a></strong> com o assunto <em>Apagar meus dados do Letravio</em>.</li>
+      <li>Diga o <strong>apelido</strong> que você usa no Torneio, que é como encontramos seus dados. Se você nunca jogou o Torneio, não temos nada seu para apagar.</li>
+      <li>Confirmamos por e-mail quando estiver feito.</li>
+    </ol>
+    <p>Respondemos em até 24 horas e apagamos em até <strong>30 dias</strong> do seu pedido.</p>
+
+    <h2>O que é apagado e o que é mantido</h2>
+    <table>
+      <tr><th>Dado</th><th>Onde fica</th><th>O que acontece</th></tr>
+      <tr><td>Moedas, estrelas por nível, álbum, sequência, idioma, som, jogadores bloqueados</td><td>Só no seu celular</td><td>Você apaga sozinho pelo jogo, na hora</td></tr>
+      <tr><td>Identificador anônimo (uma sequência aleatória; não diz nada sobre você nem sobre seu celular)</td><td>Seu celular e nosso servidor</td><td>Apagado em até 30 dias do seu pedido</td></tr>
+      <tr><td>Apelido e avatar do Torneio</td><td>Nosso servidor</td><td>Apagado em até 30 dias do seu pedido</td></tr>
+      <tr><td>Pontuações do Torneio</td><td>Nosso servidor</td><td>Apagado em até 30 dias do seu pedido</td></tr>
+      <tr><td>Denúncias que você fez sobre outros jogadores</td><td>Nosso servidor</td><td><strong>Mantidas por até 12 meses</strong>, sem o seu identificador, para podermos continuar moderando quem você denunciou</td></tr>
+      <tr><td>Histórico de compras</td><td>Google Play / App Store e RevenueCat</td><td><strong>Mantido</strong>: exigido pelas lojas e pela lei fiscal, e é o que permite restaurar suas compras se você reinstalar</td></tr>
+    </table>
+    <p>O Letravio nunca pede e-mail, telefone nem documento, então nada disso fica guardado em lugar nenhum.</p>
+    <p class="pie">Dúvidas ou pedidos: <a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a> · <a href="../privacy/">Política de privacidade</a></p>
+  </section>
+</main>
+<script>
+  var secciones = document.querySelectorAll('section[data-lang]');
+  var botones = document.querySelectorAll('.tabs button');
+  function mostrar(lang){
+    secciones.forEach(function(s){ s.hidden = s.dataset.lang !== lang; });
+    botones.forEach(function(b){ b.setAttribute('aria-selected', String(b.dataset.ir === lang)); });
+    document.documentElement.lang = lang;
+  }
+  botones.forEach(function(b){ b.addEventListener('click', function(){ mostrar(b.dataset.ir); }); });
+  var pedido = (navigator.language || 'es').slice(0,2);
+  mostrar(['es','en','pt'].indexOf(pedido) >= 0 ? pedido : 'es');
+</script>
+</body>
+</html>
