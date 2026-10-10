@@ -19,14 +19,13 @@
   .hero h1 { font: 800 clamp(38px, 6vw, 64px)/1.02 var(--display); letter-spacing: -.025em; margin: 0 0 20px; max-width: 13ch; }
   .hero p { font-size: 18.5px; color: var(--soft); margin: 0; max-width: 46ch; }
 
-  /* La estantería: cada app en un bloque de color de la marca */
-  .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .tile { aspect-ratio: 1; border-radius: 22px; display: grid; place-items: center; text-decoration: none; transition: transform .18s ease; }
-  .tile img { width: 64%; border-radius: 22%; box-shadow: 0 10px 22px rgba(8, 9, 40, .35); }
-  a.tile:hover { transform: translateY(-4px) rotate(-1.5deg); }
-  .tile.blue { background: var(--blue); } .tile.gold { background: var(--gold); } .tile.mint { background: var(--mint); }
-  .tile.coral { background: var(--coral); } .tile.ink { background: #2C307A; }
-  .tile.brand { border: 2px dashed rgba(255,255,255,.22); color: var(--muted); font: 700 15px/1.25 var(--display); text-align: center; padding: 12px; }
+  /* Íconos de las apps */
+  .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 22px; justify-items: center; }
+  .tile { display: block; width: 100%; max-width: 132px; text-decoration: none; transition: transform .18s ease; }
+  .tile img { width: 100%; aspect-ratio: 1; border-radius: 23%; box-shadow: 0 14px 30px rgba(5, 6, 30, .45); }
+  a.tile:hover { transform: translateY(-4px); }
+  .shelf .tile:nth-child(4) { grid-column: 1 / span 1; margin-left: 50%; }
+  .shelf .tile:nth-child(5) { margin-left: 50%; }
 
   .tabs { display: inline-flex; gap: 4px; padding: 4px; background: rgba(255,255,255,.07); border-radius: 14px; margin-bottom: 18px; }
   .tabs button { font: 700 16px/1 var(--body); color: var(--soft); background: none; border: 0; border-radius: 11px; padding: 12px 22px; cursor: pointer; }
@@ -77,12 +76,11 @@
       </p>
     </div>
     <div class="shelf">
-      <a class="tile blue" href="/tintix/"><img src="/tintix/icon.png" alt="Tintix"></a>
-      <a class="tile gold" href="/letravio/"><img src="/letravio/icon.png" alt="Letravio"></a>
-      <a class="tile coral" href="/santa-biblia/"><img src="/santa-biblia/icon.png" alt="Santa Biblia"></a>
-      <a class="tile mint" href="https://cajaviva.app" target="_blank" rel="noopener"><img src="/cajaviva-icon.png" alt="CajaViva"></a>
-      <a class="tile ink" href="https://mireparto.io" target="_blank" rel="noopener"><img src="/mireparto-icon.png" alt="MiReparto"></a>
-      <span class="tile brand"><span data-l="es">Más en camino</span><span data-l="en">More on the way</span><span data-l="pt">Mais a caminho</span></span>
+      <a class="tile" href="/tintix/"><img src="/tintix/icon.png" alt="Tintix"></a>
+      <a class="tile" href="/letravio/"><img src="/letravio/icon.png" alt="Letravio"></a>
+      <a class="tile" href="/santa-biblia/"><img src="/santa-biblia/icon.png" alt="Santa Biblia"></a>
+      <a class="tile" href="https://cajaviva.app" target="_blank" rel="noopener"><img src="/cajaviva-icon.png" alt="CajaViva"></a>
+      <a class="tile" href="https://mireparto.io" target="_blank" rel="noopener"><img src="/mireparto-icon.png" alt="MiReparto"></a>
     </div>
   </section>
 
