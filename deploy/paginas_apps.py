@@ -7,7 +7,7 @@ def soon(store): return f'<span class="store soon">{PHONE}<span><small data-l="e
 
 APPS = {
  "santa-biblia": dict(
-   name="Santa Biblia", color="var(--coral)", trybtn=L("Ver vista previa online","See the online preview","Ver a prévia online"),
+   name="Santa Biblia", color="var(--coral)",
    title=("Santa Biblia · La Biblia gratis y sin anuncios", "Holy Bible · Free and ad-free", "Bíblia Sagrada · Grátis e sem anúncios"),
    tagline=L("La Biblia completa, gratis y sin anuncios. Para leerla, escucharla y orar cada día.",
              "The complete Bible, free and ad-free. To read, listen and pray every day.",
@@ -23,7 +23,7 @@ APPS = {
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("terms/",L("Términos","Terms","Termos")),("support/",L("Soporte","Support","Suporte")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
  ),
  "letravio": dict(
-   name="Letravio", color="var(--gold)", trybtn=L("Jugar online los 3 primeros niveles","Play the first 3 levels online","Jogar online os 3 primeiros níveis"),
+   name="Letravio", color="var(--gold)",
    title=("Letravio · Juego de palabras", "Letravio · Word game", "Letravio · Jogo de palavras"),
    tagline=L("Uní las letras para formar palabras y completá el crucigrama.",
              "Connect the letters to form words and complete the crossword.",
@@ -68,10 +68,7 @@ for slug, a in APPS.items():
   .feats {{ list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }}
   .feats li {{ padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }}
   .feats li::before {{ content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: {a["color"]}; }}
-  .soon-note {{ display: inline-block; font-weight: 700; font-size: 14.5px; color: var(--gold); }}
-  .acts {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }}
-  .try {{ font: 700 16px/1 var(--body); color: var(--deep); background: var(--ink); text-decoration: none; padding: 13px 18px; border-radius: 12px; }}
-  .try:hover {{ background: #fff; }}
+  .soon-note {{ display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }}
   .back {{ color: var(--muted); text-decoration: none; font-size: 15px; }}
   .back:hover {{ color: var(--ink); }}
   @media (max-width: 640px) {{
@@ -96,7 +93,7 @@ for slug, a in APPS.items():
     <div>
       <h1>{a["name"]}</h1>
       <p>{a["tagline"]}</p>
-      <div class="acts"><a class="try" href="probar/">{a["trybtn"]}</a><span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span></div>
+      <span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span>
     </div>
   </section>
 
