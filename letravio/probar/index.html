@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Letravio · Probar online</title>
+<meta name="title-es" content="Letravio · Probar online">
+<meta name="title-en" content="Letravio · Try it online">
+<meta name="title-pt" content="Letravio · Experimente online">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/lang.js"></script>
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { display: flex; flex-direction: column; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); }
+  .bar img { width: 34px; height: 34px; border-radius: 9px; }
+  .bar .name { font: 700 18px/1 var(--display); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clock { font: 700 16px/1 var(--body); font-variant-numeric: tabular-nums; color: var(--deep); background: var(--gold); padding: 8px 12px; border-radius: 10px; }
+  .clock.low { background: var(--coral); color: #fff; }
+  .bar a.x { color: var(--muted); text-decoration: none; font-size: 14.5px; }
+  .stage { flex: 1; display: flex; justify-content: center; min-height: 0; padding: 0 0 env(safe-area-inset-bottom); position: relative; }
+  iframe { border: 0; width: 100%; height: 100%; background: #000; }
+  @media (min-width: 700px) {
+    .stage { padding: 6px 0 18px; }
+    iframe { max-width: 430px; border-radius: 26px; box-shadow: 0 20px 50px rgba(5,6,30,.55); }
+  }
+  .end { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(16,18,58,.92); }
+  .end[hidden] { display: none; }
+  .card { max-width: 380px; text-align: center; }
+  .card img { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 18px; }
+  .card h1 { font: 800 30px/1.1 var(--display); margin: 0 0 10px; }
+  .card p { color: var(--soft); margin: 0 0 22px; }
+  .card button, .card a { display: block; width: 100%; font: 700 17px/1 var(--body); padding: 15px; border-radius: 14px; border: 0; cursor: pointer; text-decoration: none; margin-bottom: 10px; }
+  .card button { background: var(--gold); color: var(--deep); }
+  .card a { background: rgba(255,255,255,.1); color: var(--ink); }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <img src="../icon.png" alt="">
+    <span class="name">Letravio</span>
+    <span class="clock" id="clock" aria-live="off">3:00</span>
+    <a class="x" href="../"><span data-l="es">Salir</span><span data-l="en">Exit</span><span data-l="pt">Sair</span></a>
+  </div>
+  <div class="stage">
+    <iframe id="app" title="Letravio" allow="autoplay; fullscreen"></iframe>
+    <div class="end" id="end" hidden>
+      <div class="card">
+        <img src="../icon.png" alt="">
+        <h1><span data-l="es">Se terminaron los 3 minutos</span><span data-l="en">Your 3 minutes are up</span><span data-l="pt">Seus 3 minutos acabaram</span></h1>
+        <p><span data-l="es">Esta es una prueba online. Para seguir sin límite, descargá </span><span data-l="en">This is an online preview. To keep going with no limit, download </span><span data-l="pt">Esta é uma prévia online. Para continuar sem limite, baixe </span><span data-l="es">el juego</span><span data-l="en">the game</span><span data-l="pt">o jogo</span><span data-l="es"> cuando salga en iPhone y Android.</span><span data-l="en"> when it comes out on iPhone and Android.</span><span data-l="pt"> quando sair para iPhone e Android.</span></p>
+        <button id="again"><span data-l="es">Volver a empezar</span><span data-l="en">Start over</span><span data-l="pt">Começar de novo</span></button>
+        <a href="../"><span data-l="es">Ver más de </span><span data-l="en">More about </span><span data-l="pt">Mais sobre </span>Letravio</a>
+      </div>
+    </div>
+  </div>
+<script>
+  var SEGUNDOS = 3 * 60;
+  var frame = document.getElementById("app"), clock = document.getElementById("clock"), end = document.getElementById("end");
+  var timer = null, fin = 0;
+
+  // Borra todo lo que la versión web guardó, menos el idioma del sitio: así arranca de cero.
+  function limpiar() {
+    try {
+      var keep = localStorage.getItem("dmith-lang");
+      localStorage.clear();
+      if (keep) localStorage.setItem("dmith-lang", keep);
+      sessionStorage.clear();
+    } catch (e) {}
+  }
+  function pintar(s) {
+    var m = Math.floor(s / 60), r = s % 60;
+    clock.textContent = m + ":" + (r < 10 ? "0" : "") + r;
+    clock.classList.toggle("low", s <= 30);
+  }
+  function terminar() {
+    clearInterval(timer);
+    pintar(0);
+    frame.src = "about:blank";
+    limpiar();
+    end.hidden = false;
+  }
+  function empezar() {
+    limpiar();
+    end.hidden = true;
+    frame.src = "app/index.html?t=" + Date.now();
+    fin = Date.now() + SEGUNDOS * 1000;
+    pintar(SEGUNDOS);
+    clearInterval(timer);
+    timer = setInterval(function () {
+      var s = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+      pintar(s);
+      if (s === 0) terminar();
+    }, 250);
+  }
+  document.getElementById("again").addEventListener("click", empezar);
+  empezar();
+</script>
+</body>
+</html>

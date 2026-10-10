@@ -41,6 +41,11 @@
   .status.live { color: var(--mint); }
   .more { justify-self: end; font: 700 15px/1 var(--body); color: var(--deep); background: var(--ink); text-decoration: none; padding: 12px 18px; border-radius: 12px; white-space: nowrap; }
   .more:hover { background: var(--gold); }
+  .acts { justify-self: end; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .more.try { background: var(--gold); }
+  .more.try:hover { background: #FFD46E; }
+  .more.ghost { background: rgba(255,255,255,.1); color: var(--ink); }
+  .more.ghost:hover { background: rgba(255,255,255,.18); }
   .row .stores { justify-content: flex-end; align-items: center; max-width: 380px; }
   .badge { display: inline-block; line-height: 0; }
   .badge img { height: 50px; width: auto; }
@@ -51,7 +56,7 @@
     .row { grid-template-columns: 60px 1fr; gap: 14px 16px; }
     .row > img { width: 60px; height: 60px; border-radius: 14px; }
     .row h2 { font-size: 21px; }
-    .row .stores, .more { grid-column: 2; justify-self: start; justify-content: flex-start; }
+    .row .stores, .acts { grid-column: 2; justify-self: start; justify-content: flex-start; }
   }
 </style>
 </head>
@@ -103,7 +108,7 @@
         </p>
         <span class="status"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
       </div>
-      <a class="more" href="/tintix/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
+      <div class="acts"><a class="more try" href="/tintix/probar/"><span data-l="es">Probar online</span><span data-l="en">Try online</span><span data-l="pt">Experimentar</span></a><a class="more ghost" href="/tintix/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
     </article>
     <article class="row">
       <img src="/letravio/icon.png" alt="">
@@ -116,7 +121,7 @@
         </p>
         <span class="status"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
       </div>
-      <a class="more" href="/letravio/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
+      <div class="acts"><a class="more try" href="/letravio/probar/"><span data-l="es">Probar online</span><span data-l="en">Try online</span><span data-l="pt">Experimentar</span></a><a class="more ghost" href="/letravio/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
     </article>
   </section>
 
@@ -132,7 +137,7 @@
         </p>
         <span class="status"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
       </div>
-      <a class="more" href="/santa-biblia/"><span data-l="es">Ver app</span><span data-l="en">See app</span><span data-l="pt">Ver app</span></a>
+      <div class="acts"><a class="more try" href="/santa-biblia/probar/"><span data-l="es">Probar online</span><span data-l="en">Try online</span><span data-l="pt">Experimentar</span></a><a class="more ghost" href="/santa-biblia/"><span data-l="es">Ver app</span><span data-l="en">See app</span><span data-l="pt">Ver app</span></a></div>
     </article>
     <article class="row">
       <img src="/mireparto-icon.png" alt="">
