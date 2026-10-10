@@ -7,7 +7,7 @@ def soon(store): return f'<span class="store soon">{PHONE}<span><small data-l="e
 
 APPS = {
  "santa-biblia": dict(
-   name="Santa Biblia", color="var(--coral)",
+   name="Santa Biblia", color="var(--coral)", trybtn=L("Ver vista previa online","See the online preview","Ver a prévia online"),
    title=("Santa Biblia · La Biblia gratis y sin anuncios", "Holy Bible · Free and ad-free", "Bíblia Sagrada · Grátis e sem anúncios"),
    tagline=L("La Biblia completa, gratis y sin anuncios. Para leerla, escucharla y orar cada día.",
              "The complete Bible, free and ad-free. To read, listen and pray every day.",
@@ -23,7 +23,7 @@ APPS = {
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("terms/",L("Términos","Terms","Termos")),("support/",L("Soporte","Support","Suporte")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
  ),
  "letravio": dict(
-   name="Letravio", color="var(--gold)",
+   name="Letravio", color="var(--gold)", trybtn=L("Jugar online los 3 primeros niveles","Play the first 3 levels online","Jogar online os 3 primeiros níveis"),
    title=("Letravio · Juego de palabras", "Letravio · Word game", "Letravio · Jogo de palavras"),
    tagline=L("Uní las letras para formar palabras y completá el crucigrama.",
              "Connect the letters to form words and complete the crossword.",
@@ -96,7 +96,7 @@ for slug, a in APPS.items():
     <div>
       <h1>{a["name"]}</h1>
       <p>{a["tagline"]}</p>
-      <div class="acts"><a class="try" href="probar/">{L("Probar online 3 minutos","Try online for 3 minutes","Experimentar online por 3 minutos")}</a><span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span></div>
+      <div class="acts"><a class="try" href="probar/">{a["trybtn"]}</a><span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span></div>
     </div>
   </section>
 
