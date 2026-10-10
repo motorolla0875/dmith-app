@@ -3,56 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dmith.builds · Apps y juegos</title>
+<title>dmith.builds · Juegos y apps</title>
+<meta name="description" content="Juegos y apps de dmith.builds: Tintix, Letravio, Santa Biblia, MiReparto y CajaViva.">
 <link rel="icon" href="/icon.png">
 <style>
-  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: radial-gradient(120% 80% at 50% 0%, #262A6E 0%, #181B4A 60%); color: #F4F2FF; min-height: 100vh; }
-  main { max-width: 760px; margin: 0 auto; padding: 48px 20px; }
+  :root { --bg1:#262A6E; --bg2:#181B4A; --ink:#F4F2FF; --muted:#A9A8D6; --soft:#C9C7EE; --card:rgba(255,255,255,.06); --link:#7FC4FF; --gold:#FFC23D; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: radial-gradient(120% 80% at 50% 0%, var(--bg1) 0%, var(--bg2) 60%); background-color: var(--bg2); color: var(--ink); min-height: 100vh; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 40px; }
   .brand { display: flex; align-items: center; gap: 14px; font-size: 34px; font-weight: 700; }
-  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 42px; }
-  .mark i { aspect-ratio: 1; border-radius: 6px; background: #3E9BFF; } .mark i:nth-child(2) { background: #FFC23D; } .mark i:nth-child(3) { background: #26D6A0; } .mark i:nth-child(4) { background: #FF5A6E; }
-  .brand span { color: #FFC23D; }
-  p.sub { color: #A9A8D6; margin: 6px 0 36px; }
-  .app { display: flex; margin-bottom: 14px; gap: 18px; align-items: center; background: rgba(255,255,255,.06); border-radius: 20px; padding: 18px; }
-  .app img { width: 88px; height: 88px; border-radius: 20px; }
-  .app h2 { margin: 0 0 4px; } .app p { margin: 0 0 8px; color: #C9C7EE; }
-  a { color: #7FC4FF; }
-  footer { margin-top: 40px; color: #A9A8D6; font-size: 14px; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 42px; flex: none; }
+  .mark i { aspect-ratio: 1; border-radius: 6px; background: #3E9BFF; } .mark i:nth-child(2) { background: var(--gold); } .mark i:nth-child(3) { background: #26D6A0; } .mark i:nth-child(4) { background: #FF5A6E; }
+  .brand b { font-weight: 700; } .brand span { color: var(--gold); }
+  p.sub { color: var(--muted); margin: 6px 0 28px; }
+
+  .tabs { display: inline-flex; gap: 4px; padding: 4px; background: rgba(255,255,255,.07); border-radius: 999px; margin-bottom: 22px; }
+  .tabs button { font: inherit; font-weight: 650; font-size: 16px; color: var(--soft); background: none; border: 0; border-radius: 999px; padding: 10px 22px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--gold); color: #1B1D4F; }
+  .tabs button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  .panel[hidden] { display: none; }
+  .app { display: flex; margin-bottom: 14px; gap: 18px; align-items: flex-start; background: var(--card); border-radius: 20px; padding: 18px; }
+  .app img { width: 88px; height: 88px; border-radius: 20px; flex: none; object-fit: cover; }
+  .app h2 { margin: 2px 0 4px; font-size: 21px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .tag { font-size: 12px; font-weight: 600; color: #1B1D4F; background: #9DE3C9; border-radius: 999px; padding: 3px 9px; }
+  .tag.soon { background: rgba(255,255,255,.14); color: var(--soft); }
+  .app p { margin: 0 0 10px; color: var(--soft); line-height: 1.45; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14.5px; }
+  a { color: var(--link); }
+  .cta { display: inline-block; margin-bottom: 10px; padding: 8px 16px; border-radius: 999px; background: var(--link); color: #10123A; font-weight: 650; text-decoration: none; font-size: 14.5px; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 14px; }
+  @media (max-width: 480px) {
+    .brand { font-size: 28px; }
+    .app { gap: 14px; padding: 14px; }
+    .app img { width: 64px; height: 64px; border-radius: 15px; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <div class="brand"><div class="mark"><i></i><i></i><i></i><i></i></div>dmith<span>.</span>builds</div>
+  <div class="brand"><div class="mark"><i></i><i></i><i></i><i></i></div><b>dmith<span>.</span>builds</b></div>
   <p class="sub">Juegos y apps · Games and apps</p>
-  <div class="app">
-    <img src="tintix/icon.png" alt="Tintix">
-    <div>
-      <h2>Tintix</h2>
-      <p>Encajá las piezas, juntá colores y hacé un Full Color. · Fit the pieces, match colors and make a Full Color.</p>
-      <a href="tintix/privacy/">Política de privacidad · Privacy policy</a>
-    </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t-juegos" aria-controls="juegos" aria-selected="true">Juegos · Games</button>
+    <button role="tab" id="t-apps" aria-controls="apps" aria-selected="false">Apps</button>
   </div>
-  <div class="app">
-    <img src="letravio/icon.png" alt="Letravio">
-    <div>
-      <h2>Letravio</h2>
-      <p>Uní las letras y completá el crucigrama. · Connect the letters and complete the crossword.</p>
-      <a href="letravio/privacy/">Política de privacidad · Privacy policy</a>
-      <a href="letravio/borrar-datos/">Borrar mis datos · Delete my data</a>
+
+  <section class="panel" id="juegos" role="tabpanel" aria-labelledby="t-juegos">
+    <div class="app">
+      <img src="tintix/icon.png" alt="Tintix">
+      <div>
+        <h2>Tintix <span class="tag soon">Próximamente · Coming soon</span></h2>
+        <p>Encajá las piezas, juntá colores y hacé un Full Color. · Fit the pieces, match colors and make a Full Color.</p>
+        <div class="links">
+          <a href="tintix/privacy/">Privacidad · Privacy</a>
+          <a href="tintix/borrar-datos/">Borrar mis datos · Delete my data</a>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="app">
-    <img src="santa-biblia/icon.png" alt="Santa Biblia">
-    <div>
-      <h2>Santa Biblia</h2>
-      <p>La Biblia completa, gratis y sin anuncios. · The complete Bible, free and ad-free. · A Bíblia completa, grátis e sem anúncios.</p>
-      <a href="santa-biblia/privacy/">Política de privacidad · Privacy policy</a>
-      <a href="santa-biblia/terms/">Términos · Terms</a>
-      <a href="santa-biblia/support/">Soporte · Support</a>
-      <a href="santa-biblia/borrar-datos/">Borrar mis datos · Delete my data</a>
+    <div class="app">
+      <img src="letravio/icon.png" alt="Letravio">
+      <div>
+        <h2>Letravio <span class="tag soon">Próximamente · Coming soon</span></h2>
+        <p>Uní las letras y completá el crucigrama. · Connect the letters and complete the crossword.</p>
+        <div class="links">
+          <a href="letravio/privacy/">Privacidad · Privacy</a>
+          <a href="letravio/borrar-datos/">Borrar mis datos · Delete my data</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <section class="panel" id="apps" role="tabpanel" aria-labelledby="t-apps" hidden>
+    <div class="app">
+      <img src="santa-biblia/icon.png" alt="Santa Biblia">
+      <div>
+        <h2>Santa Biblia <span class="tag soon">Próximamente · Coming soon</span></h2>
+        <p>La Biblia completa, gratis y sin anuncios, con audio, meditación y oración diaria. · The complete Bible, free and ad-free. · A Bíblia completa, grátis e sem anúncios.</p>
+        <div class="links">
+          <a href="santa-biblia/privacy/">Privacidad · Privacy</a>
+          <a href="santa-biblia/terms/">Términos · Terms</a>
+          <a href="santa-biblia/support/">Soporte · Support</a>
+          <a href="santa-biblia/borrar-datos/">Borrar mis datos · Delete my data</a>
+        </div>
+      </div>
+    </div>
+    <div class="app">
+      <img src="mireparto-icon.png" alt="MiReparto">
+      <div>
+        <h2>MiReparto <span class="tag">Disponible</span></h2>
+        <p>Organizá tu reparto: clientes, rutas, pedidos y stock en un solo lugar.</p>
+        <a class="cta" href="https://play.google.com/store/apps/details?id=io.mireparto.app" target="_blank" rel="noopener">Google Play</a>
+      </div>
+    </div>
+    <div class="app">
+      <img src="cajaviva-icon.png" alt="CajaViva">
+      <div>
+        <h2>CajaViva <span class="tag">Disponible</span></h2>
+        <p>Gestión simple para tu negocio: ventas, caja y stock.</p>
+        <a class="cta" href="https://cajaviva.app" target="_blank" rel="noopener">cajaviva.app</a>
+      </div>
+    </div>
+  </section>
+
   <footer>Contacto · Contact: <a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></footer>
 </main>
+<script>
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function show(id, push) {
+    tabs.forEach(t => {
+      const on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on);
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (push) history.replaceState(null, '', id === 'juegos' ? location.pathname : '#apps');
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.getAttribute('aria-controls'), true)));
+  if (location.hash === '#apps') show('apps');
+</script>
 </body>
 </html>
