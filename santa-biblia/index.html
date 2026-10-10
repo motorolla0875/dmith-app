@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Santa Biblia · La Biblia gratis y sin anuncios</title>
+<meta name="title-es" content="Santa Biblia · La Biblia gratis y sin anuncios">
+<meta name="title-en" content="Holy Bible · Free and ad-free">
+<meta name="title-pt" content="Bíblia Sagrada · Grátis e sem anúncios">
+<meta property="og:title" content="Santa Biblia · La Biblia gratis y sin anuncios">
+<meta property="og:image" content="https://dmith.app/santa-biblia/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/lang.js"></script>
+<style>
+  .app-hero { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 28px 0 36px; }
+  .app-hero .icon { width: 140px; height: 140px; border-radius: 32px; box-shadow: 0 0 0 10px var(--coral), 0 18px 40px rgba(5,6,30,.45); }
+  .app-hero h1 { font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }
+  .app-hero p { font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }
+  .shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }
+  .shots img { width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
+  .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+  .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
+  .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--coral); }
+  .back { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    .app-hero { grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }
+    .app-hero .icon { width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px var(--coral), 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }
+    .shots img { width: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
+    <div class="langs" role="group" aria-label="Idioma">
+      <button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button>
+    </div>
+  </header>
+  <a class="back" href="/"><span data-l="es">Todas las apps</span><span data-l="en">All apps</span><span data-l="pt">Todos os apps</span></a>
+
+  <section class="app-hero">
+    <img class="icon" src="icon.png" alt="Santa Biblia">
+    <div>
+      <h1>Santa Biblia</h1>
+      <p><span data-l="es">La Biblia completa, gratis y sin anuncios. Para leerla, escucharla y orar cada día.</span><span data-l="en">The complete Bible, free and ad-free. To read, listen and pray every day.</span><span data-l="pt">A Bíblia completa, grátis e sem anúncios. Para ler, ouvir e orar todos os dias.</span></p>
+      <div class="stores"><span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>Google Play</strong></span></span><span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>App Store</strong></span></span></div>
+    </div>
+  </section>
+
+  <div class="shots"><img src="img/captura-1.webp" alt="" loading="lazy" width="270" height="480"><img src="img/captura-2.webp" alt="" loading="lazy" width="270" height="480"><img src="img/captura-3.webp" alt="" loading="lazy" width="270" height="480"><img src="img/captura-4.webp" alt="" loading="lazy" width="270" height="480"></div>
+  <ul class="feats"><li><span data-l="es">Reina-Valera 1909, King James y Bíblia Livre, sin conexión</span><span data-l="en">Reina-Valera 1909, King James and Bíblia Livre, offline</span><span data-l="pt">Reina-Valera 1909, King James e Bíblia Livre, sem internet</span></li><li><span data-l="es">Escuchá cualquier capítulo, con cada palabra resaltada</span><span data-l="en">Listen to any chapter, with each word highlighted</span><span data-l="pt">Ouça qualquer capítulo, com cada palavra destacada</span></li><li><span data-l="es">Versículo, meditación y oración con tu nombre cada mañana</span><span data-l="en">Verse, devotional and a prayer with your name every morning</span><span data-l="pt">Versículo, devocional e oração com o seu nome toda manhã</span></li><li><span data-l="es">Resaltá en colores, anotá y memorizá versículos</span><span data-l="en">Highlight in colors, take notes and memorize verses</span><span data-l="pt">Destaque em cores, anote e memorize versículos</span></li><li><span data-l="es">Colores que cuidan la vista para leer de noche</span><span data-l="en">Eye-friendly colors for reading at night</span><span data-l="pt">Cores que cuidam da vista para ler à noite</span></li></ul>
+
+  <footer class="foot">
+    <span>© 2026 dmith.builds</span>
+    <nav><a href="privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span></a><a href="terms/"><span data-l="es">Términos</span><span data-l="en">Terms</span><span data-l="pt">Termos</span></a><a href="support/"><span data-l="es">Soporte</span><span data-l="en">Support</span><span data-l="pt">Suporte</span></a><a href="borrar-datos/"><span data-l="es">Borrar mis datos</span><span data-l="en">Delete my data</span><span data-l="pt">Apagar meus dados</span></a><a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></nav>
+  </footer>
+</div>
+</body>
+</html>

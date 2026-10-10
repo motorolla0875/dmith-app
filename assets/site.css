@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap");
+
+:root {
+  --night: #181B4A;
+  --deep: #10123A;
+  --ink: #F4F2FF;
+  --muted: #A9A8D6;
+  --soft: #CFCDF0;
+  --line: rgba(255, 255, 255, .11);
+  --blue: #3E9BFF;
+  --gold: #FFC23D;
+  --mint: #26D6A0;
+  --coral: #FF5A6E;
+  --link: #8CCBFF;
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh;
+  font: 400 16px/1.55 var(--body);
+  color: var(--ink);
+  background-color: var(--night);
+  background-image: radial-gradient(110% 70% at 85% -10%, #2B2F7C 0%, transparent 60%);
+}
+img { max-width: 100%; display: block; }
+a { color: var(--link); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+/* Idiomas: solo se ve el texto del idioma elegido */
+html[data-lang="es"] [data-l]:not([data-l="es"]),
+html[data-lang="en"] [data-l]:not([data-l="en"]),
+html[data-lang="pt"] [data-l]:not([data-l="pt"]) { display: none !important; }
+
+/* Cabecera */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; }
+.logo { display: inline-flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; font: 800 23px/1 var(--display); letter-spacing: -.01em; }
+.mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 30px; flex: none; }
+.mark i { aspect-ratio: 1; border-radius: 4px; background: var(--blue); }
+.mark i:nth-child(2) { background: var(--gold); }
+.mark i:nth-child(3) { background: var(--mint); }
+.mark i:nth-child(4) { background: var(--coral); }
+.logo .dot { color: var(--gold); }
+.langs { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,.07); }
+.langs button { font: 700 13px/1 var(--body); color: var(--muted); background: none; border: 0; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.langs button[aria-pressed="true"] { color: var(--deep); background: var(--ink); }
+
+/* Botones de tiendas */
+.stores { display: flex; flex-wrap: wrap; gap: 10px; }
+.store { display: inline-flex; align-items: center; gap: 10px; padding: 8px 15px 8px 11px; border-radius: 12px; background: #07081F; border: 1px solid rgba(255,255,255,.24); color: #fff; text-decoration: none; line-height: 1.1; }
+.store svg { width: 22px; height: 22px; flex: none; }
+.store small { display: block; font-size: 11px; opacity: .78; }
+.store strong { display: block; font: 700 16px/1.15 var(--body); }
+a.store:hover { border-color: var(--link); }
+.store.soon { opacity: .4; filter: grayscale(1); }
+.store.web { background: var(--ink); color: var(--deep); border-color: transparent; }
+
+/* Pie */
+.foot { margin-top: 72px; padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14.5px; display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.foot a { color: var(--soft); text-decoration: none; }
+.foot a:hover { color: var(--ink); text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

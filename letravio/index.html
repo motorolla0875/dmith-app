@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letravio · Juego de palabras</title>
+<meta name="title-es" content="Letravio · Juego de palabras">
+<meta name="title-en" content="Letravio · Word game">
+<meta name="title-pt" content="Letravio · Jogo de palavras">
+<meta property="og:title" content="Letravio · Juego de palabras">
+<meta property="og:image" content="https://dmith.app/letravio/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/lang.js"></script>
+<style>
+  .app-hero { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 28px 0 36px; }
+  .app-hero .icon { width: 140px; height: 140px; border-radius: 32px; box-shadow: 0 0 0 10px var(--gold), 0 18px 40px rgba(5,6,30,.45); }
+  .app-hero h1 { font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }
+  .app-hero p { font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }
+  .shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }
+  .shots img { width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
+  .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+  .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
+  .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--gold); }
+  .back { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    .app-hero { grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }
+    .app-hero .icon { width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px var(--gold), 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }
+    .shots img { width: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
+    <div class="langs" role="group" aria-label="Idioma">
+      <button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button>
+    </div>
+  </header>
+  <a class="back" href="/"><span data-l="es">Todas las apps</span><span data-l="en">All apps</span><span data-l="pt">Todos os apps</span></a>
+
+  <section class="app-hero">
+    <img class="icon" src="icon.png" alt="Letravio">
+    <div>
+      <h1>Letravio</h1>
+      <p><span data-l="es">Uní las letras para formar palabras y completá el crucigrama.</span><span data-l="en">Connect the letters to form words and complete the crossword.</span><span data-l="pt">Una as letras para formar palavras e complete as palavras cruzadas.</span></p>
+      <div class="stores"><span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>Google Play</strong></span></span><span class="store soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7m-3-3 3 3 3-3"/></svg><span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>App Store</strong></span></span></div>
+    </div>
+  </section>
+
+  
+  <ul class="feats"><li><span data-l="es">Deslizá el dedo por las letras para armar palabras</span><span data-l="en">Swipe across the letters to make words</span><span data-l="pt">Deslize o dedo pelas letras para formar palavras</span></li><li><span data-l="es">En español, inglés y portugués</span><span data-l="en">In English, Spanish and Portuguese</span><span data-l="pt">Em português, espanhol e inglês</span></li><li><span data-l="es">Pistas cuando te trabás y palabras bonus</span><span data-l="en">Hints when you get stuck and bonus words</span><span data-l="pt">Dicas quando travar e palavras bônus</span></li></ul>
+
+  <footer class="foot">
+    <span>© 2026 dmith.builds</span>
+    <nav><a href="privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span></a><a href="borrar-datos/"><span data-l="es">Borrar mis datos</span><span data-l="en">Delete my data</span><span data-l="pt">Apagar meus dados</span></a><a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></nav>
+  </footer>
+</div>
+</body>
+</html>
