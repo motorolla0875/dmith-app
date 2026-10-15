@@ -47,12 +47,15 @@
   .badge img { height: 50px; width: auto; }
 
   @media (max-width: 820px) {
-    .hero { grid-template-columns: 1fr; gap: 32px; padding: 16px 0 44px; }
-    .shelf { max-width: 420px; }
-    .row { grid-template-columns: 88px 1fr; gap: 14px 16px; align-items: start; }
-    .row > img { width: 88px; height: 88px; border-radius: 20px; grid-row: span 2; }
-    .row h2 { font-size: 21px; }
-    .row .stores, .more { grid-column: 2; justify-self: start; justify-content: flex-start; }
+    /* Como en Play Store: ícono y título arriba, descripción y botones abajo */
+    .row { grid-template-columns: 76px 1fr; grid-template-areas: "icon title" "icon status" "desc desc" "btns btns"; gap: 0 16px; align-items: center; padding: 20px 0; }
+    .row > div:first-of-type { display: contents; }
+    .row > img { grid-area: icon; width: 76px; height: 76px; border-radius: 18px; }
+    .row h2 { grid-area: title; align-self: end; font-size: 21px; margin: 0; }
+    .row .status { grid-area: status; align-self: start; margin-top: 4px; font-size: 13px; }
+    .row p { grid-area: desc; margin-top: 14px; max-width: none; }
+    .row .stores, .row > .more { grid-area: btns; justify-self: start; justify-content: flex-start; margin-top: 14px; max-width: none; }
+    .row > .more { width: 100%; text-align: center; padding: 14px 18px; }
   }
 </style>
 </head>
