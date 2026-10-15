@@ -22,6 +22,8 @@
   .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
   .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
   .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--coral); }
+  .android-note { display:block; margin-top:10px; font-size:14px; font-weight:700; opacity:.75; }
+  .badge { display:inline-block; line-height:0; } .badge img { height:52px; width:auto; }
   .soon-note { display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }
   .back { color: var(--muted); text-decoration: none; font-size: 15px; }
   .back:hover { color: var(--ink); }
@@ -47,7 +49,8 @@
     <div>
       <h1>Santa Biblia</h1>
       <p><span data-l="es">La Biblia completa, gratis y sin anuncios. Para leerla, escucharla y orar cada día.</span><span data-l="en">The complete Bible, free and ad-free. To read, listen and pray every day.</span><span data-l="pt">A Bíblia completa, grátis e sem anúncios. Para ler, ouvir e orar todos os dias.</span></p>
-      <span class="soon-note"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
+      <div class="stores"><a class="badge" data-l="es" href="https://apps.apple.com/ar/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-es.svg" alt="Descárgalo en el App Store"></a><a class="badge" data-l="en" href="https://apps.apple.com/us/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-en.svg" alt="Download on the App Store"></a><a class="badge" data-l="pt" href="https://apps.apple.com/br/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-pt.svg" alt="Baixar na App Store"></a></div>
+      <span class="android-note"><span data-l="es">Pronto en Android</span><span data-l="en">Android coming soon</span><span data-l="pt">Em breve para Android</span></span>
     </div>
   </section>
 
