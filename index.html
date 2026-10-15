@@ -27,20 +27,21 @@
   .shelf .tile:nth-child(4) { grid-column: 1 / span 1; margin-left: 50%; }
   .shelf .tile:nth-child(5) { margin-left: 50%; }
 
-  .tabs { display: inline-flex; gap: 4px; padding: 4px; background: rgba(255,255,255,.07); border-radius: 14px; margin-bottom: 18px; }
-  .tabs button { font: 700 16px/1 var(--body); color: var(--soft); background: none; border: 0; border-radius: 11px; padding: 12px 22px; cursor: pointer; }
-  .tabs button[aria-selected="true"] { background: var(--gold); color: var(--deep); }
+  .tabs { display: inline-flex; gap: 8px; margin: 12px 0 18px; }
+  .tabs button { font: 500 15px/1 var(--body); color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 10px 20px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: #E6F3EF; color: var(--gold); border-color: #E6F3EF; }
   .panel[hidden] { display: none; }
 
   .list { border-top: 1px solid var(--line); }
+  .tiendas-tit { font: 500 26px/1.2 var(--display); margin: 8px 0 0; }
   .row { display: grid; grid-template-columns: 76px 1fr auto; gap: 20px; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--line); }
-  .row > img { width: 76px; height: 76px; border-radius: 18px; object-fit: cover; }
-  .row h2 { font: 700 24px/1.15 var(--display); margin: 0 0 4px; letter-spacing: -.01em; }
+  .row > img { width: 76px; height: 76px; border-radius: 18px; object-fit: cover; box-shadow: 0 1px 3px rgba(60,64,67,.3); }
+  .row h2 { font: 500 22px/1.2 var(--display); margin: 0 0 4px; letter-spacing: -.01em; }
   .row p { margin: 0; color: var(--soft); max-width: 52ch; }
   .status { display: inline-block; margin-top: 8px; font-size: 13.5px; font-weight: 700; color: var(--muted); }
   .status.live { color: var(--mint); }
-  .more { justify-self: end; font: 700 15px/1 var(--body); color: var(--deep); background: var(--ink); text-decoration: none; padding: 12px 18px; border-radius: 12px; white-space: nowrap; }
-  .more:hover { background: var(--gold); }
+  .more { justify-self: end; font: 500 15px/1 var(--body); color: #fff; background: var(--gold); text-decoration: none; padding: 12px 18px; border-radius: 12px; white-space: nowrap; }
+  .more:hover { background: #016E4D; }
   .row .stores { justify-content: flex-end; align-items: center; max-width: 380px; }
   .badge { display: inline-block; line-height: 0; }
   .badge img { height: 50px; width: auto; }
@@ -64,28 +65,8 @@
     </div>
   </header>
 
-  <section class="hero">
-    <div>
-      <h1>
-        <span data-l="es">Juegos y apps para el día a día.</span>
-        <span data-l="en">Games and apps for every day.</span>
-        <span data-l="pt">Jogos e apps para o dia a dia.</span>
-      </h1>
-      <p>
-        <span data-l="es">Descubrí nuestros juegos y aplicaciones para iPhone, Android y la web.</span>
-        <span data-l="en">Discover our games and apps for iPhone, Android and the web.</span>
-        <span data-l="pt">Conheça nossos jogos e aplicativos para iPhone, Android e web.</span>
-      </p>
-    </div>
-    <div class="shelf">
-      <a class="tile" href="/tintix/"><img src="/tintix/icon.png" alt="Tintix"></a>
-      <a class="tile" href="/letravio/"><img src="/letravio/icon.png" alt="Letravio"></a>
-      <a class="tile" href="/santa-biblia/"><img src="/santa-biblia/icon.png" alt="Santa Biblia"></a>
-      <a class="tile" href="https://cajaviva.app" target="_blank" rel="noopener"><img src="/cajaviva-icon.png" alt="CajaViva"></a>
-      <a class="tile" href="https://mireparto.io" target="_blank" rel="noopener"><img src="/mireparto-icon.png" alt="MiReparto"></a>
-    </div>
-  </section>
 
+  <h1 class="tiendas-tit"><span data-l="es">Nuestras apps</span><span data-l="en">Our apps</span><span data-l="pt">Nossos apps</span></h1>
   <div class="tabs" role="tablist">
     <button role="tab" id="t-juegos" aria-controls="juegos" aria-selected="true"><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></button>
     <button role="tab" id="t-apps" aria-controls="apps" aria-selected="false">Apps</button>

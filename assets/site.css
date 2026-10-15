@@ -1,19 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap");
 
 :root {
-  --night: #181B4A;
-  --deep: #10123A;
-  --ink: #F4F2FF;
-  --muted: #A9A8D6;
-  --soft: #CFCDF0;
-  --line: rgba(255, 255, 255, .11);
-  --blue: #3E9BFF;
-  --gold: #FFC23D;
-  --mint: #26D6A0;
-  --coral: #FF5A6E;
-  --link: #8CCBFF;
-  --display: "Bricolage Grotesque", system-ui, sans-serif;
-  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Colores estilo Google Play */
+  --night: #FFFFFF;
+  --deep: #FFFFFF;
+  --ink: #202124;
+  --muted: #5F6368;
+  --soft: #5F6368;
+  --line: #DADCE0;
+  --blue: #4285F4;
+  --gold: #01875F;
+  --mint: #01875F;
+  --coral: #EA4335;
+  --yellow: #FBBC04;
+  --green: #34A853;
+  --link: #01875F;
+  --chip: #F1F3F4;
+  --display: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -23,7 +27,6 @@ body {
   font: 400 16px/1.55 var(--body);
   color: var(--ink);
   background-color: var(--night);
-  background-image: radial-gradient(110% 70% at 85% -10%, #2B2F7C 0%, transparent 60%);
 }
 img { max-width: 100%; display: block; }
 a { color: var(--link); }
@@ -41,23 +44,23 @@ html[data-lang="pt"] [data-l]:not([data-l="pt"]) { display: none !important; }
 .logo { display: inline-flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; font: 800 23px/1 var(--display); letter-spacing: -.01em; }
 .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 30px; flex: none; }
 .mark i { aspect-ratio: 1; border-radius: 4px; background: var(--blue); }
-.mark i:nth-child(2) { background: var(--gold); }
-.mark i:nth-child(3) { background: var(--mint); }
+.mark i:nth-child(2) { background: var(--yellow); }
+.mark i:nth-child(3) { background: var(--green); }
 .mark i:nth-child(4) { background: var(--coral); }
 .logo .dot { color: var(--gold); }
-.langs { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,.07); }
+.langs { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--chip); }
 .langs button { font: 700 13px/1 var(--body); color: var(--muted); background: none; border: 0; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
-.langs button[aria-pressed="true"] { color: var(--deep); background: var(--ink); }
+.langs button[aria-pressed="true"] { color: #fff; background: var(--gold); }
 
 /* Botones de tiendas */
 .stores { display: flex; flex-wrap: wrap; gap: 10px; }
-.store { display: inline-flex; align-items: center; gap: 10px; padding: 8px 15px 8px 11px; border-radius: 12px; background: #07081F; border: 1px solid rgba(255,255,255,.24); color: #fff; text-decoration: none; line-height: 1.1; }
+.store { display: inline-flex; align-items: center; gap: 10px; padding: 8px 15px 8px 11px; border-radius: 12px; background: #000; border: 1px solid #A6A6A6; color: #fff; text-decoration: none; line-height: 1.1; }
 .store svg { width: 22px; height: 22px; flex: none; }
 .store small { display: block; font-size: 11px; opacity: .78; }
 .store strong { display: block; font: 700 16px/1.15 var(--body); }
 a.store:hover { border-color: var(--link); }
 .store.soon { opacity: .4; filter: grayscale(1); }
-.store.web { background: var(--ink); color: var(--deep); border-color: transparent; }
+.store.web { background: #fff; color: var(--gold); border-color: var(--line); }
 
 /* Pie */
 .foot { margin-top: 72px; padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14.5px; display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
