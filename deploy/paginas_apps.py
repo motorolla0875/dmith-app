@@ -37,8 +37,8 @@ APPS = {
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
  ),
  "paseo": dict(
-   name="Paseo con Matilde", color="var(--coral)",
-   title=("Paseo con Matilde · Juego de mascotas", "Walk with Matilde · Pet game", "Passeio com Matilde · Jogo de pets"),
+   name="Cuidar Perros: Perro Virtual", color="var(--coral)",
+   title=("Cuidar Perros: Perro Virtual", "Dog Care: Virtual Pet Dog", "Cuidar Cachorro: Pet Virtual"),
    tagline=L("Cuidá y paseá a Matilde por 6 mundos: mini-juegos, ropa, aventuras y una historia de amor.",
              "Care for and walk Matilde through 6 worlds: mini-games, outfits, adventures and a love story.",
              "Cuide e passeie com a Matilde por 6 mundos: minijogos, roupas, aventuras e uma história de amor."),
