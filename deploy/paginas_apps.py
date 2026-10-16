@@ -36,6 +36,21 @@ APPS = {
    ],
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
  ),
+ "paseo": dict(
+   name="Paseo con Matilde", color="var(--coral)",
+   title=("Paseo con Matilde · Juego de mascotas", "Walk with Matilde · Pet game", "Passeio com Matilde · Jogo de pets"),
+   tagline=L("Cuidá y paseá a Matilde por 6 mundos: mini-juegos, ropa, aventuras y una historia de amor.",
+             "Care for and walk Matilde through 6 worlds: mini-games, outfits, adventures and a love story.",
+             "Cuide e passeie com a Matilde por 6 mundos: minijogos, roupas, aventuras e uma história de amor."),
+   shots=[],
+   features=[
+     L("Paseos en 3D por el barrio, el centro, el parque, la playa, la montaña y la feria","3D walks through the neighborhood, downtown, the park, the beach, the mountains and the fair","Passeios em 3D pelo bairro, centro, parque, praia, montanha e feira"),
+     L("Veterinario, peluquería, cumpleaños, concurso y muchos mini-juegos","Vet, groomer, birthday party, pet contest and lots of mini-games","Veterinário, pet salão, aniversário, concurso e muitos minijogos"),
+     L("Matilde conoce a Congo… ¡y se casan!","Matilde meets Congo… and they get married!","Matilde conhece o Congo… e eles se casam!"),
+     L("En español, inglés y portugués","In English, Spanish and Portuguese","Em português, espanhol e inglês"),
+   ],
+   legal=[("privacy/",L("Privacidad","Privacy","Privacidade"))],
+ ),
 }
 
 for slug, a in APPS.items():

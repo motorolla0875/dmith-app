@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paseo con Matilde · Juego de mascotas</title>
+<meta name="title-es" content="Paseo con Matilde · Juego de mascotas">
+<meta name="title-en" content="Walk with Matilde · Pet game">
+<meta name="title-pt" content="Passeio com Matilde · Jogo de pets">
+<meta property="og:title" content="Paseo con Matilde · Juego de mascotas">
+<meta property="og:image" content="https://dmith.app/paseo/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/lang.js"></script>
+<style>
+  .app-hero { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 28px 0 36px; }
+  .app-hero .icon { width: 140px; height: 140px; border-radius: 32px; box-shadow: 0 0 0 10px var(--coral), 0 18px 40px rgba(5,6,30,.45); }
+  .app-hero h1 { font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }
+  .app-hero p { font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }
+  .shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }
+  .shots img { width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
+  .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+  .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
+  .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--coral); }
+  .soon-note { display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    .app-hero { grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }
+    .app-hero .icon { width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px var(--coral), 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }
+    .shots img { width: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
+    <div class="langs" role="group" aria-label="Idioma">
+      <button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button>
+    </div>
+  </header>
+  <a class="back" href="/"><span data-l="es">Todas las apps</span><span data-l="en">All apps</span><span data-l="pt">Todos os apps</span></a>
+
+  <section class="app-hero">
+    <img class="icon" src="icon.png" alt="Paseo con Matilde">
+    <div>
+      <h1>Paseo con Matilde</h1>
+      <p><span data-l="es">Cuidá y paseá a Matilde por 6 mundos: mini-juegos, ropa, aventuras y una historia de amor.</span><span data-l="en">Care for and walk Matilde through 6 worlds: mini-games, outfits, adventures and a love story.</span><span data-l="pt">Cuide e passeie com a Matilde por 6 mundos: minijogos, roupas, aventuras e uma história de amor.</span></p>
+      <span class="soon-note"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
+    </div>
+  </section>
+
+  
+  <ul class="feats"><li><span data-l="es">Paseos en 3D por el barrio, el centro, el parque, la playa, la montaña y la feria</span><span data-l="en">3D walks through the neighborhood, downtown, the park, the beach, the mountains and the fair</span><span data-l="pt">Passeios em 3D pelo bairro, centro, parque, praia, montanha e feira</span></li><li><span data-l="es">Veterinario, peluquería, cumpleaños, concurso y muchos mini-juegos</span><span data-l="en">Vet, groomer, birthday party, pet contest and lots of mini-games</span><span data-l="pt">Veterinário, pet salão, aniversário, concurso e muitos minijogos</span></li><li><span data-l="es">Matilde conoce a Congo… ¡y se casan!</span><span data-l="en">Matilde meets Congo… and they get married!</span><span data-l="pt">Matilde conhece o Congo… e eles se casam!</span></li><li><span data-l="es">En español, inglés y portugués</span><span data-l="en">In English, Spanish and Portuguese</span><span data-l="pt">Em português, espanhol e inglês</span></li></ul>
+
+  <footer class="foot">
+    <span>© 2026 dmith.builds</span>
+    <nav><a href="privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span></a><a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></nav>
+  </footer>
+</div>
+</body>
+</html>
