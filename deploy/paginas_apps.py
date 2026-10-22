@@ -148,7 +148,7 @@ for slug, a in APPS.items():
 
   <footer class="foot">
     <span>© 2026 dmith.builds</span>
-    <nav>{legal}<a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></nav>
+    <nav>{legal}<a href="mailto:dmith.builds@gmail.com">{L("Contacto","Contact","Contato")}</a></nav>
   </footer>
 </div>
 </body>
