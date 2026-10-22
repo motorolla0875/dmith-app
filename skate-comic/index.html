@@ -18,7 +18,7 @@
   .app-hero h1 { font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }
   .app-hero p { font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }
   .shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }
-  .shots img { width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
+  .shots img { width: 420px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
   .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
   .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
   .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--gold); }
@@ -28,7 +28,7 @@
   @media (max-width: 640px) {
     .app-hero { grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }
     .app-hero .icon { width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px var(--gold), 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }
-    .shots img { width: 190px; }
+    .shots img { width: 300px; }
   }
 </style>
 </head>
@@ -51,7 +51,7 @@
     </div>
   </section>
 
-  
+  <div class="shots"><img src="img/captura-1.webp" alt="" loading="lazy" width="480" height="222"><img src="img/captura-2.webp" alt="" loading="lazy" width="480" height="222"><img src="img/captura-3.webp" alt="" loading="lazy" width="480" height="222"><img src="img/captura-4.webp" alt="" loading="lazy" width="480" height="222"><img src="img/captura-5.webp" alt="" loading="lazy" width="480" height="222"><img src="img/captura-6.webp" alt="" loading="lazy" width="480" height="222"></div>
   <ul class="feats"><li><span data-l="es">8 pistas: la ciudad, la bajada, el puerto, la autopista, los túneles, el shopping y más</span><span data-l="en">8 levels: the city, the downhill, the harbor, the highway, the tunnels, the mall and more</span><span data-l="pt">8 pistas: a cidade, a descida, o porto, a rodovia, os túneis, o shopping e mais</span></li><li><span data-l="es">34 trucos: flips, grinds, manuals y wallrides</span><span data-l="en">34 tricks: flips, grinds, manuals and wallrides</span><span data-l="pt">34 manobras: flips, grinds, manuals e wallrides</span></li><li><span data-l="es">Misiones, carreras y salas para patinar con amigos</span><span data-l="en">Missions, races and rooms to skate with friends</span><span data-l="pt">Missões, corridas e salas para andar com amigos</span></li><li><span data-l="es">Creá tus propios niveles y compartilos con un código</span><span data-l="en">Build your own levels and share them with a code</span><span data-l="pt">Crie seus próprios níveis e compartilhe com um código</span></li></ul>
 
   <footer class="foot">

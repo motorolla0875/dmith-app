@@ -52,12 +52,12 @@ APPS = {
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade"))],
  ),
  "skate-comic": dict(
-   name="Skate Comic", color="var(--gold)",
+   name="Skate Comic", color="var(--gold)", wide=True,
    title=("Skate Comic · Juego de skate 3D", "Skateboard Comic · 3D skate game", "Skate Comic · Jogo de skate 3D"),
    tagline=L("Juego de skate en 3D con estilo de historieta: cada truco se hace con el dedo.",
              "A comic-style 3D skateboarding game where every trick is done with your finger.",
              "Jogo de skate em 3D com estilo de quadrinhos: cada manobra é feita com o dedo."),
-   shots=[],
+   shots=[f"img/captura-{i}.webp" for i in range(1,7)],
    features=[
      L("8 pistas: la ciudad, la bajada, el puerto, la autopista, los túneles, el shopping y más","8 levels: the city, the downhill, the harbor, the highway, the tunnels, the mall and more","8 pistas: a cidade, a descida, o porto, a rodovia, os túneis, o shopping e mais"),
      L("34 trucos: flips, grinds, manuals y wallrides","34 tricks: flips, grinds, manuals and wallrides","34 manobras: flips, grinds, manuals e wallrides"),
@@ -69,7 +69,8 @@ APPS = {
 }
 
 for slug, a in APPS.items():
-    shots = "".join(f'<img src="{s}" alt="" loading="lazy" width="270" height="480">' for s in a["shots"])
+    wide = a.get("wide")
+    shots = "".join(f'<img src="{s}" alt="" loading="lazy" width="{480 if wide else 270}" height="{222 if wide else 480}">' for s in a["shots"])
     shots_html = f'<div class="shots">{shots}</div>' if shots else ""
     feats = "".join(f"<li>{f}</li>" for f in a["features"])
     legal = "".join(f'<a href="{h}">{t}</a>' for h, t in a["legal"])
@@ -94,7 +95,7 @@ for slug, a in APPS.items():
   .app-hero h1 {{ font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }}
   .app-hero p {{ font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }}
   .shots {{ display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }}
-  .shots img {{ width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }}
+  .shots img {{ width: {"420px" if a.get("wide") else "230px"}; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }}
   .feats {{ list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }}
   .feats li {{ padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }}
   .feats li::before {{ content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: {a["color"]}; }}
@@ -104,7 +105,7 @@ for slug, a in APPS.items():
   @media (max-width: 640px) {{
     .app-hero {{ grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }}
     .app-hero .icon {{ width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px {a["color"]}, 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }}
-    .shots img {{ width: 190px; }}
+    .shots img {{ width: {"300px" if a.get("wide") else "190px"}; }}
   }}
 </style>
 </head>
