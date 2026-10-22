@@ -51,6 +51,21 @@ APPS = {
    ],
    legal=[("privacy/",L("Privacidad","Privacy","Privacidade"))],
  ),
+ "skate-comic": dict(
+   name="Skate Comic", color="var(--gold)",
+   title=("Skate Comic · Juego de skate 3D", "Skateboard Comic · 3D skate game", "Skate Comic · Jogo de skate 3D"),
+   tagline=L("Juego de skate en 3D con estilo de historieta: cada truco se hace con el dedo.",
+             "A comic-style 3D skateboarding game where every trick is done with your finger.",
+             "Jogo de skate em 3D com estilo de quadrinhos: cada manobra é feita com o dedo."),
+   shots=[],
+   features=[
+     L("8 pistas: la ciudad, la bajada, el puerto, la autopista, los túneles, el shopping y más","8 levels: the city, the downhill, the harbor, the highway, the tunnels, the mall and more","8 pistas: a cidade, a descida, o porto, a rodovia, os túneis, o shopping e mais"),
+     L("34 trucos: flips, grinds, manuals y wallrides","34 tricks: flips, grinds, manuals and wallrides","34 manobras: flips, grinds, manuals e wallrides"),
+     L("Misiones, carreras y salas para patinar con amigos","Missions, races and rooms to skate with friends","Missões, corridas e salas para andar com amigos"),
+     L("Creá tus propios niveles y compartilos con un código","Build your own levels and share them with a code","Crie seus próprios níveis e compartilhe com um código"),
+   ],
+   legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
+ ),
 }
 
 for slug, a in APPS.items():
