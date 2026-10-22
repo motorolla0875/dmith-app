@@ -6,6 +6,21 @@ L = lambda es, en, pt: f'<span data-l="es">{es}</span><span data-l="en">{en}</sp
 def soon(store): return f'<span class="store soon">{PHONE}<span><small data-l="es">Próximamente</small><small data-l="en">Coming soon</small><small data-l="pt">Em breve</small><strong>{store}</strong></span></span>'
 
 APPS = {
+ "tintix": dict(
+   name="Tintix", color="var(--gold)",
+   title=("Tintix · Juego de bloques", "Tintix · Block puzzle game", "Tintix · Jogo de blocos"),
+   tagline=L("Encajá bloques, juntá colores y hacé un Full Color.",
+             "Fit blocks, match colors and make a Full Color.",
+             "Encaixe blocos, junte cores e faça um Full Color."),
+   shots=[f"img/captura-{i}.webp" for i in range(1,4)],
+   features=[
+     L("Mundos de niveles con metas y mecánicas nuevas","Worlds of levels with goals and new mechanics","Mundos de níveis com metas e mecânicas novas"),
+     L("Modo libre, contrarreloj y desafío del día","Free mode, time attack and daily challenge","Modo livre, contra o relógio e desafio do dia"),
+     L("Liga semanal y duelos 1 vs 1 con amigos","Weekly league and 1 vs 1 duels with friends","Liga semanal e duelos 1 contra 1 com amigos"),
+     L("Herramientas, temas y regalos diarios","Power-ups, themes and daily gifts","Ferramentas, temas e presentes diários"),
+   ],
+   legal=[("privacy/",L("Privacidad","Privacy","Privacidade")),("borrar-datos/",L("Borrar mis datos","Delete my data","Apagar meus dados"))],
+ ),
  "santa-biblia": dict(
    name="Santa Biblia", color="var(--coral)",
    title=("Santa Biblia · La Biblia gratis y sin anuncios", "Holy Bible · Free and ad-free", "Bíblia Sagrada · Grátis e sem anúncios"),
@@ -28,7 +43,7 @@ APPS = {
    tagline=L("Uní las letras para formar palabras y completá el crucigrama.",
              "Connect the letters to form words and complete the crossword.",
              "Una as letras para formar palavras e complete as palavras cruzadas."),
-   shots=[],
+   shots=[f"img/captura-{i}.webp" for i in range(1,5)],
    features=[
      L("Deslizá el dedo por las letras para armar palabras","Swipe across the letters to make words","Deslize o dedo pelas letras para formar palavras"),
      L("En español, inglés y portugués","In English, Spanish and Portuguese","Em português, espanhol e inglês"),
@@ -42,7 +57,7 @@ APPS = {
    tagline=L("Cuidá y paseá a Matilde por 6 mundos: mini-juegos, ropa, aventuras y una historia de amor.",
              "Care for and walk Matilde through 6 worlds: mini-games, outfits, adventures and a love story.",
              "Cuide e passeie com a Matilde por 6 mundos: minijogos, roupas, aventuras e uma história de amor."),
-   shots=[],
+   shots=["img/captura-1.webp"],
    features=[
      L("Paseos en 3D por el barrio, el centro, el parque, la playa, la montaña y la feria","3D walks through the neighborhood, downtown, the park, the beach, the mountains and the fair","Passeios em 3D pelo bairro, centro, parque, praia, montanha e feira"),
      L("Veterinario, peluquería, cumpleaños, concurso y muchos mini-juegos","Vet, groomer, birthday party, pet contest and lots of mini-games","Veterinário, pet salão, aniversário, concurso e muitos minijogos"),

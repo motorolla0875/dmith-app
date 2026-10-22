@@ -1,90 +1,63 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tintix · Juego de bloques</title>
-<link rel="icon" href="icon.png">
-<meta property="og:title" content="Tintix · Encajá bloques, juntá colores">
-<meta property="og:description" content="Juego de bloques con niveles, liga semanal y duelos con amigos.">
+<meta name="title-es" content="Tintix · Juego de bloques">
+<meta name="title-en" content="Tintix · Block puzzle game">
+<meta name="title-pt" content="Tintix · Jogo de blocos">
+<meta property="og:title" content="Tintix · Juego de bloques">
 <meta property="og:image" content="https://dmith.app/tintix/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/lang.js"></script>
 <style>
-  :root { box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
-  * { box-sizing:inherit; margin:0; padding:0; }
-  body { min-height:100vh; padding:38px 22px 60px; color:#F4F2FF; text-align:center;
-    font:16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: radial-gradient(ellipse 62% 78% at 50% 6%, #1B4FA8 0%, #123D8A 26%, transparent 72%),
-                radial-gradient(ellipse 50% 60% at 6% 48%, #232257 0%, transparent 70%),
-                linear-gradient(178deg, #0F1B4E 0%, #0C1B4C 34%, #08143C 68%, #061030 100%);
-    background-attachment: fixed; }
-  .caja { max-width:440px; margin:0 auto; }
-  .icono { width:132px; height:132px; border-radius:30px; box-shadow:0 16px 40px rgba(0,0,0,.55); }
-  h1 { font-size:38px; margin:20px 0 6px; letter-spacing:-.5px; }
-  .bajada { color:#A9B8E8; font-size:17px; margin-bottom:34px; }
-  .btn { display:flex; align-items:center; justify-content:center; gap:11px;
-    text-decoration:none; font-weight:700; font-size:19px; padding:17px 20px;
-    border-radius:16px; margin-bottom:13px; transition:transform .12s; }
-  .btn:active { transform:translateY(2px); }
-  .ios { background:#fff; color:#111; box-shadow:0 6px 0 #B9B9C4, 0 14px 30px rgba(0,0,0,.4); }
-  .android { background:linear-gradient(180deg,#5BE07A,#27A84C); color:#fff;
-    box-shadow:0 6px 0 #17853A, 0 14px 30px rgba(0,0,0,.4); }
-  .jugar { background:rgba(255,255,255,.12); color:#fff; box-shadow:inset 0 0 0 2px rgba(255,255,255,.22); }
-  .pronto { opacity:.45; pointer-events:none; }
-  .chip { font-size:12px; font-weight:700; background:rgba(0,0,0,.28); padding:3px 9px; border-radius:99px; }
-  .redes { margin-top:34px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-  .redes a { color:#8FB4FF; text-decoration:none; font-size:15px; font-weight:600; }
-  footer { margin-top:38px; color:#6E7FB0; font-size:13px; }
-  footer a { color:#8FB4FF; }
+  .app-hero { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; padding: 28px 0 36px; }
+  .app-hero .icon { width: 140px; height: 140px; border-radius: 32px; box-shadow: 0 0 0 10px var(--gold), 0 18px 40px rgba(5,6,30,.45); }
+  .app-hero h1 { font: 800 clamp(36px, 6vw, 56px)/1.02 var(--display); letter-spacing: -.02em; margin: 0 0 10px; }
+  .app-hero p { font-size: 18.5px; color: var(--soft); margin: 0 0 20px; max-width: 46ch; }
+  .shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 18px; scroll-snap-type: x mandatory; }
+  .shots img { width: 230px; height: auto; flex: none; border-radius: 22px; scroll-snap-align: start; border: 1px solid var(--line); }
+  .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+  .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
+  .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--gold); }
+  .soon-note { display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    .app-hero { grid-template-columns: 1fr; gap: 26px; padding-top: 12px; }
+    .app-hero .icon { width: 108px; height: 108px; border-radius: 25px; box-shadow: 0 0 0 8px var(--gold), 0 14px 30px rgba(5,6,30,.45); margin-left: 8px; }
+    .shots img { width: 190px; }
+  }
 </style>
 </head>
 <body>
-<div class="caja">
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
+    <div class="langs" role="group" aria-label="Idioma">
+      <button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button>
+    </div>
+  </header>
+  <a class="back" href="/"><span data-l="es">Todas las apps</span><span data-l="en">All apps</span><span data-l="pt">Todos os apps</span></a>
 
-  <img class="icono" src="icon.png" alt="Tintix">
-  <h1>Tintix</h1>
-  <p class="bajada" id="bajada">Encajá bloques, juntá colores y hacé un FULL COLOR</p>
+  <section class="app-hero">
+    <img class="icon" src="icon.png" alt="Tintix">
+    <div>
+      <h1>Tintix</h1>
+      <p><span data-l="es">Encajá bloques, juntá colores y hacé un Full Color.</span><span data-l="en">Fit blocks, match colors and make a Full Color.</span><span data-l="pt">Encaixe blocos, junte cores e faça um Full Color.</span></p>
+      <span class="soon-note"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
+    </div>
+  </section>
 
-  <a class="btn ios pronto" id="btnIos" href="#"> Descargar para iPhone <span class="chip" id="chipIos">pronto</span></a>
-  <a class="btn android pronto" id="btnAnd" href="#">▶ Descargar para Android <span class="chip" id="chipAnd">pronto</span></a>
+  <div class="shots"><img src="img/captura-1.webp" alt="" loading="lazy" width="270" height="480"><img src="img/captura-2.webp" alt="" loading="lazy" width="270" height="480"><img src="img/captura-3.webp" alt="" loading="lazy" width="270" height="480"></div>
+  <ul class="feats"><li><span data-l="es">Mundos de niveles con metas y mecánicas nuevas</span><span data-l="en">Worlds of levels with goals and new mechanics</span><span data-l="pt">Mundos de níveis com metas e mecânicas novas</span></li><li><span data-l="es">Modo libre, contrarreloj y desafío del día</span><span data-l="en">Free mode, time attack and daily challenge</span><span data-l="pt">Modo livre, contra o relógio e desafio do dia</span></li><li><span data-l="es">Liga semanal y duelos 1 vs 1 con amigos</span><span data-l="en">Weekly league and 1 vs 1 duels with friends</span><span data-l="pt">Liga semanal e duelos 1 contra 1 com amigos</span></li><li><span data-l="es">Herramientas, temas y regalos diarios</span><span data-l="en">Power-ups, themes and daily gifts</span><span data-l="pt">Ferramentas, temas e presentes diários</span></li></ul>
 
-  <div class="redes">
-    <a href="mailto:dmith.builds@gmail.com">Escribinos</a>
-  </div>
-
-  <footer>
-    <a href="privacy/">Política de privacidad</a><br><br>
-    © 2026 dmith.builds
+  <footer class="foot">
+    <span>© 2026 dmith.builds</span>
+    <nav><a href="privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span></a><a href="borrar-datos/"><span data-l="es">Borrar mis datos</span><span data-l="en">Delete my data</span><span data-l="pt">Apagar meus dados</span></a><a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a></nav>
   </footer>
-
 </div>
-
-<script>
-  // enlaces de las tiendas: cuando esten publicadas, se completan aca
-  var IOS = '';        // ej: https://apps.apple.com/app/id6814691734
-  var ANDROID = '';    // ej: https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix
-
-  var ua = navigator.userAgent || '';
-  var esIphone  = /iPhone|iPad|iPod/i.test(ua);
-  var esAndroid = /Android/i.test(ua);
-
-  function activar(id, chipId, url) {
-    var b = document.getElementById(id);
-    if (!url) return;
-    b.href = url; b.classList.remove('pronto');
-    document.getElementById(chipId).remove();
-  }
-  activar('btnIos', 'chipIos', IOS);
-  activar('btnAnd', 'chipAnd', ANDROID);
-
-  // el boton del sistema del visitante va primero
-  var caja = document.querySelector('.caja');
-  if (esAndroid) caja.insertBefore(document.getElementById('btnAnd'), document.getElementById('btnIos'));
-
-  // si ya esta en la tienda y entra desde el celular, lo mando derecho
-  var directo = esIphone ? IOS : (esAndroid ? ANDROID : '');
-  if (directo && location.hash !== '#quedate') location.replace(directo);
-
-  // en computadora no tiene sentido ofrecer el APK
-</script>
 </body>
 </html>
