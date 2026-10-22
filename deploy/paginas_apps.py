@@ -57,7 +57,7 @@ APPS = {
    tagline=L("Cuidá y paseá a Matilde por 6 mundos: mini-juegos, ropa, aventuras y una historia de amor.",
              "Care for and walk Matilde through 6 worlds: mini-games, outfits, adventures and a love story.",
              "Cuide e passeie com a Matilde por 6 mundos: minijogos, roupas, aventuras e uma história de amor."),
-   shots=["img/captura-1.webp"],
+   shots=[f"img/captura-{i}.webp" for i in range(1,5)],
    features=[
      L("Paseos en 3D por el barrio, el centro, el parque, la playa, la montaña y la feria","3D walks through the neighborhood, downtown, the park, the beach, the mountains and the fair","Passeios em 3D pelo bairro, centro, parque, praia, montanha e feira"),
      L("Veterinario, peluquería, cumpleaños, concurso y muchos mini-juegos","Vet, groomer, birthday party, pet contest and lots of mini-games","Veterinário, pet salão, aniversário, concurso e muitos minijogos"),
