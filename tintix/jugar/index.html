@@ -2780,7 +2780,7 @@ function newGamePoki(mode, lvl) {
   partidasPoki++;
   if (POKI.listo && partidasPoki > 1 && partidasPoki % 3 === 0) {
     busy = true;
-    POKI.tanda().then(() => { busy = false; newGame(mode, lvl); });
+    POKI.tanda().then(() => { busy = false; try { newGame(mode, lvl); } catch (e) { console.error(e); } });
     return;
   }
   newGame(mode, lvl);
@@ -5302,15 +5302,25 @@ const POKI = {
   empiezaPartida() { if (this.listo) try { PokiSDK.gameplayStart(); } catch (e) {} },
   terminaPartida() { if (this.listo) try { PokiSDK.gameplayStop(); } catch (e) {} },
   // anuncio entre niveles; devuelve una promesa que siempre termina
+  // siempre termina: aunque el anuncio no avise que cerró, a los 35 s el juego sigue solo
   tanda() {
     if (!this.listo) return Promise.resolve();
-    try { return PokiSDK.commercialBreak().catch(() => {}); } catch (e) { return Promise.resolve(); }
+    return new Promise(res => {
+      let listo = false;
+      const fin = () => { if (listo) return; listo = true; try { if (AC && AC.state === 'suspended') AC.resume(); } catch (e) {} res(); };
+      try { PokiSDK.commercialBreak(() => { try { if (AC) AC.suspend(); } catch (e) {} }).then(fin, fin); } catch (e) { fin(); }
+      setTimeout(fin, 35000);
+    });
   },
   // video con premio; devuelve true si lo miro entero
   videoPremio() {
     if (!this.listo) return Promise.resolve(false);
-    try { return PokiSDK.rewardedBreak().then(ok => !!ok).catch(() => false); }
-    catch (e) { return Promise.resolve(false); }
+    return new Promise(res => {
+      let listo = false;
+      const fin = ok => { if (listo) return; listo = true; try { if (AC && AC.state === 'suspended') AC.resume(); } catch (e) {} res(!!ok); };
+      try { PokiSDK.rewardedBreak(() => { try { if (AC) AC.suspend(); } catch (e) {} }).then(fin, () => fin(false)); } catch (e) { fin(false); }
+      setTimeout(() => fin(false), 60000);
+    });
   }
 };
 POKI.arrancar();
