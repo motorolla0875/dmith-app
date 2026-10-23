@@ -22,6 +22,8 @@
   .feats { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
   .feats li { padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }
   .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--gold); }
+  .badge { display: inline-block; line-height: 0; } .badge img { height: 52px; width: auto; }
+  .store.web { height: 52px; box-sizing: border-box; }
   .soon-note { display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }
   .back { color: var(--muted); text-decoration: none; font-size: 15px; }
   .back:hover { color: var(--ink); }
@@ -47,7 +49,7 @@
     <div>
       <h1>Tintix</h1>
       <p><span data-l="es">Encajá bloques, juntá colores y hacé un Full Color.</span><span data-l="en">Fit blocks, match colors and make a Full Color.</span><span data-l="pt">Encaixe blocos, junte cores e faça um Full Color.</span></p>
-      <span class="soon-note"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
+      <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="store web" href="jugar/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg><span><span data-l="es"><small>Jugar gratis</small></span><span data-l="en"><small>Play free</small></span><span data-l="pt"><small>Jogar grátis</small></span><strong><span data-l="es">En el navegador</span><span data-l="en">In your browser</span><span data-l="pt">No navegador</span></strong></span></a></div>
     </div>
   </section>
 

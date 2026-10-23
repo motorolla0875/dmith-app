@@ -8,6 +8,7 @@ def soon(store): return f'<span class="store soon">{PHONE}<span><small data-l="e
 APPS = {
  "tintix": dict(
    name="Tintix", color="var(--gold)",
+   play="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix", web="jugar/",
    title=("Tintix · Juego de bloques", "Tintix · Block puzzle game", "Tintix · Jogo de blocos"),
    tagline=L("Encajá bloques, juntá colores y hacé un Full Color.",
              "Fit blocks, match colors and make a Full Color.",
@@ -90,6 +91,13 @@ for slug, a in APPS.items():
     feats = "".join(f"<li>{f}</li>" for f in a["features"])
     legal = "".join(f'<a href="{h}">{t}</a>' for h, t in a["legal"])
     t_es, t_en, t_pt = a["title"]
+    if a.get("play"):
+        tiendas = f'<div class="stores"><a class="badge" href="{a["play"]}" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>'
+        if a.get("web"): tiendas += f'<a class="store web" href="{a["web"]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg><span>{L("<small>Jugar gratis</small>","<small>Play free</small>","<small>Jogar grátis</small>")}<strong>{L("En el navegador","In your browser","No navegador")}</strong></span></a>'
+        tiendas += '</div>'
+    else:
+        tiendas = f'<span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span>'
+
     html = f'''<!DOCTYPE html>
 <html lang="es" data-lang="es">
 <head>
@@ -114,6 +122,8 @@ for slug, a in APPS.items():
   .feats {{ list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }}
   .feats li {{ padding: 14px 0 14px 26px; border-top: 1px solid var(--line); position: relative; color: var(--soft); }}
   .feats li::before {{ content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: {a["color"]}; }}
+  .badge {{ display: inline-block; line-height: 0; }} .badge img {{ height: 52px; width: auto; }}
+  .store.web {{ height: 52px; box-sizing: border-box; }}
   .soon-note {{ display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }}
   .back {{ color: var(--muted); text-decoration: none; font-size: 15px; }}
   .back:hover {{ color: var(--ink); }}
@@ -139,7 +149,7 @@ for slug, a in APPS.items():
     <div>
       <h1>{a["name"]}</h1>
       <p>{a["tagline"]}</p>
-      <span class="soon-note">{L("Próximamente en iPhone y Android","Coming soon to iPhone and Android","Em breve para iPhone e Android")}</span>
+      {tiendas}
     </div>
   </section>
 
