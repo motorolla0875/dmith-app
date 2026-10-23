@@ -5302,14 +5302,13 @@ const POKI = {
   empiezaPartida() { if (this.listo) try { PokiSDK.gameplayStart(); } catch (e) {} },
   terminaPartida() { if (this.listo) try { PokiSDK.gameplayStop(); } catch (e) {} },
   // anuncio entre niveles; devuelve una promesa que siempre termina
-  // siempre termina: aunque el anuncio no avise que cerró, a los 35 s el juego sigue solo
+  // anuncio entre partidas: el juego queda en silencio mientras dura y sigue cuando Poki avisa que cerró
   tanda() {
     if (!this.listo) return Promise.resolve();
     return new Promise(res => {
       let listo = false;
       const fin = () => { if (listo) return; listo = true; try { if (AC && AC.state === 'suspended') AC.resume(); } catch (e) {} res(); };
       try { PokiSDK.commercialBreak(() => { try { if (AC) AC.suspend(); } catch (e) {} }).then(fin, fin); } catch (e) { fin(); }
-      setTimeout(fin, 35000);
     });
   },
   // video con premio; devuelve true si lo miro entero
@@ -5319,7 +5318,6 @@ const POKI = {
       let listo = false;
       const fin = ok => { if (listo) return; listo = true; try { if (AC && AC.state === 'suspended') AC.resume(); } catch (e) {} res(!!ok); };
       try { PokiSDK.rewardedBreak(() => { try { if (AC) AC.suspend(); } catch (e) {} }).then(fin, () => fin(false)); } catch (e) { fin(false); }
-      setTimeout(() => fin(false), 60000);
     });
   }
 };
