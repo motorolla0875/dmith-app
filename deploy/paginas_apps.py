@@ -8,7 +8,7 @@ def soon(store): return f'<span class="store soon">{PHONE}<span><small data-l="e
 APPS = {
  "tintix": dict(
    name="Tintix", color="var(--gold)",
-   play="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix", web="jugar/",
+   play="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix",
    title=("Tintix · Juego de bloques", "Tintix · Block puzzle game", "Tintix · Jogo de blocos"),
    tagline=L("Encajá bloques, juntá colores y hacé un Full Color.",
              "Fit blocks, match colors and make a Full Color.",
