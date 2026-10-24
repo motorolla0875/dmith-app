@@ -20,6 +20,24 @@ const SUS = ['Panda', 'Zorro', 'Dragon', 'Lobo', 'Gato', 'Conejo', 'Buho', 'Tigr
 const nombreValido = n => typeof n === 'string' && /^[A-Za-z]{3,24}\d{0,3}$/.test(n) && ADJ.some(a => n.startsWith(a) && SUS.some(s => n.slice(a.length).replace(/\d+$/, '') === s));
 const FRASES = 12;                        // cantidad de frases rápidas (índices 0..11)
 
+// ─── récords en línea: Parkour de lava (menos tiempo) y Noche de zombis (más oleadas) ───
+// se guardan FUERA de la carpeta del sitio web; por cada celular (dev) queda su mejor marca
+const RECORDS = process.env.RECORDS || path.join(require('os').homedir(), 'voxelium-records.json');
+const TABLAS = { parkour: { menor: true, min: 25, max: 3600 }, oleadas: { menor: false, min: 1, max: 500 } };
+let rec = { parkour: {}, oleadas: {} };
+try { const r = JSON.parse(fs.readFileSync(RECORDS, 'utf8')); for (const k in TABLAS) if (r && r[k]) rec[k] = r[k]; } catch (e) {}
+let recSucio = false;
+setInterval(() => { if (!recSucio) return; recSucio = false; const tmp = RECORDS + '.tmp'; fs.writeFile(tmp, JSON.stringify(rec), e => { if (!e) fs.rename(tmp, RECORDS, () => {}); }); }, 10000);
+const semanaHoy = () => Math.floor((Date.now() / 86400000 + 3) / 7);   // las semanas empiezan el lunes
+const mejorQue = (T, a, b) => T.menor ? a < b : a > b;
+function tablaPara(tabla, dev, nuevo) {
+  const T = TABLAS[tabla], s = semanaHoy(), todos = Object.entries(rec[tabla]), ord = (a, b) => T.menor ? a[2] - b[2] : b[2] - a[2];
+  const siempre = todos.map(([d, e]) => [d, e.n, e.v]).sort(ord), semana = todos.filter(([, e]) => e.s === s).map(([d, e]) => [d, e.n, e.vs]).sort(ord);
+  const pos = l => { const k = l.findIndex(x => x[0] === dev); return k < 0 ? null : [k + 1, l[k][2]]; };
+  const top = l => l.slice(0, 20).map(x => [x[1], x[2]]);
+  return { t: 'records', tabla, siempre: top(siempre), semana: top(semana), yoS: pos(siempre), yoW: pos(semana), total: siempre.length, nuevo: !!nuevo };
+}
+
 const salas = new Map();                  // codigo -> sala
 let sigId = 1;
 const ahora = () => Date.now();
@@ -64,6 +82,18 @@ wss.on('connection', ws => {
         return enviar(ws, { t: 'bienvenida', id: ws.id });
       }
       case 'lista': return enviar(ws, { t: 'lista', salas: listaPublica() });
+      case 'records': { if (!TABLAS[m.tabla]) return; if (t - (ws.recPideT || 0) < 700) return; ws.recPideT = t; return enviar(ws, tablaPara(m.tabla, String(m.dev || '').slice(0, 40))); }
+      case 'record': {
+        const T = TABLAS[m.tabla], dev = String(m.dev || ''); if (!T || !ws.nombre || !/^[a-z0-9]{8,40}$/.test(dev)) return;
+        let v = +m.v; if (!Number.isFinite(v) || v < T.min || v > T.max) return; v = T.menor ? Math.round(v * 100) / 100 : Math.floor(v);
+        if (t - (ws.recT || 0) < 3000) return; ws.recT = t;
+        const tb = rec[m.tabla], s = semanaHoy(); let e = tb[dev], nuevo = false;
+        if (!e) { if (Object.keys(tb).length >= 50000) return; e = tb[dev] = { n: ws.nombre, v, vs: v, s }; nuevo = true; }
+        else { e.n = ws.nombre; if (mejorQue(T, v, e.v)) e.v = v; if (e.s !== s) { e.s = s; e.vs = v; nuevo = true; } else if (mejorQue(T, v, e.vs)) { e.vs = v; nuevo = true; } }
+        recSucio = true; if (nuevo) log('record', m.tabla, ws.nombre, v);
+        return enviar(ws, tablaPara(m.tabla, dev, nuevo));
+      }
+
       case 'crear': {
         if (!ws.nombre) return; if (ws.sala) salir(ws);
         if (salas.size >= MAX_SALAS) return enviar(ws, { t: 'error', e: 'lleno' });
