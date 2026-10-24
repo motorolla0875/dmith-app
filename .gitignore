@@ -1,1 +1,3 @@
 *.apk
+voxelium-servidor/node_modules/
+*.log
