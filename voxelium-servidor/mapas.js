@@ -15,6 +15,7 @@ const ARCH_CLAVE = process.env.CLAVE_ADMIN_ARCH || path.join(os.homedir(), 'voxe
 let CLAVE = ''; try { CLAVE = fs.readFileSync(ARCH_CLAVE, 'utf8').trim(); } catch (e) {}
 if (!/^[a-f0-9]{24,}$/.test(CLAVE)) { CLAVE = crypto.randomBytes(16).toString('hex'); try { fs.writeFileSync(ARCH_CLAVE, CLAVE + '\n', { mode: 0o600 }); } catch (e) {} }
 
+const AUTOR_OFICIAL = process.env.AUTOR_OFICIAL || 'Voxelium';   // nombre con el que salen los mapas del creador del juego
 const MAX_VOXEL = 6 * 1024 * 1024, MAX_FOTO = 400 * 1024, MAX_PEND = 300;
 const TIPOS = ['', 'skyblock', 'parkour'], MODOS = ['aventura', 'supervivencia', 'creativo'];
 const leerJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
@@ -23,7 +24,7 @@ let aprobados = listar(APROB);
 const guardarMeta = (dir, m) => fs.writeFileSync(path.join(dir, m.id + '.json'), JSON.stringify(m));
 const idOk = id => /^[a-z0-9]{6,24}$/.test(id || '');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
+const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
 function json(res, code, obj) { res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, CORS)); res.end(JSON.stringify(obj)); }
 function leerCuerpo(req, max) {
@@ -67,16 +68,19 @@ function atender(req, res, nombreValido, log) {
   // ── subir un mapa (queda pendiente) ──
   if (req.method === 'POST' && p === '/mapas/subir') {
     const ip = String(req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
-    const ult = subidas.get(ip) || 0; if (Date.now() - ult < 90 * 1000) { json(res, 429, { error: 'espera' }); return true; }
+    const ult = subidas.get(ip) || 0;
     leerCuerpo(req, MAX_VOXEL * 1.4 + MAX_FOTO * 1.4 + 20000).then(buf => {
       let d; try { d = JSON.parse(buf.toString('utf8')); } catch (e) { return json(res, 400, { error: 'datos' }); }
-      const nombre = String(d.nombre || '').trim().slice(0, 30), desc = String(d.desc || '').trim().slice(0, 200), autor = String(d.autor || '');
-      if (nombre.length < 3 || !nombreValido(autor)) return json(res, 400, { error: 'datos' });
+      const oficial = d.clave === CLAVE;   // el creador del juego publica directo, como oficial
+      if (!oficial && Date.now() - ult < 90 * 1000) return json(res, 429, { error: 'espera' });
+      const nombre = String(d.nombre || '').trim().slice(0, 30), desc = String(d.desc || '').trim().slice(0, 200), autor = oficial ? AUTOR_OFICIAL : String(d.autor || '');
+      if (nombre.length < 3 || (!oficial && !nombreValido(autor))) return json(res, 400, { error: 'datos' });
       const voxel = Buffer.from(String(d.voxel || ''), 'base64'); if (voxel.length < 50 || voxel.length > MAX_VOXEL) return json(res, 400, { error: 'grande' });
       const fm = String(d.foto || '').match(/^data:image\/jpeg;base64,(.+)$/); const foto = fm ? Buffer.from(fm[1], 'base64') : null; if (!foto || foto.length > MAX_FOTO) return json(res, 400, { error: 'foto' });
-      if (fs.readdirSync(PEND).filter(f => f.endsWith('.json')).length >= MAX_PEND) return json(res, 503, { error: 'lleno' });
+      if (!oficial && fs.readdirSync(PEND).filter(f => f.endsWith('.json')).length >= MAX_PEND) return json(res, 503, { error: 'lleno' });
       const id = Date.now().toString(36) + crypto.randomBytes(3).toString('hex');
       const meta = { id, nombre, desc, autor, dev: String(d.dev || '').slice(0, 40), ip, modo: MODOS.includes(d.modo) ? d.modo : 'aventura', tipo: TIPOS.includes(d.tipo) ? d.tipo : '', plano: !!d.plano, tam: [96, 160, 256, 352].includes(+d.tam) ? +d.tam : 160, peso: voxel.length, fecha: Date.now(), descargas: 0 };
+      if (oficial) { meta.oficial = true; meta.aprobado = Date.now(); const dir = APROB; fs.writeFileSync(path.join(dir, id + '.voxel'), voxel); fs.writeFileSync(path.join(dir, id + '.jpg'), foto); guardarMeta(dir, meta); aprobados = listar(APROB); log('mapa oficial publicado', id, nombre); return json(res, 200, { ok: true, id, oficial: true }); }
       fs.writeFileSync(path.join(PEND, id + '.voxel'), voxel); fs.writeFileSync(path.join(PEND, id + '.jpg'), foto); guardarMeta(PEND, meta);
       subidas.set(ip, Date.now()); log('mapa subido (pendiente)', id, nombre, autor);
       json(res, 200, { ok: true, id });
@@ -102,7 +106,7 @@ function atender(req, res, nombreValido, log) {
     const pend = listar(PEND).sort((a, b) => a.fecha - b.fecha), k = esc(CLAVE);
     const fecha = t => new Date(t).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
     const kb = n => (n / 1024).toFixed(0) + ' KB';
-    const tarjeta = (x, pendiente) => `<div class="t"><img src="/voxws/mapas/foto/${x.id}?clave=${k}" alt=""><div class="i"><b>${esc(x.nombre)}</b><small>${esc(x.autor)} · ${esc(x.modo)}${x.tipo ? ' · ' + esc(x.tipo) : ''} · ${kb(x.peso)} · ${fecha(x.fecha)}${pendiente ? '' : ' · ' + (x.descargas || 0) + ' descargas'}</small><p>${esc(x.desc) || '<i>sin descripción</i>'}</p>
+    const tarjeta = (x, pendiente) => `<div class="t"><img src="/voxws/mapas/foto/${x.id}?clave=${k}" alt=""><div class="i"><b>${esc(x.nombre)}${x.oficial ? ' <span style="background:#ffd23a;color:#1b2a6b;border-radius:6px;padding:0 6px;font-size:12px">OFICIAL</span>' : ''}</b><small>${esc(x.autor)} · ${esc(x.modo)}${x.tipo ? ' · ' + esc(x.tipo) : ''} · ${kb(x.peso)} · ${fecha(x.fecha)}${pendiente ? '' : ' · ' + (x.descargas || 0) + ' descargas'}</small><p>${esc(x.desc) || '<i>sin descripción</i>'}</p>
       <a href="/voxws/mapas/archivo/${x.id}?clave=${k}">Descargar para probar</a>
       <form method="post" action="/voxws/admin/accion"><input type="hidden" name="clave" value="${k}"><input type="hidden" name="id" value="${x.id}">${pendiente ? '<button name="acc" value="aprobar" class="si">Aprobar</button><button name="acc" value="rechazar" class="no">Rechazar</button>' : '<button name="acc" value="quitar" class="no">Quitar</button>'}</form></div></div>`;
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
