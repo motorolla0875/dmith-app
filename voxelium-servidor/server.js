@@ -7,6 +7,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { WebSocketServer } = require('ws');
+const mapas = require('./mapas');   // mapas de la comunidad (subir, aprobar, descargar)
 
 const PUERTO = +process.env.PUERTO || 8820;
 const MAX_JUG = 8;                       // jugadores por sala, contando al dueño
@@ -62,6 +63,7 @@ function log(...a) { console.log(new Date().toISOString().slice(0, 19), ...a); }
 // ─── servidor http (para saber si está vivo) + websocket ───
 const srv = http.createServer((req, res) => {
   if (req.url.startsWith('/voxws/estado') || req.url === '/estado') { res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }); return res.end(JSON.stringify({ ok: true, salas: salas.size, jugadores: [...salas.values()].reduce((s, x) => s + x.jug.size, 0) })); }
+  try { if (mapas.atender(req, res, nombreValido, log)) return; } catch (e) { log('error mapas', e.message); res.writeHead(500); return res.end(); }
   res.writeHead(404); res.end();
 });
 const wss = new WebSocketServer({ server: srv, maxPayload: 8 * 1024 * 1024, perMessageDeflate: { threshold: 2048 } });

@@ -31,8 +31,16 @@ s = re.sub(r"(server_name[^;]*dmith\.app[^;]*;\n)", lambda m: m.group(1) + bloqu
 open(p, "w").write(s)
 PY
 fi
-if nginx -t 2>/dev/null; then systemctl reload nginx; else echo "ERROR en nginx: se deja como estaba"; cp /root/dmith.app.nginx.antes-voxelium "$F"; nginx -t && systemctl reload nginx; exit 1; fi
+# mapas de la comunidad: se pueden subir archivos de hasta 8 MB
+if ! grep -q "client_max_body_size 9m" "$F"; then
+  cp "$F" /root/dmith.app.nginx.antes-mapas
+  sed -i 's#location /voxws {#location /voxws {\n        client_max_body_size 9m;#' "$F"
+fi
+if nginx -t 2>/dev/null; then systemctl reload nginx; else echo "ERROR en nginx: se deja como estaba"; cp /root/dmith.app.nginx.antes-mapas "$F" 2>/dev/null || cp /root/dmith.app.nginx.antes-voxelium "$F"; nginx -t && systemctl reload nginx; exit 1; fi
 sleep 1
 echo
 echo "Prueba:"; curl -s https://dmith.app/voxws/estado; echo
 echo "LISTO: servidor de Voxelium encendido"
+echo
+echo "Panel para aprobar mapas (guárdalo, no lo compartas):"
+echo "https://dmith.app/voxws/admin?clave=$(cat ~/voxelium-admin.txt 2>/dev/null)"
