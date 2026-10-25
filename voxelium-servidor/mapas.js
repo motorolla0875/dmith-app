@@ -18,11 +18,21 @@ if (!/^[a-f0-9]{24,}$/.test(CLAVE)) { CLAVE = crypto.randomBytes(16).toString('h
 const AUTOR_OFICIAL = process.env.AUTOR_OFICIAL || 'Voxelium';   // nombre con el que salen los mapas del creador del juego
 const MAX_VOXEL = 6 * 1024 * 1024, MAX_FOTO = 400 * 1024, MAX_PEND = 300;
 const TIPOS = ['', 'skyblock', 'parkour'], MODOS = ['aventura', 'supervivencia', 'creativo'];
-const leerJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
-const listar = dir => fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => leerJSON(path.join(dir, f))).filter(Boolean);
-let aprobados = listar(APROB);
 const guardarMeta = (dir, m) => fs.writeFileSync(path.join(dir, m.id + '.json'), JSON.stringify(m));
 const idOk = id => /^[a-z0-9]{6,24}$/.test(id || '');
+const leerJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
+const listar = dir => fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => leerJSON(path.join(dir, f))).filter(Boolean);
+// Mapas oficiales que vienen con el código (carpeta oficiales/): se copian una sola vez.
+// Si después los borras desde el panel, no vuelven (queda anotado en .sembrados).
+{ const ORIG = path.join(__dirname, 'oficiales'), MARCA = path.join(DIR, '.sembrados');
+  let hechos = []; try { hechos = fs.readFileSync(MARCA, 'utf8').split('\n').filter(Boolean); } catch (e) {}
+  try { for (const f of fs.readdirSync(ORIG).filter(f => f.endsWith('.json'))) {
+    const m = leerJSON(path.join(ORIG, f)); if (!m || !idOk(m.id) || hechos.includes(m.id)) continue;
+    m.autor = AUTOR_OFICIAL; m.oficial = true; m.fecha = m.aprobado = Date.now(); m.descargas = 0;
+    for (const ext of ['.voxel', '.jpg']) fs.copyFileSync(path.join(ORIG, m.id + ext), path.join(APROB, m.id + ext));
+    guardarMeta(APROB, m); hechos.push(m.id); fs.writeFileSync(MARCA, hechos.join('\n') + '\n'); console.log('mapa oficial agregado:', m.nombre);
+  } } catch (e) { console.log('oficiales:', e.message); } }
+let aprobados = listar(APROB);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
