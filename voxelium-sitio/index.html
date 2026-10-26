@@ -23,16 +23,16 @@
 
   /* barra */
   .barra { position: sticky; top: 0; z-index: 10; background: rgba(19,32,90,.92); backdrop-filter: blur(6px); color: #fff; }
-  .barra .cont { display: flex; align-items: center; gap: 12px; height: 60px; }
+  .barra .cont { display: flex; align-items: center; justify-content: center; gap: 12px; height: 60px; }
   .marca { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; letter-spacing: 1px; text-decoration: none; }
   .marca img { width: 38px; height: 38px; border-radius: 10px; border: 2px solid #0d153d; }
-  .barra nav { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .barra nav { display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
   .barra nav a { text-decoration: none; font-weight: 700; padding: 6px 10px; border-radius: 10px; opacity: .9; }
   .barra nav a:hover { background: rgba(255,255,255,.12); }
   .idiomas { display: flex; gap: 2px; margin-left: 6px; }
   .idiomas button { font: 800 12px 'Baloo 2', sans-serif; color: #fff; background: transparent; border: 2px solid transparent; border-radius: 8px; padding: 2px 6px; cursor: pointer; }
   .idiomas button.on { border-color: var(--oro); color: var(--oro); }
-  @media (max-width: 720px) { .barra nav a.opc { display: none; } }
+  @media (max-width: 520px) { .barra nav a.opc { padding: 6px 6px; font-size: 14px; } .idiomas { margin-left: 2px; } }
 
   /* botones */
   .bt { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 800 18px 'Baloo 2', sans-serif; text-decoration: none; padding: 12px 22px; border-radius: 14px; border: 3px solid #0d153d; box-shadow: 0 5px 0 #0d153d; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.35); transition: transform .08s, box-shadow .08s; cursor: pointer; }
@@ -44,7 +44,8 @@
   .portada { position: relative; min-height: min(86vh, 760px); display: flex; align-items: center; color: #fff; overflow: hidden; background: #6aa5e8 url(img/hero.jpg) center/cover; }
   .portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,21,61,.82), rgba(13,21,61,.35) 60%, rgba(13,21,61,.1)); }
   .portada .cont { position: relative; z-index: 1; padding: 48px 0; }
-  .portada h1 { font-size: clamp(46px, 9vw, 96px); line-height: .95; margin: 0 0 10px; letter-spacing: 2px; text-shadow: 0 5px 0 #0d153d; }
+  .portada h1.logo { margin: 0; line-height: 0; } .portada .logoSvg { display: block; width: min(560px, 92%); height: auto; overflow: visible; margin-left: -1.5%; }
+  .portada .lema { font-weight: 800; font-size: clamp(16px, 2.4vw, 22px); letter-spacing: 3px; text-shadow: 0 3px 0 #0d153d; margin: 2px 0 14px; }
   .portada p { font-size: clamp(18px, 2.4vw, 23px); max-width: 560px; margin: 0 0 22px; font-weight: 600; }
   .portada .acciones { display: flex; flex-wrap: wrap; gap: 12px; }
   .portada small { display: block; margin-top: 12px; opacity: .85; font-weight: 600; }
@@ -94,7 +95,6 @@
 </head>
 <body>
 <header class="barra"><div class="cont">
-  <a class="marca" href="#"><img src="img/icono.png" alt="">VOXELIUM</a>
   <nav>
     <a class="opc" href="#video" data-t="nVideo">Video</a>
     <a class="opc" href="#mapas" data-t="nMapas">Mapas</a>
@@ -105,7 +105,7 @@
 </div></header>
 
 <div class="portada"><div class="cont">
-  <h1>VOXELIUM</h1>
+  <h1 class="logo"><svg class="logoSvg" viewBox="95 55 810 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voxelium"><defs><linearGradient id="oroM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff59a"/><stop offset=".42" stop-color="#ffd43a"/><stop offset=".55" stop-color="#ffb52a"/><stop offset="1" stop-color="#f0701a"/></linearGradient><filter id="brilloM" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="9"/></filter></defs><g font-family="'Baloo 2', sans-serif" font-weight="800" font-size="148" text-anchor="middle" font-style="italic" stroke-linejoin="round"><text x="500" y="205" fill="none" stroke="#7fe3ff" stroke-width="34" filter="url(#brilloM)" opacity=".9">VOXELIUM</text><text x="500" y="205" fill="none" stroke="#7fe3ff" stroke-width="30">VOXELIUM</text><text x="500" y="205" fill="none" stroke="#0d1a4a" stroke-width="20">VOXELIUM</text><text x="500" y="205" fill="#c8501a" stroke="#c8501a" stroke-width="5">VOXELIUM</text><text x="500" y="201" fill="url(#oroM)">VOXELIUM</text></g></svg></h1><div class="lema">Block Crafting</div>
   <p data-t="lema">Construye lo que imagines, explora islas enormes, cría dragones y sobrevive a la noche. Solo o con amigos.</p>
   <div class="acciones">
     <a class="bt verde" href="/jugar/"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg><span data-t="jugar">Jugar ahora</span></a>
