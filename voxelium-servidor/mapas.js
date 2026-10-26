@@ -34,7 +34,7 @@ const listar = dir => fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f
   } } catch (e) { console.log('oficiales:', e.message); } }
 let aprobados = listar(APROB);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
+const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, pro: !!m.pro, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
 function json(res, code, obj) { res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, CORS)); res.end(JSON.stringify(obj)); }
 function leerCuerpo(req, max) {
@@ -82,14 +82,15 @@ function atender(req, res, nombreValido, log) {
     leerCuerpo(req, MAX_VOXEL * 1.4 + MAX_FOTO * 1.4 + 20000).then(buf => {
       let d; try { d = JSON.parse(buf.toString('utf8')); } catch (e) { return json(res, 400, { error: 'datos' }); }
       const oficial = d.clave === CLAVE;   // el creador del juego publica directo, como oficial
-      if (!oficial && Date.now() - ult < 90 * 1000) return json(res, 429, { error: 'espera' });
+      const pro = !!d.pro;   // jugador Pro: espera más corta y marca "Creador Pro"
+      if (!oficial && Date.now() - ult < (pro ? 15 : 90) * 1000) return json(res, 429, { error: 'espera' });
       const nombre = String(d.nombre || '').trim().slice(0, 30), desc = String(d.desc || '').trim().slice(0, 200), autor = oficial ? AUTOR_OFICIAL : String(d.autor || '');
       if (nombre.length < 3 || (!oficial && !nombreValido(autor))) return json(res, 400, { error: 'datos' });
       const voxel = Buffer.from(String(d.voxel || ''), 'base64'); if (voxel.length < 50 || voxel.length > MAX_VOXEL) return json(res, 400, { error: 'grande' });
       const fm = String(d.foto || '').match(/^data:image\/jpeg;base64,(.+)$/); const foto = fm ? Buffer.from(fm[1], 'base64') : null; if (!foto || foto.length > MAX_FOTO) return json(res, 400, { error: 'foto' });
       if (!oficial && fs.readdirSync(PEND).filter(f => f.endsWith('.json')).length >= MAX_PEND) return json(res, 503, { error: 'lleno' });
       const id = Date.now().toString(36) + crypto.randomBytes(3).toString('hex');
-      const meta = { id, nombre, desc, autor, dev: String(d.dev || '').slice(0, 40), ip, modo: MODOS.includes(d.modo) ? d.modo : 'aventura', tipo: TIPOS.includes(d.tipo) ? d.tipo : '', plano: !!d.plano, tam: [96, 160, 256, 352].includes(+d.tam) ? +d.tam : 160, peso: voxel.length, fecha: Date.now(), descargas: 0 };
+      const meta = { id, nombre, desc, autor, pro: pro && !oficial, dev: String(d.dev || '').slice(0, 40), ip, modo: MODOS.includes(d.modo) ? d.modo : 'aventura', tipo: TIPOS.includes(d.tipo) ? d.tipo : '', plano: !!d.plano, tam: [96, 160, 256, 352].includes(+d.tam) ? +d.tam : 160, peso: voxel.length, fecha: Date.now(), descargas: 0 };
       if (oficial) { meta.oficial = true; meta.aprobado = Date.now(); const dir = APROB; fs.writeFileSync(path.join(dir, id + '.voxel'), voxel); fs.writeFileSync(path.join(dir, id + '.jpg'), foto); guardarMeta(dir, meta); aprobados = listar(APROB); log('mapa oficial publicado', id, nombre); return json(res, 200, { ok: true, id, oficial: true }); }
       fs.writeFileSync(path.join(PEND, id + '.voxel'), voxel); fs.writeFileSync(path.join(PEND, id + '.jpg'), foto); guardarMeta(PEND, meta);
       subidas.set(ip, Date.now()); log('mapa subido (pendiente)', id, nombre, autor);
