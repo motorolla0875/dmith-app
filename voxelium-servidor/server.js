@@ -24,8 +24,8 @@ const FRASES = 12;                        // cantidad de frases rápidas (índic
 // ─── récords en línea: Parkour de lava (menos tiempo) y Noche de zombis (más oleadas) ───
 // se guardan FUERA de la carpeta del sitio web; por cada celular (dev) queda su mejor marca
 const RECORDS = process.env.RECORDS || path.join(require('os').homedir(), 'voxelium-records.json');
-const TABLAS = { parkour: { menor: true, min: 25, max: 3600 }, oleadas: { menor: false, min: 1, max: 500 } };
-let rec = { parkour: {}, oleadas: {} };
+const TABLAS = { parkour: { menor: true, min: 25, max: 3600 }, oleadas: { menor: false, min: 1, max: 500 }, caceria: { menor: false, min: 1, max: 20000 } };   // caceria: puntos de la Cacería de Umbrak
+let rec = { parkour: {}, oleadas: {}, caceria: {} };
 try { const r = JSON.parse(fs.readFileSync(RECORDS, 'utf8')); for (const k in TABLAS) if (r && r[k]) rec[k] = r[k]; } catch (e) {}
 let recSucio = false;
 setInterval(() => { if (!recSucio) return; recSucio = false; const tmp = RECORDS + '.tmp'; fs.writeFile(tmp, JSON.stringify(rec), e => { if (!e) fs.rename(tmp, RECORDS, () => {}); }); }, 10000);
