@@ -42,6 +42,7 @@
 
   /* portada */
   .portada { position: relative; min-height: min(86vh, 760px); display: flex; align-items: center; color: #fff; overflow: hidden; background: #6aa5e8 url(img/hero.jpg) center/cover; }
+  @media (max-width: 900px) { .portada { background-image: url(img/hero-m.jpg); } }
   .portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,21,61,.82), rgba(13,21,61,.35) 60%, rgba(13,21,61,.1)); }
   .portada .cont { position: relative; z-index: 1; padding: 48px 0; }
   .portada h1.logo { margin: 0; line-height: 0; } .portada .logoSvg { display: block; width: min(560px, 92%); height: auto; overflow: visible; margin-left: -1.5%; }
