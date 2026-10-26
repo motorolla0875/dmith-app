@@ -34,7 +34,7 @@ const listar = dir => fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f
   } } catch (e) { console.log('oficiales:', e.message); } }
 let aprobados = listar(APROB);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, pro: !!m.pro, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
+const publico = m => ({ id: m.id, nombre: m.nombre, desc: m.desc, autor: m.autor, oficial: !!m.oficial, pro: !!m.pro, soloPro: !!m.soloPro, modo: m.modo, tipo: m.tipo, plano: !!m.plano, tam: m.tam, peso: m.peso, fecha: m.fecha, aprobado: m.aprobado, descargas: m.descargas || 0 });
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
 function json(res, code, obj) { res.writeHead(code, Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, CORS)); res.end(JSON.stringify(obj)); }
 function leerCuerpo(req, max) {
@@ -117,7 +117,7 @@ function atender(req, res, nombreValido, log) {
     const pend = listar(PEND).sort((a, b) => a.fecha - b.fecha), k = esc(CLAVE);
     const fecha = t => new Date(t).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
     const kb = n => (n / 1024).toFixed(0) + ' KB';
-    const tarjeta = (x, pendiente) => `<div class="t"><img src="/voxws/mapas/foto/${x.id}?clave=${k}" alt=""><div class="i"><b>${esc(x.nombre)}${x.oficial ? ' <span style="background:#ffd23a;color:#1b2a6b;border-radius:6px;padding:0 6px;font-size:12px">OFICIAL</span>' : ''}</b><small>${esc(x.autor)} · ${esc(x.modo)}${x.tipo ? ' · ' + esc(x.tipo) : ''} · ${kb(x.peso)} · ${fecha(x.fecha)}${pendiente ? '' : ' · ' + (x.descargas || 0) + ' descargas'}</small><p>${esc(x.desc) || '<i>sin descripción</i>'}</p>
+    const tarjeta = (x, pendiente) => `<div class="t"><img src="/voxws/mapas/foto/${x.id}?clave=${k}" alt=""><div class="i"><b>${esc(x.nombre)}${x.oficial ? ' <span style="background:#ffd23a;color:#1b2a6b;border-radius:6px;padding:0 6px;font-size:12px">OFICIAL</span>' : ''}${x.soloPro ? ' <span style="background:#c8841a;color:#fff;border-radius:6px;padding:0 6px;font-size:12px">SOLO PRO</span>' : ''}</b><small>${esc(x.autor)} · ${esc(x.modo)}${x.tipo ? ' · ' + esc(x.tipo) : ''} · ${kb(x.peso)} · ${fecha(x.fecha)}${pendiente ? '' : ' · ' + (x.descargas || 0) + ' descargas'}</small><p>${esc(x.desc) || '<i>sin descripción</i>'}</p>
       <a href="/voxws/mapas/archivo/${x.id}?clave=${k}">Descargar para probar</a>
       <form method="post" action="/voxws/admin/accion"><input type="hidden" name="clave" value="${k}"><input type="hidden" name="id" value="${x.id}">${pendiente ? '<button name="acc" value="aprobar" class="si">Aprobar</button><button name="acc" value="rechazar" class="no">Rechazar</button>' : '<button name="acc" value="quitar" class="no">Quitar</button>'}</form></div></div>`;
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
