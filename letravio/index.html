@@ -24,6 +24,8 @@
   .feats li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 10px; height: 10px; border-radius: 3px; background: var(--gold); }
   .badge { display: inline-block; line-height: 0; } .badge img { height: 52px; width: auto; }
   .store.web { height: 52px; box-sizing: border-box; }
+  .stores { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .android-note { display:block; margin-top:10px; font-size:14px; font-weight:700; opacity:.75; }
   .soon-note { display: inline-block; font-weight: 700; font-size: 15px; color: var(--deep); background: var(--gold); padding: 9px 14px; border-radius: 10px; }
   .back { color: var(--muted); text-decoration: none; font-size: 15px; }
   .back:hover { color: var(--ink); }
@@ -49,7 +51,8 @@
     <div>
       <h1>Letravio</h1>
       <p><span data-l="es">Uní las letras para formar palabras y completá el crucigrama.</span><span data-l="en">Connect the letters to form words and complete the crossword.</span><span data-l="pt">Una as letras para formar palavras e complete as palavras cruzadas.</span></p>
-      <span class="soon-note"><span data-l="es">Próximamente en iPhone y Android</span><span data-l="en">Coming soon to iPhone and Android</span><span data-l="pt">Em breve para iPhone e Android</span></span>
+      <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.letravio" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a></div>
+      <span class="android-note"><span data-l="es">Pronto en iPhone</span><span data-l="en">iPhone coming soon</span><span data-l="pt">Em breve para iPhone</span></span>
     </div>
   </section>
 
