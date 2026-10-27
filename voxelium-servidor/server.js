@@ -14,6 +14,10 @@ const MAX_JUG = 8;                       // jugadores por sala, contando al due�
 const MAX_SALAS = 2000;
 // los reportes se guardan FUERA de la carpeta del sitio web (no se pueden descargar)
 const REPORTES = process.env.REPORTES || path.join(require('os').homedir(), 'voxelium-reportes.log');
+// los reportes se guardan hasta 12 meses (lo dice la política de privacidad): al arrancar y una vez por día se borran los más viejos
+function limpiarReportes() { try { const lim = Date.now() - 365 * 864e5; const l = fs.readFileSync(REPORTES, 'utf8').split('\n').filter(x => { if (!x) return false; try { return Date.parse(JSON.parse(x).fecha) > lim; } catch (e) { return false; } });
+  fs.writeFileSync(REPORTES, l.length ? l.join('\n') + '\n' : ''); } catch (e) {} }
+limpiarReportes(); setInterval(limpiarReportes, 864e5);
 
 // nombres: se arman con estas dos listas + un número (así nadie puede ponerse un nombre feo)
 const ADJ = ['Super', 'Mega', 'Pixel', 'Turbo', 'Rayo', 'Cubo', 'Ninja', 'Gran', 'Mini', 'Cosmo', 'Neon', 'Lava', 'Hielo', 'Trueno', 'Bloque', 'Veloz', 'Feliz', 'Dorado', 'Cristal', 'Fuego'];
@@ -84,6 +88,13 @@ wss.on('connection', ws => {
         return enviar(ws, { t: 'bienvenida', id: ws.id });
       }
       case 'lista': return enviar(ws, { t: 'lista', salas: listaPublica() });
+      case 'borrarDatos': {   // "Borrar mis datos" desde el juego: récords y mapas subidos desde ese celular
+        const dev = String(m.dev || ''); if (!/^[a-z0-9]{8,40}$/.test(dev)) return enviar(ws, { t: 'datosBorrados', ok: false });
+        let r = 0; for (const k in rec) if (rec[k][dev]) { delete rec[k][dev]; r++; } if (r) recSucio = true;
+        let mp = 0; try { mp = mapas.borrarDeDev(dev); } catch (e) {}
+        log('datos borrados', dev.slice(0, 6) + '…', 'records', r, 'mapas', mp);
+        return enviar(ws, { t: 'datosBorrados', ok: true, records: r, mapas: mp });
+      }
       case 'records': { if (!TABLAS[m.tabla]) return; if (t - (ws.recPideT || 0) < 700) return; ws.recPideT = t; return enviar(ws, tablaPara(m.tabla, String(m.dev || '').slice(0, 40))); }
       case 'record': {
         const T = TABLAS[m.tabla], dev = String(m.dev || ''); if (!T || !ws.nombre || !/^[a-z0-9]{8,40}$/.test(dev)) return;

@@ -131,4 +131,11 @@ function atender(req, res, nombreValido, log) {
   }
   return false;
 }
-module.exports = { atender, CLAVE: () => CLAVE, DIR };
+// "Borrar mis datos" desde el juego: se borran los mapas subidos desde ese celular (no los oficiales)
+function borrarDeDev(dev) {
+  if (!/^[a-z0-9]{8,40}$/.test(dev || '')) return 0; let n = 0;
+  for (const dir of [PEND, APROB]) for (const m of listar(dir)) if (m.dev === dev && !m.oficial) {
+    for (const ext of ['.json', '.voxel', '.jpg']) { try { fs.unlinkSync(path.join(dir, m.id + ext)); } catch (e) {} } n++; }
+  return n;
+}
+module.exports = { atender, borrarDeDev, CLAVE: () => CLAVE, DIR };
