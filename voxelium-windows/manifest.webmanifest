@@ -1,0 +1,18 @@
+{
+  "id": "/windows/",
+  "name": "Voxelium: Block Crafting 3D",
+  "short_name": "Voxelium",
+  "description": "Sandbox building and survival game in a huge world made of blocks.",
+  "start_url": "/windows/",
+  "scope": "/windows/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0d153d",
+  "theme_color": "#0d153d",
+  "lang": "en",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "/windows/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/windows/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

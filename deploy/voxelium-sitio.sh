@@ -11,6 +11,12 @@ if [ -d "$J/.git" ]; then git -C "$J" fetch -q --depth 1 origin main && git -C "
 else rm -rf "$J"; git clone -q --depth 1 https://github.com/motorolla0875/motorolla0875.github.io.git "$J"; fi
 echo "Juego: $(git -C $J log --oneline -1)"
 
+# la versión congelada de portales (rama portales-v2) para la app de Microsoft Store, en /windows/
+P=/var/www/voxelium-portales
+if [ -d "$P/.git" ]; then git -C "$P" fetch -q --depth 1 origin portales-v2 && git -C "$P" reset -q --hard FETCH_HEAD
+else rm -rf "$P"; git clone -q --depth 1 -b portales-v2 https://github.com/motorolla0875/motorolla0875.github.io.git "$P"; fi
+echo "Portales: $(git -C $P log --oneline -1)"
+
 F=/etc/nginx/sites-available/voxelium.app
 if [ ! -f "$F" ] || ! grep -q "voxelium-sitio" "$F"; then
 cat > "$F" <<'NGX'
@@ -26,12 +32,16 @@ server {
         index index.html;
         add_header Cache-Control "no-cache";
     }
+    include /var/www/dmith-app/voxelium-windows/nginx.conf;
     location / { try_files $uri $uri/ =404; }
 }
 NGX
 ln -sf "$F" /etc/nginx/sites-enabled/voxelium.app
 fi
-nginx -t && systemctl reload nginx
+# /windows/ (Microsoft Store) en el sitio que ya existía
+grep -q "voxelium-windows/nginx.conf" "$F" || sed -i '0,/location \/ {/s//include \/var\/www\/dmith-app\/voxelium-windows\/nginx.conf;\n    location \/ {/' "$F"
+if ! nginx -t 2>/dev/null; then sed -i '/voxelium-windows\/nginx.conf/d' "$F"; echo "La parte /windows/ dio error y la saqué (el resto sigue igual). Copia este mensaje y mándaselo a Claude."; nginx -t; fi
+systemctl reload nginx
 
 # certificado (el candado): .app solo abre con https
 if ! grep -q "ssl_certificate" "$F"; then
@@ -45,4 +55,5 @@ fi
 echo
 printf "Página: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/
 printf "Juego:  "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/jugar/
+printf "Windows: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/windows/
 echo "LISTO: https://voxelium.app"
