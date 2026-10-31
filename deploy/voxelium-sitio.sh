@@ -41,6 +41,12 @@ fi
 # /windows/ (Microsoft Store) en el sitio que ya existía
 grep -q "voxelium-windows/nginx.conf" "$F" || sed -i '0,/location \/ {/s//include \/var\/www\/dmith-app\/voxelium-windows\/nginx.conf;\n    location \/ {/' "$F"
 if ! nginx -t 2>/dev/null; then sed -i '/voxelium-windows\/nginx.conf/d' "$F"; echo "La parte /windows/ dio error y la saqué (el resto sigue igual). Copia este mensaje y mándaselo a Claude."; nginx -t; fi
+# la dirección principal abre el juego directo (las páginas legales, app-ads.txt, robots y sitemap siguen saliendo de voxelium-sitio)
+if ! grep -q "location @sitio" "$F"; then
+  cp "$F" /root/voxelium.app.nginx.antes
+  sed -i 's#location / { try_files $uri $uri/ =404; }#location / { root /var/www/voxelium-juego/bloques; try_files $uri $uri/ @sitio; add_header Cache-Control "no-cache"; }\n    location @sitio { root /var/www/dmith-app/voxelium-sitio; try_files $uri $uri/ =404; }#g' "$F"
+  if ! nginx -t 2>/dev/null; then cp /root/voxelium.app.nginx.antes "$F"; echo "El cambio de la página principal dio error y lo deshice (sigue como antes). Copia este mensaje y mándaselo a Claude."; nginx -t; fi
+fi
 systemctl reload nginx
 
 # certificado (el candado): .app solo abre con https
@@ -55,5 +61,8 @@ fi
 echo
 printf "Página: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/
 printf "Juego:  "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/jugar/
+printf "Inicio con el juego: "; curl -s https://voxelium.app/ | grep -q "juego de construir con bloques" && echo SI || echo NO
+printf "Privacidad: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/privacidad/
+printf "Sitemap: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/sitemap.xml
 printf "Windows: "; curl -s -o /dev/null -w "%{http_code}\n" https://voxelium.app/windows/
 echo "LISTO: https://voxelium.app"
