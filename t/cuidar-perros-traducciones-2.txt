@@ -1,0 +1,639 @@
+=== Language: et ===
+App name: Koerte hoidmine: Virtuaalkoer
+Short description: Koeramängud: hoolitse virtuaalse lemmiku eest, jaluta ja põgene kurja koera eest
+Full description:
+Kas sulle meeldivad koeramängud ja lemmikloomamängud? Mängus Koerte hoidmine võtad endale armsa väikese koera ja hoolitsed tema eest iga päev: virtuaalse lemmiklooma simulaator koos loo, jalutuskäikude, minimängude ja seiklustega.
+
+HOOLITSE OMA KUTSIKA EEST
+Anna talle süüa ja juua, pese teda, mängi temaga ja vii ta loomaarsti juurde, kui ta end vigastab. Iga päev vajab su lemmik midagi uut. Loomade eest hoolitsemine pole kunagi olnud nii lõbus.
+
+JALUTUSKÄIGUD LINNAS
+Pane rihm kaela ja minge naabruskonda jalutama. Ületa tänavat rohelise tulega, riieta koer ilma järgi (vihm, lumi või kuumus) ja pane seljakotti kõik, mida vajad.
+
+KOERTE MINIMÄNGUD
+Iga päev on erinev: köievedu, frisbee, trikid, labürint, oja ületamine, võidujooks ja salapärane pood.
+
+PÕGENE KURJA KOERA EEST
+Kuri koer on linnas lahti. Pane oma refleksid proovile ja põgene õigel ajal.
+
+ARMASTUS JA KOERTE PULM
+Sinu koer kohtub Congoga. Saada neid kohtingul ja pidage koerte pulmi.
+
+RIIETA OMA LEMMIKUT
+Riided, mütsid ja aksessuaarid Pet Shopist teevad sinu virtuaalsest koerast ainulaadse.
+
+MIKS SULLE SEE MEELDIB
+- 3D-lemmikloomamäng värvika graafika ja lihtsa juhtimisega.
+- Koeramäng ilma internetita: mängi võrguühenduseta kus tahes.
+- Virtuaalse lemmiklooma simulaatori, seikluse ja minimängude segu.
+- Hispaania, inglise ja portugali keeles.
+
+Kui otsid koeramänge, lemmikloomade hooldamise mänge või virtuaalse koera simulaatorit, on see just sinu mäng! Laadi see alla ja saa oma kutsika parimaks omanikuks.
+
+=== Language: eu-ES ===
+App name: Txakur Birtuala Zaindu
+Short description: Txakur jokoak: zaindu zure maskota birtuala eta ihes egin txakur gaiztotik
+Full description:
+Gustuko dituzu txakur jokoak eta maskota jokoak? Txakur Birtuala Zaindu jokoan txakurkume maitagarri bat adoptatu eta egunero zaintzen duzu: maskota birtualaren simulagailu bat, istorioa, paseoak, minijokoak eta abentura dituena.
+
+ZAINDU ZURE TXAKURKUMEA
+Eman jaten eta edaten, bainatu, jolastu berarekin eta eraman albaitariarengana min hartzen duenean. Egunero zure maskotak zerbait berria behar du. Animaliak zaintzea ez da inoiz hain dibertigarria izan.
+
+PASEOAK HIRIAN ZEHAR
+Jarri uhala eta atera zaitezte auzoan paseatzera. Gurutzatu kalea semaforoa berdean dagoenean, jantzi eguraldiaren arabera (euria, elurra edo beroa) eta eraman motxilan beharko duzuna.
+
+TXAKUR MINIJOKOAK
+Egun bakoitza desberdina da: soka, frisbeea, trikimailuak, labirintoa, erreka zeharkatzea, lasterketak eta denda misteriotsu bat.
+
+IHES EGIN TXAKUR GAIZTOTIK
+Txakur gaizto bat aske dabil hirian. Jarri proban zure erreflexuak garaiz ihes egiteko.
+
+TXAKURREN MAITASUNA ETA EZTEIAK
+Zure txakurkumeak Congo ezagutzen du. Lagundu haien zitan eta ospatu txakur ezteiak.
+
+JANTZI ZURE MASKOTA
+Pet Shop-eko arropak, txanoak eta osagarriak zure txakur birtuala bakarra izan dadin.
+
+ZERGATIK GUSTATUKO ZAIZU
+- 3D maskota joko bat, grafiko koloretsuekin eta kontrol errazekin.
+- Interneterik gabeko txakur jokoa: jokatu lineaz kanpo edonon.
+- Maskota birtualaren simulagailua, abentura eta minijokoak nahasten ditu.
+- Gaztelaniaz, ingelesez eta portugesez.
+
+Txakur jokoak, maskotak zaintzeko jokoak edo txakur birtualaren simulagailu bat bilatzen badituzu, hau da zure jokoa! Deskargatu eta izan zure txakurkumearen jaberik onena.
+
+=== Language: fa ===
+App name: مراقبت از سگ: سگ مجازی
+Short description: بازی سگ: از حیوان خانگی مجازی‌ات مراقبت کن، قدم بزن و از سگ بدجنس فرار کن
+Full description:
+بازی‌های سگ و بازی‌های حیوان خانگی را دوست داری؟ در «مراقبت از سگ» یک سگ دوست‌داشتنی را به سرپرستی می‌گیری و هر روز از او مراقبت می‌کنی: یک شبیه‌ساز حیوان خانگی مجازی با داستان، پیاده‌روی، مینی‌گیم و ماجراجویی.
+
+از سگت مراقبت کن
+به او غذا و آب بده، حمامش کن، با او بازی کن و وقتی آسیب دید پیش دامپزشک ببرش. حیوان خانگی‌ات هر روز به چیز تازه‌ای نیاز دارد. مراقبت از حیوانات هیچ‌وقت این‌قدر سرگرم‌کننده نبوده.
+
+پیاده‌روی در شهر
+قلاده‌اش را ببند و در محله قدم بزنید. وقتی چراغ راهنمایی سبز است از خیابان رد شو، او را مناسب هوا بپوشان (باران، برف یا گرما) و هرچه لازم داری در کوله‌پشتی بگذار.
+
+مینی‌گیم‌های سگ
+هر روز متفاوت است: طناب‌کشی، فریزبی، ترفندها، هزارتو، عبور از نهر، مسابقه‌ی دو و یک فروشگاه مرموز.
+
+از سگ بدجنس فرار کن
+یک سگ بدجنس در شهر آزادانه می‌چرخد. واکنش‌هایت را محک بزن تا به‌موقع فرار کنی.
+
+عشق و عروسی سگ‌ها
+سگ تو با کونگو آشنا می‌شود. در قرارشان همراهی‌شان کن و یک عروسی سگی جشن بگیرید.
+
+حیوان خانگی‌ات را بپوشان
+لباس، کلاه و لوازم جانبی از Pet Shop تا سگ مجازی‌ات بی‌نظیر شود.
+
+چرا دوستش خواهی داشت
+- یک بازی حیوان خانگی سه‌بعدی با گرافیک رنگارنگ و کنترل ساده.
+- بازی سگ بدون اینترنت: هر جا که باشی آفلاین بازی کن.
+- ترکیبی از شبیه‌ساز حیوان خانگی مجازی، ماجراجویی و مینی‌گیم.
+- به زبان‌های اسپانیایی، انگلیسی و پرتغالی.
+
+اگر دنبال بازی سگ، بازی مراقبت از حیوان خانگی یا شبیه‌ساز سگ مجازی هستی، این بازی توست! دانلودش کن و بهترین صاحب توله‌سگت شو.
+
+=== Language: fi-FI ===
+App name: Koiranhoito: Virtuaalikoira
+Short description: Koirapelit: hoida virtuaalilemmikkiä, ulkoiluta ja pakene pahaa koiraa
+Full description:
+Pidätkö koirapeleistä ja lemmikkipeleistä? Koiranhoito-pelissä adoptoit suloisen pikku koiran ja hoidat sitä joka päivä: virtuaalilemmikkisimulaattori, jossa on tarina, kävelylenkkejä, minipelejä ja seikkailua.
+
+HOIDA KOIRANPENTUASI
+Anna sille ruokaa ja vettä, kylvetä se, leiki sen kanssa ja vie se eläinlääkäriin, kun se loukkaantuu. Lemmikkisi tarvitsee joka päivä jotain uutta. Eläinten hoitaminen ei ole koskaan ollut näin hauskaa.
+
+KÄVELYLLÄ KAUPUNGISSA
+Kiinnitä talutushihna ja lähtekää kävelylle naapurustoon. Ylitä katu vihreillä valoilla, pue koira sään mukaan (sade, lumi tai helle) ja pakkaa reppuun kaikki tarvittava.
+
+KOIRAN MINIPELIT
+Jokainen päivä on erilainen: köydenveto, frisbee, temput, labyrintti, puron ylitys, kilpajuoksu ja salaperäinen kauppa.
+
+PAKENE PAHAA KOIRAA
+Paha koira on irrallaan kaupungissa. Testaa refleksisi ja pakene ajoissa.
+
+RAKKAUTTA JA KOIRAHÄÄT
+Koirasi tapaa Congon. Seuraa niitä treffeille ja juhlikaa koirahäitä.
+
+PUE LEMMIKKISI
+Vaatteita, hattuja ja asusteita Pet Shopista, jotta virtuaalikoirasi on ainutlaatuinen.
+
+MIKSI PIDÄT TÄSTÄ
+- 3D-lemmikkipeli, jossa on värikäs grafiikka ja helpot ohjaimet.
+- Koirapeli ilman internetiä: pelaa offline missä tahansa.
+- Yhdistelmä virtuaalilemmikkisimulaattoria, seikkailua ja minipelejä.
+- Espanjaksi, englanniksi ja portugaliksi.
+
+Etsitkö koirapelejä, lemmikinhoitopelejä tai virtuaalikoirasimulaattoria? Tämä on sinun pelisi! Lataa se ja ole pentusi paras omistaja.
+
+=== Language: fil ===
+App name: Mag-alaga ng Aso: Virtual Pet
+Short description: Dog games: alagaan ang virtual pet mo, ipasyal at takasan ang masamang aso
+Full description:
+Mahilig ka ba sa dog games at pet games? Sa Mag-alaga ng Aso, mag-aampon ka ng isang cute na tutang babae at aalagaan mo siya araw-araw: isang virtual pet simulator na may kuwento, pamamasyal, minigames at adventure.
+
+ALAGAAN ANG IYONG TUTA
+Pakainin at painumin siya, paliguan, makipaglaro sa kanya at dalhin sa beterinaryo kapag nasaktan. Araw-araw may bagong kailangan ang alaga mo. Hindi pa naging ganito kasaya ang pag-aalaga ng hayop.
+
+PASYAL SA LUNGSOD
+Isuot ang tali at mamasyal kayo sa kapitbahayan. Tumawid kapag berde ang ilaw, bihisan siya ayon sa panahon (ulan, niyebe o init) at ilagay sa backpack ang mga kakailanganin mo.
+
+MINIGAMES NG ASO
+Iba-iba araw-araw: tug-of-war, frisbee, tricks, maze, pagtawid sa sapa, karera at isang misteryosong tindahan.
+
+TAKASAN ANG MASAMANG ASO
+May masamang aso na pagala-gala sa lungsod. Subukin ang bilis ng reflexes mo para makatakas sa tamang oras.
+
+PAG-IBIG AT KASAL NG MGA ASO
+Makikilala ng tuta mo si Congo. Samahan sila sa kanilang date at ipagdiwang ang isang dog wedding.
+
+BIHISAN ANG IYONG ALAGA
+Mga damit, sumbrero at accessories mula sa Pet Shop para maging kakaiba ang virtual na aso mo.
+
+BAKIT MO ITO MAGUGUSTUHAN
+- Isang 3D pet game na makulay ang graphics at simple ang controls.
+- Dog game na walang internet: puwedeng laruin offline kahit saan.
+- Pinagsamang virtual pet simulator, adventure at minigames.
+- Nasa Spanish, English at Portuguese.
+
+Kung naghahanap ka ng dog games, pet care games o virtual dog simulator, ito ang laro para sa iyo! I-download na at maging pinakamahusay na amo ng iyong tuta.
+
+=== Language: fr-CA ===
+App name: Soins Chien : Toutou Virtuel
+Short description: Jeux de chiens : prends soin de ton toutou virtuel et fuis le méchant chien
+Full description:
+Tu aimes les jeux de chiens et les jeux d'animaux? Dans Soins Chien, tu adoptes une adorable petite chienne et tu t'en occupes tous les jours : un simulateur d'animal virtuel avec une histoire, des promenades, des mini-jeux et de l'aventure.
+
+PRENDS SOIN DE TON TOUTOU
+Donne-lui à manger et à boire, donne-lui son bain, joue avec lui et amène-le chez le vétérinaire quand il se blesse. Chaque jour, ton animal a besoin de quelque chose de nouveau. Prendre soin des animaux n'a jamais été aussi le fun.
+
+PROMENADES EN VILLE
+Attache-lui sa laisse et partez vous promener dans le quartier. Traverse la rue au feu vert, habille-le selon la météo (pluie, neige ou chaleur) et mets dans ton sac à dos ce dont tu vas avoir besoin.
+
+MINI-JEUX DE CHIENS
+Chaque journée est différente : corde, frisbee, trucs, labyrinthe, traverser le ruisseau, courses et un magasin mystérieux.
+
+ÉCHAPPE AU MÉCHANT CHIEN
+Un méchant chien se promène en liberté dans la ville. Mets tes réflexes à l'épreuve pour te sauver à temps.
+
+AMOUR ET MARIAGE DE CHIENS
+Ta petite chienne rencontre Congo. Accompagne-les à leur rendez-vous et célébrez un mariage de chiens.
+
+HABILLE TON ANIMAL
+Vêtements, tuques et accessoires de l'animalerie Pet Shop pour rendre ton chien virtuel unique.
+
+POURQUOI TU VAS L'ADORER
+- Un jeu d'animaux en 3D avec des graphismes colorés et des contrôles simples.
+- Jeu de chien sans Internet : joue hors ligne n'importe où.
+- Un mélange de simulateur d'animal virtuel, d'aventure et de mini-jeux.
+- En espagnol, en anglais et en portugais.
+
+Si tu cherches des jeux de chiens, des jeux pour prendre soin d'animaux ou un simulateur de chien virtuel, c'est ton jeu! Télécharge-le et deviens le meilleur maître de ton chiot.
+
+=== Language: fr-FR ===
+App name: Soins Chien : Chien Virtuel
+Short description: Jeux de chiens : soigne ton animal virtuel, promène-le et fuis le méchant chien
+Full description:
+Tu aimes les jeux de chiens et les jeux d'animaux ? Dans Soins Chien, tu adoptes une adorable petite chienne et tu t'en occupes chaque jour : un simulateur d'animal virtuel avec une histoire, des promenades, des mini-jeux et de l'aventure.
+
+PRENDS SOIN DE TON CHIOT
+Donne-lui à manger et à boire, lave-le, joue avec lui et emmène-le chez le vétérinaire quand il se blesse. Chaque jour, ton animal a besoin de quelque chose de nouveau. S'occuper des animaux n'a jamais été aussi amusant.
+
+PROMENADES EN VILLE
+Mets-lui sa laisse et partez vous balader dans le quartier. Traverse la rue au feu vert, habille-le selon la météo (pluie, neige ou chaleur) et mets dans ton sac à dos ce dont tu auras besoin.
+
+MINI-JEUX DE CHIENS
+Chaque jour est différent : corde, frisbee, tours, labyrinthe, traversée du ruisseau, courses et une boutique mystérieuse.
+
+ÉCHAPPE AU MÉCHANT CHIEN
+Un méchant chien rôde en liberté dans la ville. Teste tes réflexes pour t'enfuir à temps.
+
+AMOUR ET MARIAGE DE CHIENS
+Ta petite chienne rencontre Congo. Accompagne-les à leur rendez-vous et célébrez un mariage de chiens.
+
+HABILLE TON ANIMAL
+Vêtements, bonnets et accessoires du Pet Shop pour rendre ton chien virtuel unique.
+
+POURQUOI TU VAS ADORER
+- Un jeu d'animaux en 3D aux graphismes colorés et aux commandes simples.
+- Jeu de chien sans internet : joue hors ligne où tu veux.
+- Un mélange de simulateur d'animal virtuel, d'aventure et de mini-jeux.
+- En espagnol, anglais et portugais.
+
+Si tu cherches des jeux de chiens, des jeux pour s'occuper d'animaux ou un simulateur de chien virtuel, c'est ton jeu ! Télécharge-le et deviens le meilleur maître de ton chiot.
+
+=== Language: gl-ES ===
+App name: Coidar Cans: Can Virtual
+Short description: Xogos de cans: coida a túa mascota virtual, pasea e escapa do can malo
+Full description:
+Gústanche os xogos de cans e os xogos de mascotas? En Coidar Cans adoptas unha cadeliña adorable e coidas dela todos os días: un simulador de mascota virtual con historia, paseos, minixogos e aventura.
+
+COIDA O TEU CADELIÑO
+Dálle de comer e de beber, báñao, xoga con el e lévao ao veterinario cando se mance. Cada día a túa mascota precisa algo novo. Coidar animais nunca foi tan divertido.
+
+PASEOS POLA CIDADE
+Ponlle a correa e saíde pasear polo barrio. Cruza a rúa co semáforo en verde, vísteo segundo o tempo (choiva, neve ou calor) e leva na mochila o que vas precisar.
+
+MINIXOGOS DE CANS
+Cada día é distinto: corda, frisbee, trucos, labirinto, cruzar o regato, carreiras e unha tenda misteriosa.
+
+ESCAPA DO CAN MALO
+Un can malo anda solto pola cidade. Pon a proba os teus reflexos para escapar a tempo.
+
+AMOR E VODA DE CADELIÑOS
+A túa cadeliña coñece a Congo. Acompáñaos na súa cita e celebrade unha voda de cans.
+
+VISTE A TÚA MASCOTA
+Roupa, gorros e accesorios do Pet Shop para que o teu can virtual sexa único.
+
+POR QUE CHE VAI GUSTAR
+- Un xogo de mascotas en 3D con gráficos coloridos e controis sinxelos.
+- Xogo de cans sen internet: podes xogar sen conexión en calquera lugar.
+- Mestura de simulador de mascota virtual, aventura e minixogos.
+- En español, inglés e portugués.
+
+Se buscas xogos de cans, xogos de coidar mascotas ou un simulador de can virtual, este é o teu xogo! Descárgao e convértete no mellor dono do teu cachorro.
+
+=== Language: gu ===
+App name: કૂતરાની સંભાળ: વર્ચ્યુઅલ ડોગ
+Short description: ડોગ ગેમ: વર્ચ્યુઅલ પેટની સંભાળ રાખો, ફરવા લઈ જાઓ, ખરાબ કૂતરાથી બચો
+Full description:
+શું તમને ડોગ ગેમ્સ અને પેટ ગેમ્સ ગમે છે? કૂતરાની સંભાળમાં તમે એક વહાલું ગલૂડિયું દત્તક લો છો અને દરરોજ તેની સંભાળ રાખો છો: વાર્તા, સહેલ, મિની ગેમ્સ અને સાહસથી ભરપૂર વર્ચ્યુઅલ પેટ સિમ્યુલેટર.
+
+તમારા ગલૂડિયાની સંભાળ રાખો
+તેને ખાવાનું અને પાણી આપો, નવડાવો, તેની સાથે રમો અને વાગે ત્યારે પશુચિકિત્સક પાસે લઈ જાઓ. દરરોજ તમારા પેટને કંઈક નવું જોઈએ છે. પ્રાણીઓની સંભાળ ક્યારેય આટલી મજેદાર નહોતી.
+
+શહેરમાં સહેલ
+પટ્ટો બાંધો અને મહોલ્લામાં ફરવા નીકળો. લીલી લાઈટ થાય ત્યારે રસ્તો ઓળંગો, હવામાન (વરસાદ, બરફ કે ગરમી) પ્રમાણે કપડાં પહેરાવો અને જરૂરી વસ્તુઓ બેગમાં રાખો.
+
+ડોગ મિની ગેમ્સ
+દરેક દિવસ અલગ: દોરડાખેંચ, ફ્રિસ્બી, કરતબ, ભુલભુલામણી, ઝરણું પાર કરવું, દોડ અને એક રહસ્યમય દુકાન.
+
+ખરાબ કૂતરાથી બચો
+એક ખરાબ કૂતરો શહેરમાં છૂટો ફરે છે. સમયસર બચવા માટે તમારી ચપળતાની કસોટી કરો.
+
+ગલૂડિયાંનો પ્રેમ અને લગ્ન
+તમારું ગલૂડિયું કોંગોને મળે છે. તેમની ડેટમાં સાથ આપો અને કૂતરાઓના લગ્નની ઉજવણી કરો.
+
+તમારા પેટને સજાવો
+પેટ શોપના કપડાં, ટોપીઓ અને એક્સેસરીઝથી તમારા વર્ચ્યુઅલ ડોગને અનોખો બનાવો.
+
+તમને આ કેમ ગમશે
+- રંગબેરંગી ગ્રાફિક્સ અને સરળ કંટ્રોલ્સ સાથેની 3D પેટ ગેમ.
+- ઇન્ટરનેટ વગરની ડોગ ગેમ: ગમે ત્યાં ઓફલાઇન રમો.
+- વર્ચ્યુઅલ પેટ સિમ્યુલેટર, સાહસ અને મિની ગેમ્સનું મિશ્રણ.
+- સ્પેનિશ, અંગ્રેજી અને પોર્ટુગીઝમાં.
+
+જો તમે ડોગ ગેમ્સ, પેટ કેર ગેમ્સ કે વર્ચ્યુઅલ ડોગ સિમ્યુલેટર શોધી રહ્યા હો, તો આ જ તમારી ગેમ છે! હમણાં જ ડાઉનલોડ કરો અને તમારા ગલૂડિયાના શ્રેષ્ઠ માલિક બનો.
+
+=== Language: hi-IN ===
+App name: कुत्तों की देखभाल: वर्चुअल डॉग
+Short description: डॉग गेम: अपने वर्चुअल पेट की देखभाल करें, सैर कराएं और बुरे कुत्ते से बचें
+Full description:
+क्या आपको डॉग गेम और पेट गेम पसंद हैं? कुत्तों की देखभाल में आप एक प्यारी-सी पपी को गोद लेते हैं और हर दिन उसका ख्याल रखते हैं: कहानी, सैर, मिनी गेम और रोमांच से भरा एक वर्चुअल पेट सिम्युलेटर।
+
+अपने पपी की देखभाल करें
+उसे खाना और पानी दें, नहलाएं, उसके साथ खेलें और चोट लगने पर उसे पशु चिकित्सक के पास ले जाएं। हर दिन आपके पालतू को कुछ नया चाहिए। जानवरों की देखभाल कभी इतनी मज़ेदार नहीं थी।
+
+शहर में सैर
+पट्टा लगाएं और मोहल्ले में घूमने निकलें। हरी बत्ती होने पर सड़क पार करें, मौसम (बारिश, बर्फ़ या गर्मी) के हिसाब से उसे कपड़े पहनाएं और बैग में ज़रूरी चीज़ें रखें।
+
+डॉग मिनी गेम
+हर दिन अलग है: रस्साकशी, फ्रिस्बी, करतब, भूलभुलैया, नाला पार करना, दौड़ और एक रहस्यमयी दुकान।
+
+बुरे कुत्ते से बचें
+एक बुरा कुत्ता शहर में खुला घूम रहा है। समय पर बच निकलने के लिए अपनी फुर्ती आज़माएं।
+
+पपी का प्यार और शादी
+आपकी पपी की मुलाकात कोंगो से होती है। उनकी डेट पर साथ चलें और कुत्तों की शादी का जश्न मनाएं।
+
+अपने पेट को सजाएं
+पेट शॉप से कपड़े, टोपियां और एक्सेसरीज़, ताकि आपका वर्चुअल डॉग सबसे अलग दिखे।
+
+आपको यह क्यों पसंद आएगा
+- रंगीन ग्राफ़िक्स और आसान कंट्रोल वाला 3D पेट गेम।
+- बिना इंटरनेट वाला डॉग गेम: कहीं भी ऑफ़लाइन खेलें।
+- वर्चुअल पेट सिम्युलेटर, एडवेंचर और मिनी गेम का मेल।
+- स्पेनिश, अंग्रेज़ी और पुर्तगाली में उपलब्ध।
+
+अगर आप डॉग गेम, पेट केयर गेम या वर्चुअल डॉग सिम्युलेटर ढूंढ रहे हैं, तो यही आपका गेम है! अभी डाउनलोड करें और अपने पपी के सबसे अच्छे मालिक बनें।
+
+=== Language: hr ===
+App name: Briga o psu: Virtualni pas
+Short description: Igre sa psima: brini o virtualnom ljubimcu, šetaj i bježi od zlog psa
+Full description:
+Voliš igre sa psima i igre s ljubimcima? U igri „Briga o psu” udomljuješ preslatko štene i brineš se o njemu svaki dan: simulator virtualnog ljubimca s pričom, šetnjama, mini igrama i avanturom.
+
+BRINI SE O SVOM PSIĆU
+Nahrani ga i daj mu vode, okupaj ga, igraj se s njim i vodi ga veterinaru kad se ozlijedi. Svaki dan tvoj ljubimac treba nešto novo. Briga o životinjama nikad nije bila tako zabavna.
+
+ŠETNJE GRADOM
+Stavi mu povodac i izađite u šetnju po kvartu. Prelazi cestu na zeleno svjetlo, odjeni ga prema vremenu (kiša, snijeg ili vrućina) i spremi u ruksak sve što će ti trebati.
+
+MINI IGRE SA PSIMA
+Svaki je dan drukčiji: natezanje užeta, frizbi, trikovi, labirint, prelazak potoka, utrke i tajanstvena trgovina.
+
+POBJEGNI OD ZLOG PSA
+Zli pas slobodno luta gradom. Testiraj svoje reflekse i pobjegni na vrijeme.
+
+LJUBAV I PSEĆE VJENČANJE
+Tvoje štene upoznaje Konga. Prati ih na spoju i proslavite pseće vjenčanje.
+
+ODJENI SVOG LJUBIMCA
+Odjeća, kape i dodaci iz Pet Shopa kako bi tvoj virtualni pas bio jedinstven.
+
+ZAŠTO ĆE TI SE SVIDJETI
+- 3D igra s ljubimcem, šarenom grafikom i jednostavnim kontrolama.
+- Igra sa psima bez interneta: igraj offline bilo gdje.
+- Spoj simulatora virtualnog ljubimca, avanture i mini igara.
+- Na španjolskom, engleskom i portugalskom jeziku.
+
+Ako tražiš igre sa psima, igre brige o ljubimcima ili simulator virtualnog psa, ovo je igra za tebe! Preuzmi je i postani najbolji vlasnik svog šteneta.
+
+=== Language: hu-HU ===
+App name: Kutyagondozás: Virtuális kutya
+Short description: Kutyás játék: gondozd virtuális kisállatod, és menekülj a gonosz kutya elől
+Full description:
+Szereted a kutyás játékokat és a kisállatos játékokat? A Kutyagondozás játékban örökbe fogadsz egy imádnivaló kiskutyát, és minden nap gondoskodsz róla: virtuális kisállat szimulátor történettel, sétákkal, minijátékokkal és kalanddal.
+
+GONDOZD A KISKUTYÁDAT
+Etesd és itasd, fürdesd meg, játssz vele, és vidd el az állatorvoshoz, ha megsérül. A kisállatodnak minden nap valami újra van szüksége. Az állatgondozás még sosem volt ilyen szórakoztató.
+
+SÉTÁK A VÁROSBAN
+Csatold fel a pórázt, és induljatok sétálni a környéken. Zöld jelzésnél kelj át az úton, öltöztesd az időjárásnak megfelelően (eső, hó vagy hőség), és pakold be a hátizsákba, amire szükséged lesz.
+
+KUTYÁS MINIJÁTÉKOK
+Minden nap más: kötélhúzás, frizbi, trükkök, labirintus, átkelés a patakon, versenyek és egy rejtélyes bolt.
+
+MENEKÜLJ A GONOSZ KUTYA ELŐL
+Egy gonosz kutya kóborol szabadon a városban. Tedd próbára a reflexeidet, és menekülj el időben.
+
+SZERELEM ÉS KUTYAESKÜVŐ
+A kutyusod megismerkedik Congóval. Kísérd el őket a randijukra, és ünnepeljetek kutyaesküvőt.
+
+ÖLTÖZTESD A KISÁLLATODAT
+Ruhák, sapkák és kiegészítők a Pet Shopból, hogy a virtuális kutyád egyedi legyen.
+
+MIÉRT FOG TETSZENI
+- 3D kisállatos játék színes grafikával és egyszerű irányítással.
+- Kutyás játék internet nélkül: játssz offline bárhol.
+- A virtuális kisállat szimulátor, a kaland és a minijátékok keveréke.
+- Spanyol, angol és portugál nyelven.
+
+Ha kutyás játékokat, kisállatgondozós játékokat vagy virtuális kutya szimulátort keresel, ez a te játékod! Töltsd le, és légy a legjobb gazdi a kiskutyád számára.
+
+=== Language: hy-AM ===
+App name: Շների խնամք: Վիրտուալ շուն
+Short description: Շների խաղեր. խնամիր վիրտուալ ընտանի կենդանուդ, զբոսնիր և փախիր չար շնից
+Full description:
+Սիրու՞մ ես շների խաղեր և ընտանի կենդանիների խաղեր։ «Շների խնամք»-ում դու որդեգրում ես մի սքանչելի շնիկի և ամեն օր խնամում նրան. վիրտուալ ընտանի կենդանու սիմուլյատոր՝ պատմությամբ, զբոսանքներով, մինի-խաղերով և արկածներով։
+
+ԽՆԱՄԻՐ ՔՈ ՇՆԻԿԻՆ
+Կերակրիր և ջուր տուր, լողացրու, խաղա նրա հետ և տար անասնաբույժի մոտ, երբ վնասվի։ Ամեն օր քո ընտանի կենդանուն ինչ-որ նոր բան է պետք։ Կենդանիների խնամքը երբեք այսքան զվարճալի չի եղել։
+
+ԶԲՈՍԱՆՔՆԵՐ ՔԱՂԱՔՈՒՄ
+Ամրացրու վզկապի կապը և դուրս եկեք զբոսնելու թաղամասում։ Անցիր փողոցը լուսացույցի կանաչ լույսի ժամանակ, հագցրու նրան ըստ եղանակի (անձրև, ձյուն կամ շոգ) և ուսապարկում վերցրու այն, ինչ պետք կգա։
+
+ՇՆԵՐԻ ՄԻՆԻ-ԽԱՂԵՐ
+Ամեն օր տարբեր է՝ պարանի ձգում, ֆրիսբի, հնարքներ, լաբիրինթոս, առվակի անցում, մրցավազքեր և խորհրդավոր խանութ։
+
+ՓԱԽԻՐ ՉԱՐ ՇՆԻՑ
+Չար շունը ազատ թափառում է քաղաքում։ Ստուգիր ռեակցիադ, որպեսզի ժամանակին փախչես։
+
+ՍԵՐ ԵՎ ՇՆԵՐԻ ՀԱՐՍԱՆԻՔ
+Քո շնիկը ծանոթանում է Կոնգոյի հետ։ Ուղեկցիր նրանց ժամադրությանը և միասին նշեք շների հարսանիքը։
+
+ՀԱԳՑՐՈՒ ՔՈ ԸՆՏԱՆԻ ԿԵՆԴԱՆՈՒՆ
+Հագուստ, գլխարկներ և աքսեսուարներ Pet Shop-ից, որպեսզի քո վիրտուալ շունը լինի յուրահատուկ։
+
+ԻՆՉՈՒ ԿՍԻՐԵՍ ԱՅՍ ԽԱՂԸ
+- 3D ընտանի կենդանիների խաղ՝ գունավոր գրաֆիկայով և պարզ կառավարմամբ։
+- Շների խաղ առանց ինտերնետի՝ խաղա օֆլայն ցանկացած վայրում։
+- Վիրտուալ ընտանի կենդանու սիմուլյատորի, արկածի և մինի-խաղերի համադրություն։
+- Իսպաներեն, անգլերեն և պորտուգալերեն։
+
+Եթե փնտրում ես շների խաղեր, ընտանի կենդանիների խնամքի խաղեր կամ վիրտուալ շան սիմուլյատոր, սա քո խաղն է։ Ներբեռնիր և դարձիր քո ձագուկի լավագույն տերը։
+
+=== Language: id ===
+App name: Rawat Anjing: Anjing Virtual
+Short description: Game anjing: rawat hewan peliharaan virtual, ajak jalan, kabur dari anjing galak
+Full description:
+Suka game anjing dan game hewan peliharaan? Di Rawat Anjing, kamu mengadopsi anak anjing betina yang menggemaskan dan merawatnya setiap hari: simulator hewan peliharaan virtual dengan cerita, jalan-jalan, mini game, dan petualangan.
+
+RAWAT ANAK ANJINGMU
+Beri makan dan minum, mandikan, ajak bermain, dan bawa ke dokter hewan saat terluka. Setiap hari hewan peliharaanmu butuh sesuatu yang baru. Merawat hewan tidak pernah semenyenangkan ini.
+
+JALAN-JALAN KELILING KOTA
+Pasang tali dan ajak jalan-jalan keliling lingkungan. Seberangi jalan saat lampu hijau, beri pakaian sesuai cuaca (hujan, salju, atau panas), dan bawa barang yang kamu perlukan di ransel.
+
+MINI GAME ANJING
+Setiap hari berbeda: tarik tambang, frisbee, trik, labirin, menyeberangi sungai kecil, balapan, dan toko misterius.
+
+KABUR DARI ANJING GALAK
+Seekor anjing galak berkeliaran di kota. Uji refleksmu untuk kabur tepat waktu.
+
+CINTA DAN PERNIKAHAN ANJING
+Anjingmu bertemu Congo. Temani mereka berkencan dan rayakan pernikahan anjing.
+
+DANDANI HEWAN PELIHARAANMU
+Baju, topi, dan aksesori dari Pet Shop agar anjing virtualmu jadi unik.
+
+KENAPA KAMU AKAN SUKA
+- Game hewan peliharaan 3D dengan grafis penuh warna dan kontrol sederhana.
+- Game anjing tanpa internet: main offline di mana saja.
+- Perpaduan simulator hewan peliharaan virtual, petualangan, dan mini game.
+- Tersedia dalam bahasa Spanyol, Inggris, dan Portugis.
+
+Kalau kamu mencari game anjing, game merawat hewan peliharaan, atau simulator anjing virtual, inilah game-mu! Unduh sekarang dan jadilah pemilik anak anjing terbaik.
+
+=== Language: is-IS ===
+App name: Hundaumönnun: Sýndarhundur
+Short description: Hundaleikir: annastu sýndargæludýr, farðu út að ganga og flýðu vonda hundinn
+Full description:
+Finnst þér gaman að hundaleikjum og gæludýraleikjum? Í Hundaumönnun tekur þú að þér yndislega litla tík og annast hana á hverjum degi: hermir fyrir sýndargæludýr með sögu, gönguferðum, smáleikjum og ævintýrum.
+
+ANNASTU HVOLPINN ÞINN
+Gefðu honum að borða og drekka, baðaðu hann, leiktu við hann og farðu með hann til dýralæknis þegar hann meiðir sig. Á hverjum degi þarf gæludýrið þitt eitthvað nýtt. Það hefur aldrei verið jafn skemmtilegt að annast dýr.
+
+GÖNGUFERÐIR UM BÆINN
+Settu ólina á og farið út að ganga um hverfið. Farðu yfir götuna á grænu ljósi, klæddu hundinn eftir veðri (rigning, snjór eða hiti) og settu það sem þú þarft í bakpokann.
+
+HUNDASMÁLEIKIR
+Hver dagur er ólíkur: reiptog, frisbí, brellur, völundarhús, yfir lækinn, kapphlaup og dularfull búð.
+
+FLÝÐU VONDA HUNDINN
+Vondur hundur gengur laus um bæinn. Reyndu á viðbrögðin og sleppu í tæka tíð.
+
+ÁST OG HUNDABRÚÐKAUP
+Hundurinn þinn hittir Congo. Fylgdu þeim á stefnumót og haldið upp á hundabrúðkaup.
+
+KLÆDDU GÆLUDÝRIÐ ÞITT
+Föt, húfur og fylgihlutir úr Pet Shop svo sýndarhundurinn þinn verði einstakur.
+
+AF HVERJU ÞÚ MUNT ELSKA ÞENNAN LEIK
+- Gæludýraleikur í 3D með litríkri grafík og einfaldri stjórnun.
+- Hundaleikur án nets: spilaðu án nettengingar hvar sem er.
+- Blanda af sýndargæludýrahermi, ævintýrum og smáleikjum.
+- Á spænsku, ensku og portúgölsku.
+
+Ertu að leita að hundaleikjum, leikjum þar sem þú annast gæludýr eða sýndarhundaherminum? Þá er þetta leikurinn fyrir þig! Sæktu hann og vertu besti eigandi hvolpsins þíns.
+
+=== Language: it-IT ===
+App name: Cura Cani: Cane Virtuale
+Short description: Giochi di cani: cura il tuo cane virtuale, passeggia e fuggi dal cane cattivo
+Full description:
+Ti piacciono i giochi di cani e i giochi di animali? In Cura Cani adotti un'adorabile cagnolina e te ne prendi cura ogni giorno: un simulatore di animale virtuale con storia, passeggiate, minigiochi e avventura.
+
+PRENDITI CURA DEL TUO CUCCIOLO
+Dagli da mangiare e da bere, fagli il bagno, gioca con lui e portalo dal veterinario quando si fa male. Ogni giorno il tuo animale ha bisogno di qualcosa di nuovo. Prendersi cura degli animali non è mai stato così divertente.
+
+PASSEGGIATE IN CITTÀ
+Mettigli il guinzaglio e uscite a fare un giro nel quartiere. Attraversa la strada con il verde, vestilo in base al meteo (pioggia, neve o caldo) e metti nello zaino quello che ti servirà.
+
+MINIGIOCHI CON I CANI
+Ogni giorno è diverso: tiro alla fune, frisbee, trucchi, labirinto, attraversare il ruscello, corse e un negozio misterioso.
+
+FUGGI DAL CANE CATTIVO
+Un cane cattivo si aggira libero per la città. Metti alla prova i tuoi riflessi per scappare in tempo.
+
+AMORE E MATRIMONIO TRA CANI
+La tua cagnolina conosce Congo. Accompagnali al loro appuntamento e festeggiate un matrimonio tra cani.
+
+VESTI IL TUO ANIMALE
+Vestiti, cappelli e accessori del Pet Shop per rendere unico il tuo cane virtuale.
+
+PERCHÉ TI PIACERÀ
+- Un gioco di animali in 3D con grafica colorata e comandi semplici.
+- Gioco di cani senza internet: gioca offline ovunque.
+- Un mix di simulatore di animale virtuale, avventura e minigiochi.
+- In spagnolo, inglese e portoghese.
+
+Se cerchi giochi di cani, giochi per prendersi cura degli animali o un simulatore di cane virtuale, questo è il gioco che fa per te! Scaricalo e diventa il miglior padrone del tuo cucciolo.
+
+=== Language: iw-IL ===
+App name: לטפל בכלבים: כלב וירטואלי
+Short description: משחקי כלבים: טפלו בחיית המחמד הווירטואלית, צאו לטיול וברחו מהכלב הרע
+Full description:
+אוהבים משחקי כלבים ומשחקי חיות מחמד? ב"לטפל בכלבים" אתם מאמצים כלבה מקסימה ומטפלים בה כל יום: סימולטור חיית מחמד וירטואלית עם עלילה, טיולים, מיני-משחקים והרפתקאות.
+
+טפלו בכלבלב שלכם
+האכילו והשקו אותו, רחצו אותו, שחקו איתו וקחו אותו לווטרינר כשהוא נפצע. בכל יום חיית המחמד שלכם צריכה משהו חדש. טיפול בבעלי חיים מעולם לא היה כיף כל כך.
+
+טיולים בעיר
+שימו לו רצועה וצאו לטייל בשכונה. חצו את הכביש ברמזור ירוק, הלבישו אותו לפי מזג האוויר (גשם, שלג או חום) וקחו בתיק את מה שתצטרכו.
+
+מיני-משחקי כלבים
+כל יום שונה: משיכת חבל, פריזבי, טריקים, מבוך, חציית הנחל, מרוצים וחנות מסתורית.
+
+ברחו מהכלב הרע
+כלב רע משוטט חופשי בעיר. בחנו את הרפלקסים שלכם כדי לברוח בזמן.
+
+אהבה וחתונת כלבים
+הכלבה שלכם פוגשת את קונגו. לוו אותם בדייט וחגגו חתונת כלבים.
+
+הלבישו את חיית המחמד
+בגדים, כובעים ואביזרים מה-Pet Shop כדי שהכלב הווירטואלי שלכם יהיה ייחודי.
+
+למה תאהבו את המשחק
+- משחק חיות מחמד בתלת-ממד עם גרפיקה צבעונית ושליטה פשוטה.
+- משחק כלבים בלי אינטרנט: אפשר לשחק אופליין בכל מקום.
+- שילוב של סימולטור חיית מחמד וירטואלית, הרפתקה ומיני-משחקים.
+- בספרדית, באנגלית ובפורטוגזית.
+
+אם אתם מחפשים משחקי כלבים, משחקי טיפול בחיות מחמד או סימולטור כלב וירטואלי, זה המשחק בשבילכם! הורידו אותו והפכו לבעלים הטובים ביותר של הגור שלכם.
+
+=== Language: ja-JP ===
+App name: わんこのお世話：バーチャルペット
+Short description: 犬ゲーム：バーチャルペットを育てて、お散歩して、悪い犬から逃げよう
+Full description:
+犬ゲームやペットゲームが好きですか？「わんこのお世話」では、かわいい子犬を迎えて毎日お世話をします。ストーリー、お散歩、ミニゲーム、冒険がつまったバーチャルペット育成シミュレーターです。
+
+わんこのお世話をしよう
+ごはんと水をあげて、お風呂に入れて、いっしょに遊んで、ケガをしたら動物病院へ連れて行きましょう。ペットは毎日ちがうことを必要としています。動物のお世話がこんなに楽しいなんて！
+
+街でお散歩
+リードをつけて、近所へお散歩に出かけよう。信号が青になったら道路をわたり、天気（雨、雪、暑い日）に合わせて服を着せて、必要なものをリュックに入れて持って行こう。
+
+犬のミニゲーム
+毎日ちがう遊びが待っています：綱引き、フリスビー、芸、迷路、小川わたり、かけっこ、そしてナゾのお店。
+
+悪い犬から逃げよう
+街に悪い犬がうろついています。反射神経をためして、うまく逃げ切ろう。
+
+わんこの恋と結婚式
+あなたの子犬がコンゴと出会います。ふたりのデートを見守って、ワンちゃんの結婚式をお祝いしよう。
+
+ペットを着せ替えよう
+ペットショップの服、帽子、アクセサリーで、あなただけのバーチャル犬に。
+
+ここがおすすめ
+- カラフルなグラフィックとかんたん操作の3Dペットゲーム。
+- ネット不要の犬ゲーム：オフラインでどこでも遊べます。
+- バーチャルペット育成、冒険、ミニゲームがひとつに。
+- スペイン語、英語、ポルトガル語に対応。
+
+犬ゲーム、ペット育成ゲーム、バーチャル犬シミュレーターを探しているなら、このゲームで決まり！今すぐダウンロードして、最高の飼い主になろう。
+
+=== Language: ka-GE ===
+App name: ვირტუალური ძაღლის მოვლა
+Short description: ძაღლის თამაში: მოუარე ვირტუალურ ცხოველს, ისეირნე და გაექეცი ბოროტ ძაღლს
+Full description:
+გიყვარს ძაღლების თამაშები და შინაური ცხოველების თამაშები? „ვირტუალური ძაღლის მოვლაში“ შენ იშვილებ საყვარელ ძაღლუკას და ყოველდღე უვლი მას: ვირტუალური შინაური ცხოველის სიმულატორი სიუჟეტით, გასეირნებით, მინი-თამაშებითა და თავგადასავლებით.
+
+მოუარე შენს ძაღლს
+აჭამე და დაალევინე, დაბანე, ეთამაშე და წაიყვანე ვეტერინართან, როცა დაშავდება. ყოველდღე შენს შინაურ ცხოველს რაღაც ახალი სჭირდება. ცხოველების მოვლა არასოდეს ყოფილა ასეთი სახალისო.
+
+გასეირნება ქალაქში
+გაუკეთე საბელი და გადით სასეირნოდ უბანში. გადაკვეთე ქუჩა შუქნიშნის მწვანე შუქზე, ჩააცვი ამინდის მიხედვით (წვიმა, თოვლი ან სიცხე) და ზურგჩანთაში ჩაიდე ყველაფერი, რაც დაგჭირდება.
+
+ძაღლების მინი-თამაშები
+ყოველი დღე განსხვავებულია: თოკის ჭიდილი, ფრისბი, ხრიკები, ლაბირინთი, ნაკადულის გადალახვა, რბოლები და იდუმალი მაღაზია.
+
+გაექეცი ბოროტ ძაღლს
+ბოროტი ძაღლი ქალაქში თავისუფლად დაძრწის. გამოსცადე შენი რეაქცია, რომ დროულად გაიქცე.
+
+სიყვარული და ძაღლების ქორწილი
+შენი ძაღლი კონგოს ეცნობა. გაჰყევი მათ პაემანზე და ერთად აღნიშნეთ ძაღლების ქორწილი.
+
+ჩააცვი შენს ცხოველს
+ტანსაცმელი, ქუდები და აქსესუარები Pet Shop-იდან, რომ შენი ვირტუალური ძაღლი გამორჩეული იყოს.
+
+რატომ მოგეწონება
+- 3D თამაში შინაურ ცხოველებზე ფერადი გრაფიკითა და მარტივი მართვით.
+- ძაღლების თამაში ინტერნეტის გარეშე: ითამაშე ოფლაინ ნებისმიერ ადგილას.
+- ვირტუალური შინაური ცხოველის სიმულატორის, თავგადასავლისა და მინი-თამაშების ნაზავი.
+- ესპანურ, ინგლისურ და პორტუგალიურ ენებზე.
+
+თუ ეძებ ძაღლების თამაშებს, შინაური ცხოველების მოვლის თამაშებს ან ვირტუალური ძაღლის სიმულატორს, ეს შენი თამაშია! ჩამოტვირთე და გახდი შენი ლეკვის საუკეთესო პატრონი.
+
+=== Language: kk ===
+App name: Ит күтімі: Виртуалды ит
+Short description: Ит ойындары: виртуалды үй жануарыңды күт, серуенде, зұлым иттен қаш
+Full description:
+Ит ойындары мен үй жануарлары туралы ойындарды ұнатасың ба? «Ит күтімі» ойынында сүйкімді күшікті асырап алып, оны күн сайын күтесің: оқиғасы, серуендері, мини-ойындары мен шытырман оқиғалары бар виртуалды үй жануары симуляторы.
+
+КҮШІГІҢДІ КҮТ
+Оны тамақтандыр, суын бер, шомылдыр, онымен ойна және жарақаттанса, ветеринарға апар. Үй жануарыңа күн сайын жаңа бір нәрсе керек. Жануарларды күту ешқашан мұндай қызық болмаған.
+
+ҚАЛАДА СЕРУЕНДЕУ
+Қарғыбауын тағып, ауданды аралап серуендеңдер. Көшені бағдаршамның жасыл түсінде кесіп өт, ауа райына қарай киіндір (жаңбыр, қар немесе ыстық) және рюкзагыңа керек заттарды сал.
+
+ИТ МИНИ-ОЙЫНДАРЫ
+Әр күн әртүрлі: арқан тарту, фрисби, айла-тәсілдер, лабиринт, бұлақтан өту, жарыстар және жұмбақ дүкен.
+
+ЗҰЛЫМ ИТТЕН ҚАШ
+Қалада зұлым ит еркін жүр. Уақытында қашып үлгеру үшін реакцияңды сынап көр.
+
+МАХАББАТ ЖӘНЕ ИТТЕР ТОЙЫ
+Сенің итің Конгомен танысады. Олардың кездесуіне бірге барып, иттер тойын тойлаңдар.
+
+ҮЙ ЖАНУАРЫҢДЫ КИІНДІР
+Виртуалды итің ерекше болуы үшін Pet Shop дүкенінен киімдер, бас киімдер мен аксессуарлар.
+
+НЕГЕ ҰНАЙДЫ
+- Түрлі-түсті графикасы және қарапайым басқаруы бар 3D үй жануарлары ойыны.
+- Интернетсіз ит ойыны: кез келген жерде офлайн ойна.
+- Виртуалды үй жануары симуляторы, шытырман оқиға мен мини-ойындардың қоспасы.
+- Испан, ағылшын және португал тілдерінде.
+
+Егер ит ойындарын, үй жануарларын күту ойындарын немесе виртуалды ит симуляторын іздесең, бұл – сенің ойының! Жүктеп ал да, күшігіңнің ең жақсы иесі бол.
