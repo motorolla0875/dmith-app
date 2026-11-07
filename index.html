@@ -7,207 +7,246 @@
 <meta name="title-es" content="dmith.builds · Juegos y apps">
 <meta name="title-en" content="dmith.builds · Games and apps">
 <meta name="title-pt" content="dmith.builds · Jogos e apps">
-<meta name="description" content="Juegos y apps de dmith.builds: Tintix, Letravio, Santa Biblia, MiReparto y CajaViva.">
+<meta name="description" content="Juegos y apps de dmith.builds: Legionia, Tintix, Letravio, Cuidar Perros, Voxelium, Skate Comic, Santa Biblia, MiReparto y CajaViva.">
 <meta property="og:title" content="dmith.builds · Juegos y apps">
-<meta property="og:description" content="Tintix, Letravio, Santa Biblia, MiReparto y CajaViva.">
+<meta property="og:description" content="Legionia, Tintix, Letravio, Cuidar Perros, Voxelium, Santa Biblia, MiReparto y CajaViva.">
 <meta property="og:image" content="https://dmith.app/og-image.png">
 <link rel="icon" href="/icon.png?v=2">
 <link rel="apple-touch-icon" href="/og-image.png">
 <link rel="stylesheet" href="/assets/site.css">
 <script src="/assets/lang.js"></script>
 <style>
-  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 40px 0 64px; }
-  .hero h1 { font: 800 clamp(38px, 6vw, 64px)/1.02 var(--display); letter-spacing: -.025em; margin: 0 0 20px; max-width: 13ch; }
-  .hero p { font-size: 18.5px; color: var(--soft); margin: 0; max-width: 46ch; }
+  body { background: #F6F7FB; }
+  .barra { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .barra .wrap { display: flex; align-items: center; gap: 18px; height: 66px; }
+  .barra .logo { font-size: 21px; }
+  .menu { display: flex; gap: 4px; margin-left: 10px; }
+  .menu a { font: 500 15px/1 var(--body); color: var(--ink); text-decoration: none; padding: 10px 14px; border-radius: 99px; }
+  .menu a:hover { background: var(--chip); }
+  .barra .der { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+  .redes { display: flex; gap: 6px; }
+  .redes a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--ink); background: var(--chip); }
+  .redes a:hover { color: #fff; background: var(--ink); }
+  .redes svg { width: 18px; height: 18px; }
 
-  /* Íconos de las apps */
-  .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 22px; justify-items: center; }
-  .tile { display: block; width: 100%; max-width: 132px; text-decoration: none; transition: transform .18s ease; }
-  .tile img { width: 100%; aspect-ratio: 1; border-radius: 23%; box-shadow: 0 14px 30px rgba(5, 6, 30, .45); }
-  a.tile:hover { transform: translateY(-4px); }
-  .shelf .tile:nth-child(4) { grid-column: 1 / span 1; margin-left: 50%; }
-  .shelf .tile:nth-child(5) { margin-left: 50%; }
+  /* Video de Legionia */
+  .hero { position: relative; margin: 22px 0 8px; border-radius: 22px; overflow: hidden; background: #0b1530; aspect-ratio: 16 / 7; min-height: 340px; box-shadow: 0 20px 50px rgba(10,20,60,.25); }
+  .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,10,35,.82) 0%, rgba(5,10,35,.45) 45%, rgba(5,10,35,0) 75%); }
+  .hero .txt { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 34px 44px; color: #fff; max-width: 560px; }
+  .hero .tag { font: 700 12.5px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: #9fd0ff; margin-bottom: 12px; }
+  .hero h1 { font: 900 clamp(40px, 6.5vw, 72px)/1 var(--display); letter-spacing: .02em; margin: 0 0 14px; }
+  .hero p { font-size: 17.5px; margin: 0 0 22px; color: #e3ebff; }
+  .hero .acc { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 9px; font: 700 15.5px/1 var(--body); text-decoration: none; padding: 14px 20px; border-radius: 12px; }
+  .btn svg { width: 20px; height: 20px; }
+  .btn.dc { background: #5865F2; color: #fff; }
+  .btn.dc:hover { background: #4752c4; }
+  .btn.yt { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.35); }
+  .btn.yt:hover { background: rgba(255,255,255,.24); }
+  .hero .pronto { margin-top: 16px; font-size: 13.5px; color: #c4d2f5; }
 
-  .tabs { display: inline-flex; gap: 8px; margin: 12px 0 18px; }
-  .tabs button { font: 500 15px/1 var(--body); color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: 10px 20px; cursor: pointer; }
-  .tabs button[aria-selected="true"] { background: #E6F3EF; color: var(--gold); border-color: #E6F3EF; }
-  .panel[hidden] { display: none; }
-
-  .list { border-top: 1px solid var(--line); }
-  .tiendas-tit { font: 500 26px/1.2 var(--display); margin: 8px 0 0; }
-  .row { display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: center; padding: 22px 0; border-bottom: 1px solid var(--line); }
-  .row > img { width: 100px; height: 100px; border-radius: 22px; object-fit: cover; box-shadow: 0 1px 3px rgba(60,64,67,.3); }
-  .row h2 { font: 500 22px/1.2 var(--display); margin: 0 0 4px; letter-spacing: -.01em; }
-  .row p { margin: 0; color: var(--soft); max-width: 52ch; }
-  .status { display: inline-block; margin-top: 8px; font-size: 13.5px; font-weight: 700; color: var(--muted); }
-  .status.live { color: var(--mint); }
-  .more { justify-self: end; font: 500 15px/1 var(--body); color: #fff; background: var(--gold); text-decoration: none; padding: 12px 18px; border-radius: 12px; white-space: nowrap; }
-  .more:hover { background: #016E4D; }
-  .row .stores { justify-content: flex-end; align-items: center; max-width: 380px; }
+  /* Secciones */
+  .sec { padding: 34px 0 6px; scroll-margin-top: 80px; }
+  .sec h2 { font: 800 30px/1.1 var(--display); margin: 0 0 20px; letter-spacing: -.01em; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 1px 2px rgba(20,30,60,.08), 0 8px 24px rgba(20,30,60,.07); display: flex; flex-direction: column; transition: transform .18s ease, box-shadow .18s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(20,30,60,.08), 0 16px 36px rgba(20,30,60,.12); }
+  .card .banner { aspect-ratio: 1024 / 500; background: #e9ecf4; }
+  .card .banner img { width: 100%; height: 100%; object-fit: cover; }
+  .card .body { position: relative; padding: 52px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+  .card .icono { position: absolute; top: -40px; left: 18px; width: 82px; height: 82px; border-radius: 20px; border: 4px solid #fff; box-shadow: 0 6px 16px rgba(20,30,60,.22); background: #fff; }
+  .card h3 { font: 800 20px/1.2 var(--display); margin: 0 0 4px; }
+  .card .status { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .card .status.live { color: var(--mint); }
+  .card p { margin: 10px 0 16px; color: var(--soft); font-size: 15px; flex: 1; }
+  .card .stores { align-items: center; gap: 8px; }
   .badge { display: inline-block; line-height: 0; }
-  .badge img { height: 50px; width: auto; }
+  .badge img { height: 42px; width: auto; }
+  .store.web { padding: 6px 13px 6px 10px; }
+  .ver { font: 700 14px/1 var(--body); color: var(--gold); text-decoration: none; padding: 10px 6px; }
+  .ver:hover { text-decoration: underline; }
 
-  @media (max-width: 820px) {
-    /* Como en Play Store: ícono y título arriba, descripción y botones abajo */
-    .row { grid-template-columns: 76px 1fr; grid-template-areas: "icon title" "icon status" "desc desc" "btns btns"; gap: 0 16px; align-items: center; padding: 20px 0; }
-    .row > div:first-of-type { display: contents; }
-    .row > img { grid-area: icon; width: 76px; height: 76px; border-radius: 18px; }
-    .row h2 { grid-area: title; align-self: end; font-size: 21px; margin: 0; }
-    .row .status { grid-area: status; align-self: start; margin-top: 4px; font-size: 13px; }
-    .row p { grid-area: desc; margin-top: 14px; max-width: none; }
-    .row .stores, .row > .more { grid-area: btns; justify-self: start; justify-content: flex-start; margin-top: 14px; max-width: none; }
-    .row > .more { width: 100%; text-align: center; padding: 14px 18px; }
+  /* Pie */
+  .pie { margin-top: 54px; background: #0e1630; color: #c7d0ea; }
+  .pie .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; padding: 44px 20px 26px; }
+  .pie h4 { font: 700 14px/1 var(--body); color: #fff; letter-spacing: .06em; text-transform: uppercase; margin: 6px 0 14px; }
+  .pie a { color: #c7d0ea; text-decoration: none; display: block; padding: 4px 0; font-size: 15px; }
+  .pie a:hover { color: #fff; }
+  .pie .logo { color: #fff; }
+  .pie .yo p { margin: 14px 0 16px; font-size: 14.5px; max-width: 34ch; }
+  .pie .redes a { display: grid; padding: 0; background: rgba(255,255,255,.1); color: #fff; }
+  .pie .redes a:hover { background: #fff; color: #0e1630; }
+  .pie .copy { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.12); padding-top: 18px; font-size: 13.5px; color: #8e9abf; }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } .pie .wrap { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .barra .wrap { height: auto; flex-wrap: wrap; padding-top: 12px; padding-bottom: 10px; gap: 10px; }
+    .menu { order: 3; margin-left: 0; width: 100%; }
+    .barra .redes { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    .hero { aspect-ratio: auto; min-height: 460px; }
+    .hero::after { background: linear-gradient(0deg, rgba(5,10,35,.9) 0%, rgba(5,10,35,.5) 55%, rgba(5,10,35,.1) 100%); }
+    .hero .txt { justify-content: flex-end; padding: 24px 22px; min-height: 460px; }
+    .pie .wrap { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
+<header class="barra">
+  <div class="wrap">
     <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
-    <div class="langs" role="group" aria-label="Idioma">
-      <button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button>
+    <nav class="menu"><a href="#juegos"><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></a><a href="#apps">Apps</a></nav>
+    <div class="der">
+      <nav class="redes" aria-label="Redes"><a href="https://www.youtube.com/@legioniagame" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.7 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg></a><a href="https://www.tiktok.com/@dmith.builds" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 2h-3.4v13.4a2.9 2.9 0 1 1-2.1-2.8V9.1a6.3 6.3 0 1 0 5.5 6.3V8.6a8 8 0 0 0 4.6 1.5V6.7a4.6 4.6 0 0 1-4.6-4.7Z"/></svg></a><a href="https://discord.gg/FRsDnGurG" target="_blank" rel="noopener" aria-label="Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.5 19.5 0 0 0-4.9 1.5A20.4 20.4 0 0 0 .2 18.1a19.8 19.8 0 0 0 6 3l1.3-2a12.7 12.7 0 0 1-2-1l.5-.4a14.1 14.1 0 0 0 12 0l.5.4a12.7 12.7 0 0 1-2 1l1.3 2a19.7 19.7 0 0 0 6-3 20.3 20.3 0 0 0-3.5-13.7ZM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg></a></nav>
+      <div class="langs" role="group" aria-label="Idioma"><button data-set="es">ES</button><button data-set="en">EN</button><button data-set="pt">PT</button></div>
     </div>
-  </header>
-
-
-  <h1 class="tiendas-tit"><span data-l="es">Nuestras apps</span><span data-l="en">Our apps</span><span data-l="pt">Nossos apps</span></h1>
-  <div class="tabs" role="tablist">
-    <button role="tab" id="t-juegos" aria-controls="juegos" aria-selected="true"><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></button>
-    <button role="tab" id="t-apps" aria-controls="apps" aria-selected="false">Apps</button>
   </div>
+</header>
 
-  <section class="panel list" id="juegos" role="tabpanel" aria-labelledby="t-juegos">
-    <article class="row">
-      <img src="/skate-comic/icon.png" alt="">
-      <div>
-        <h2>Skate Comic</h2>
-        <p>
-          <span data-l="es">Juego de skate en 3D con estilo de historieta: trucos con el dedo, 8 pistas, misiones, carreras y salas con amigos.</span>
-          <span data-l="en">A comic-style 3D skateboarding game: finger tricks, 8 levels, missions, races and rooms with friends.</span>
-          <span data-l="pt">Jogo de skate em 3D com estilo de quadrinhos: manobras com o dedo, 8 pistas, missões, corridas e salas com amigos.</span>
-        </p>
-        <span class="status"><span data-l="es">Próximamente en Android y iPhone</span><span data-l="en">Coming soon to Android and iPhone</span><span data-l="pt">Em breve para Android e iPhone</span></span>
+<main class="wrap">
+  <section class="hero">
+    <video autoplay muted loop playsinline preload="metadata" poster="/assets/apps/legionia/poster.webp"><source src="/assets/apps/legionia/trailer.mp4" type="video/mp4"></video>
+    <div class="txt">
+      <span class="tag"><span data-l="es">Nuevo juego</span><span data-l="en">New game</span><span data-l="pt">Novo jogo</span></span>
+      <h1>LEGIONIA</h1>
+      <p><span data-l="es">Explorá, juntá tesoros, construí tu aldea y defendela con tu legión de las hordas zombis.</span><span data-l="en">Explore, gather treasures, build your village and defend it with your legion from the zombie hordes.</span><span data-l="pt">Explore, junte tesouros, construa sua vila e defenda-a com sua legião das hordas zumbis.</span></p>
+      <div class="acc">
+        <a class="btn dc" href="https://discord.gg/FRsDnGurG" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.5 19.5 0 0 0-4.9 1.5A20.4 20.4 0 0 0 .2 18.1a19.8 19.8 0 0 0 6 3l1.3-2a12.7 12.7 0 0 1-2-1l.5-.4a14.1 14.1 0 0 0 12 0l.5.4a12.7 12.7 0 0 1-2 1l1.3 2a19.7 19.7 0 0 0 6-3 20.3 20.3 0 0 0-3.5-13.7ZM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg><span data-l="es">Unite al Discord</span><span data-l="en">Join the Discord</span><span data-l="pt">Entre no Discord</span></a>
+        <a class="btn yt" href="https://www.youtube.com/@legioniagame" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.7 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg><span data-l="es">Ver el tráiler</span><span data-l="en">Watch the trailer</span><span data-l="pt">Ver o trailer</span></a>
       </div>
-      <a class="more" href="/skate-comic/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
-    </article>
-    <article class="row">
-      <img src="/tintix/icon.png" alt="">
-      <div>
-        <h2>Tintix</h2>
-        <p>
-          <span data-l="es">Encajá bloques, juntá colores y hacé un Full Color. Con niveles, liga semanal y duelos con amigos.</span>
-          <span data-l="en">Fit blocks, match colors and make a Full Color. With levels, a weekly league and duels with friends.</span>
-          <span data-l="pt">Encaixe blocos, junte cores e faça um Full Color. Com níveis, liga semanal e duelos com amigos.</span>
-        </p>
+      <span class="pronto"><span data-l="es">Próximamente en Android, iPhone y PC (Steam)</span><span data-l="en">Coming soon to Android, iPhone and PC (Steam)</span><span data-l="pt">Em breve para Android, iPhone e PC (Steam)</span></span>
+    </div>
+  </section>
+
+  <section class="sec" id="juegos">
+    <h2><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></h2>
+    <div class="grid">
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/tintix/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/tintix/icon.webp" alt="Tintix" loading="lazy" width="96" height="96">
+        <h3>Tintix</h3>
         <span class="status live"><span data-l="es">Disponible en Android</span><span data-l="en">Available on Android</span><span data-l="pt">Disponível para Android</span></span>
+        <p><span data-l="es">Encajá bloques, juntá colores y hacé un Full Color. Con niveles, liga semanal y duelos con amigos.</span><span data-l="en">Fit blocks, match colors and make a Full Color. With levels, a weekly league and duels with friends.</span><span data-l="pt">Encaixe blocos, junte cores e faça um Full Color. Com níveis, liga semanal e duelos com amigos.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="ver" href="/tintix/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
       </div>
-      <div class="stores">
-        <a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.tintix" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
-      </div>
-      <a class="more" href="/tintix/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
     </article>
-    <article class="row">
-      <img src="/letravio/icon.png" alt="">
-      <div>
-        <h2>Letravio</h2>
-        <p>
-          <span data-l="es">Uní las letras para formar palabras y completá el crucigrama. En español, inglés y portugués.</span>
-          <span data-l="en">Connect the letters to form words and complete the crossword. In English, Spanish and Portuguese.</span>
-          <span data-l="pt">Una as letras para formar palavras e complete as palavras cruzadas. Em português, espanhol e inglês.</span>
-        </p>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/letravio/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/letravio/icon.webp" alt="Letravio" loading="lazy" width="96" height="96">
+        <h3>Letravio</h3>
         <span class="status live"><span data-l="es">Disponible en Android · pronto en iPhone</span><span data-l="en">Available on Android · iPhone coming soon</span><span data-l="pt">Disponível para Android · em breve para iPhone</span></span>
+        <p><span data-l="es">Uní las letras para formar palabras y completá el crucigrama. En español, inglés y portugués.</span><span data-l="en">Connect the letters to form words and complete the crossword. In English, Spanish and Portuguese.</span><span data-l="pt">Una as letras para formar palavras e complete as palavras cruzadas. Em português, espanhol e inglês.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.letravio" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="ver" href="/letravio/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
       </div>
-      <div class="stores">
-        <a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.letravio" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
-      </div>
-      <a class="more" href="/letravio/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
     </article>
-    <article class="row">
-      <img src="/paseo/icon.png" alt="">
-      <div>
-        <h2>Cuidar Perros: Perro Virtual</h2>
-        <p>
-          <span data-l="es">Cuidá y paseá a Matilde por 6 mundos, con mini-juegos, ropa y una historia de amor.</span>
-          <span data-l="en">Care for and walk Matilde through 6 worlds, with mini-games, outfits and a love story.</span>
-          <span data-l="pt">Cuide e passeie com a Matilde por 6 mundos, com minijogos, roupas e uma história de amor.</span>
-        </p>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/paseo/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/paseo/icon.webp" alt="Cuidar Perros: Perro Virtual" loading="lazy" width="96" height="96">
+        <h3>Cuidar Perros: Perro Virtual</h3>
         <span class="status live"><span data-l="es">Disponible en Android · pronto en iPhone</span><span data-l="en">Available on Android · iPhone coming soon</span><span data-l="pt">Disponível para Android · em breve para iPhone</span></span>
+        <p><span data-l="es">Cuidá y paseá a Matilde por 6 mundos, con mini-juegos, ropa y una historia de amor.</span><span data-l="en">Care for and walk Matilde through 6 worlds, with mini-games, outfits and a love story.</span><span data-l="pt">Cuide e passeie com a Matilde por 6 mundos, com minijogos, roupas e uma história de amor.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.paseoperro" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="ver" href="/paseo/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
       </div>
-      <div class="stores">
-        <a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.paseoperro" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
-      </div>
-      <a class="more" href="/paseo/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a>
     </article>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/voxelium/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/voxelium/icon.webp" alt="Voxelium" loading="lazy" width="96" height="96">
+        <h3>Voxelium</h3>
+        <span class="status live"><span data-l="es">Para jugar en la web</span><span data-l="en">Play on the web</span><span data-l="pt">Para jogar na web</span></span>
+        <p><span data-l="es">Construí, explorá y sobreviví en un mundo de bloques. Jugá gratis desde el navegador.</span><span data-l="en">Build, explore and survive in a world of blocks. Play free in your browser.</span><span data-l="pt">Construa, explore e sobreviva em um mundo de blocos. Jogue grátis no navegador.</span></p>
+        <div class="stores"><a class="store web" href="https://voxelium.app/jugar/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small><span data-l="es">Jugar en la web</span><span data-l="en">Play on the web</span><span data-l="pt">Jogar na web</span></small><strong>voxelium.app</strong></span></a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/skate/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/skate/icon.webp" alt="Skate Comic" loading="lazy" width="96" height="96">
+        <h3>Skate Comic</h3>
+        <span class="status"><span data-l="es">Próximamente en Android y iPhone</span><span data-l="en">Coming soon to Android and iPhone</span><span data-l="pt">Em breve para Android e iPhone</span></span>
+        <p><span data-l="es">Juego de skate en 3D con estilo de historieta: trucos con el dedo, 8 pistas, misiones, carreras y salas con amigos.</span><span data-l="en">A comic-style 3D skateboarding game: finger tricks, 8 levels, missions, races and rooms with friends.</span><span data-l="pt">Jogo de skate em 3D com estilo de quadrinhos: manobras com o dedo, 8 pistas, missões, corridas e salas com amigos.</span></p>
+        <div class="stores"><a class="ver" href="/skate-comic/"><span data-l="es">Ver juego</span><span data-l="en">See game</span><span data-l="pt">Ver jogo</span></a></div>
+      </div>
+    </article>
+    </div>
   </section>
 
-  <section class="panel list" id="apps" role="tabpanel" aria-labelledby="t-apps" hidden>
-    <article class="row">
-      <img src="/santa-biblia/icon.png" alt="">
-      <div>
-        <h2>Santa Biblia</h2>
-        <p>
-          <span data-l="es">La Biblia completa, gratis y sin anuncios, con audio, meditación y oración para cada día.</span>
-          <span data-l="en">The complete Bible, free and ad-free, with audio, a daily devotional and prayer.</span>
-          <span data-l="pt">A Bíblia completa, grátis e sem anúncios, com áudio, devocional e oração diária.</span>
-        </p>
+  <section class="sec" id="apps">
+    <h2>Apps</h2>
+    <div class="grid">
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/biblia/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/biblia/icon.webp" alt="Santa Biblia" loading="lazy" width="96" height="96">
+        <h3>Santa Biblia</h3>
         <span class="status live"><span data-l="es">Disponible en iPhone y Android</span><span data-l="en">Available on iPhone and Android</span><span data-l="pt">Disponível para iPhone e Android</span></span>
+        <p><span data-l="es">La Biblia completa, gratis y sin anuncios, con audio, meditación y oración para cada día.</span><span data-l="en">The complete Bible, free and ad-free, with audio, a daily devotional and prayer.</span><span data-l="pt">A Bíblia completa, grátis e sem anúncios, com áudio, devocional e oração diária.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.santabiblia" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="badge" data-l="es" href="https://apps.apple.com/ar/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-es.svg" alt="Descárgalo en el App Store"></a><a class="badge" data-l="en" href="https://apps.apple.com/us/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-en.svg" alt="Download on the App Store"></a><a class="badge" data-l="pt" href="https://apps.apple.com/br/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-pt.svg" alt="Baixar na App Store"></a><a class="ver" href="/santa-biblia/"><span data-l="es">Ver app</span><span data-l="en">See app</span><span data-l="pt">Ver app</span></a></div>
       </div>
-      <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.dmithbuilds.santabiblia" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="badge" data-l="es" href="https://apps.apple.com/ar/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-es.svg" alt="Descárgalo en el App Store"></a><a class="badge" data-l="en" href="https://apps.apple.com/us/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-en.svg" alt="Download on the App Store"></a><a class="badge" data-l="pt" href="https://apps.apple.com/br/app/id6820761716" target="_blank" rel="noopener"><img src="/assets/badges/app-store-pt.svg" alt="Baixar na App Store"></a><a class="more" href="/santa-biblia/"><span data-l="es">Ver app</span><span data-l="en">See app</span><span data-l="pt">Ver app</span></a></div>
-      
     </article>
-    <article class="row">
-      <img src="/mireparto-icon.png" alt="">
-      <div>
-        <h2>MiReparto</h2>
-        <p>
-          <span data-l="es">Organizá tu reparto: clientes, rutas, pedidos y stock en un solo lugar.</span>
-          <span data-l="en">Run your deliveries: customers, routes, orders and stock in one place.</span>
-          <span data-l="pt">Organize suas entregas: clientes, rotas, pedidos e estoque em um só lugar.</span>
-        </p>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/mireparto/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/mireparto/icon.webp" alt="MiReparto" loading="lazy" width="96" height="96">
+        <h3>MiReparto</h3>
         <span class="status live"><span data-l="es">Disponible en Android y en la web</span><span data-l="en">Available on Android and the web</span><span data-l="pt">Disponível para Android e na web</span></span>
-      </div>
-      <div class="stores">
-        <a class="badge" href="https://play.google.com/store/apps/details?id=io.mireparto.app" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
-        <a class="store web" href="https://mireparto.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small data-l="es">Versión web</small><small data-l="en">Web version</small><small data-l="pt">Versão web</small><strong>mireparto.io</strong></span></a>
+        <p><span data-l="es">Organizá tu reparto: clientes, rutas, pedidos y stock en un solo lugar.</span><span data-l="en">Run your deliveries: customers, routes, orders and stock in one place.</span><span data-l="pt">Organize suas entregas: clientes, rotas, pedidos e estoque em um só lugar.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=io.mireparto.app" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="store web" href="https://mireparto.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small><span data-l="es">Versión web</span><span data-l="en">Web version</span><span data-l="pt">Versão web</span></small><strong>mireparto.io</strong></span></a></div>
       </div>
     </article>
-    <article class="row">
-      <img src="/cajaviva-icon.png" alt="">
-      <div>
-        <h2>CajaViva</h2>
-        <p>
-          <span data-l="es">Gestión simple para tu negocio: ventas, caja y stock.</span>
-          <span data-l="en">Simple management for your business: sales, cash and stock.</span>
-          <span data-l="pt">Gestão simples para o seu negócio: vendas, caixa e estoque.</span>
-        </p>
-        <span class="status live"><span data-l="es">Disponible en Android y en la web. Pronto en iPhone</span><span data-l="en">Available on Android and the web. Soon on iPhone</span><span data-l="pt">Disponível no Android e na web. Em breve para iPhone</span></span>
-      </div>
-      <div class="stores">
-        <a class="badge" href="https://play.google.com/store/apps/details?id=com.cajaviva.app" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a>
-        <a class="store web" href="https://cajaviva.app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small data-l="es">Versión web</small><small data-l="en">Web version</small><small data-l="pt">Versão web</small><strong>cajaviva.app</strong></span></a>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/cajaviva/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/cajaviva/icon.webp" alt="CajaViva" loading="lazy" width="96" height="96">
+        <h3>CajaViva</h3>
+        <span class="status live"><span data-l="es">Disponible en Android y en la web · pronto en iPhone</span><span data-l="en">Available on Android and the web · iPhone coming soon</span><span data-l="pt">Disponível para Android e na web · em breve para iPhone</span></span>
+        <p><span data-l="es">Gestión simple para tu negocio: ventas, caja y stock, también sin internet.</span><span data-l="en">Simple management for your business: sales, cash and stock, even offline.</span><span data-l="pt">Gestão simples para o seu negócio: vendas, caixa e estoque, mesmo sem internet.</span></p>
+        <div class="stores"><a class="badge" href="https://play.google.com/store/apps/details?id=com.cajaviva.app" target="_blank" rel="noopener"><img data-l="es" src="/assets/badges/google-play-es.svg" alt="Disponible en Google Play"><img data-l="en" src="/assets/badges/google-play-en.svg" alt="Get it on Google Play"><img data-l="pt" src="/assets/badges/google-play-pt.svg" alt="Disponível no Google Play"></a><a class="store web" href="https://cajaviva.app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span><small><span data-l="es">Versión web</span><span data-l="en">Web version</span><span data-l="pt">Versão web</span></small><strong>cajaviva.app</strong></span></a></div>
       </div>
     </article>
+    <article class="card">
+      <div class="banner"><img src="/assets/apps/audiolibros/banner.webp" alt="" loading="lazy" width="1024" height="500"></div>
+      <div class="body">
+        <img class="icono" src="/assets/apps/audiolibros/icon.webp" alt="Audiolibros Gratis" loading="lazy" width="96" height="96">
+        <h3>Audiolibros Gratis</h3>
+        <span class="status"><span data-l="es">Próximamente en Android y iPhone</span><span data-l="en">Coming soon to Android and iPhone</span><span data-l="pt">Em breve para Android e iPhone</span></span>
+        <p><span data-l="es">Audiolibros, podcasts y radio gratis en un solo lugar.</span><span data-l="en">Free audiobooks, podcasts and radio in one place.</span><span data-l="pt">Audiolivros, podcasts e rádio grátis em um só lugar.</span></p>
+        <div class="stores"></div>
+      </div>
+    </article>
+    </div>
   </section>
+</main>
 
-  <footer class="foot">
-    <span>© 2026 dmith.builds</span>
-    <nav>
-      <a href="mailto:dmith.builds@gmail.com"><span data-l="es">Contacto</span><span data-l="en">Contact</span><span data-l="pt">Contato</span></a>
-    </nav>
-  </footer>
-</div>
-<script>
-  var tabs = [].slice.call(document.querySelectorAll('[role="tab"]'));
-  function show(id, remember) {
-    tabs.forEach(function (t) {
-      var on = t.getAttribute('aria-controls') === id;
-      t.setAttribute('aria-selected', on);
-      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-    });
-    if (remember) history.replaceState(null, '', id === 'juegos' ? location.pathname : '#apps');
-  }
-  tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.getAttribute('aria-controls'), true); }); });
-  if (location.hash === '#apps') show('apps');
-</script>
+<footer class="pie">
+  <div class="wrap">
+    <div class="yo">
+      <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span><span>dmith<span class="dot">.</span>builds</span></a>
+      <p><span data-l="es">Juegos y apps hechos con cariño en Argentina, en español, inglés y portugués.</span><span data-l="en">Games and apps made with care in Argentina, in English, Spanish and Portuguese.</span><span data-l="pt">Jogos e apps feitos com carinho na Argentina, em português, espanhol e inglês.</span></p>
+      <nav class="redes" aria-label="Redes"><a href="https://www.youtube.com/@legioniagame" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.7 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg></a><a href="https://www.tiktok.com/@dmith.builds" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 2h-3.4v13.4a2.9 2.9 0 1 1-2.1-2.8V9.1a6.3 6.3 0 1 0 5.5 6.3V8.6a8 8 0 0 0 4.6 1.5V6.7a4.6 4.6 0 0 1-4.6-4.7Z"/></svg></a><a href="https://discord.gg/FRsDnGurG" target="_blank" rel="noopener" aria-label="Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.5 19.5 0 0 0-4.9 1.5A20.4 20.4 0 0 0 .2 18.1a19.8 19.8 0 0 0 6 3l1.3-2a12.7 12.7 0 0 1-2-1l.5-.4a14.1 14.1 0 0 0 12 0l.5.4a12.7 12.7 0 0 1-2 1l1.3 2a19.7 19.7 0 0 0 6-3 20.3 20.3 0 0 0-3.5-13.7ZM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg></a></nav>
+    </div>
+    <div>
+      <h4><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></h4>
+      <a href="https://discord.gg/FRsDnGurG" target="_blank" rel="noopener">Legionia</a>
+      <a href="/tintix/">Tintix</a><a href="/letravio/">Letravio</a><a href="/paseo/">Cuidar Perros</a><a href="https://voxelium.app" target="_blank" rel="noopener">Voxelium</a><a href="/skate-comic/">Skate Comic</a>
+    </div>
+    <div>
+      <h4>Apps</h4>
+      <a href="/santa-biblia/">Santa Biblia</a><a href="https://mireparto.io" target="_blank" rel="noopener">MiReparto</a><a href="https://cajaviva.app" target="_blank" rel="noopener">CajaViva</a>
+      <h4 style="margin-top:22px"><span data-l="es">Contacto</span><span data-l="en">Contact</span><span data-l="pt">Contato</span></h4>
+      <a href="mailto:dmith.builds@gmail.com">dmith.builds@gmail.com</a>
+    </div>
+    <div>
+      <h4><span data-l="es">Legal</span><span data-l="en">Legal</span><span data-l="pt">Legal</span></h4>
+      <a href="/terminos/"><span data-l="es">Términos del servicio</span><span data-l="en">Terms of service</span><span data-l="pt">Termos de serviço</span></a>
+      <a href="/tintix/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Tintix</a><a href="/letravio/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Letravio</a><a href="/paseo/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Cuidar Perros</a><a href="/skate-comic/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Skate Comic</a><a href="/santa-biblia/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Santa Biblia</a>
+    </div>
+    <div class="copy">© 2026 dmith.builds</div>
+  </div>
+</footer>
 </body>
 </html>
