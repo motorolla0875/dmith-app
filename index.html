@@ -16,78 +16,80 @@
 <link rel="stylesheet" href="/assets/site.css">
 <script src="/assets/lang.js"></script>
 <style>
-  body { background: #F6F7FB; }
-  .barra { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  .barra .wrap { display: flex; align-items: center; gap: 18px; height: 66px; }
-  .barra .logo { font-size: 21px; }
-  .menu { display: flex; gap: 4px; margin-left: 10px; }
-  .menu a { font: 500 15px/1 var(--body); color: var(--ink); text-decoration: none; padding: 10px 14px; border-radius: 99px; }
-  .menu a:hover { background: var(--chip); }
-  .barra .der { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-  .redes { display: flex; gap: 6px; }
-  .redes a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--ink); background: var(--chip); }
-  .redes a:hover { color: #fff; background: var(--ink); }
-  .redes svg { width: 18px; height: 18px; }
+  body { background: #fff; }
+  .barra { position: sticky; top: 0; z-index: 20; background: #000; color: #fff; }
+  .barra .wrap { max-width: 1120px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; height: 72px; }
+  .barra .logo { font-size: 21px; color: #fff; }
+  .menu { display: flex; gap: 6px; justify-content: center; }
+  .menu a { font: 500 16px/1 var(--body); color: #fff; text-decoration: none; padding: 10px 14px; border-radius: 8px; }
+  .menu a:hover { background: rgba(255,255,255,.12); }
+  .barra .der { display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+  .redes { display: flex; gap: 4px; }
+  .redes a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: #fff; }
+  .redes a:hover { background: rgba(255,255,255,.14); }
+  .redes svg { width: 19px; height: 19px; }
+  .barra .langs { background: rgba(255,255,255,.12); }
+  .barra .langs button { color: #cfd3dc; }
 
-  /* Video de Legionia */
-  .hero { position: relative; margin: 22px 0 8px; border-radius: 22px; overflow: hidden; background: #0b1530; aspect-ratio: 16 / 7; min-height: 340px; box-shadow: 0 20px 50px rgba(10,20,60,.25); }
+  /* Video de Legionia, de lado a lado */
+  .hero { position: relative; height: clamp(380px, 46vw, 560px); overflow: hidden; background: #0b1530; }
   .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,10,35,.82) 0%, rgba(5,10,35,.45) 45%, rgba(5,10,35,0) 75%); }
-  .hero .txt { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 34px 44px; color: #fff; max-width: 560px; }
-  .hero .tag { font: 700 12.5px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: #9fd0ff; margin-bottom: 12px; }
-  .hero h1 { font: 900 clamp(40px, 6.5vw, 72px)/1 var(--display); letter-spacing: .02em; margin: 0 0 14px; }
-  .hero p { font-size: 17.5px; margin: 0 0 22px; color: #e3ebff; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,.72) 100%); }
+  .hero .wrap { position: relative; z-index: 1; height: 100%; max-width: 1120px; display: flex; align-items: center; justify-content: flex-end; }
+  .hero .txt { color: #fff; width: min(440px, 100%); }
+  .hero .ico { width: 92px; height: 92px; border-radius: 22px; box-shadow: 0 10px 26px rgba(0,0,0,.45); margin-bottom: 14px; }
+  .hero .nom { font: 500 15px/1.3 var(--body); margin: 0 0 8px; color: #e6e9f2; }
+  .hero h1 { font: 800 clamp(26px, 3.2vw, 36px)/1.2 var(--display); margin: 0 0 20px; }
   .hero .acc { display: flex; flex-wrap: wrap; gap: 10px; }
-  .btn { display: inline-flex; align-items: center; gap: 9px; font: 700 15.5px/1 var(--body); text-decoration: none; padding: 14px 20px; border-radius: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 9px; font: 700 15px/1 var(--body); text-decoration: none; padding: 13px 18px; border-radius: 10px; }
   .btn svg { width: 20px; height: 20px; }
   .btn.dc { background: #5865F2; color: #fff; }
   .btn.dc:hover { background: #4752c4; }
-  .btn.yt { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.35); }
-  .btn.yt:hover { background: rgba(255,255,255,.24); }
-  .hero .pronto { margin-top: 16px; font-size: 13.5px; color: #c4d2f5; }
+  .btn.yt { background: #000; color: #fff; border: 1px solid #A6A6A6; }
+  .btn.yt:hover { background: #222; }
+  .hero .pronto { display: block; margin-top: 14px; font-size: 13.5px; color: #d5daea; }
 
   /* Secciones */
-  .sec { padding: 34px 0 6px; scroll-margin-top: 80px; }
-  .sec h2 { font: 800 30px/1.1 var(--display); margin: 0 0 20px; letter-spacing: -.01em; }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 1px 2px rgba(20,30,60,.08), 0 8px 24px rgba(20,30,60,.07); display: flex; flex-direction: column; transition: transform .18s ease, box-shadow .18s ease; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(20,30,60,.08), 0 16px 36px rgba(20,30,60,.12); }
-  .card .banner { aspect-ratio: 1024 / 500; background: #e9ecf4; }
+  .sec { max-width: 1040px; margin: 0 auto; padding: 50px 20px 0; scroll-margin-top: 80px; }
+  .sec h2 { font: 800 30px/1.1 var(--display); margin: 0 0 30px; text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 46px 44px; }
+  .card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .card .banner { width: 100%; aspect-ratio: 1024 / 500; border-radius: 24px; overflow: hidden; background: #eef0f5; box-shadow: 0 10px 28px rgba(20,30,60,.14); transition: transform .2s ease; }
+  .card:hover .banner { transform: translateY(-3px); }
   .card .banner img { width: 100%; height: 100%; object-fit: cover; }
-  .card .body { position: relative; padding: 52px 20px 20px; display: flex; flex-direction: column; flex: 1; }
-  .card .icono { position: absolute; top: -40px; left: 18px; width: 82px; height: 82px; border-radius: 20px; border: 4px solid #fff; box-shadow: 0 6px 16px rgba(20,30,60,.22); background: #fff; }
-  .card h3 { font: 800 20px/1.2 var(--display); margin: 0 0 4px; }
+  .card .body { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .card .icono { width: 96px; height: 96px; margin-top: -54px; position: relative; border-radius: 24px; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(20,30,60,.25); background: #fff; }
+  .card h3 { font: 800 21px/1.2 var(--display); margin: 14px 0 4px; }
   .card .status { font-size: 13px; font-weight: 700; color: var(--muted); }
   .card .status.live { color: var(--mint); }
-  .card p { margin: 10px 0 16px; color: var(--soft); font-size: 15px; flex: 1; }
-  .card .stores { align-items: center; gap: 8px; }
+  .card p { margin: 10px 0 16px; color: var(--soft); font-size: 15.5px; max-width: 42ch; }
+  .card .stores { justify-content: center; align-items: center; gap: 8px; }
   .badge { display: inline-block; line-height: 0; }
-  .badge img { height: 42px; width: auto; }
+  .badge img { height: 44px; width: auto; }
   .store.web { padding: 6px 13px 6px 10px; }
   .ver { font: 700 14px/1 var(--body); color: var(--gold); text-decoration: none; padding: 10px 6px; }
   .ver:hover { text-decoration: underline; }
 
   /* Pie */
-  .pie { margin-top: 54px; background: #0e1630; color: #c7d0ea; }
-  .pie .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; padding: 44px 20px 26px; }
+  .pie { margin-top: 70px; background: #000; color: #c7cbd6; }
+  .pie .wrap { max-width: 1120px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; padding: 46px 20px 26px; }
   .pie h4 { font: 700 14px/1 var(--body); color: #fff; letter-spacing: .06em; text-transform: uppercase; margin: 6px 0 14px; }
-  .pie a { color: #c7d0ea; text-decoration: none; display: block; padding: 4px 0; font-size: 15px; }
+  .pie a { color: #c7cbd6; text-decoration: none; display: block; padding: 4px 0; font-size: 15px; }
   .pie a:hover { color: #fff; }
   .pie .logo { color: #fff; }
   .pie .yo p { margin: 14px 0 16px; font-size: 14.5px; max-width: 34ch; }
-  .pie .redes a { display: grid; padding: 0; background: rgba(255,255,255,.1); color: #fff; }
-  .pie .redes a:hover { background: #fff; color: #0e1630; }
-  .pie .copy { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.12); padding-top: 18px; font-size: 13.5px; color: #8e9abf; }
+  .pie .redes a { display: grid; padding: 0; background: rgba(255,255,255,.1); }
+  .pie .redes a:hover { background: #fff; color: #000; }
+  .pie .copy { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.12); padding-top: 18px; font-size: 13.5px; color: #8a8f9c; }
 
-  @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } .pie .wrap { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) { .pie .wrap { grid-template-columns: 1fr 1fr; } .barra .redes { display: none; } .barra .wrap { grid-template-columns: auto 1fr auto; } }
   @media (max-width: 680px) {
-    .barra .wrap { height: auto; flex-wrap: wrap; padding-top: 12px; padding-bottom: 10px; gap: 10px; }
-    .menu { order: 3; margin-left: 0; width: 100%; }
-    .barra .redes { display: none; }
+    .barra .wrap { height: auto; grid-template-columns: 1fr auto; padding-top: 12px; padding-bottom: 8px; gap: 8px; }
+    .menu { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
     .grid { grid-template-columns: 1fr; }
-    .hero { aspect-ratio: auto; min-height: 460px; }
-    .hero::after { background: linear-gradient(0deg, rgba(5,10,35,.9) 0%, rgba(5,10,35,.5) 55%, rgba(5,10,35,.1) 100%); }
-    .hero .txt { justify-content: flex-end; padding: 24px 22px; min-height: 460px; }
+    .hero { height: 520px; }
+    .hero::after { background: linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.1) 100%); }
+    .hero .wrap { align-items: flex-end; justify-content: flex-start; padding-bottom: 30px; }
     .pie .wrap { grid-template-columns: 1fr; }
   }
 </style>
@@ -104,21 +106,23 @@
   </div>
 </header>
 
-<main class="wrap">
-  <section class="hero">
-    <video autoplay muted loop playsinline preload="metadata" poster="/assets/apps/legionia/poster.webp"><source src="/assets/apps/legionia/trailer.mp4" type="video/mp4"><source src="/assets/apps/legionia/trailer.webm" type="video/webm"></video>
+<section class="hero">
+  <video autoplay muted loop playsinline preload="metadata" poster="/assets/apps/legionia/poster.webp"><source src="/assets/apps/legionia/trailer.mp4" type="video/mp4"><source src="/assets/apps/legionia/trailer.webm" type="video/webm"></video>
+  <div class="wrap">
     <div class="txt">
-      <span class="tag"><span data-l="es">Nuevo juego</span><span data-l="en">New game</span><span data-l="pt">Novo jogo</span></span>
-      <h1>LEGIONIA</h1>
-      <p><span data-l="es">Explorá, juntá tesoros, construí tu aldea y defendela con tu legión de las hordas zombis.</span><span data-l="en">Explore, gather treasures, build your village and defend it with your legion from the zombie hordes.</span><span data-l="pt">Explore, junte tesouros, construa sua vila e defenda-a com sua legião das hordas zumbis.</span></p>
+      <img class="ico" src="/assets/apps/legionia/icon.webp" alt="Legionia" width="92" height="92">
+      <p class="nom">Legionia</p>
+      <h1><span data-l="es">Explorá, construí tu aldea y defendela con tu legión</span><span data-l="en">Explore, build your village and defend it with your legion</span><span data-l="pt">Explore, construa sua vila e defenda-a com sua legião</span></h1>
       <div class="acc">
         <a class="btn dc" href="https://discord.gg/FRsDnGurG" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.5 19.5 0 0 0-4.9 1.5A20.4 20.4 0 0 0 .2 18.1a19.8 19.8 0 0 0 6 3l1.3-2a12.7 12.7 0 0 1-2-1l.5-.4a14.1 14.1 0 0 0 12 0l.5.4a12.7 12.7 0 0 1-2 1l1.3 2a19.7 19.7 0 0 0 6-3 20.3 20.3 0 0 0-3.5-13.7ZM8.3 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm7.4 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg><span data-l="es">Unite al Discord</span><span data-l="en">Join the Discord</span><span data-l="pt">Entre no Discord</span></a>
         <a class="btn yt" href="https://www.youtube.com/@legioniagame" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.7 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg><span data-l="es">Ver el tráiler</span><span data-l="en">Watch the trailer</span><span data-l="pt">Ver o trailer</span></a>
       </div>
       <span class="pronto"><span data-l="es">Próximamente en Android, iPhone y PC (Steam)</span><span data-l="en">Coming soon to Android, iPhone and PC (Steam)</span><span data-l="pt">Em breve para Android, iPhone e PC (Steam)</span></span>
     </div>
-  </section>
+  </div>
+</section>
 
+<main>
   <section class="sec" id="juegos">
     <h2><span data-l="es">Juegos</span><span data-l="en">Games</span><span data-l="pt">Jogos</span></h2>
     <div class="grid">
@@ -245,7 +249,7 @@
       <a href="/terminos/"><span data-l="es">Términos del servicio</span><span data-l="en">Terms of service</span><span data-l="pt">Termos de serviço</span></a>
       <a href="/tintix/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Tintix</a><a href="/letravio/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Letravio</a><a href="/paseo/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Cuidar Perros</a><a href="/skate-comic/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Skate Comic</a><a href="/santa-biblia/privacy/"><span data-l="es">Privacidad</span><span data-l="en">Privacy</span><span data-l="pt">Privacidade</span> · Santa Biblia</a>
     </div>
-    <div class="copy">© 2026 dmith.builds</div>
+    <div class="copy">© 2026 dmith.builds · Diego Schmid</div>
   </div>
 </footer>
 </body>
