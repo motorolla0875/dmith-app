@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Armá tu juego · dmith juegos</title>
+<meta name="theme-color" content="#f3ecff">
+<link rel="icon" href="/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root { --papel:#f3ecff; --uva:#2e1650; --uva2:#5b3d86; --chicle:#ff4f8b; --manteca:#ffd23f; --linea:#ddd0f3; --blanco:#fff; --ok:#14a35a;
+    --fuente:'Bricolage Grotesque', 'Poppins', system-ui, sans-serif; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--papel); color:var(--uva); font-family:var(--fuente); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  :focus-visible { outline:3px solid var(--chicle); outline-offset:2px; }
+  a { color:inherit; }
+  .oculto { display:none !important; }
+
+  .barra { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:2px solid var(--linea); background:var(--papel);
+    position:sticky; top:0; z-index:15; }
+  .marca { font-weight:800; font-size:19px; letter-spacing:-.4px; text-decoration:none; display:flex; align-items:center; gap:9px; }
+  .marca svg { width:28px; height:28px; }
+  .cambiar { font-weight:700; font-size:15px; color:var(--uva2); }
+
+  .armado { display:grid; grid-template-columns:minmax(0, 560px) 1fr; min-height:calc(100vh - 62px); }
+  .form { padding:28px 28px 140px; border-right:2px solid var(--linea); }
+  h1 { font-size:36px; line-height:1; letter-spacing:-.035em; margin:0 0 6px; }
+  .bajada { color:var(--uva2); margin:0 0 26px; }
+
+  fieldset { border:0; padding:0; margin:0 0 26px; }
+  legend { font-weight:800; font-size:21px; letter-spacing:-.02em; margin-bottom:12px; padding:0; }
+  label { display:block; font-weight:700; font-size:15px; margin:14px 0 6px; }
+  .ayuda { font-weight:500; color:var(--uva2); font-size:14px; }
+  input[type=text], input[type=url], textarea { width:100%; font:500 17px var(--fuente); color:var(--uva); background:var(--blanco); border:2px solid var(--linea);
+    border-radius:14px; padding:12px 14px; transition:border-color .15s; }
+  input[type=text]:focus, input[type=url]:focus, textarea:focus { border-color:var(--uva); outline:none; }
+  textarea { resize:vertical; min-height:110px; line-height:1.4; }
+  .doble { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .doble label { margin-top:0; }
+  .cuenta { text-align:right; font-size:13px; color:var(--uva2); margin-top:4px; }
+
+  /* foto */
+  .foto { display:flex; align-items:center; gap:16px; background:var(--blanco); border:2px dashed var(--linea); border-radius:20px; padding:14px; cursor:pointer; }
+  .foto:hover { border-color:var(--uva2); }
+  .foto .circulo { width:84px; height:84px; border-radius:50%; background:var(--papel) center/cover no-repeat; flex:none; border:4px solid var(--chicle);
+    display:grid; place-items:center; color:var(--uva2); }
+  .foto.logo .circulo { border-color:var(--manteca); }
+  .foto b { display:block; font-size:17px; }
+  .foto span { color:var(--uva2); font-size:14px; }
+  .foto input { display:none; }
+
+  /* opciones en fichas */
+  .fichas { display:flex; flex-wrap:wrap; gap:8px; }
+  .ficha { border:2px solid var(--linea); background:var(--blanco); border-radius:999px; padding:9px 15px; font:700 15px var(--fuente); color:var(--uva);
+    cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+  .ficha[aria-pressed="true"] { border-color:var(--uva); background:var(--uva); color:var(--papel); }
+  .ficha svg { width:18px; height:18px; }
+  .temas { display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; }
+  .tema { border:3px solid transparent; border-radius:16px; padding:0; cursor:pointer; overflow:hidden; background:none; font:700 13px var(--fuente); color:var(--uva); }
+  .tema[aria-pressed="true"] { border-color:var(--uva); }
+  .tema .mues { height:46px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; }
+  .tema .mues i { width:16px; height:16px; border-radius:50%; }
+  .tema span { display:block; padding:5px 0 6px; background:var(--blanco); }
+  .colores { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
+  .colores label { margin:0; display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px; color:var(--uva2); }
+  input[type=color] { width:38px; height:38px; border:2px solid var(--linea); border-radius:10px; padding:2px; background:var(--blanco); cursor:pointer; }
+
+  /* premios de la ruleta */
+  .premio { display:grid; grid-template-columns:1fr 92px 36px; gap:8px; align-items:center; background:var(--blanco); border:2px solid var(--linea);
+    border-radius:16px; padding:10px; margin-bottom:8px; }
+  .premio input[type=text] { padding:9px 11px; font-size:16px; }
+  .premio .chance { display:flex; flex-direction:column; align-items:center; font-size:12px; color:var(--uva2); }
+  .premio .chance b { font-size:17px; color:var(--uva); }
+  .premio .chance input { width:100%; accent-color:var(--chicle); }
+  .premio .quitar { width:36px; height:36px; border:0; border-radius:50%; background:var(--papel); cursor:pointer; color:var(--uva2); font-size:20px; line-height:1; }
+  .premio .sin { grid-column:1 / -1; display:flex; gap:8px; align-items:center; margin:0; font-weight:600; font-size:14px; color:var(--uva2); }
+  .premio.pierde { background:#f1edf7; }
+  .mas { border:2px dashed var(--uva2); background:none; color:var(--uva); font:700 15px var(--fuente); border-radius:14px; padding:11px; width:100%; cursor:pointer; }
+  .interruptor { display:flex; align-items:center; gap:10px; font-weight:600; margin-top:14px; }
+  .interruptor input { width:20px; height:20px; accent-color:var(--uva); }
+
+  /* vista previa */
+  .vista { position:sticky; top:62px; height:calc(100vh - 62px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+    background:radial-gradient(circle at 50% 45%, #fff6c9 0, #fff6c9 34%, transparent 34.2%), var(--papel); padding:20px; }
+  .cel { width:min(320px, 42vh); aspect-ratio:9/18.5; border-radius:44px; background:var(--uva); padding:11px; position:relative;
+    box-shadow:0 30px 60px -22px rgba(46,22,80,.55); }
+  .cel iframe { width:100%; height:100%; border:0; border-radius:34px; display:block; background:#2b0f3a; }
+  .cel::before { content:""; position:absolute; top:20px; left:50%; width:78px; height:20px; margin-left:-39px; background:var(--uva); border-radius:20px; z-index:2; }
+  .ver { display:flex; gap:6px; background:var(--blanco); padding:5px; border-radius:999px; box-shadow:0 6px 18px -10px rgba(46,22,80,.5); }
+  .ver button { border:0; background:none; font:700 14px var(--fuente); color:var(--uva2); padding:8px 14px; border-radius:999px; cursor:pointer; }
+  .ver button[aria-pressed="true"] { background:var(--uva); color:var(--papel); }
+  .vista .cerrar { display:none; }
+  .vista .nota { font-size:14px; color:var(--uva2); margin:0; }
+
+  /* barra de pago */
+  .pagar { position:fixed; left:0; bottom:0; width:min(560px, 100%); padding:14px 28px max(14px, env(safe-area-inset-bottom)); background:var(--papel);
+    border-top:2px solid var(--linea); border-right:2px solid var(--linea); display:flex; gap:10px; align-items:center; z-index:12; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:999px; font:700 17px/1 var(--fuente); padding:16px 24px;
+    text-decoration:none; cursor:pointer; transition:transform .12s, box-shadow .12s; }
+  .btn-1 { background:var(--uva); color:var(--papel); box-shadow:0 5px 0 var(--chicle); flex:1; }
+  .btn-1:active { transform:translateY(3px); box-shadow:0 2px 0 var(--chicle); }
+  .btn-1:disabled { opacity:.6; cursor:wait; }
+  .btn-2 { background:var(--blanco); color:var(--uva); border:2px solid var(--uva); }
+  .probar { display:none; }
+  .error { color:#c0174d; font-weight:700; font-size:15px; margin:0 0 10px; }
+
+  /* ventanas */
+  .ventana { position:fixed; inset:0; z-index:30; background:rgba(30,12,55,.62); display:flex; align-items:center; justify-content:center; padding:16px; overflow:auto; }
+  .caja { background:var(--papel); border-radius:30px; width:100%; max-width:480px; padding:28px; position:relative; max-height:calc(100vh - 32px); overflow:auto;
+    animation:sube .3s cubic-bezier(.2,1.2,.4,1); }
+  @keyframes sube { from { transform:translateY(30px); opacity:0 } }
+  @media (prefers-reduced-motion: reduce) { .caja { animation:none; } }
+  .caja h2 { font-size:32px; line-height:1; letter-spacing:-.03em; margin:0 0 8px; }
+  .caja p { color:var(--uva2); margin:0 0 18px; }
+  .x { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; border:0; background:var(--blanco); cursor:pointer; font-size:22px; color:var(--uva); }
+  .resumen { background:var(--blanco); border-radius:18px; padding:16px; display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:10px; }
+  .resumen b { font-size:26px; letter-spacing:-.02em; }
+  .mp { background:#009ee3; color:#fff; box-shadow:0 5px 0 #0a6fa0; width:100%; }
+  .prueba { background:var(--manteca); border-radius:12px; padding:10px 12px; font-size:14px; font-weight:600; margin-top:14px; }
+  .link { display:flex; gap:8px; background:var(--blanco); border:2px solid var(--linea); border-radius:14px; padding:6px 6px 6px 14px; align-items:center; margin-bottom:10px; }
+  .link code { flex:1; font:700 15px var(--fuente); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .link button { border:0; border-radius:10px; background:var(--uva); color:var(--papel); font:700 14px var(--fuente); padding:10px 14px; cursor:pointer; }
+  .qr { display:flex; gap:16px; align-items:center; background:var(--blanco); border-radius:18px; padding:14px; margin:14px 0; }
+  .qr canvas { width:120px; height:120px; image-rendering:pixelated; flex:none; }
+  .compartir { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .compartir .btn { font-size:15px; padding:14px 12px; }
+  .wa { background:#25d366; color:#fff; box-shadow:0 4px 0 #128c4b; }
+  .guardar { background:#fff1c2; border:2px solid var(--manteca); border-radius:16px; padding:14px; margin-top:18px; font-size:14px; }
+  .guardar b { display:block; font-size:16px; margin-bottom:4px; }
+  .guardar .link { margin:10px 0 0; }
+
+  .estado { background:var(--blanco); border-radius:18px; padding:14px 16px; margin-bottom:22px; display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; font-weight:600; }
+  .estado .pildora { background:#d8f5e5; color:var(--ok); border-radius:999px; padding:4px 12px; font-size:14px; font-weight:800; }
+  .estado .pildora.no { background:#ffe2ea; color:#c0174d; }
+  .stats { background:var(--blanco); border-radius:18px; padding:16px; margin-bottom:22px; }
+  .stats h3 { margin:0 0 10px; font-size:19px; }
+  .stats .grande { font-size:40px; font-weight:800; letter-spacing:-.03em; line-height:1; }
+  .barras { display:flex; align-items:flex-end; gap:4px; height:70px; margin:12px 0 4px; }
+  .barras i { flex:1; background:var(--chicle); border-radius:4px 4px 0 0; min-height:3px; }
+  .stats ul { margin:10px 0 0; padding:0; list-style:none; font-size:15px; }
+  .stats li { display:flex; justify-content:space-between; border-top:1px solid var(--linea); padding:6px 0; }
+
+  @media (max-width: 900px) {
+    .armado { grid-template-columns:1fr; }
+    .form { padding:22px 16px 130px; border-right:0; }
+    .vista { display:none; position:fixed; inset:0; z-index:25; height:auto; top:0; background:rgba(30,12,55,.92); }
+    .vista.abierta { display:flex; }
+    .vista .cerrar { display:block; position:absolute; top:max(14px, env(safe-area-inset-top)); right:14px; z-index:3; }
+    .vista .nota { color:#e8dcff; }
+    .cel { width:min(330px, 78vw, 44vh); }
+    .pagar { width:100%; padding:12px 16px max(12px, env(safe-area-inset-bottom)); border-right:0; }
+    .probar { display:inline-flex; flex:none; }
+    .doble { grid-template-columns:1fr; gap:0; }
+    .doble label { margin-top:14px; }
+  }
+</style>
+</head>
+<body>
+<header class="barra">
+  <a class="marca" href="/juego/"><svg viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="9" fill="#2e1650"/><path d="M15 22c-6-4-8-7-8-10a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 3-2 6-8 10z" fill="#ff4f8b"/></svg>dmith juegos</a>
+  <a class="cambiar" href="/juego/#plantillas">Cambiar plantilla</a>
+</header>
+
+<div class="armado">
+  <form class="form" id="form" autocomplete="off" onsubmit="return false">
+    <h1 id="h1">Armá tu juego</h1>
+    <p class="bajada" id="bajada">Todo lo que cambies se ve al instante en el celular de la derecha.</p>
+    <div id="estado" class="oculto"></div>
+    <div id="campos"></div>
+  </form>
+
+  <aside class="vista" id="vista" aria-label="Vista previa">
+    <button class="x cerrar" type="button" id="cerrarVista" aria-label="Cerrar vista previa">×</button>
+    <div class="cel"><iframe id="prev" title="Vista previa del juego"></iframe></div>
+    <div class="ver" id="verBotones"></div>
+    <p class="nota">Es la vista previa: se puede jugar de verdad.</p>
+  </aside>
+</div>
+
+<div class="pagar">
+  <button class="btn btn-2 probar" type="button" id="probar">Probar</button>
+  <button class="btn btn-1" type="button" id="obtener">Obtener mi juego</button>
+</div>
+
+<!-- pago -->
+<div class="ventana oculto" id="vPago" role="dialog" aria-modal="true" aria-labelledby="tPago">
+  <div class="caja">
+    <button class="x" type="button" data-cerrar aria-label="Cerrar">×</button>
+    <h2 id="tPago">Último paso</h2>
+    <p>Pagás y al instante te damos el link y el QR para mandarlo.</p>
+    <div class="resumen"><span id="rNombre"></span><b id="rPrecio"></b></div>
+    <p class="error oculto" id="ePago"></p>
+    <button class="btn mp" type="button" id="pagarMP">Pagar con Mercado Pago</button>
+    <div class="prueba" id="modoPrueba">Modo de prueba: no se cobra nada. El pago real se conecta más adelante.</div>
+  </div>
+</div>
+
+<!-- listo -->
+<div class="ventana oculto" id="vListo" role="dialog" aria-modal="true" aria-labelledby="tListo">
+  <div class="caja">
+    <button class="x" type="button" data-cerrar aria-label="Cerrar">×</button>
+    <h2 id="tListo">¡Listo! Ya lo podés mandar</h2>
+    <p id="pListo">Este es el link de tu juego. Funciona en cualquier celular.</p>
+    <div class="link"><code id="lJuego"></code><button type="button" data-copiar="lJuego">Copiar</button></div>
+    <div class="compartir">
+      <a class="btn wa" id="bWa" target="_blank" rel="noopener">Mandar por WhatsApp</a>
+      <a class="btn btn-2" id="bAbrir" target="_blank" rel="noopener">Abrir el juego</a>
+    </div>
+    <div class="qr"><canvas id="qr" width="120" height="120"></canvas>
+      <div><b>QR para imprimir</b><p style="margin:4px 0 10px;font-size:14px">Ideal para una tarjeta o el mostrador.</p>
+      <button class="btn btn-2" type="button" id="bQR" style="padding:10px 16px;font-size:14px">Descargar QR</button></div></div>
+    <div class="guardar"><b>Guardá este link privado</b>Con este link podés cambiar el juego cuando quieras. No lo compartas.
+      <div class="link"><code id="lEditar"></code><button type="button" data-copiar="lEditar">Copiar</button></div></div>
+  </div>
+</div>
+
+<script src="/juego/demos.js"></script>
+<script src="/juego/qr.js"></script>
+<script>
+// ─── Editor: arma los datos de la plantilla, los muestra en vivo y los manda al servidor ───
+const $ = id => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+const EDITAR = q.get('editar'), CLAVE = q.get('clave');
+let PL = PRECIOS[q.get('p')] ? q.get('p') : 'amor';
+let D = null;           // datos actuales
+let foto = '', logo = ''; // dataURL nueva (o url si ya estaba guardada)
+let subida = { foto: false, logo: false }; // si la imagen actual ya está en el servidor
+let JUEGO = null;       // {id, clave} cuando ya existe en el servidor
+let INFO = null;        // respuesta del servidor en modo editar
+let vistaIr = 'inicio';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ─── temas de color ───
+const TEMAS_AMOR = [
+  { n: 'Noche', color: '#ff4f7b', fondo1: '#2b0f3a', fondo2: '#7a1f5c' },
+  { n: 'Atardecer', color: '#ff6b3d', fondo1: '#3d1240', fondo2: '#e0565b' },
+  { n: 'Océano', color: '#3fd0ff', fondo1: '#071a3a', fondo2: '#1b5a8f' },
+  { n: 'Bosque', color: '#8ce07a', fondo1: '#0e2a1f', fondo2: '#22604a' },
+  { n: 'Lavanda', color: '#c58cff', fondo1: '#1d1240', fondo2: '#5b3d9a' },
+  { n: 'Fiesta', color: '#ff9f1c', fondo1: '#10224a', fondo2: '#2f4fa8' }
+];
+const TEMAS_RULETA = [
+  { n: 'Café', color: '#f2b65a', fondo: '#2b1a12' }, { n: 'Helado', color: '#ff8fb8', fondo: '#3a1830' },
+  { n: 'Menta', color: '#4fe0b0', fondo: '#0d2a24' }, { n: 'Rojo', color: '#ff5a4f', fondo: '#26100f' },
+  { n: 'Azul', color: '#5ab8ff', fondo: '#0c1a33' }, { n: 'Negro y oro', color: '#e8c35a', fondo: '#111111' }
+];
+const OBJETOS = [
+  ['corazon', 'Corazones', '<path d="M9 15C3 11 2 8 2 6a3.5 3.5 0 0 1 7-1 3.5 3.5 0 0 1 7 1c0 2-1 5-7 9z" fill="#ff4f8b"/>'],
+  ['estrella', 'Estrellas', '<path d="M9 1.5l2.2 4.9 5.3.5-4 3.6 1.2 5.2L9 13l-4.7 2.7 1.2-5.2-4-3.6 5.3-.5z" fill="#ffc21a"/>'],
+  ['flor', 'Flores', '<g fill="#ff7fb0"><circle cx="9" cy="4.5" r="3.2"/><circle cx="13.3" cy="7.6" r="3.2"/><circle cx="11.6" cy="12.7" r="3.2"/><circle cx="6.4" cy="12.7" r="3.2"/><circle cx="4.7" cy="7.6" r="3.2"/></g><circle cx="9" cy="9" r="2.6" fill="#ffd23f"/>'],
+  ['globo', 'Globos', '<ellipse cx="9" cy="7" rx="5" ry="6" fill="#5ad1ff"/><path d="M9 13v4" stroke="#5b3d86" stroke-width="1.2"/>'],
+  ['moneda', 'Monedas', '<circle cx="9" cy="9" r="7" fill="#ffcc33" stroke="#c98a10" stroke-width="2"/>']
+];
+
+// ─── guardar borrador en el navegador ───
+const BORR = 'juego_borrador_' + PL;
+function guardarBorrador() { if (EDITAR) return; try { localStorage.setItem(BORR, JSON.stringify({ D, foto, logo, JUEGO, subida })); } catch (e) { try { localStorage.setItem(BORR, JSON.stringify({ D, JUEGO })); } catch (e2) {} } }
+function leerBorrador() { try { return JSON.parse(localStorage.getItem(BORR) || 'null'); } catch (e) { return null; } }
+function misJuegos(j) { try { const l = JSON.parse(localStorage.getItem('juego_mios') || '[]'); if (!l.find(x => x.id === j.id)) l.unshift(j); localStorage.setItem('juego_mios', JSON.stringify(l.slice(0, 30))); } catch (e) {} }
+
+// ─── formulario ───
+function campo(id, etiqueta, opts = {}) {
+  const v = esc(opts.valor != null ? opts.valor : (D[id] || ''));
+  const ayuda = opts.ayuda ? ` <span class="ayuda">${opts.ayuda}</span>` : '';
+  if (opts.largo) return `<label for="f_${id}">${etiqueta}${ayuda}</label><textarea id="f_${id}" data-k="${id}" maxlength="${opts.max || 600}" placeholder="${esc(opts.ph || '')}">${v}</textarea><div class="cuenta" data-cuenta="${id}"></div>`;
+  return `<label for="f_${id}">${etiqueta}${ayuda}</label><input type="${opts.tipo || 'text'}" id="f_${id}" data-k="${id}" value="${v}" maxlength="${opts.max || 40}" placeholder="${esc(opts.ph || '')}">`;
+}
+function bloqueFoto(cual, titulo, texto) {
+  return `<label class="foto ${cual === 'logo' ? 'logo' : ''}" for="f_${cual}">
+    <span class="circulo" id="c_${cual}"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M5 10h4l2-3h8l2 3h4v13H5z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+    <span><b id="t_${cual}">${titulo}</b><span>${texto}</span></span>
+    <input type="file" id="f_${cual}" accept="image/*"></label>`;
+}
+function armar() {
+  const P = PRECIOS[PL];
+  $('h1').textContent = EDITAR ? 'Editá tu juego' : P.nombre;
+  $('bajada').textContent = innerWidth > 900 ? 'Todo lo que cambies se ve al instante en el celular de la derecha.' : 'Completá lo tuyo y tocá Probar para jugarlo.';
+  document.title = `${P.nombre} · dmith juegos`;
+  let h = '';
+  if (PL === 'ruleta') {
+    h += `<fieldset><legend>Tu local</legend>${bloqueFoto('logo', 'Subí tu logo', 'Mejor si es cuadrado. Va en el centro de la ruleta.')}
+      ${campo('local', 'Nombre del local', { max: 40, ph: 'Ej: Heladería Polo' })}
+      ${campo('titulo', 'Título de arriba', { max: 40, ph: 'Girá y ganá' })}</fieldset>
+      <fieldset><legend>Premios</legend><p class="ayuda" style="margin:0 0 12px">La chance es qué tan seguido sale cada uno. Los premios caros, con chance baja.</p>
+      <div id="premios"></div><button type="button" class="mas" id="masPremio">Agregar premio</button></fieldset>
+      <fieldset><legend>Colores</legend><div class="temas" id="temas"></div>
+      <div class="colores"><label><input type="color" data-k="color"> Principal</label><label><input type="color" data-k="fondo"> Fondo</label></div></fieldset>
+      <fieldset><legend>El cupón</legend>
+      <div class="doble">${campo('prefijo', 'Código empieza con', { max: 5, ph: 'HEL' })}<div></div></div>
+      ${campo('vence', 'Condiciones del premio', { max: 120, ph: 'Válido hoy, presentando esta pantalla en caja.' })}
+      ${campo('instagram', 'Instagram del local', { tipo: 'url', max: 120, ph: 'https://instagram.com/tulocal', ayuda: '(opcional)' })}
+      <label class="interruptor"><input type="checkbox" id="f_una" ${D.una_por_dia !== false ? 'checked' : ''}> Una tirada por persona por día</label></fieldset>`;
+  } else {
+    h += `<fieldset><legend>Para quién es</legend>${bloqueFoto('foto', 'Subí su foto', 'Una de la cara, bien de frente. Se ve en un círculo.')}
+      <div class="doble">${campo('para', 'Su nombre', { max: 30, ph: 'Ej: Sofi' })}${campo('de', 'De parte de', { max: 30, ph: 'Tu nombre' })}</div></fieldset>
+      <fieldset><legend>Tu mensaje</legend>${campo('mensaje', 'Lo que aparece cuando gana', { largo: true, max: 600, ph: 'Escribí lo que le querés decir. Podés usar varias líneas.' })}
+      ${PL === 'amor' ? campo('pregunta', 'Una pregunta al final', { max: 120, ph: '¿Querés salir conmigo el sábado?', ayuda: '(opcional, el NO se escapa)' }) + '<div id="rta">' + campo('respuesta_si', 'Lo que aparece si dice que sí', { max: 120, ph: '¡Sabía! Te paso a buscar a las 9.' }) + '</div>' : ''}
+      </fieldset>
+      <fieldset><legend>El juego</legend><label>Qué cae del cielo</label><div class="fichas" id="objetos"></div>
+      <label>Dificultad</label><div class="fichas" id="metas"></div>
+      <label>Frases mientras juega <span class="ayuda">(opcional)</span></label>
+      <div class="doble" style="grid-template-columns:1fr 1fr 1fr">${[0, 1, 2].map(i => `<input type="text" data-frase="${i}" maxlength="30" value="${esc((D.frases || [])[i] || '')}" aria-label="Frase ${i + 1}">`).join('')}</div></fieldset>
+      <fieldset><legend>Colores</legend><div class="temas" id="temas"></div>
+      <div class="colores"><label><input type="color" data-k="color"> Principal</label><label><input type="color" data-k="fondo1"> Fondo arriba</label><label><input type="color" data-k="fondo2"> Fondo abajo</label></div></fieldset>`;
+  }
+  $('campos').innerHTML = h;
+  // textos
+  document.querySelectorAll('[data-k]').forEach(el => {
+    if (el.type === 'color') el.value = D[el.dataset.k];
+    el.addEventListener('input', () => { D[el.dataset.k] = el.value; if (el.type === 'color') { D.tema = ''; pintarTemas(); } cambio(); });
+  });
+  document.querySelectorAll('[data-frase]').forEach(el => el.addEventListener('input', () => { D.frases = [0, 1, 2].map(i => document.querySelector(`[data-frase="${i}"]`).value); cambio(); }));
+  // fotos
+  for (const cual of ['foto', 'logo']) {
+    const inp = $('f_' + cual); if (!inp) continue;
+    inp.addEventListener('change', () => leerImagen(inp.files[0], cual));
+    pintarFoto(cual);
+  }
+  if (PL === 'ruleta') {
+    $('f_una').addEventListener('change', e => { D.una_por_dia = e.target.checked; cambio(); });
+    $('masPremio').addEventListener('click', () => { if (D.premios.length < 12) { D.premios.push({ texto: '', peso: 10 }); pintarPremios(); cambio(); $('premios').lastElementChild.querySelector('input').focus(); } });
+    pintarPremios();
+  } else {
+    $('objetos').innerHTML = OBJETOS.map(([k, n, svg]) => `<button type="button" class="ficha" data-obj="${k}" aria-pressed="${D.objeto === k}"><svg viewBox="0 0 18 18" aria-hidden="true">${svg}</svg>${n}</button>`).join('');
+    $('objetos').addEventListener('click', e => { const b = e.target.closest('[data-obj]'); if (!b) return; D.objeto = b.dataset.obj; marcar('objetos', 'obj', D.objeto); cambio(); });
+    $('metas').innerHTML = [[10, 'Fácil'], [15, 'Normal'], [25, 'Difícil']].map(([m, n]) => `<button type="button" class="ficha" data-meta="${m}" aria-pressed="${+D.meta === m}">${n}</button>`).join('');
+    $('metas').addEventListener('click', e => { const b = e.target.closest('[data-meta]'); if (!b) return; D.meta = +b.dataset.meta; marcar('metas', 'meta', String(D.meta)); cambio(); });
+    if ($('f_pregunta')) $('f_pregunta').addEventListener('input', () => $('rta').classList.toggle('oculto', !D.pregunta));
+    if ($('rta')) $('rta').classList.toggle('oculto', !D.pregunta);
+  }
+  pintarTemas(); contar();
+  $('verBotones').innerHTML = (PL === 'ruleta' ? [['inicio', 'La ruleta'], ['cupon', 'El cupón']] : [['inicio', 'Inicio'], ['final', 'Final']])
+    .map(([k, n]) => `<button type="button" data-ir="${k}" aria-pressed="${k === vistaIr}">${n}</button>`).join('');
+}
+function marcar(cont, attr, val) { $(cont).querySelectorAll(`[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', b.dataset[attr] === val)); }
+function contar() { document.querySelectorAll('[data-cuenta]').forEach(el => { const k = el.dataset.cuenta; el.textContent = `${(D[k] || '').length} / 600`; }); }
+function pintarTemas() {
+  const lista = PL === 'ruleta' ? TEMAS_RULETA : TEMAS_AMOR;
+  $('temas').innerHTML = lista.map((t, i) => {
+    const sel = PL === 'ruleta' ? (t.color === D.color && t.fondo === D.fondo) : (t.color === D.color && t.fondo1 === D.fondo1 && t.fondo2 === D.fondo2);
+    const bg = PL === 'ruleta' ? t.fondo : `linear-gradient(${t.fondo1}, ${t.fondo2})`;
+    return `<button type="button" class="tema" data-tema="${i}" aria-pressed="${sel}"><div class="mues" style="background:${bg}"><i style="background:${t.color}"></i></div><span>${t.n}</span></button>`;
+  }).join('');
+  $('temas').onclick = e => {
+    const b = e.target.closest('[data-tema]'); if (!b) return;
+    const t = lista[+b.dataset.tema]; Object.assign(D, t); delete D.n; D.tema = t.n.toLowerCase();
+    document.querySelectorAll('input[type=color]').forEach(c => c.value = D[c.dataset.k]);
+    pintarTemas(); cambio();
+  };
+}
+function pintarPremios() {
+  const total = D.premios.reduce((s, p) => s + (+p.peso || 0), 0) || 1;
+  $('premios').innerHTML = D.premios.map((p, i) => `<div class="premio ${p.pierde ? 'pierde' : ''}" data-i="${i}">
+    <input type="text" value="${esc(p.texto)}" maxlength="28" placeholder="${p.pierde ? 'Seguí participando' : 'Ej: 2x1 en conos'}" aria-label="Premio ${i + 1}" data-pr="texto">
+    <div class="chance"><b data-pct>${Math.round((+p.peso || 0) / total * 100)}%</b><input type="range" min="0" max="50" value="${p.peso}" aria-label="Chance del premio ${i + 1}" data-pr="peso"></div>
+    <button type="button" class="quitar" aria-label="Quitar premio ${i + 1}" data-pr="quitar">×</button>
+    <label class="sin"><input type="checkbox" data-pr="pierde" ${p.pierde ? 'checked' : ''}> Sin premio (para que no ganen siempre)</label></div>`).join('');
+  $('masPremio').classList.toggle('oculto', D.premios.length >= 12);
+}
+function porcentajes() {
+  const total = D.premios.reduce((s, p) => s + (+p.peso || 0), 0) || 1;
+  document.querySelectorAll('.premio').forEach(el => { el.querySelector('[data-pct]').textContent = Math.round((+D.premios[+el.dataset.i].peso || 0) / total * 100) + '%'; });
+}
+document.addEventListener('input', e => {
+  const t = e.target.closest('[data-pr]'); if (!t || t.dataset.pr === 'quitar') return;
+  const i = +t.closest('.premio').dataset.i, p = D.premios[i];
+  if (t.dataset.pr === 'texto') p.texto = t.value;
+  if (t.dataset.pr === 'peso') { p.peso = +t.value; porcentajes(); }
+  if (t.dataset.pr === 'pierde') { p.pierde = t.checked; if (p.pierde && !p.texto) p.texto = 'Seguí participando'; pintarPremios(); }
+  cambio();
+});
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-pr="quitar"]'); if (!t) return;
+  if (D.premios.length <= 2) return mostrarError('La ruleta necesita por lo menos 2 opciones.');
+  D.premios.splice(+t.closest('.premio').dataset.i, 1); pintarPremios(); cambio();
+});
+
+// ─── imágenes: se achican en el celu antes de subir ───
+function leerImagen(archivo, cual) {
+  if (!archivo) return;
+  const url = URL.createObjectURL(archivo), im = new Image();
+  im.onload = () => {
+    const max = cual === 'logo' ? 400 : 900, k = Math.min(1, max / Math.max(im.width, im.height));
+    const c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+    c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+    const png = cual === 'logo' && archivo.type === 'image/png';
+    const data = c.toDataURL(png ? 'image/png' : 'image/jpeg', .86);
+    if (cual === 'foto') foto = data; else logo = data;
+    subida[cual] = false;
+    URL.revokeObjectURL(url); pintarFoto(cual); cambio();
+  };
+  im.onerror = () => mostrarError('No pudimos leer esa imagen. Probá con otra (JPG o PNG).');
+  im.src = url;
+}
+function pintarFoto(cual) {
+  const v = cual === 'foto' ? foto : logo, c = $('c_' + cual); if (!c) return;
+  c.style.backgroundImage = v ? `url("${v}")` : ''; c.querySelector('svg').style.display = v ? 'none' : '';
+  $('t_' + cual).textContent = v ? (cual === 'foto' ? 'Cambiar la foto' : 'Cambiar el logo') : (cual === 'foto' ? 'Subí su foto' : 'Subí tu logo');
+}
+
+// ─── vista previa ───
+const prev = $('prev');
+let listo = false, tPrev = null;
+function datosParaVista() { return Object.assign({}, D, PL === 'ruleta' ? { logo } : { foto }); }
+function mandarVista(reiniciar) {
+  if (!listo) return;
+  prev.contentWindow.postMessage({ juego: 'datos', plantilla: PL, datos: datosParaVista(), vista: true, ir: reiniciar ? vistaIr : undefined, reiniciar }, location.origin);
+}
+addEventListener('message', e => { if (e.source === prev.contentWindow && e.data && e.data.juego === 'listo') { listo = true; mandarVista(true); } });
+function cambio() { contar(); clearTimeout(tPrev); tPrev = setTimeout(() => { mandarVista(vistaIr !== 'inicio'); guardarBorrador(); }, 220); $('ePago') && $('ePago').classList.add('oculto'); $('eForm') && $('eForm').classList.add('oculto'); }
+$('verBotones').addEventListener('click', e => { const b = e.target.closest('[data-ir]'); if (!b) return; vistaIr = b.dataset.ir; marcar('verBotones', 'ir', vistaIr); mandarVista(true); });
+$('probar').addEventListener('click', () => { $('vista').classList.add('abierta'); mandarVista(true); });
+$('cerrarVista').addEventListener('click', () => $('vista').classList.remove('abierta'));
+
+// ─── validar, guardar y pagar ───
+function mostrarError(t) {
+  let e = $('eForm'); if (!e) { e = document.createElement('p'); e.id = 'eForm'; e.className = 'error'; document.querySelector('.pagar').prepend(e); e.style.cssText = 'position:absolute;bottom:100%;left:16px;right:16px;background:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.15)'; }
+  e.textContent = t; e.classList.remove('oculto'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.add('oculto'), 4000);
+}
+function falta() {
+  if (PL === 'ruleta') {
+    if (!(D.local || '').trim()) return ['f_local', 'Poné el nombre del local.'];
+    const validos = D.premios.filter(p => p.texto.trim());
+    if (validos.length < 2) return [null, 'La ruleta necesita por lo menos 2 opciones con texto.'];
+    if (!validos.some(p => !p.pierde && p.peso > 0)) return [null, 'Agregá por lo menos un premio que se pueda ganar.'];
+  } else {
+    if (!foto) return ['f_foto', 'Falta la foto: es lo que hace especial al juego.'];
+    if (!(D.para || '').trim()) return ['f_para', 'Escribí su nombre.'];
+    if (!(D.mensaje || '').trim()) return ['f_mensaje', 'Escribí tu mensaje: es la sorpresa del final.'];
+  }
+  return null;
+}
+async function api(ruta, cuerpo) {
+  const r = await fetch('/juego/api/' + ruta, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo) });
+  const j = await r.json().catch(() => ({ error: 'No hay conexión con el servidor.' }));
+  if (!r.ok) throw new Error(j.error || 'Algo falló. Probá de nuevo.');
+  return j;
+}
+function paquete() {
+  const d = Object.assign({}, D); delete d.foto; delete d.logo;
+  if (PL === 'ruleta') d.premios = D.premios.filter(p => p.texto.trim());
+  const nueva = c => (c === 'foto' ? foto : logo).startsWith('data:') && !subida[c] ? (c === 'foto' ? foto : logo) : undefined;
+  return { datos: d, foto: nueva('foto'), logo: nueva('logo') };
+}
+async function subir() {
+  const pk = paquete();
+  if (JUEGO) {
+    INFO = await api(`editar/${JUEGO.id}`, Object.assign({ clave: JUEGO.clave }, pk));
+  } else {
+    JUEGO = await api('crear', Object.assign({ plantilla: PL }, pk));
+    misJuegos({ id: JUEGO.id, clave: JUEGO.clave, plantilla: PL, para: D.para || D.local, t: Date.now() });
+  }
+  // las imágenes ya quedaron en el servidor: no hace falta mandarlas de nuevo
+  if (pk.foto) subida.foto = true;
+  if (pk.logo) subida.logo = true;
+  guardarBorrador();
+}
+$('obtener').addEventListener('click', async () => {
+  const f = falta();
+  if (f) { mostrarError(f[1]); if (f[0] && $(f[0])) { $(f[0]).scrollIntoView({ behavior: 'smooth', block: 'center' }); if ($(f[0]).focus) setTimeout(() => $(f[0]).focus({ preventScroll: true }), 400); } return; }
+  const b = $('obtener'); b.disabled = true; const txt = b.textContent; b.textContent = 'Guardando…';
+  try {
+    await subir();
+    if (INFO && INFO.activo) { b.textContent = 'Guardado'; setTimeout(() => b.textContent = txt, 1500); mostrarListo(true); }
+    else abrir('vPago');
+  } catch (e) { mostrarError(e.message); }
+  b.disabled = false; if (b.textContent === 'Guardando…') b.textContent = txt;
+});
+$('pagarMP').addEventListener('click', async () => {
+  const b = $('pagarMP'); b.disabled = true; b.textContent = 'Procesando…';
+  try {
+    INFO = await api(`pagar/${JUEGO.id}`, { clave: JUEGO.clave });
+    cerrar('vPago'); mostrarListo(false);
+    try { localStorage.removeItem(BORR); } catch (e) {}
+  } catch (e) { $('ePago').textContent = e.message; $('ePago').classList.remove('oculto'); }
+  b.disabled = false; b.textContent = 'Pagar con Mercado Pago';
+});
+function mostrarListo(editado) {
+  const base = location.origin, link = `${base}/juego/j/${JUEGO.id}`, edit = `${base}/juego/crear/?editar=${JUEGO.id}&clave=${JUEGO.clave}`;
+  $('tListo').textContent = editado ? 'Cambios guardados' : '¡Listo! Ya lo podés mandar';
+  $('pListo').textContent = editado ? 'El mismo link ya muestra la versión nueva.' : 'Este es el link de tu juego. Funciona en cualquier celular.';
+  $('lJuego').textContent = link; $('lEditar').textContent = edit;
+  $('bAbrir').href = link;
+  const texto = PL === 'ruleta' ? `Girá la ruleta de ${D.local} y ganá un premio: ${link}` : `Te hice algo. Abrilo y jugá: ${link}`;
+  $('bWa').href = 'https://wa.me/?text=' + encodeURIComponent(texto);
+  dibujarQR(link);
+  abrir('vListo');
+}
+function dibujarQR(texto) {
+  const qr = qrcode(0, 'M'); qr.addData(texto); qr.make();
+  const n = qr.getModuleCount(), c = $('qr'), cx = c.getContext('2d'), m = 2, t = c.width / (n + m * 2);
+  cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height); cx.fillStyle = '#2e1650';
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (qr.isDark(y, x)) cx.fillRect((x + m) * t, (y + m) * t, Math.ceil(t), Math.ceil(t));
+  $('bQR').onclick = () => {
+    const g = document.createElement('canvas'), s = 1000, tt = s / (n + m * 2); g.width = g.height = s; const gx = g.getContext('2d');
+    gx.fillStyle = '#fff'; gx.fillRect(0, 0, s, s); gx.fillStyle = '#000';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (qr.isDark(y, x)) gx.fillRect(Math.floor((x + m) * tt), Math.floor((y + m) * tt), Math.ceil(tt), Math.ceil(tt));
+    const a = document.createElement('a'); a.download = `qr-${JUEGO.id}.png`; a.href = g.toDataURL('image/png'); a.click();
+  };
+}
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-copiar]');
+  if (c) { const t = $(c.dataset.copiar).textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { c.textContent = 'Copiado'; setTimeout(() => c.textContent = 'Copiar', 1500); }).catch(() => { getSelection().selectAllChildren($(c.dataset.copiar)); }); }
+  if (e.target.closest('[data-cerrar]')) cerrar(e.target.closest('.ventana').id);
+  if (e.target.classList.contains('ventana')) cerrar(e.target.id);
+});
+addEventListener('keydown', e => { if (e.key === 'Escape') { document.querySelectorAll('.ventana:not(.oculto)').forEach(v => cerrar(v.id)); $('vista').classList.remove('abierta'); } });
+function abrir(id) { $(id).classList.remove('oculto'); const f = $(id).querySelector('button:not([data-cerrar])'); f && f.focus(); }
+function cerrar(id) { $(id).classList.add('oculto'); }
+
+// ─── estado del juego (modo editar) ───
+function pintarEstado() {
+  if (!INFO) return;
+  const e = $('estado'); e.classList.remove('oculto');
+  const vence = INFO.vence ? new Date(INFO.vence).toLocaleDateString('es-AR') : '';
+  e.innerHTML = `<div class="estado"><span class="pildora ${INFO.activo ? '' : 'no'}">${INFO.activo ? 'Activo' : 'Sin activar'}</span>
+    <span>Link: <a href="/juego/j/${INFO.id}" target="_blank" rel="noopener">dmith.app/juego/j/${INFO.id}</a></span>${vence ? `<span>${INFO.activo ? 'Pago hasta el' : 'Venció el'} ${vence}</span>` : ''}</div>`;
+  if (PL === 'ruleta') {
+    const s = INFO.stats || {}, dias = s.dias || {}, ult = [];
+    for (let i = 13; i >= 0; i--) { const d = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10); ult.push(dias[d] || 0); }
+    const max = Math.max(1, ...ult), hoy = ult[13];
+    const pr = Object.entries(s.premios || {}).sort((a, b) => b[1] - a[1]);
+    e.innerHTML += `<div class="stats"><h3>Cuántos giraron</h3><div class="grande">${s.total || 0}</div><span class="ayuda">en total, ${hoy} hoy</span>
+      <div class="barras" aria-label="Tiradas de los últimos 14 días">${ult.map(v => `<i style="height:${Math.max(4, v / max * 100)}%" title="${v}"></i>`).join('')}</div>
+      <span class="ayuda">Últimos 14 días</span>
+      ${pr.length ? `<ul>${pr.map(([k, v]) => `<li><span>${esc(k)}</span><b>${v}</b></li>`).join('')}</ul>` : ''}</div>`;
+  }
+  $('obtener').textContent = INFO.activo ? 'Guardar cambios' : `Activar · ${pesos(INFO.precio)}${INFO.mensual ? ' por mes' : ''}`;
+}
+
+// ─── arranque ───
+function botonPrecio() { const P = PRECIOS[PL]; $('obtener').textContent = `${innerWidth > 420 ? 'Obtener mi juego' : 'Obtener'} · ${pesos(P.precio)}${P.mensual ? '/mes' : ''}`; $('rNombre').textContent = P.nombre + (P.mensual ? ' (1 mes)' : ''); $('rPrecio').textContent = pesos(P.precio); }
+async function iniciar() {
+  if (EDITAR && CLAVE) {
+    const r = await fetch(`/juego/api/juego/${EDITAR}?clave=${encodeURIComponent(CLAVE)}`).then(r => r.json()).catch(() => ({}));
+    if (!r.plantilla || r.pagado === undefined) { $('campos').innerHTML = '<p class="error">No encontramos ese juego, o el link de edición no es correcto.</p>'; $('obtener').disabled = true; return; }
+    INFO = r; PL = r.plantilla; JUEGO = { id: EDITAR, clave: CLAVE };
+    D = JSON.parse(JSON.stringify(r.datos)); foto = D.foto || ''; logo = D.logo || ''; delete D.foto; delete D.logo;
+  } else {
+    const b = leerBorrador();
+    if (b && b.D) { D = b.D; foto = b.foto || ''; logo = b.logo || ''; JUEGO = b.JUEGO || null; if (b.subida && foto) subida = b.subida; }
+    else { D = JSON.parse(JSON.stringify(DEMOS[PL])); delete D.foto; delete D.logo; if (PL !== 'ruleta') { D.para = ''; D.de = ''; D.mensaje = ''; D.pregunta = ''; D.respuesta_si = ''; } else { D.local = ''; D.prefijo = ''; } }
+  }
+  botonPrecio(); armar(); pintarEstado();
+  prev.src = `/juego/plantillas/${PL === 'ruleta' ? 'ruleta' : 'amor'}/?p=${PL}`;
+}
+addEventListener('resize', () => { $('bajada').textContent = innerWidth > 900 ? 'Todo lo que cambies se ve al instante en el celular de la derecha.' : 'Completá lo tuyo y tocá Probar para jugarlo.'; });
+iniciar();
+</script>
+</body>
+</html>
