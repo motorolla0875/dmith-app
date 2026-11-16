@@ -62,6 +62,10 @@
   .up h3 span { font: 700 16px "DM Sans", sans-serif; color: var(--blue); }
   .up ul { margin: 6px 0 12px; padding-left: 20px; font-size: 15px; } .up li { margin: 2px 0; }
   .up.star { border-color: var(--sun); }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .msgbtn { position: relative; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); color: #fff; border: 0; border-radius: 12px; padding: 9px 14px; font: 700 15px "DM Sans", sans-serif; cursor: pointer; }
+  .num { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; background: var(--coral); color: #fff; font: 700 13px/22px "DM Sans", sans-serif; text-align: center; }
+  h2 .num { display: inline-block; vertical-align: 3px; margin-left: 4px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -69,7 +73,8 @@
 <header><div class="wrap">
   <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith Sitios</a>
   <h1 id="hola">Tu panel</h1>
-  <span class="badge" id="badge" hidden></span>
+  <div class="top"><span class="badge" id="badge" hidden></span>
+    <button class="msgbtn" id="ir-msg" hidden>💬 Mensajes <span class="num" id="num" hidden></span></button></div>
 </div></header>
 
 <main class="wrap">
@@ -150,7 +155,7 @@
     </section>
 
     <section class="card" id="sec-chat">
-      <h2>Mensajes <span class="dot" id="dot" hidden></span></h2>
+      <h2>Mensajes <span class="num" id="dot" hidden></span></h2>
       <div id="chat"></div>
       <div class="send"><textarea id="msg-txt" rows="2" placeholder="Escribinos lo que necesites…"></textarea><button class="btn" id="msg-env">Enviar</button></div>
     </section>
@@ -220,7 +225,7 @@ function pintar(d) {
   const m = d.mensajes || [];
   $("chat").innerHTML = m.length ? m.map((x) => `<div class="b ${x.de === "cliente" ? "yo" : "el"}">${esc(x.texto)}<small>${hora(x.fecha)}</small></div>`).join("") : '<div class="vacio">Todavía no hay mensajes. Escribinos lo que necesites.</div>';
   $("chat").scrollTop = 1e9;
-  $("dot").hidden = !d.sin_leer;
+  contarNuevos();
   $("pedir-dns").onclick = () => copiar("Hola! Soy " + d.negocio + ". Mi dominio es " + ($("dom").value.trim() || "...") + " (NIC.ar). Pásenme los servidores DNS.");
 }
 function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
@@ -280,6 +285,29 @@ $("plan-up").addEventListener("click", (e) => {
   try { localStorage.setItem("dm-cambio-plan", JSON.stringify({ t: token, plan: p.n })); } catch (e) {}
   b.textContent = "Abriendo Mercado Pago…"; location.href = p.link;
 });
+
+// Mensajes nuevos: cuenta las respuestas nuestras que el cliente todavía no vio
+const VISTO = DEMO ? "dm-visto-demo" : "dm-visto";
+let vistoDemo = "";
+const getVisto = () => { if (DEMO) return vistoDemo; try { return localStorage.getItem(VISTO) || ""; } catch (e) { return ""; } };
+function contarNuevos() {
+  const v = getVisto();
+  const n = (datos.mensajes || []).filter((x) => x.de !== "cliente" && x.fecha > v).length;
+  $("ir-msg").hidden = false;
+  [$("num"), $("dot")].forEach((el) => { el.hidden = !n; el.textContent = n; });
+}
+function marcarVistos() {
+  const m = (datos && datos.mensajes) || []; if (!m.length) return;
+  const ult = m[m.length - 1].fecha;
+  if (DEMO) vistoDemo = ult; else try { localStorage.setItem(VISTO, ult); } catch (e) {}
+  contarNuevos();
+}
+$("ir-msg").onclick = () => { $("sec-chat").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(marcarVistos, 900); };
+if ("IntersectionObserver" in window) {
+  let enVista = false;
+  new IntersectionObserver((e) => { enVista = e[0].isIntersecting; if (enVista && !document.hidden) setTimeout(() => enVista && marcarVistos(), 1500); }, { threshold: 0.6 }).observe($("sec-chat"));
+  setInterval(() => { if (enVista && !document.hidden) marcarVistos(); }, 3000);
+}
 
 function tab(t) {
   document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
