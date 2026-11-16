@@ -106,5 +106,7 @@ document.addEventListener("toggle", (e) => {
 }, true);
 $("entrar").onclick = () => { k = $("k").value.trim(); cargar(); };
 if (k) cargar();
-setInterval(() => { if (k && !document.activeElement.matches("textarea")) cargar(); }, 60000);
+function autoCargar() { if (k && !document.hidden && ![...document.querySelectorAll("textarea")].some((t) => t === document.activeElement || t.value.trim())) cargar(); }
+setInterval(autoCargar, 15000);
+document.addEventListener("visibilitychange", autoCargar);
 </script></body></html>

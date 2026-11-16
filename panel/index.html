@@ -258,6 +258,18 @@ $("avisar").onclick = async () => {
   } catch (e) { $("avisar").disabled = false; $("avisar").textContent = "Ya lo conecté, avisar"; $("dom-estado").textContent = e.message || "No se pudo enviar"; }
 };
 cargar();
+// Busca mensajes nuevos solo: cada 15 s y al volver a la pestaña. Solo repinta si algo cambió.
+const firmaDe = (j) => JSON.stringify([j.mensajes, j.tareas, j.estado, j.dominio_estado, j.proximo_cobro]);
+async function refrescar() {
+  if (DEMO || !token || !datos || document.hidden) return;
+  try {
+    const r = await fetch("/api/sitios/panel?t=" + encodeURIComponent(token)); if (!r.ok) return;
+    const j = await r.json();
+    if (firmaDe(j) !== firmaDe(datos)) pintar(j);
+  } catch (e) {}
+}
+setInterval(refrescar, 15000);
+document.addEventListener("visibilitychange", refrescar);
 </script>
 </body>
 </html>
