@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /panel/
+Disallow: /activar/
+Disallow: /api/
+Disallow: /sitios-servidor/
+
+Sitemap: https://dmith.app/sitemap.xml
