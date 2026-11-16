@@ -23,6 +23,29 @@ const save = (d) => { fs.mkdirSync(DIR, { recursive: true }); fs.writeFileSync(D
 const PLANES = { 25000: "Vidriera", 40000: "Catálogo", 60000: "Negocio" };
 const err = (code, msg) => Object.assign(new Error(msg), { code });
 
+// Avisos a Diego: por WhatsApp (CallMeBot) y/o Telegram, según qué claves haya en el .env
+//   WA_PHONE=+549...  WA_APIKEY=...      (CallMeBot)
+//   TG_TOKEN=...      TG_CHAT=... (opcional: si falta, se detecta solo cuando le escribís /start al bot)
+let tgChat = null;
+async function aviso(c, txt) {
+  const e = env(); const t = (c && c.prueba ? "🧪 " : "") + txt + "\n👉 https://dmith.app/panel/admin/";
+  const tareas = [];
+  if (e.WA_PHONE && e.WA_APIKEY) tareas.push(fetch("https://api.callmebot.com/whatsapp.php?phone=" + encodeURIComponent(e.WA_PHONE) + "&apikey=" + encodeURIComponent(e.WA_APIKEY) + "&text=" + encodeURIComponent(t)));
+  if (e.TG_TOKEN) tareas.push((async () => {
+    let chat = e.TG_CHAT || tgChat;
+    if (!chat) {
+      const u = await (await fetch("https://api.telegram.org/bot" + e.TG_TOKEN + "/getUpdates")).json();
+      const m = (u.result || []).map((x) => x.message || x.my_chat_member).filter(Boolean).pop();
+      chat = tgChat = m && m.chat && m.chat.id;
+    }
+    if (chat) await fetch("https://api.telegram.org/bot" + e.TG_TOKEN + "/sendMessage", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: chat, text: t, disable_web_page_preview: true }) });
+  })());
+  const res = await Promise.allSettled(tareas);
+  res.forEach((x) => x.status === "rejected" && console.log("aviso falló:", x.reason && x.reason.message));
+}
+const avisar = (c, txt) => { aviso(c, txt).catch((e) => console.log("aviso falló:", e.message)); };
+const corto = (s) => { s = String(s); return s.length > 300 ? s.slice(0, 300) + "…" : s; };
+
 async function mpCancelar(id) {
   const r = await fetch(MP_API + "/preapproval/" + encodeURIComponent(id), { method: "PUT", headers: { Authorization: "Bearer " + env().MP_ACCESS_TOKEN, "Content-Type": "application/json" }, body: JSON.stringify({ status: "cancelled" }) });
   if (!r.ok) throw err(502, "Mercado Pago respondió " + r.status);
@@ -91,6 +114,7 @@ const rutas = {
     };
     aplicar(c, p);
     d.clientes.push(c); save(d);
+    avisar(c, "🎉 Nuevo cliente: " + c.negocio + "\nPlan " + c.plan + " · $" + Number(c.monto || 0).toLocaleString("es-AR") + "/mes\nWeb: dmith.app/" + c.slug + (c.dominio ? "\nDominio: " + c.dominio : ""));
     return { token: c.token };
   },
 
@@ -106,11 +130,12 @@ const rutas = {
     const viejo = c.preapproval_id, planViejo = c.plan;
     c.anteriores = [...(c.anteriores || []), { preapproval_id: viejo, plan: planViejo, hasta: ahora() }];
     c.preapproval_id = id; aplicar(c, p);
-    let aviso = "";
-    if (!c.prueba) { try { await mpCancelar(viejo); } catch (e) { aviso = " ⚠️ No se pudo cancelar la suscripción vieja (" + viejo + "): cancelala a mano en Mercado Pago."; } }
-    c.tareas = c.tareas || []; c.tareas.push({ id: crypto.randomBytes(6).toString("hex"), texto: "Pasó de " + planViejo + " a " + c.plan + ": activarle lo nuevo (panel propio)." + aviso, fecha: ahora(), hecha: false });
+    let nota = "";
+    if (!c.prueba) { try { await mpCancelar(viejo); } catch (e) { nota = " ⚠️ No se pudo cancelar la suscripción vieja (" + viejo + "): cancelala a mano en Mercado Pago."; } }
+    c.tareas = c.tareas || []; c.tareas.push({ id: crypto.randomBytes(6).toString("hex"), texto: "Pasó de " + planViejo + " a " + c.plan + ": activarle lo nuevo (panel propio)." + nota, fecha: ahora(), hecha: false });
     c.mensajes = c.mensajes || []; c.mensajes.push({ de: "dmith", texto: "🎉 ¡Listo! Ya estás en el plan " + c.plan + ". Te avisamos por acá cuando tengas lo nuevo activado.", fecha: ahora() });
     c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; c.cliente_sin_leer = (c.cliente_sin_leer || 0) + 1; save(d);
+    avisar(c, "🔁 " + c.negocio + " se cambió de " + planViejo + " a " + c.plan + "." + nota);
     return { ok: true };
   },
 
@@ -133,6 +158,7 @@ const rutas = {
     if (lim && cambiosMes(c) >= lim) throw err(429, "Ya usaste los " + lim + " cambios de este mes. Se renuevan el mes que viene (o pasate al plan Catálogo).");
     c.tareas = c.tareas || []; c.tareas.push({ id: crypto.randomBytes(6).toString("hex"), texto: texto(b.texto), fecha: ahora(), hecha: false });
     c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; save(d);
+    avisar(c, "🛠️ " + c.negocio + " pidió un cambio:\n" + corto(b.texto));
     return publico(c);
   },
 
@@ -141,6 +167,7 @@ const rutas = {
     const b = await body(req); const d = load(); const c = porToken(d, b.t);
     c.mensajes = c.mensajes || []; c.mensajes.push({ de: "cliente", texto: texto(b.texto), fecha: ahora() });
     c.mensajes = c.mensajes.slice(-200); c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; save(d);
+    avisar(c, "💬 " + c.negocio + " te escribió:\n" + corto(b.texto));
     return publico(c);
   },
 
@@ -185,6 +212,7 @@ const rutas = {
     const dom = limpiarDominio(b.dominio);
     if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(dom)) throw err(400, "Ese dominio no parece válido");
     c.dominio = dom; c.dominio_estado = "revisar"; c.dominio_aviso = new Date().toISOString(); save(d);
+    avisar(c, "🌐 " + c.negocio + " dice que ya conectó su dominio " + dom + ". Hay que activarlo en el servidor.");
     return publico(c);
   },
 
