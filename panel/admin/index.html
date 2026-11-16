@@ -35,6 +35,7 @@
 <main>
   <div class="card" id="login"><p>Clave (la línea ADMIN_KEY del archivo .env del servidor):</p><input id="k" type="password"> <button id="entrar">Entrar</button></div>
   <div class="card" id="herr" hidden><button class="l" id="nueva-prueba">+ Crear cliente de prueba</button> <span class="s">Para probar mensajes y pedidos. No cobra nada.</span></div>
+  <div class="card" id="consultas" hidden><h2>📨 Consultas de apps a medida <span class="t n" id="cons-n" hidden></span></h2><div id="cons"></div></div>
   <div class="card" id="hoy" hidden><h2>Para hacer hoy</h2><div id="pend"></div></div>
   <div id="lista"></div>
 </main>
@@ -47,6 +48,24 @@ const h = (s) => new Date(s).toLocaleString("es-AR", { day: "numeric", month: "s
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 async function post(r, b) { const x = await fetch(r, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k, ...b }) }); if (!x.ok) throw new Error((await x.json()).error); }
 
+async function cargarConsultas() {
+  try {
+    const r = await fetch("/api/sitios/admin/consultas?k=" + encodeURIComponent(k)); if (!r.ok) return;
+    const l = await r.json(); const nuevas = l.filter((c) => !c.atendida).length;
+    $("consultas").hidden = !l.length;
+    $("cons-n").hidden = !nuevas; $("cons-n").textContent = nuevas + " nueva" + (nuevas > 1 ? "s" : "");
+    l.sort((a, b) => a.atendida - b.atendida);
+    $("cons").innerHTML = l.map((c) => {
+      const wa = (c.whatsapp || "").replace(/\D/g, "");
+      let n = wa.replace(/^0/, ""); if (!wa.startsWith("54") && n.length > 10) n = n.replace(/^(\d{2,4})15/, "$1");
+      const waLink = wa ? "https://wa.me/" + (wa.startsWith("54") ? wa : "549" + n) : "";
+      return `<div class="tarea${c.atendida ? " hecha" : ""}"><input type="checkbox" data-cons="${c.id}" ${c.atendida ? "checked" : ""} title="Atendida">
+        <div style="flex:1"><b>${esc(c.nombre)}</b>${c.negocio ? " · " + esc(c.negocio) : ""} <span class="s">· ${f(c.fecha)}</span>
+        <div style="white-space:pre-wrap;margin:4px 0">${esc(c.idea)}</div>
+        <div class="s">${wa ? `📱 <a href="${waLink}" target="_blank">${esc(c.whatsapp)}</a>` : ""} ${c.email ? `✉️ <a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ""} · <a href="#" data-cons-borrar="${c.id}">borrar</a></div></div></div>`;
+    }).join("");
+  } catch (e) {}
+}
 async function cargar() {
   const r = await fetch("/api/sitios/admin?k=" + encodeURIComponent(k));
   if (!r.ok) { $("login").hidden = false; return; }
@@ -64,6 +83,7 @@ async function cargar() {
     if (c.admin_sin_leer) pend.push(`<div class="tarea"><span>💬 <b>${esc(c.negocio)}:</b> ${c.admin_sin_leer} mensaje(s) sin leer</span></div>`);
   });
   $("hoy").hidden = false; $("herr").hidden = false;
+  cargarConsultas();
   $("pend").innerHTML = pend.join("") || '<p class="s">Nada pendiente. 🎉</p>';
 
   $("lista").innerHTML = l.map((c) => {
@@ -85,7 +105,9 @@ async function cargar() {
 }
 
 document.addEventListener("change", async (e) => {
-  const el = e.target; if (!el.dataset.t) return;
+  const el = e.target;
+  if (el.dataset.cons) { await post("/api/sitios/admin/consulta", { id: el.dataset.cons, atendida: el.checked }).catch(() => {}); return cargarConsultas(); }
+  if (!el.dataset.t) return;
   try { await post("/api/sitios/admin/tarea", { id: el.dataset.id, tarea: el.dataset.t, hecha: el.checked }); } catch (er) { el.checked = !el.checked; }
   cargar();
 });
@@ -95,6 +117,7 @@ document.addEventListener("click", async (e) => {
     const ta = b.parentElement.querySelector("textarea"); if (!ta.value.trim()) return ta.focus();
     b.disabled = true; try { await post("/api/sitios/admin/mensaje", { id: b.dataset.resp, texto: ta.value }); } catch (er) {} cargar();
   }
+  if (b.dataset.consBorrar) { e.preventDefault(); await post("/api/sitios/admin/consulta", { id: b.dataset.consBorrar, borrar: true }).catch(() => {}); return cargarConsultas(); }
   if (b.dataset.borrar) { await post("/api/sitios/admin/borrar", { id: b.dataset.borrar }).catch(() => {}); cargar(); }
   if (b.id === "nueva-prueba") { await post("/api/sitios/admin/prueba", {}).catch(() => {}); abiertos.clear(); await cargar(); const d = document.querySelector("details.cli"); if (d) { d.open = true; } }
   if (b.dataset.dom) { await post("/api/sitios/admin/dominio", { id: b.dataset.dom }).catch(() => {}); cargar(); }

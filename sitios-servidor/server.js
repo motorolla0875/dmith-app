@@ -90,6 +90,7 @@ function send(res, code, data) {
   res.end(JSON.stringify(data));
 }
 
+const consultasIp = {};
 const rutas = {
   // El cliente vuelve de Mercado Pago: confirmamos el pago y le creamos su panel
   "POST /api/sitios/activar": async (req) => {
@@ -223,6 +224,33 @@ const rutas = {
   },
 
   // Lista para Diego (clave en .env: ADMIN_KEY)
+  // Consulta pública: "Quiero una app a medida" (sin precio, llega al panel de Diego)
+  "POST /api/sitios/consulta": async (req) => {
+    const b = await body(req);
+    if (b.web) return { ok: true }; // campo trampa para robots
+    const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+    const ahoraMs = Date.now(); consultasIp[ip] = (consultasIp[ip] || []).filter((t) => ahoraMs - t < 3600e3);
+    if (consultasIp[ip].length >= 5) throw err(429, "Ya recibimos tus consultas. Te contactamos pronto.");
+    const corta = (v, n) => String(v || "").trim().slice(0, n);
+    const c = { id: crypto.randomBytes(6).toString("hex"), nombre: corta(b.nombre, 80), negocio: corta(b.negocio, 100), whatsapp: corta(b.whatsapp, 40), email: corta(b.email, 120), idea: corta(b.idea, 3000), fecha: ahora(), atendida: false };
+    if (!c.nombre) throw err(400, "Contanos tu nombre");
+    if (!c.whatsapp.replace(/\D/g, "") && !c.email) throw err(400, "Dejanos un WhatsApp o un email para responderte");
+    if (c.idea.length < 10) throw err(400, "Contanos un poco más de lo que necesitás");
+    consultasIp[ip].push(ahoraMs);
+    const d = load(); d.consultas = d.consultas || []; d.consultas.push(c); save(d);
+    avisar(null, "📨 Consulta de app a medida: " + c.nombre + (c.negocio ? " (" + c.negocio + ")" : "") + "\n" + corto(c.idea));
+    return { ok: true };
+  },
+  "GET /api/sitios/admin/consultas": async (req, q) => {
+    esAdmin(q.get("k")); return (load().consultas || []).slice().reverse();
+  },
+  "POST /api/sitios/admin/consulta": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load();
+    const c = (d.consultas || []).find((x) => x.id === b.id); if (!c) throw err(404, "Consulta no encontrada");
+    if (b.borrar) d.consultas = d.consultas.filter((x) => x !== c); else c.atendida = !!b.atendida;
+    save(d); return { ok: true };
+  },
+
   "GET /api/sitios/admin": async (req, q) => {
     esAdmin(q.get("k"));
     return load().clientes.map((c) => ({ ...publico(c), id: c.preapproval_id, prueba: !!c.prueba, token: c.prueba ? c.token : undefined, email: c.email || "", dominio_aviso: c.dominio_aviso || "", admin_sin_leer: c.admin_sin_leer || 0 })).reverse();

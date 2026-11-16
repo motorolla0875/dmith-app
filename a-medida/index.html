@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App a medida para tu negocio · dmith</title>
+<meta name="description" content="¿Necesitás una aplicación a medida para tu negocio o empresa? Contanos tu idea y te respondemos.">
+<link rel="canonical" href="https://dmith.app/a-medida/">
+<link rel="icon" href="/icon.png?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --night: #181B4A; --ink: #15172E; --paper: #F6F5FB; --blue: #3E9BFF; --sun: #FFC23D; --mint: #26D6A0; --coral: #FF5A6E; --mute: #6A6C8A; --line: #E3E2EF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 "DM Sans", system-ui, sans-serif; }
+  header { background: var(--night); color: #fff; padding: 18px 20px 40px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 10px; font: 700 17px Unbounded, sans-serif; color: #fff; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 24px; }
+  .mark i { aspect-ratio: 1; border-radius: 3px; background: var(--blue); } .mark i:nth-child(2) { background: var(--sun); } .mark i:nth-child(3) { background: var(--mint); } .mark i:nth-child(4) { background: var(--coral); }
+  h1 { font: 800 clamp(28px, 6.5vw, 42px)/1.1 Unbounded, sans-serif; margin: 28px 0 12px; } h1 b { color: var(--sun); font-weight: 800; }
+  header p { color: #C9CBEA; margin: 0; font-size: 18px; }
+  main { padding: 0 20px 60px; margin-top: -20px; }
+  .card { background: #fff; border: 2px solid var(--line); border-radius: 20px; padding: 22px 22px; margin-bottom: 16px; }
+  .card h2 { font: 700 19px Unbounded, sans-serif; margin: 0 0 12px; }
+  .ej { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 15px; }
+  .ej li { background: var(--paper); border-radius: 12px; padding: 10px 12px; }
+  label { display: block; font-weight: 700; font-size: 15px; margin: 14px 0 6px; } label small { font-weight: 400; color: var(--mute); }
+  input, textarea { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; background: #fff; }
+  input:focus, textarea:focus { outline: none; border-color: var(--blue); }
+  textarea { resize: vertical; min-height: 130px; }
+  .btn { display: flex; width: 100%; justify-content: center; margin-top: 18px; border: 0; border-radius: 14px; padding: 15px; font: 700 17px "DM Sans", sans-serif; background: var(--sun); color: var(--ink); cursor: pointer; }
+  .btn:disabled { opacity: .6; }
+  .note { font-size: 14px; color: var(--mute); margin: 12px 0 0; text-align: center; }
+  .err { color: #A8192E; font-weight: 700; font-size: 15px; margin: 10px 0 0; }
+  .ok { text-align: center; padding: 20px 0; } .ok h2 { margin-top: 10px; } .ok .big { font-size: 46px; }
+  .alt { text-align: center; font-size: 15px; } .alt a { color: var(--blue); font-weight: 700; }
+  .trampa { position: absolute; left: -9999px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 480px) { .ej { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith</a>
+  <h1>¿Querés una <b>aplicación a medida</b>?</h1>
+  <p>Si tu negocio necesita algo que no está en ninguna plantilla, contanos la idea. La miramos y te respondemos con cómo lo haríamos.</p>
+</div></header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>Algunas cosas que hacemos</h2>
+    <ul class="ej">
+      <li>📦 Gestión de stock, ventas y caja</li>
+      <li>🚚 Reparto y rutas para repartidores</li>
+      <li>📅 Turnos y reservas online</li>
+      <li>🧾 Pedidos con panel para tu equipo</li>
+      <li>👥 Socios, alumnos o clientes con cuenta</li>
+      <li>📱 Apps para Android y iPhone</li>
+    </ul>
+  </section>
+
+  <section class="card" id="form-card">
+    <h2>Contanos qué necesitás</h2>
+    <form id="f" novalidate>
+      <label for="idea">¿Qué querés que haga la app?</label>
+      <textarea id="idea" placeholder="Ej: tengo una distribuidora y necesito que los vendedores carguen pedidos desde el celular y yo los vea en la compu…" required></textarea>
+      <label for="nombre">Tu nombre</label>
+      <input id="nombre" autocomplete="name" required>
+      <label for="negocio">Negocio o empresa <small>(opcional)</small></label>
+      <input id="negocio" autocomplete="organization">
+      <label for="whatsapp">Tu WhatsApp</label>
+      <input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 11 2345 6789">
+      <label for="email">Email <small>(opcional)</small></label>
+      <input id="email" type="email" autocomplete="email">
+      <input class="trampa" id="web" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="err" id="err" hidden></p>
+      <button class="btn" id="go" type="submit">Enviar consulta</button>
+      <p class="note">Es solo una consulta, no te compromete a nada. Cada proyecto es distinto, así que el precio lo charlamos después de entender qué necesitás.</p>
+    </form>
+    <div class="ok" id="ok" hidden>
+      <div class="big">🙌</div>
+      <h2>¡Recibimos tu consulta!</h2>
+      <p>La leemos y te escribimos por WhatsApp o email lo antes posible.</p>
+    </div>
+  </section>
+
+  <p class="alt">¿Solo necesitás una web para tu negocio? <a href="/sitios/">Mirá nuestros planes desde $25.000/mes</a></p>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+$("f").onsubmit = async (e) => {
+  e.preventDefault();
+  const datos = { idea: $("idea").value, nombre: $("nombre").value, negocio: $("negocio").value, whatsapp: $("whatsapp").value, email: $("email").value, web: $("web").value };
+  const err = (t) => { $("err").hidden = false; $("err").textContent = t; };
+  if ($("idea").value.trim().length < 10) { $("idea").focus(); return err("Contanos un poco más de lo que necesitás."); }
+  if (!$("nombre").value.trim()) { $("nombre").focus(); return err("Contanos tu nombre."); }
+  if (!$("whatsapp").value.replace(/\D/g, "") && !$("email").value.trim()) { $("whatsapp").focus(); return err("Dejanos un WhatsApp o un email para responderte."); }
+  $("err").hidden = true; $("go").disabled = true; $("go").textContent = "Enviando…";
+  try {
+    const r = await fetch("/api/sitios/consulta", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "No se pudo enviar");
+    $("f").hidden = true; $("ok").hidden = false; $("form-card").scrollIntoView({ behavior: "smooth" });
+  } catch (e2) { err(e2.message + ". Probá de nuevo."); $("go").disabled = false; $("go").textContent = "Enviar consulta"; }
+};
+</script>
+</body>
+</html>
