@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clientes · dmith Sitios</title><meta name="robots" content="noindex">
+<style>
+  body { margin: 0; font: 400 16px/1.5 system-ui, sans-serif; background: #F6F5FB; color: #15172E; padding: 20px; }
+  h1 { margin: 0 0 14px; font-size: 22px; }
+  .c { background: #fff; border: 2px solid #E3E2EF; border-radius: 14px; padding: 14px 16px; margin: 0 0 10px; }
+  .c b { font-size: 17px; } .s { font-size: 14px; color: #6A6C8A; }
+  .t { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 13px; font-weight: 700; margin-left: 6px; }
+  .authorized { background: #DDF8EE; color: #0E7A58; } .pending { background: #FFF1D1; color: #8A5A00; } .paused, .cancelled { background: #FFE1E5; color: #A8192E; }
+  .dom { margin-top: 6px; font-weight: 700; color: #B35C00; }
+  input, button { font: inherit; padding: 10px 12px; border-radius: 10px; border: 2px solid #E3E2EF; }
+  button { background: #FFC23D; border: 0; font-weight: 700; }
+</style></head><body>
+<h1>Clientes de dmith Sitios</h1>
+<div id="login"><input id="k" type="password" placeholder="Clave (ADMIN_KEY del .env)"> <button id="entrar">Entrar</button></div>
+<div id="tot" class="s"></div><div id="lista"></div>
+<script>
+const $ = (i) => document.getElementById(i);
+let k = ""; try { k = localStorage.getItem("dm-admin") || ""; } catch (e) {}
+const f = (s) => s ? new Date(s).toLocaleDateString("es-AR") : "—";
+async function cargar() {
+  const r = await fetch("/api/sitios/admin?k=" + encodeURIComponent(k));
+  if (!r.ok) { $("login").hidden = false; return; }
+  try { localStorage.setItem("dm-admin", k); } catch (e) {}
+  $("login").hidden = true;
+  const l = await r.json();
+  const act = l.filter((c) => c.estado === "authorized");
+  $("tot").textContent = act.length + " activos · $" + act.reduce((a, c) => a + (c.monto || 0), 0).toLocaleString("es-AR") + " por mes";
+  $("lista").innerHTML = l.map((c) => `<div class="c"><b>${c.negocio}</b><span class="t ${c.estado}">${c.estado}</span>
+    <div class="s">${c.plan || ""} · $${(c.monto || 0).toLocaleString("es-AR")}/mes · próximo cobro ${f(c.proximo_cobro)} · ${c.email || ""}</div>
+    <div class="s"><a href="/${c.slug}/" target="_blank">dmith.app/${c.slug}</a> · alta ${f(c.alta)}</div>
+    ${c.dominio_estado === "revisar" ? `<div class="dom">⚠ Conectar dominio: ${c.dominio} (avisó el ${f(c.dominio_aviso)})</div>` : c.dominio ? `<div class="s">Dominio: ${c.dominio} (${c.dominio_estado})</div>` : ""}</div>`).join("") || '<p class="s">Todavía no hay clientes.</p>';
+}
+$("entrar").onclick = () => { k = $("k").value.trim(); cargar(); };
+if (k) cargar();
+</script></body></html>

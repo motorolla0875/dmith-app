@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi web · dmith Sitios</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --night: #181B4A; --ink: #15172E; --paper: #F6F5FB; --blue: #3E9BFF; --sun: #FFC23D; --mint: #26D6A0; --coral: #FF5A6E; --mute: #6A6C8A; --line: #E3E2EF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 "DM Sans", system-ui, sans-serif; }
+  header { background: var(--night); color: #fff; padding: 18px 20px 28px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 10px; font: 700 17px Unbounded, sans-serif; color: #fff; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 24px; }
+  .mark i { aspect-ratio: 1; border-radius: 3px; background: var(--blue); } .mark i:nth-child(2) { background: var(--sun); } .mark i:nth-child(3) { background: var(--mint); } .mark i:nth-child(4) { background: var(--coral); }
+  h1 { font: 800 clamp(26px, 6vw, 36px)/1.1 Unbounded, sans-serif; margin: 22px 0 8px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font: 700 14px "DM Sans", sans-serif; padding: 5px 12px; border-radius: 99px; }
+  .badge.ok { background: #DDF8EE; color: #0E7A58; } .badge.wait { background: #FFF1D1; color: #8A5A00; } .badge.bad { background: #FFE1E5; color: #A8192E; }
+  main { padding: 20px 20px 60px; display: grid; gap: 16px; }
+  .card { background: #fff; border: 2px solid var(--line); border-radius: 18px; padding: 18px 20px; }
+  .card h2 { font: 700 19px/1.25 Unbounded, sans-serif; margin: 0 0 12px; }
+  .site { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .addr { font: 700 18px "DM Sans", sans-serif; color: var(--blue); text-decoration: none; word-break: break-all; }
+  .live { color: #0E7A58; font-size: 14px; font-weight: 700; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid div { background: var(--paper); border-radius: 12px; padding: 10px 14px; }
+  .grid span { display: block; font-size: 13px; color: var(--mute); } .grid strong { font-size: 18px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 12px 16px; font: 700 16px "DM Sans", sans-serif; cursor: pointer; text-decoration: none; background: var(--sun); color: var(--ink); }
+  .btn.light { background: #fff; border: 2px solid var(--line); }
+  .tabs { display: flex; gap: 6px; background: var(--paper); padding: 5px; border-radius: 14px; margin-bottom: 14px; }
+  .tabs button { flex: 1; border: 0; background: none; padding: 10px; border-radius: 10px; font: 700 15px "DM Sans", sans-serif; cursor: pointer; color: var(--mute); }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  ol { margin: 0; padding-left: 22px; } ol li { margin: 0 0 10px; }
+  .rec { display: grid; grid-template-columns: auto auto 1fr; gap: 4px 14px; background: var(--paper); border-radius: 12px; padding: 10px 14px; font-size: 15px; margin: 8px 0; }
+  .rec b { color: var(--mute); font-weight: 500; } code { font: 700 15px ui-monospace, monospace; }
+  input[type=text] { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; margin: 6px 0 10px; }
+  .note { font-size: 14px; color: var(--mute); margin: 10px 0 0; }
+  .sub { font-size: 15px; font-weight: 700; margin: 16px 0 6px; }
+  .msg { padding: 40px 0; text-align: center; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith Sitios</a>
+  <h1 id="hola">Tu panel</h1>
+  <span class="badge" id="badge" hidden></span>
+</div></header>
+
+<main class="wrap">
+  <div class="msg" id="cargando">Cargando tu panel…</div>
+  <div class="msg" id="error" hidden></div>
+
+  <div id="todo" hidden>
+    <section class="card">
+      <h2>Tu web</h2>
+      <div class="site"><a class="addr" id="addr" target="_blank"></a><span class="live">● Funcionando</span></div>
+      <p class="note" id="addr-note">Esta dirección ya funciona y la podés compartir. Cuando conectes tu dominio, la web va a abrir también ahí.</p>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn light" id="copiar">Copiar link</button>
+        <a class="btn light" id="ver" target="_blank">Ver mi web</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Tu plan</h2>
+      <div class="grid">
+        <div><span>Plan</span><strong id="plan"></strong></div>
+        <div><span>Precio</span><strong id="monto"></strong></div>
+        <div><span id="hasta-l">Pagado hasta</span><strong id="hasta"></strong></div>
+        <div><span>Cliente desde</span><strong id="alta"></strong></div>
+      </div>
+      <p class="note">El cobro es automático con Mercado Pago. Para cambiar de plan o darte de baja, escribinos.</p>
+    </section>
+
+    <section class="card">
+      <h2>Tu dominio</h2>
+      <p id="dom-estado" class="note" style="margin:0 0 12px"></p>
+      <div class="tabs"><button class="on" data-t="conectar">Ya tengo dominio</button><button data-t="comprar">Quiero comprar uno</button></div>
+
+      <div id="t-conectar">
+        <div class="sub">Si tu dominio termina en .com.ar o .ar (NIC Argentina)</div>
+        <ol>
+          <li>Entrá a <b>nic.ar</b> con tu clave fiscal.</li>
+          <li>Andá a <b>Mis dominios</b>, elegí tu dominio y tocá <b>Delegar</b>.</li>
+          <li>Tocá el botón de abajo y <b>pedinos los servidores DNS</b>. Te los mandamos y los pegás ahí.</li>
+          <li>Guardá. Puede tardar hasta 24–48 h en funcionar.</li>
+        </ol>
+        <a class="btn light" id="pedir-dns" href="https://ig.me/m/dmith_app">Pedir los servidores DNS</a>
+
+        <div class="sub" style="margin-top:22px">Si es .com u otro (GoDaddy, Hostinger, DonWeb…)</div>
+        <ol>
+          <li>Entrá a tu cuenta donde compraste el dominio y buscá <b>DNS</b> o <b>Administrar DNS</b>.</li>
+          <li>Creá (o cambiá) estos dos registros:
+            <div class="rec"><b>Tipo</b><b>Nombre</b><b>Valor</b><code>A</code><code>@</code><code>147.93.185.154</code><code>A</code><code>www</code><code>147.93.185.154</code></div>
+          </li>
+          <li>Guardá. Suele funcionar en menos de 1 hora.</li>
+        </ol>
+
+        <div class="sub" style="margin-top:22px">¿Ya lo hiciste? Avisanos</div>
+        <input type="text" id="dom" placeholder="minegocio.com.ar" inputmode="url" autocomplete="off">
+        <button class="btn" id="avisar">Ya lo conecté, avisar</button>
+        <p class="note">Mientras tanto tu web sigue funcionando en tu dirección de dmith.app. No se corta nada.</p>
+      </div>
+
+      <div id="t-comprar" hidden>
+        <ol>
+          <li>Entrá a <b>nic.ar</b>. Vas a necesitar tu <b>CUIT/CUIL</b> y tu <b>clave fiscal</b> (la de ARCA, ex AFIP).</li>
+          <li>Buscá el nombre que querés (por ejemplo <i>minegocio.com.ar</i>). Si está libre, tocá <b>Registrar</b>.</li>
+          <li>Pagalo. El dominio queda <b>a tu nombre</b> y se renueva una vez por año.</li>
+          <li>Después seguí los pasos de <b>"Ya tengo dominio"</b> para conectarlo.</li>
+        </ol>
+        <p class="note">¿Preferís un .com? Lo podés comprar en GoDaddy, Hostinger o DonWeb y seguir los mismos pasos.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>¿Necesitás un cambio?</h2>
+      <p class="note" style="margin:0 0 12px">Contanos qué querés cambiar (fotos, precios, horarios) y lo hacemos.</p>
+      <a class="btn" id="cambio" href="https://ig.me/m/dmith_app">Pedir un cambio</a>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const IG = "https://ig.me/m/dmith_app";
+const fmt = (n) => n ? "$" + Number(n).toLocaleString("es-AR") + "/mes" : "—";
+const fecha = (s) => s ? new Date(s).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) : "—";
+const q = new URLSearchParams(location.search);
+let token = q.get("t");
+try { if (token) localStorage.setItem("dm-panel", token); else token = localStorage.getItem("dm-panel"); } catch (e) {}
+if (q.get("t")) history.replaceState(null, "", "/panel/");
+let datos = null;
+
+function fallo(t) { $("cargando").hidden = true; $("error").hidden = false; $("error").innerHTML = t; }
+
+async function cargar() {
+  if (!token) return fallo('No encontramos tu panel en este celular.<br><br><a class="btn" href="' + IG + '">Pedir mi link por Instagram</a>');
+  try {
+    const r = await fetch("/api/sitios/panel?t=" + encodeURIComponent(token));
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || "Error");
+    pintar(await r.json());
+  } catch (e) { fallo("No pudimos abrir tu panel (" + e.message + ").<br><br><a class=\"btn\" href=\"" + IG + "\">Escribinos</a>"); }
+}
+
+function pintar(d) {
+  datos = d;
+  $("cargando").hidden = true; $("todo").hidden = false;
+  $("hola").textContent = "Hola, " + d.negocio;
+  const est = { authorized: ["ok", "● Activa"], pending: ["wait", "● Confirmando el pago"], paused: ["bad", "● Pago pausado"], cancelled: ["bad", "● Suscripción cancelada"] }[d.estado] || ["wait", d.estado];
+  $("badge").hidden = false; $("badge").className = "badge " + est[0]; $("badge").textContent = est[1];
+  const url = "https://dmith.app/" + d.slug + "/";
+  $("addr").textContent = "dmith.app/" + d.slug; $("addr").href = url; $("ver").href = url;
+  $("copiar").onclick = () => { navigator.clipboard && navigator.clipboard.writeText(url); $("copiar").textContent = "¡Copiado!"; setTimeout(() => $("copiar").textContent = "Copiar link", 1500); };
+  $("plan").textContent = d.plan || "—"; $("monto").textContent = fmt(d.monto);
+  $("hasta-l").textContent = d.estado === "authorized" ? "Pagado hasta" : "Próximo cobro";
+  $("hasta").textContent = fecha(d.proximo_cobro); $("alta").textContent = fecha(d.alta);
+  if (d.dominio) $("dom").value = d.dominio;
+  const de = {
+    falta_conectar: "Elegiste usar tu dominio <b>" + d.dominio + "</b>. Seguí los pasos de abajo para conectarlo.",
+    comprando: "Elegiste comprar un dominio. Mirá los pasos en <b>Quiero comprar uno</b>.",
+    revisar: "Nos avisaste que conectaste <b>" + d.dominio + "</b>. Lo estamos revisando y te avisamos cuando abra tu web.",
+    listo: "✅ Tu dominio <b>" + d.dominio + "</b> ya está conectado.",
+  }[d.dominio_estado] || "Tu web funciona en tu dirección de dmith.app. Si querés un dominio propio, seguí estos pasos.";
+  $("dom-estado").innerHTML = de;
+  if (d.dominio_estado === "comprando") tab("comprar");
+  const msg = (t) => IG + "?text=" + encodeURIComponent(t);
+  $("cambio").href = IG; $("cambio").onclick = () => copiar("Hola! Soy " + d.negocio + " (dmith.app/" + d.slug + "). Quiero este cambio: ");
+  $("pedir-dns").onclick = () => copiar("Hola! Soy " + d.negocio + ". Mi dominio es " + ($("dom").value.trim() || "...") + " (NIC.ar). Pásenme los servidores DNS.");
+}
+function copiar(t) { try { navigator.clipboard.writeText(t); } catch (e) {} }
+
+function tab(t) {
+  document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
+  $("t-conectar").hidden = t !== "conectar"; $("t-comprar").hidden = t !== "comprar";
+}
+document.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => tab(b.dataset.t));
+
+$("avisar").onclick = async () => {
+  const dom = $("dom").value.trim();
+  if (!dom) { $("dom").focus(); return; }
+  $("avisar").disabled = true; $("avisar").textContent = "Enviando…";
+  try {
+    const r = await fetch("/api/sitios/dominio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, dominio: dom }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error);
+    pintar(j); $("avisar").textContent = "¡Listo, te avisamos!";
+  } catch (e) { $("avisar").disabled = false; $("avisar").textContent = "Ya lo conecté, avisar"; $("dom-estado").textContent = e.message || "No se pudo enviar"; }
+};
+cargar();
+</script>
+</body>
+</html>

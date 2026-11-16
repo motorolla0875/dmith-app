@@ -135,7 +135,7 @@ const $ = id => document.getElementById(id);
 const st = { dom: null, plan: null };
 
 if (negocio) $("sub").textContent = "Web de " + negocio + " · tres pasos y queda online.";
-$("sub-addr").textContent = slug + ".dmith.app";
+$("sub-addr").textContent = "dmith.app/" + slug;
 
 function go(n) {
   ["p1", "p2", "p3", "p4"].forEach((id, i) => $(id).hidden = i !== n - 1);
@@ -168,8 +168,8 @@ $("n2").onclick = () => { resumen(); go(3); };
 // Paso 3
 function direccion() {
   if (st.dom === "propio") return $("dom").value.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
-  if (st.dom === "comprar") return slug + ".dmith.app (después pasamos a tu dominio)";
-  return slug + ".dmith.app";
+  if (st.dom === "comprar") return "dmith.app/" + slug + " (después pasamos a tu dominio)";
+  return "dmith.app/" + slug;
 }
 function resumen() {
   $("sum").innerHTML = [
@@ -186,7 +186,7 @@ $("pay").onclick = async () => {
   const link = MP_LINKS[st.plan.n];
   try { await navigator.clipboard.writeText(mensaje()); } catch (e) {}
   if (link) {
-    try { localStorage.setItem("dm-pedido", mensaje()); } catch (e) {}
+    try { localStorage.setItem("dm-pedido", mensaje()); localStorage.setItem("dm-pedido-json", JSON.stringify({ slug, negocio, dominio: st.dom, dominio_nombre: $("dom").value.trim(), plan: st.plan.n })); } catch (e) {}
     $("pay").textContent = "Abriendo Mercado Pago…"; $("pay").disabled = true;
     location.href = link;
   } else {

@@ -8,6 +8,11 @@
   var slug = (me && me.dataset.slug) || location.pathname.split("/").filter(Boolean).pop() || "";
   var IG = "https://ig.me/m/dmith_app";
 
+  var listo = false;
+  fetch("/api/sitios/estado?slug=" + encodeURIComponent(slug)).then(function (r) { return r.json(); }).then(function (j) { listo = true; if (!j.activo) mostrar(); }).catch(function () { if (!listo) { listo = true; mostrar(); } });
+  setTimeout(function () { if (!listo) { listo = true; mostrar(); } }, 2500);
+
+  function mostrar() {
   var css = document.createElement("style");
   css.textContent =
     "#dm-franja{position:fixed;top:0;left:0;right:0;z-index:2147483000;background:#181B4A;color:#fff;" +
@@ -47,6 +52,8 @@
       });
     }
   });
+
+  }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 })();
