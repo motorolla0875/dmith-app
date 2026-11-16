@@ -130,14 +130,20 @@ const IG = "https://ig.me/m/dmith_app";
 const fmt = (n) => n ? "$" + Number(n).toLocaleString("es-AR") + "/mes" : "—";
 const fecha = (s) => s ? new Date(s).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) : "—";
 const q = new URLSearchParams(location.search);
+const DEMO = q.has("demo");
 let token = q.get("t");
-try { if (token) localStorage.setItem("dm-panel", token); else token = localStorage.getItem("dm-panel"); } catch (e) {}
+if (!DEMO) { try { if (token) localStorage.setItem("dm-panel", token); else token = localStorage.getItem("dm-panel"); } catch (e) {} }
 if (q.get("t")) history.replaceState(null, "", "/panel/");
 let datos = null;
 
 function fallo(t) { $("cargando").hidden = true; $("error").hidden = false; $("error").innerHTML = t; }
 
 async function cargar() {
+  if (DEMO) {
+    const hoy = new Date(), prox = new Date(hoy); prox.setMonth(prox.getMonth() + 1);
+    document.title = "Panel de ejemplo · dmith Sitios";
+    return pintar({ negocio: "Navaja Sur", slug: "navaja-sur", plan: "Catálogo", monto: 40000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: hoy.toISOString(), dominio: "navajasur.com.ar", dominio_estado: "falta_conectar" });
+  }
   if (!token) return fallo('No encontramos tu panel en este celular.<br><br><a class="btn" href="' + IG + '">Pedir mi link por Instagram</a>');
   try {
     const r = await fetch("/api/sitios/panel?t=" + encodeURIComponent(token));
@@ -182,6 +188,7 @@ document.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => tab(b
 $("avisar").onclick = async () => {
   const dom = $("dom").value.trim();
   if (!dom) { $("dom").focus(); return; }
+  if (DEMO) { pintar({ ...datos, dominio: dom, dominio_estado: "revisar" }); $("avisar").textContent = "¡Listo, te avisamos!"; return; }
   $("avisar").disabled = true; $("avisar").textContent = "Enviando…";
   try {
     const r = await fetch("/api/sitios/dominio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, dominio: dom }) });
