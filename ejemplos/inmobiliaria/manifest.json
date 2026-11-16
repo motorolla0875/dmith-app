@@ -1,0 +1,17 @@
+{
+ "name": "Umbral Propiedades",
+ "short_name": "Umbral",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FAF7F2",
+ "theme_color": "#1E2A3A",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

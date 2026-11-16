@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Canasta Verdulería</title>
+<meta name="description" content="Verdulería en Quilmes con envío a domicilio. Armá tu pedido por kilo o pedí un bolsón de la semana por WhatsApp.">
+<meta name="theme-color" content="#2E6B2F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --leaf: #2E6B2F; --leaf-d: #1F4A20; --kraft: #F3E9D6; --paper: #FBF7EE; --tomato: #E2492F; --ink: #1F2A1C; --mute: #6B7064; --line: #E6DCC6; --white: #fff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.6 Figtree, system-ui, sans-serif; padding-bottom: 86px; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-family: Caprasimo, Georgia, serif; font-weight: 400; }
+
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 12px; }
+  .logo { font-size: 28px; text-decoration: none; color: var(--leaf); }
+  .logo span { color: var(--tomato); }
+  .chip { background: var(--kraft); border-radius: 999px; padding: 7px 14px; font-weight: 600; font-size: 14px; }
+
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; padding-top: 12px; padding-bottom: 52px; }
+  .hero h1 { font-size: clamp(44px, 7vw, 86px); line-height: 1; margin: 0 0 18px; color: var(--leaf-d); text-wrap: balance; }
+  .hero h1 span { color: var(--tomato); }
+  .hero p { font-size: 19px; color: var(--mute); max-width: 36ch; margin: 0 0 24px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--leaf); color: #fff; text-decoration: none; font: 800 16px Figtree, sans-serif; padding: 13px 22px; border-radius: 14px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn.tomato { background: var(--tomato); }
+  .btn svg { width: 18px; height: 18px; }
+  .crate { position: relative; }
+  .crate img { width: 100%; aspect-ratio: 5/4; object-fit: cover; border-radius: 22px; }
+  .stamp { position: absolute; left: -14px; bottom: -14px; width: 130px; height: 130px; border-radius: 50%; background: var(--tomato); color: #fff; display: grid; place-items: center; text-align: center; font: 400 17px/1.1 Caprasimo, serif; transform: rotate(-10deg); box-shadow: 0 10px 24px rgba(226,73,47,.35); padding: 10px; }
+
+  section { padding: 56px 0; }
+  h2 { font-size: clamp(34px, 5vw, 52px); margin: 0 0 6px; line-height: 1.05; color: var(--leaf-d); }
+  .lead { color: var(--mute); margin: 0 0 26px; }
+
+  .bolsones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .bol { background: var(--white); border-radius: 20px; overflow: hidden; border: 1.5px solid var(--line); display: flex; flex-direction: column; }
+  .bol img { aspect-ratio: 16/10; object-fit: cover; width: 100%; }
+  .bol div { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .bol h3 { margin: 0; font-size: 24px; color: var(--leaf-d); }
+  .bol p { margin: 0; color: var(--mute); font-size: 15px; flex: 1; }
+  .bol .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; }
+  .bol b { font: 400 24px Caprasimo, serif; }
+
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .tabs button { border: 0; background: var(--kraft); color: var(--ink); padding: 9px 16px; border-radius: 999px; font: 600 15px Figtree, sans-serif; cursor: pointer; }
+  .tabs button.on { background: var(--leaf); color: #fff; }
+  .list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .prod { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; background: var(--white); border: 1.5px solid var(--line); border-radius: 16px; padding: 10px 12px; }
+  .dot { width: 44px; height: 44px; border-radius: 50%; box-shadow: inset -6px -6px 0 rgba(0,0,0,.12); }
+  .prod b { display: block; font-weight: 800; }
+  .prod small { color: var(--mute); }
+  .qty { display: flex; align-items: center; gap: 6px; }
+  .qty button { width: 34px; height: 34px; border-radius: 50%; border: 0; font: 800 18px Figtree, sans-serif; cursor: pointer; background: var(--leaf); color: #fff; line-height: 1; }
+  .qty button.minus { background: var(--kraft); color: var(--ink); }
+  .qty span { min-width: 46px; text-align: center; font-weight: 800; font-size: 14px; }
+
+  .info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .info div { background: var(--kraft); border-radius: 18px; padding: 18px; }
+  .info b { display: block; font: 400 20px Caprasimo, serif; color: var(--leaf-d); }
+
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--leaf-d); color: #fff; padding: 12px max(16px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-bottom)); }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; }
+  .bar b { font: 400 24px Caprasimo, serif; display: block; line-height: 1.1; }
+  .bar small { color: #C6D8C2; }
+  .bar .btn.off { opacity: .45; pointer-events: none; }
+  .install { display: none; background: var(--kraft); color: var(--ink); border: 0; border-radius: 999px; padding: 7px 14px; font: 600 14px Figtree, sans-serif; cursor: pointer; }
+  footer { padding: 20px 0 30px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 880px) {
+    .hero .wrap { grid-template-columns: 1fr; }
+    .crate { order: -1; }
+    .stamp { width: 104px; height: 104px; font-size: 14px; left: 8px; }
+    .bolsones, .list, .info { grid-template-columns: 1fr; }
+    section { padding: 40px 0; }
+  }
+  @media (max-width: 420px) { .bar .btn span { display: none; } .chip { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">La Canasta<span>.</span></a>
+    <div style="display:flex;gap:8px;align-items:center"><button class="install" id="install">Instalar app</button><span class="chip">Envíos de lunes a sábado</span></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Fruta y verdura <span>de hoy</span>, en tu puerta</h1>
+      <p>Compramos en el Mercado Central cada madrugada. Armá tu pedido por kilo o llevate un bolsón de la semana.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#bolsones">Ver bolsones</a><a class="btn tomato" href="#pedido">Armar pedido</a></div>
+    </div>
+    <div class="crate">
+      <img src="https://unsplash.com/photos/GPxxXAbzsXU/download?w=1000" alt="Cajones de frutas y verduras">
+      <div class="stamp">Envío gratis desde $20.000</div>
+    </div>
+  </div>
+</div>
+
+<section id="bolsones" style="padding-top:0">
+  <div class="wrap">
+    <h2>Bolsones de la semana</h2>
+    <p class="lead">Lo más fresco de la semana, ya armado. Ideal para no pensar.</p>
+    <div class="bolsones" id="bolsones-box"></div>
+  </div>
+</section>
+
+<section id="pedido" style="padding-top:0">
+  <div class="wrap">
+    <h2>Armá tu pedido</h2>
+    <p class="lead">Sumá por medio kilo o por unidad. Precios de esta semana.</p>
+    <div class="tabs" id="tabs"></div>
+    <div class="list" id="list"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap info">
+    <div><b>Quilmes Oeste</b>Local frente a la plaza</div>
+    <div><b>Lun a sáb</b>De 8 a 13:30 y de 17 a 20:30</div>
+    <div><b>Pagás al recibir</b>Efectivo, transferencia o Mercado Pago</div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>La Canasta Verdulería · @lacanasta.verdu</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+
+<div class="bar">
+  <div class="wrap">
+    <div><b id="total">$0</b><small id="count">Tu pedido está vacío</small></div>
+    <a class="btn tomato off" id="go" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>Enviar pedido</span></a>
+  </div>
+</div>
+
+<script>
+const fmt = n => "$" + Math.round(n).toLocaleString("es-AR");
+const bolsones = [
+  { n: "Bolsón chico", d: "Para 1 o 2 personas: 6 kg de fruta y verdura surtida.", p: 12000, img: "bWg-BeVJPG4" },
+  { n: "Bolsón familiar", d: "Para 4 personas: 10 kg, con papa, cebolla, tomate, lechuga y fruta de estación.", p: 18500, img: "2WmVYrCwEKg" },
+  { n: "Bolsón frutero", d: "8 kg de fruta: banana, manzana, naranja y lo que esté más rico.", p: 15000, img: "PM16-G2eVAs" },
+];
+const prods = {
+  "Verduras": [["Papa", 1100, "kg", "#C9A46A"], ["Cebolla", 1300, "kg", "#E8C99A"], ["Tomate", 2400, "kg", "#E2492F"], ["Zanahoria", 1200, "kg", "#F08A2A"], ["Lechuga", 1500, "u", "#7FBF4D"], ["Zapallo anco", 1600, "kg", "#E9A23B"]],
+  "Frutas": [["Banana", 2200, "kg", "#F4D03F"], ["Manzana roja", 2600, "kg", "#C0392B"], ["Naranja", 1500, "kg", "#F39C12"], ["Mandarina", 1800, "kg", "#F5A623"], ["Frutilla", 3500, "kg", "#D7263D"], ["Limón", 1900, "kg", "#E6E04A"]],
+  "Otros": [["Huevos x 12", 4200, "u", "#F3E3C3"], ["Ajo (cabeza)", 600, "u", "#EDE6DA"], ["Albahaca (atado)", 1200, "u", "#3E8E41"], ["Palta", 1800, "u", "#4F7A28"]],
+};
+const cart = {};
+document.getElementById("bolsones-box").innerHTML = bolsones.map((b, i) => `<div class="bol"><img src="https://unsplash.com/photos/${b.img}/download?w=700" alt="${b.n}" loading="lazy"><div><h3>${b.n}</h3><p>${b.d}</p><div class="row"><b>${fmt(b.p)}</b><button class="btn" data-b="${i}">Agregar</button></div></div></div>`).join("");
+document.querySelectorAll("[data-b]").forEach(btn => btn.onclick = () => { const b = bolsones[btn.dataset.b]; cart[b.n] = { n: b.n, p: b.p, u: "u", q: (cart[b.n]?.q || 0) + 1 }; btn.textContent = `Agregado (${cart[b.n].q})`; upd(); });
+const tabs = document.getElementById("tabs"), list = document.getElementById("list");
+let cat = "Verduras";
+Object.keys(prods).forEach(c => { const b = document.createElement("button"); b.textContent = c; if (c === cat) b.className = "on"; b.onclick = () => { cat = c; tabs.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); render(); }; tabs.appendChild(b); });
+const label = (q, u) => u === "kg" ? (q ? `${q.toString().replace(".", ",")} kg` : "0") : `${q}`;
+function render() {
+  list.innerHTML = "";
+  prods[cat].forEach(([n, p, u, c]) => {
+    const el = document.createElement("div"); el.className = "prod";
+    el.innerHTML = `<i class="dot" style="background:${c}"></i><div><b>${n}</b><small>${fmt(p)} ${u === "kg" ? "el kilo" : "c/u"}</small></div><div class="qty"><button class="minus" aria-label="Quitar">−</button><span>${label(cart[n]?.q || 0, u)}</span><button aria-label="Agregar">+</button></div>`;
+    const [m, pl] = el.querySelectorAll("button"), s = el.querySelector("span"), step = u === "kg" ? .5 : 1;
+    const set = q => { q = Math.max(0, Math.round(q * 2) / 2); cart[n] = { n, p, u, q }; s.textContent = label(q, u); upd(); };
+    pl.onclick = () => set((cart[n]?.q || 0) + step); m.onclick = () => set((cart[n]?.q || 0) - step);
+    list.appendChild(el);
+  });
+}
+render();
+function upd() {
+  const items = Object.values(cart).filter(i => i.q > 0);
+  const sub = items.reduce((a, i) => a + i.p * i.q, 0), envio = sub && sub < 20000 ? 1500 : 0;
+  document.getElementById("total").textContent = fmt(sub + envio);
+  document.getElementById("count").textContent = items.length ? `${items.length} producto${items.length > 1 ? "s" : ""}${envio ? " + envío" : " · envío gratis"}` : "Tu pedido está vacío";
+  const go = document.getElementById("go"); go.classList.toggle("off", !items.length);
+  go.href = "https://wa.me/?text=" + encodeURIComponent(`Hola La Canasta! Mi pedido:\n${items.map(i => `- ${i.u === "kg" ? label(i.q, "kg") : i.q + " x"} ${i.n} (${fmt(i.p * i.q)})`).join("\n")}${envio ? `\n- Envío (${fmt(envio)})` : ""}\nTotal aprox.: ${fmt(sub + envio)}`);
+}
+upd();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-block"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

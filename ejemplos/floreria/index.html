@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malva Florería</title>
+<meta name="description" content="Florería en Quilmes. Ramos, arreglos y plantas con envío a domicilio. Elegí el ramo, escribí la tarjeta y pedilo por WhatsApp.">
+<meta name="theme-color" content="#2F4A3A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Mulish:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #FBF7F4; --lilac: #E9DDEE; --plum: #7A4A86; --forest: #2F4A3A; --ink: #2A2530; --mute: #7A7180; --line: #E8DFE9; --white: #fff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 400 16px/1.65 Mulish, system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-family: "Gilda Display", Georgia, serif; font-weight: 400; }
+
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 12px; }
+  .logo { font-size: 34px; text-decoration: none; color: var(--forest); line-height: 1; }
+  .logo small { display: block; font: 600 11px Mulish, sans-serif; letter-spacing: .14em; color: var(--plum); }
+  nav { display: flex; gap: 26px; }
+  nav a { text-decoration: none; color: var(--mute); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--forest); color: #fff; text-decoration: none; font: 800 15px Mulish, sans-serif; padding: 12px 22px; border-radius: 999px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn.plum { background: var(--plum); }
+
+  .hero { background: var(--lilac); }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding-top: 48px; padding-bottom: 48px; }
+  .hero h1 { font-size: clamp(46px, 7vw, 90px); line-height: 1; margin: 0 0 18px; color: var(--forest); text-wrap: balance; }
+  .hero p { font-size: 19px; color: #5E5466; max-width: 36ch; margin: 0 0 26px; }
+  .occ { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 26px; }
+  .occ span { background: var(--cream); padding: 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--plum); }
+  .hero-img { position: relative; }
+  .hero-img img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 240px 240px 16px 16px; }
+  .ribbon { position: absolute; right: -10px; top: 24%; background: var(--forest); color: #fff; padding: 12px 18px; border-radius: 12px; font-weight: 800; transform: rotate(4deg); box-shadow: 0 10px 24px rgba(47,74,58,.3); }
+  .ribbon small { display: block; font-weight: 400; opacity: .85; }
+
+  section { padding: 72px 0; }
+  h2 { font-size: clamp(36px, 5vw, 56px); margin: 0 0 8px; line-height: 1.05; color: var(--forest); }
+  .lead { color: var(--mute); margin: 0 0 30px; max-width: 54ch; }
+
+  .ramos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .ramo { background: var(--white); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); display: flex; flex-direction: column; cursor: pointer; transition: box-shadow .2s; }
+  .ramo.on { box-shadow: 0 0 0 3px var(--plum); }
+  .ramo img { aspect-ratio: 1; object-fit: cover; width: 100%; }
+  .ramo div { padding: 16px 18px 20px; }
+  .ramo h3 { margin: 0; font-size: 24px; }
+  .ramo p { margin: 2px 0 8px; color: var(--mute); font-size: 15px; }
+  .ramo b { color: var(--plum); font-size: 18px; }
+
+  .order { background: var(--forest); color: #fff; border-radius: 28px; padding: 40px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 36px; }
+  .order h2 { color: #fff; }
+  .order .lead { color: #C8D6CC; }
+  .pick { display: flex; gap: 14px; align-items: center; background: rgba(255,255,255,.08); border-radius: 16px; padding: 12px; }
+  .pick img { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; }
+  .pick b { display: block; font-family: "Gilda Display", serif; font-size: 22px; font-weight: 400; }
+  .field { display: grid; gap: 6px; margin-bottom: 14px; }
+  .field label { font-weight: 800; font-size: 14px; }
+  .field input, .field textarea, .field select { padding: 12px 14px; border-radius: 12px; border: 0; font: 400 16px Mulish, sans-serif; background: var(--cream); color: var(--ink); width: 100%; }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .card-prev { background: var(--cream); color: var(--ink); border-radius: 4px; padding: 18px; font: 400 20px/1.4 "Gilda Display", serif; min-height: 110px; box-shadow: 0 8px 20px rgba(0,0,0,.2); transform: rotate(-2deg); margin-top: 22px; white-space: pre-wrap; }
+  .total { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .total b { font: 400 30px "Gilda Display", serif; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; box-shadow: 0 10px 26px rgba(47,74,58,.35); }
+  footer { padding: 30px 0 40px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 880px) {
+    nav { display: none; }
+    .hero .wrap, .order { grid-template-columns: 1fr; }
+    .hero .wrap { padding-top: 20px; }
+    .hero-img { max-width: 380px; margin: 0 auto; order: -1; }
+    .ramos { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ramo h3 { font-size: 20px; }
+    .order { padding: 24px; border-radius: 22px; }
+    section { padding: 52px 0; }
+  }
+  @media (max-width: 420px) { header .btn span { display: none; } .ramo div { padding: 12px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">Malva<small>FLORERÍA · QUILMES</small></a>
+    <nav><a href="#ramos">Ramos</a><a href="#pedido">Enviar flores</a></nav>
+    <a class="btn" href="#pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h13v10H3zM16 10h3l2 3v4h-5"/><circle cx="7" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></svg><span>Enviar flores</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Flores frescas que llegan hoy</h1>
+      <p>Armamos cada ramo a mano con flores del día. Elegí, escribí la tarjeta y lo llevamos a domicilio.</p>
+      <a class="btn plum" href="#ramos">Elegir un ramo</a>
+      <div class="occ"><span>Cumpleaños</span><span>Aniversario</span><span>Perdón</span><span>Nacimiento</span><span>Porque sí</span></div>
+    </div>
+    <div class="hero-img">
+      <img src="https://unsplash.com/photos/vN8HQcKv8Lg/download?w=900" alt="Ramo de flores rosadas">
+      <div class="ribbon">Envío en el día<small>pidiendo antes de las 15 h</small></div>
+    </div>
+  </div>
+</div>
+
+<section id="ramos">
+  <div class="wrap">
+    <h2>Ramos</h2>
+    <p class="lead">Tocá el que te guste y pasá a escribir la tarjeta.</p>
+    <div class="ramos" id="list"></div>
+  </div>
+</section>
+
+<section id="pedido" style="padding-top:0">
+  <div class="wrap">
+    <div class="order">
+      <div>
+        <h2>Enviá flores</h2>
+        <p class="lead">Completá los datos y te confirmamos por WhatsApp el horario de entrega.</p>
+        <div class="pick"><img id="o-img" src="" alt=""><div><small>Elegiste</small><b id="o-name"></b><span id="o-price"></span></div></div>
+        <div class="card-prev" id="o-card">Tu mensaje va a aparecer acá</div>
+      </div>
+      <div>
+        <div class="field"><label>Mensaje de la tarjeta</label><textarea id="o-msg" maxlength="160" placeholder="Feliz cumple, mamá. Te quiero mucho."></textarea></div>
+        <div class="field"><label>Para quién</label><input id="o-to" placeholder="Nombre de quien recibe"></div>
+        <div class="field"><label>Barrio de entrega</label><select id="o-zone"><option value="0">Quilmes (envío gratis)</option><option value="2500">Bernal (+ $2.500)</option><option value="3500">Berazategui (+ $3.500)</option><option value="-1">Retiro en el local</option></select></div>
+        <div class="field"><label>Día</label><input type="date" id="o-date"></div>
+        <div class="total"><b id="o-total"></b><a class="btn plum" id="o-go" target="_blank" rel="noopener">Pedir por WhatsApp</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Malva Florería · Quilmes centro · @malva.flores</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+<button class="btn install" id="install">Instalar la app</button>
+
+<script>
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const ramos = [
+  { n: "Rosa pastel", d: "Rosas y claveles rosados", p: 32000, img: "vN8HQcKv8Lg" },
+  { n: "Tulipanes", d: "12 tulipanes rojos y rosados", p: 38000, img: "VLpbgwu2phY" },
+  { n: "Sol de otoño", d: "Astromelias amarillas y blancas", p: 24000, img: "HcmTXrnzJog" },
+  { n: "Florero clásico", d: "Rosas rojas en florero de vidrio", p: 45000, img: "1h68SIbrxWk" },
+  { n: "Jardín silvestre", d: "Flores de estación y follaje", p: 29000, img: "10VrDx2akC0" },
+  { n: "Ramo sorpresa", d: "Lo armamos con lo más lindo del día", p: 22000, img: "F3HNRyow1CI", noimg: true },
+];
+let sel = ramos[0];
+const list = document.getElementById("list");
+ramos.filter(r => !r.noimg).forEach((r, i) => {
+  const el = document.createElement("div"); el.className = "ramo" + (i ? "" : " on");
+  el.innerHTML = `<img src="https://unsplash.com/photos/${r.img}/download?w=600" alt="${r.n}" loading="lazy"><div><h3>${r.n}</h3><p>${r.d}</p><b>${fmt(r.p)}</b></div>`;
+  el.onclick = () => { list.querySelectorAll(".ramo").forEach(x => x.classList.remove("on")); el.classList.add("on"); sel = r; upd(); document.getElementById("pedido").scrollIntoView({ behavior: "smooth" }); };
+  list.appendChild(el);
+});
+const date = document.getElementById("o-date");
+date.min = new Date().toISOString().slice(0, 10); date.value = date.min;
+["o-msg","o-to","o-zone","o-date"].forEach(id => document.getElementById(id).addEventListener("input", upd));
+function upd() {
+  document.getElementById("o-img").src = `https://unsplash.com/photos/${sel.img}/download?w=200`;
+  document.getElementById("o-name").textContent = sel.n;
+  document.getElementById("o-price").textContent = fmt(sel.p);
+  const msg = document.getElementById("o-msg").value.trim(), to = document.getElementById("o-to").value.trim();
+  document.getElementById("o-card").textContent = msg || "Tu mensaje va a aparecer acá";
+  const z = document.getElementById("o-zone"), env = Math.max(0, +z.value), tot = sel.p + env;
+  document.getElementById("o-total").textContent = fmt(tot);
+  const [y, m, d] = date.value.split("-");
+  const entrega = +z.value < 0 ? "Lo retiro en el local" : `Entrega en ${z.options[z.selectedIndex].text.split(" (")[0]}`;
+  document.getElementById("o-go").href = "https://wa.me/?text=" + encodeURIComponent(`Hola Malva! Quiero el ramo ${sel.n} (${fmt(sel.p)}) para el ${d}/${m}.\n${entrega}${to ? `, para ${to}` : ""}.\n${msg ? `Tarjeta: "${msg}"\n` : ""}Total: ${fmt(tot)}`);
+}
+upd();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-flex"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

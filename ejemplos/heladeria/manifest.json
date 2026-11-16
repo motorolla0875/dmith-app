@@ -1,0 +1,17 @@
+{
+ "name": "Nieve Helados",
+ "short_name": "Nieve",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FFF8EC",
+ "theme_color": "#FF6F91",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

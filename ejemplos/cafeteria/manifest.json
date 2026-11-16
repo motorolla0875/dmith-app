@@ -1,0 +1,17 @@
+{
+ "name": "Miga Café y Panadería",
+ "short_name": "Miga",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#F7F1E6",
+ "theme_color": "#3B2A20",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

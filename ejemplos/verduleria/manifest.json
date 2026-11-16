@@ -1,0 +1,17 @@
+{
+ "name": "La Canasta Verdulería",
+ "short_name": "La Canasta",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FBF7EE",
+ "theme_color": "#2E6B2F",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

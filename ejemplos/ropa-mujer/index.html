@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lirio Boutique</title>
+<meta name="description" content="Ropa de mujer en Quilmes. Vestidos, blusas y prendas de temporada. Pedí por WhatsApp.">
+<meta name="theme-color" content="#4A1F3D">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blush: #F7EAE6; --paper: #FFFAF8; --plum: #4A1F3D; --wine: #A3354F; --ink: #2B1726; --soft: #7A6271; --line: #E7D3CF;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.6 Jost, system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+
+  .notice { background: var(--plum); color: #F7EAE6; text-align: center; font-size: 14px; padding: 8px 12px; }
+  header { position: sticky; top: 0; z-index: 10; background: rgba(255,250,248,.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
+  .logo { font-family: "Bodoni Moda", serif; font-size: 28px; letter-spacing: .02em; text-decoration: none; color: var(--plum); }
+  .logo i { color: var(--wine); }
+  nav { display: flex; gap: 22px; font-size: 15px; }
+  nav a { text-decoration: none; color: var(--soft); }
+  nav a:hover { color: var(--plum); }
+  .wa { display: inline-flex; align-items: center; gap: 8px; background: var(--wine); color: #fff; text-decoration: none; font-weight: 500; padding: 10px 16px; border-radius: 999px; font-size: 15px; white-space: nowrap; }
+  .wa svg { width: 18px; height: 18px; }
+
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; height: min(84vh, 700px); min-height: 520px; background: var(--blush); }
+  .hero-text { padding: 64px max(18px, 6vw); display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+  .hero-text small { color: var(--wine); font-weight: 500; font-size: 15px; }
+  .hero h1 { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: clamp(42px, 6vw, 76px); line-height: 1.02; margin: 0; color: var(--plum); text-wrap: balance; }
+  .hero p { margin: 0; max-width: 34ch; color: var(--soft); font-size: 18px; }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-line { display: inline-flex; align-items: center; padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--plum); color: var(--plum); text-decoration: none; font-weight: 500; }
+  .hero-img { position: relative; overflow: hidden; }
+  .hero-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .tag-season { position: absolute; left: 20px; bottom: 20px; background: var(--paper); padding: 12px 16px; border-radius: 4px; font-size: 14px; color: var(--plum); box-shadow: 0 8px 24px rgba(74,31,61,.15); }
+  .tag-season b { font-family: "Bodoni Moda", serif; font-size: 22px; font-weight: 600; display: block; }
+
+  section { padding: 72px 0; }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  h2 { font-family: "Bodoni Moda", serif; font-weight: 400; font-size: clamp(32px, 4vw, 44px); margin: 0; color: var(--plum); line-height: 1.1; }
+  .head p { margin: 0; color: var(--soft); }
+
+  .cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .cat { position: relative; aspect-ratio: 3/4; overflow: hidden; border-radius: 6px; text-decoration: none; }
+  .cat img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .cat:hover img { transform: scale(1.04); }
+  .cat span { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 14px; color: #fff; font-family: "Bodoni Moda", serif; font-size: 24px; background: linear-gradient(transparent, rgba(43,23,38,.75)); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 20px; }
+  .card .ph { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 6px; background: var(--blush); }
+  .card .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .badge { position: absolute; top: 12px; left: 12px; background: var(--wine); color: #fff; font-size: 13px; padding: 3px 10px; border-radius: 999px; }
+  .card h3 { font-weight: 500; font-size: 17px; margin: 14px 0 2px; }
+  .price { color: var(--wine); font-weight: 600; }
+  .price s { color: var(--soft); font-weight: 400; margin-left: 6px; font-size: 14px; }
+  .sizes { display: flex; gap: 6px; margin: 10px 0 12px; flex-wrap: wrap; }
+  .sizes button { min-width: 38px; height: 34px; border: 1px solid var(--line); background: #fff; border-radius: 4px; font: 500 14px Jost, sans-serif; color: var(--ink); cursor: pointer; }
+  .sizes button.on { background: var(--plum); border-color: var(--plum); color: #fff; }
+  .sizes button:disabled { color: #C9B8BF; text-decoration: line-through; cursor: default; }
+  .ask { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 11px; border-radius: 4px; border: 0; background: var(--plum); color: #fff; font: 500 15px Jost, sans-serif; cursor: pointer; text-decoration: none; }
+  .ask svg { width: 17px; height: 17px; }
+
+  .how { background: var(--blush); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .step { background: var(--paper); padding: 26px; border-radius: 6px; }
+  .step b { font-family: "Bodoni Moda", serif; font-size: 40px; color: var(--wine); font-weight: 400; line-height: 1; }
+  .step h3 { margin: 10px 0 6px; font-weight: 600; font-size: 18px; }
+  .step p { margin: 0; color: var(--soft); }
+
+  .visit { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .visit img { border-radius: 6px; aspect-ratio: 3/2; object-fit: cover; width: 100%; }
+  .info { display: grid; gap: 18px; margin-top: 22px; }
+  .info div { border-top: 1px solid var(--line); padding-top: 14px; }
+  .info small { color: var(--soft); display: block; font-size: 14px; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; background: var(--plum); color: #fff; border: 0; border-radius: 999px; padding: 12px 20px; font: 500 15px Jost, sans-serif; box-shadow: 0 10px 30px rgba(43,23,38,.3); cursor: pointer; }
+  footer { background: var(--plum); color: #E8D6DE; padding: 40px 0; font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer .logo { color: #fff; }
+
+  @media (max-width: 860px) {
+    nav { display: none; }
+    .hero { grid-template-columns: 1fr; height: auto; min-height: 0; }
+    .hero-img { height: 440px; order: -1; }
+    .hero-text { padding: 36px 18px 44px; }
+    .cats { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 24px 12px; }
+    .steps, .visit { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+  }
+  @media (max-width: 420px) { .wa span { display: none; } .card h3 { font-size: 15px; } .sizes button { min-width: 32px; } }
+</style>
+</head>
+<body>
+<div class="notice">Envíos a todo Quilmes y zona sur · 3 cuotas sin interés</div>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">Lirio <i>boutique</i></a>
+    <nav><a href="#nuevo">Lo nuevo</a><a href="#categorias">Categorías</a><a href="#como">Cómo comprar</a><a href="#local">El local</a></nav>
+    <a class="wa" href="https://wa.me/?text=Hola%20Lirio%2C%20quiero%20hacer%20una%20consulta" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>Escribinos</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-text">
+    <small>Colección primavera–verano</small>
+    <h1>Vestirte lindo no tiene que ser complicado</h1>
+    <p>Prendas elegidas una por una, en talles del S al XXL. Mirá, elegí tu talle y pedilo por WhatsApp.</p>
+    <div class="hero-btns">
+      <a class="wa" href="#nuevo">Ver lo nuevo</a>
+      <a class="btn-line" href="#local">Visitá el local</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <img src="https://unsplash.com/photos/IuVz1J2dajY/download?w=1100" alt="Modelo con vestido rojo de mangas abullonadas">
+    <div class="tag-season">Vestido Carmín<b>$68.900</b></div>
+  </div>
+</div>
+
+<section id="categorias">
+  <div class="wrap">
+    <div class="head"><h2>Categorías</h2><p>Todo lo que está en el local, también acá.</p></div>
+    <div class="cats">
+      <a class="cat" href="#nuevo"><img src="https://unsplash.com/photos/3TLQwqJrJeo/download?w=600" alt="" loading="lazy"><span>Vestidos</span></a>
+      <a class="cat" href="#nuevo"><img src="https://unsplash.com/photos/yZZh_QrHpY0/download?w=600" alt="" loading="lazy"><span>Camisas</span></a>
+      <a class="cat" href="#nuevo"><img src="https://unsplash.com/photos/rHy8nZca5DM/download?w=600" alt="" loading="lazy"><span>Tops</span></a>
+      <a class="cat" href="#nuevo"><img src="https://unsplash.com/photos/qmPK8XwLgfQ/download?w=600" alt="" loading="lazy"><span>Fiesta</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="nuevo" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><h2>Lo nuevo de la semana</h2><p>Elegí tu talle y tocá el botón: te respondemos al toque.</p></div>
+    <div class="grid" id="productos"></div>
+  </div>
+</section>
+
+<section class="how" id="como">
+  <div class="wrap">
+    <div class="head"><h2>Cómo comprar</h2></div>
+    <div class="steps">
+      <div class="step"><b>1</b><h3>Elegí la prenda</h3><p>Mirá el catálogo y marcá tu talle.</p></div>
+      <div class="step"><b>2</b><h3>Pedila por WhatsApp</h3><p>El mensaje ya sale escrito con la prenda y el talle.</p></div>
+      <div class="step"><b>3</b><h3>Retirá o te la mandamos</h3><p>Pagás con transferencia, Mercado Pago o efectivo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="local">
+  <div class="wrap visit">
+    <img src="https://unsplash.com/photos/MHN96iFvKIU/download?w=1000" alt="Interior del local con percheros" loading="lazy">
+    <div>
+      <h2>Vení a probártelo</h2>
+      <div class="info">
+        <div><small>Dirección</small>Quilmes Centro, a dos cuadras de la peatonal</div>
+        <div><small>Horarios</small>Lunes a sábado de 10 a 13 y de 16 a 20</div>
+        <div><small>Instagram</small>@lirio.boutique</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="logo">Lirio <i>boutique</i></span>
+    <span>Sitio de ejemplo hecho por dmith.app</span>
+  </div>
+</footer>
+<button class="install" id="install">Instalar la app de Lirio</button>
+
+<script>
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>';
+const productos = [
+  { n: "Vestido Carmín", p: 68900, img: "JfETyx2y9MI", talles: ["S","M","L"], sin: ["L"], badge: "Nuevo" },
+  { n: "Vestido Jardín", p: 59900, old: 74900, img: "5o44iIegdqs", talles: ["S","M","L","XL"], sin: [], badge: "Oferta" },
+  { n: "Vestido Lino blanco", p: 52500, img: "Edxk9S1Du8Q", talles: ["S","M","L"], sin: ["S"] },
+  { n: "Vestido Bordó", p: 71000, img: "qmPK8XwLgfQ", talles: ["M","L","XL","XXL"], sin: [] },
+  { n: "Blusa Oversize", p: 34900, img: "yZZh_QrHpY0", talles: ["S","M","L","XL"], sin: [], badge: "Nuevo" },
+  { n: "Top Canela", p: 27500, img: "rHy8nZca5DM", talles: ["S","M","L"], sin: [] },
+];
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const box = document.getElementById("productos");
+productos.forEach(pr => {
+  const el = document.createElement("div");
+  el.className = "card";
+  el.innerHTML = `<div class="ph"><img src="https://unsplash.com/photos/${pr.img}/download?w=700" alt="${pr.n}" loading="lazy">${pr.badge ? `<span class="badge">${pr.badge}</span>` : ""}</div>
+    <h3>${pr.n}</h3><div class="price">${fmt(pr.p)}${pr.old ? `<s>${fmt(pr.old)}</s>` : ""}</div>
+    <div class="sizes">${pr.talles.map(t => `<button ${pr.sin.includes(t) ? "disabled title='Sin stock'" : ""}>${t}</button>`).join("")}</div>
+    <a class="ask" target="_blank" rel="noopener">${WA_ICON}Pedir por WhatsApp</a>`;
+  let talle = "";
+  const link = el.querySelector(".ask");
+  const upd = () => { link.href = "https://wa.me/?text=" + encodeURIComponent(`Hola Lirio! Quiero el ${pr.n}${talle ? " en talle " + talle : ""} (${fmt(pr.p)}). ¿Lo tienen?`); };
+  el.querySelectorAll(".sizes button").forEach(b => b.onclick = () => {
+    el.querySelectorAll(".sizes button").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); talle = b.textContent; upd();
+  });
+  upd(); box.appendChild(el);
+});
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "block"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+ "name": "Hierro Gym",
+ "short_name": "Hierro",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#F2F0EB",
+ "theme_color": "#121316",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Umbral Propiedades</title>
+<meta name="description" content="Inmobiliaria en Quilmes y zona sur. Casas, departamentos y PH en venta y alquiler. Tasación gratis.">
+<meta name="theme-color" content="#1E2A3A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #1E2A3A; --sand: #EFE7DA; --paper: #FAF7F2; --brick: #B5523B; --mute: #6B7280; --line: #E3DCCF; --white: #fff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--navy); font: 400 16px/1.6 Manrope, system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-family: Newsreader, Georgia, serif; font-weight: 500; }
+
+  header { position: absolute; left: 0; right: 0; top: 0; z-index: 10; color: #fff; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 12px; }
+  .logo { font-size: 28px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .door { width: 22px; height: 30px; border: 2.5px solid currentColor; border-bottom: 0; border-radius: 11px 11px 0 0; position: relative; }
+  .door::after { content: ""; position: absolute; right: 4px; top: 15px; width: 3px; height: 3px; background: currentColor; border-radius: 50%; }
+  nav { display: flex; gap: 26px; }
+  nav a { text-decoration: none; opacity: .85; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brick); color: #fff; text-decoration: none; font: 700 15px Manrope, sans-serif; padding: 12px 20px; border-radius: 8px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn.navy { background: var(--navy); }
+
+  .hero { position: relative; min-height: min(92vh, 760px); display: flex; align-items: end; color: #fff; overflow: hidden; }
+  .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30,42,58,.55) 0%, rgba(30,42,58,.1) 35%, rgba(30,42,58,.85) 100%); }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; padding-top: 100px; padding-bottom: 40px; }
+  .hero h1 { font-size: clamp(44px, 7vw, 88px); line-height: 1; margin: 0 0 14px; max-width: 14ch; text-wrap: balance; }
+  .hero p { font-size: 19px; max-width: 44ch; margin: 0 0 26px; opacity: .92; }
+  .search { background: var(--white); color: var(--navy); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: auto 1fr 1fr 1fr auto; gap: 10px; align-items: end; box-shadow: 0 20px 40px rgba(0,0,0,.2); }
+  .seg { display: flex; background: var(--sand); border-radius: 10px; padding: 4px; }
+  .seg button { border: 0; background: none; padding: 10px 16px; border-radius: 8px; font: 700 15px Manrope, sans-serif; cursor: pointer; color: var(--navy); }
+  .seg button.on { background: var(--navy); color: #fff; }
+  .search label { font-size: 13px; color: var(--mute); display: grid; gap: 4px; }
+  .search select { padding: 11px 10px; border: 1.5px solid var(--line); border-radius: 10px; font: 500 15px Manrope, sans-serif; background: var(--white); color: var(--navy); }
+
+  section { padding: 72px 0; }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+  h2 { font-size: clamp(34px, 5vw, 52px); margin: 0; line-height: 1.05; }
+  .count { color: var(--mute); }
+
+  .props { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .prop { background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .prop .ph { position: relative; aspect-ratio: 4/3; }
+  .prop .ph img { width: 100%; height: 100%; object-fit: cover; }
+  .tag { position: absolute; top: 12px; left: 12px; background: var(--white); color: var(--navy); font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 6px; }
+  .tag.alq { background: var(--brick); color: #fff; }
+  .prop .body { padding: 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .prop .price { font: 600 26px Newsreader, serif; }
+  .prop h3 { margin: 0; font: 700 16px Manrope, sans-serif; }
+  .prop .addr { color: var(--mute); font-size: 14px; }
+  .feats { display: flex; gap: 14px; color: var(--mute); font-size: 14px; border-top: 1px solid var(--line); padding-top: 10px; margin-top: auto; flex-wrap: wrap; }
+  .feats b { color: var(--navy); }
+  .prop .btn { margin: 0 18px 18px; }
+  .empty { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--mute); background: var(--white); border-radius: 14px; border: 1px dashed var(--line); }
+
+  .tasa { background: var(--navy); color: #fff; }
+  .tasa .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .tasa img { border-radius: 14px; aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+  .tasa p { color: #C9D1DC; }
+  .steps { display: grid; gap: 14px; margin: 22px 0 26px; }
+  .steps div { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+  .steps b { width: 36px; height: 36px; border-radius: 50%; background: var(--brick); display: grid; place-items: center; font-family: Newsreader, serif; font-size: 18px; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; box-shadow: 0 10px 26px rgba(30,42,58,.35); }
+  footer { padding: 32px 0; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .search { grid-template-columns: 1fr 1fr; }
+    .seg, .search .btn { grid-column: span 2; }
+    .seg button { flex: 1; }
+    .props { grid-template-columns: 1fr; }
+    .tasa .wrap { grid-template-columns: 1fr; }
+    .tasa img { display: none; }
+    section { padding: 52px 0; }
+  }
+  @media (max-width: 420px) { header .btn span { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><i class="door"></i>Umbral</a>
+    <nav><a href="#propiedades">Propiedades</a><a href="#tasacion">Tasaciones</a><a href="#contacto">Contacto</a></nav>
+    <a class="btn" href="#tasacion"><span>Tasá gratis</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7v9H3z"/></svg></a>
+  </div>
+</header>
+
+<div class="hero">
+  <img src="https://unsplash.com/photos/KtOid0FLjqU/download?w=1900" alt="Casa con pileta iluminada de noche">
+  <div class="wrap">
+    <h1>Tu próxima casa en zona sur</h1>
+    <p>Casas, departamentos y PH en Quilmes, Bernal y Berazategui. Buscá, mirá las fotos y consultá por WhatsApp.</p>
+    <div class="search">
+      <div class="seg" id="op"><button class="on">Comprar</button><button>Alquilar</button></div>
+      <label>Tipo<select id="f-tipo"><option>Todos</option><option>Casa</option><option>Departamento</option><option>PH</option></select></label>
+      <label>Zona<select id="f-zona"><option>Todas</option><option>Quilmes</option><option>Bernal</option><option>Berazategui</option></select></label>
+      <label>Ambientes<select id="f-amb"><option value="0">Cualquiera</option><option value="2">2 o más</option><option value="3">3 o más</option><option value="4">4 o más</option></select></label>
+      <a class="btn navy" href="#propiedades">Buscar</a>
+    </div>
+  </div>
+</div>
+
+<section id="propiedades">
+  <div class="wrap">
+    <div class="head"><h2 id="p-title">En venta</h2><span class="count" id="p-count"></span></div>
+    <div class="props" id="props"></div>
+  </div>
+</section>
+
+<section class="tasa" id="tasacion">
+  <div class="wrap">
+    <img src="https://unsplash.com/photos/77U1wzOD1yw/download?w=1000" alt="Living luminoso con sillón" loading="lazy">
+    <div>
+      <h2>¿Querés vender o alquilar tu propiedad?</h2>
+      <p>Te la tasamos gratis y sin compromiso. Nos encargamos de las fotos, la publicación y las visitas.</p>
+      <div class="steps">
+        <div><b>1</b><span>Nos escribís con la dirección y cómo es la propiedad.</span></div>
+        <div><b>2</b><span>Coordinamos una visita y te pasamos la tasación en 48 h.</span></div>
+        <div><b>3</b><span>Si te convence, la publicamos con fotos profesionales.</span></div>
+      </div>
+      <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=Hola%20Umbral!%20Quiero%20tasar%20mi%20propiedad.">Pedir tasación gratis</a>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" style="padding:40px 0">
+  <div class="wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+    <div><b>Oficina</b><br><span style="color:var(--mute)">Quilmes centro, a 3 cuadras de la estación</span></div>
+    <div><b>Horarios</b><br><span style="color:var(--mute)">Lunes a viernes de 9 a 18 h · Sábados de 10 a 13 h</span></div>
+    <div><b>Matrícula</b><br><span style="color:var(--mute)">Martillero y corredor público matriculado</span></div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Umbral Propiedades</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+<button class="btn install" id="install">Instalar la app</button>
+
+<script>
+const props = [
+  { c: "UM-101", op: "Comprar", t: "Casa", z: "Bernal", p: "US$ 185.000", n: "Casa con pileta y quincho", a: "Bernal Oeste", amb: 4, m2: 220, d: 3, img: "KtOid0FLjqU" },
+  { c: "UM-102", op: "Comprar", t: "Casa", z: "Quilmes", p: "US$ 128.000", n: "Casa de ladrillo con jardín", a: "Quilmes Oeste", amb: 4, m2: 160, d: 3, img: "uOYak90r4L0" },
+  { c: "UM-103", op: "Comprar", t: "Departamento", z: "Quilmes", p: "US$ 89.000", n: "Depto luminoso con balcón", a: "Quilmes centro", amb: 3, m2: 72, d: 2, img: "1vieZivk1As" },
+  { c: "UM-104", op: "Comprar", t: "PH", z: "Berazategui", p: "US$ 72.000", n: "PH al frente con patio", a: "Berazategui centro", amb: 3, m2: 85, d: 2, img: "y_ibWWpOiL0" },
+  { c: "UM-105", op: "Alquilar", t: "Departamento", z: "Quilmes", p: "$ 480.000 / mes", n: "2 ambientes a estrenar", a: "Quilmes centro", amb: 2, m2: 45, d: 1, img: "77U1wzOD1yw" },
+  { c: "UM-106", op: "Alquilar", t: "Casa", z: "Bernal", p: "$ 850.000 / mes", n: "Casa con parque y cochera", a: "Bernal", amb: 4, m2: 180, d: 3, img: "Dy-HDgXzzhc" },
+  { c: "UM-107", op: "Alquilar", t: "PH", z: "Quilmes", p: "$ 560.000 / mes", n: "PH reciclado con terraza", a: "Quilmes Este", amb: 3, m2: 70, d: 2, img: "eVb3HwIVnw0" },
+  { c: "UM-108", op: "Comprar", t: "Casa", z: "Berazategui", p: "US$ 210.000", n: "Casa en barrio parque", a: "Hudson", amb: 5, m2: 300, d: 4, img: "dmXD7r2mSPs" },
+];
+let op = "Comprar";
+const box = document.getElementById("props");
+function render() {
+  const t = document.getElementById("f-tipo").value, z = document.getElementById("f-zona").value, a = +document.getElementById("f-amb").value;
+  const list = props.filter(p => p.op === op && (t === "Todos" || p.t === t) && (z === "Todas" || p.z === z) && p.amb >= a);
+  document.getElementById("p-title").textContent = op === "Comprar" ? "En venta" : "En alquiler";
+  document.getElementById("p-count").textContent = `${list.length} propiedad${list.length === 1 ? "" : "es"}`;
+  box.innerHTML = list.length ? list.map(p => `<div class="prop"><div class="ph"><img src="https://unsplash.com/photos/${p.img}/download?w=700" alt="${p.n}" loading="lazy"><span class="tag${p.op === "Alquilar" ? " alq" : ""}">${p.t} · ${p.op === "Comprar" ? "Venta" : "Alquiler"}</span></div><div class="body"><div class="price">${p.p}</div><h3>${p.n}</h3><div class="addr">${p.a} · Cód. ${p.c}</div><div class="feats"><span><b>${p.amb}</b> amb.</span><span><b>${p.d}</b> dorm.</span><span><b>${p.m2}</b> m²</span></div></div><a class="btn navy" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hola Umbral! Me interesa la propiedad ${p.c} (${p.n}, ${p.p}). ¿Puedo verla?`)}">Consultar</a></div>`).join("")
+    : `<div class="empty">No hay propiedades con esos filtros ahora. Escribinos y te avisamos cuando entre una.</div>`;
+}
+document.querySelectorAll("#op button").forEach(b => b.onclick = () => { op = b.textContent; document.querySelectorAll("#op button").forEach(x => x.classList.toggle("on", x === b)); render(); });
+["f-tipo","f-zona","f-amb"].forEach(id => document.getElementById(id).addEventListener("change", render));
+render();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-flex"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

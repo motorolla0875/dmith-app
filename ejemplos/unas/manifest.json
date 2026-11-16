@@ -1,0 +1,17 @@
+{
+ "name": "Nácar Nails Studio",
+ "short_name": "Nácar",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FBF6F2",
+ "theme_color": "#3C3A36",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

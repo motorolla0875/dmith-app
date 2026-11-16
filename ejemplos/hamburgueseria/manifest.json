@@ -1,0 +1,17 @@
+{
+ "name": "Doble Queso Burgers",
+ "short_name": "Doble Queso",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FFF6E8",
+ "theme_color": "#E63B2E",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

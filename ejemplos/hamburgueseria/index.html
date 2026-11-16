@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Doble Queso Burgers</title>
+<meta name="description" content="Hamburguesas y pizzas en Quilmes. Armá tu pedido y mandalo por WhatsApp. Delivery o retiro.">
+<meta name="theme-color" content="#E63B2E">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red: #E63B2E; --mustard: #FFC93C; --cream: #FFF6E8; --brown: #2A1A12; --mute: #7A6658; --line: #F0E1CC; --green: #1F9D55; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--brown); font: 400 16px/1.55 Rubik, system-ui, sans-serif; padding-bottom: 90px; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo, .price { font-family: "Lilita One", system-ui, sans-serif; font-weight: 400; }
+
+  header { position: sticky; top: 0; z-index: 10; background: var(--red); color: #fff; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 12px; }
+  .logo { font-size: 28px; text-decoration: none; line-height: 1; }
+  .logo span { color: var(--mustard); }
+  .open { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,.18); padding: 6px 12px; border-radius: 999px; font-weight: 500; font-size: 14px; }
+  .open i { width: 9px; height: 9px; border-radius: 50%; background: #7CFFA8; box-shadow: 0 0 0 3px rgba(124,255,168,.3); }
+  .open.closed i { background: #FFB4A8; box-shadow: none; }
+
+  .hero { background: var(--red); color: #fff; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; padding-top: 24px; padding-bottom: 48px; }
+  .hero h1 { font-size: clamp(52px, 8vw, 104px); line-height: .92; margin: 0 0 16px; }
+  .hero h1 span { color: var(--mustard); }
+  .hero p { font-size: 19px; margin: 0 0 24px; max-width: 34ch; color: #FFE3DE; }
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pills span { background: #fff; color: var(--brown); border-radius: 999px; padding: 8px 14px; font-weight: 500; font-size: 15px; }
+  .hero-img { position: relative; }
+  .hero-img img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 10px solid var(--mustard); }
+  .burst { position: absolute; right: 2%; top: 4%; width: 120px; height: 120px; background: var(--mustard); color: var(--brown); display: grid; place-items: center; text-align: center; font: 400 20px/1 "Lilita One", sans-serif; clip-path: polygon(50% 0,61% 12%,77% 6%,80% 22%,96% 25%,90% 40%,100% 52%,88% 62%,93% 78%,77% 80%,72% 96%,57% 89%,44% 100%,36% 86%,20% 92%,18% 76%,3% 70%,11% 56%,0 44%,13% 34%,8% 18%,25% 18%,30% 3%,44% 11%); transform: rotate(8deg); }
+
+  .tabs { position: sticky; top: 62px; z-index: 9; background: var(--cream); border-bottom: 2px solid var(--line); }
+  .tabs .wrap { display: flex; gap: 8px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; scrollbar-width: none; }
+  .tabs a { flex: none; text-decoration: none; background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 7px 16px; font-weight: 500; }
+  .tabs a:hover { border-color: var(--red); }
+
+  section { padding: 40px 0 8px; scroll-margin-top: 130px; }
+  h2 { font-size: clamp(34px, 5vw, 48px); margin: 0 0 18px; color: var(--red); }
+  .menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .item { display: grid; grid-template-columns: 120px 1fr; gap: 14px; background: #fff; border-radius: 18px; padding: 12px; border: 2px solid var(--line); }
+  .item.noimg { grid-template-columns: 1fr; }
+  .item img { width: 120px; height: 120px; object-fit: cover; border-radius: 12px; }
+  .item h3 { margin: 0; font-size: 22px; line-height: 1.1; }
+  .item p { margin: 4px 0 10px; color: var(--mute); font-size: 14px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .price { font-size: 22px; color: var(--brown); }
+  .qty { display: flex; align-items: center; gap: 4px; }
+  .qty button { width: 36px; height: 36px; border-radius: 50%; border: 0; font: 700 20px Rubik, sans-serif; cursor: pointer; background: var(--red); color: #fff; line-height: 1; }
+  .qty button.minus { background: var(--line); color: var(--brown); }
+  .qty b { min-width: 24px; text-align: center; font-size: 17px; }
+
+  .info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 48px 0 24px; }
+  .info div { background: var(--brown); color: var(--cream); border-radius: 18px; padding: 20px; }
+  .info small { color: var(--mustard); display: block; font-weight: 700; margin-bottom: 2px; }
+
+  .cart { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--brown); color: #fff; padding: 12px max(16px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px rgba(42,26,18,.25); }
+  .cart .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; }
+  .cart .tot { font-family: "Lilita One", sans-serif; font-size: 24px; color: var(--mustard); line-height: 1; }
+  .cart small { color: #CDBBAA; display: block; }
+  .mode { display: flex; background: rgba(255,255,255,.12); border-radius: 999px; padding: 3px; }
+  .mode button { border: 0; background: none; color: #fff; padding: 7px 12px; border-radius: 999px; font: 500 14px Rubik, sans-serif; cursor: pointer; }
+  .mode button.on { background: var(--mustard); color: var(--brown); }
+  .send { display: inline-flex; align-items: center; gap: 8px; background: var(--green); color: #fff; text-decoration: none; font-weight: 700; padding: 12px 18px; border-radius: 999px; white-space: nowrap; }
+  .send.off { opacity: .45; pointer-events: none; }
+  .send svg { width: 18px; height: 18px; }
+  footer { padding: 20px 0 30px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .install { display: none; border: 0; background: var(--mustard); color: var(--brown); border-radius: 999px; padding: 6px 12px; font: 500 14px Rubik, sans-serif; cursor: pointer; }
+
+  @media (max-width: 860px) {
+    .hero .wrap { grid-template-columns: 1fr; padding-top: 8px; }
+    .hero-img { order: -1; max-width: 340px; margin: 0 auto; }
+    .menu, .info { grid-template-columns: 1fr; }
+    .item { grid-template-columns: 96px 1fr; }
+    .item img { width: 96px; height: 96px; }
+    .cart .wrap { flex-wrap: wrap; }
+    .mode { order: 3; }
+  }
+  @media (max-width: 420px) { .open span { display: none; } .send span { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">Doble<span>Queso</span></a>
+    <div style="display:flex;gap:8px;align-items:center"><button class="install" id="install">Instalar app</button><span class="open" id="open"><i></i><span id="openTxt">Abierto</span></span></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Pedí en 1 minuto, <span>comé en 30</span></h1>
+      <p>Hamburguesas de carne smasheada y pizzas a la piedra. Sumá lo que quieras y mandá el pedido por WhatsApp.</p>
+      <div class="pills"><span>Delivery en Quilmes</span><span>Retiro sin espera</span><span>Pagás al recibir</span></div>
+    </div>
+    <div class="hero-img">
+      <img src="https://unsplash.com/photos/88YAXjnpvrM/download?w=900" alt="Hamburguesa triple con cheddar">
+      <div class="burst">Combo<br>2x1<br>martes</div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs"><div class="wrap" id="tabs"></div></nav>
+<main class="wrap" id="menu"></main>
+
+<div class="wrap">
+  <div class="info">
+    <div><small>Horarios</small>Todos los días de 19 a 00 h</div>
+    <div><small>Delivery</small>Quilmes, Bernal y Don Bosco · Envío $1.500</div>
+    <div><small>Pagos</small>Efectivo, transferencia y Mercado Pago</div>
+  </div>
+</div>
+<footer><div class="wrap"><span>Doble Queso · Quilmes</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+
+<div class="cart">
+  <div class="wrap">
+    <div><div class="tot" id="tot">$0</div><small id="cnt">Tu pedido está vacío</small></div>
+    <div class="mode" id="mode"><button class="on" data-m="Delivery">Delivery</button><button data-m="Retiro">Retiro</button></div>
+    <a class="send off" id="send" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>Enviar pedido</span></a>
+  </div>
+</div>
+
+<script>
+const carta = {
+  "Hamburguesas": [
+    { n: "Clásica", d: "Medallón smash, cheddar, lechuga, tomate y salsa de la casa", p: 9500, img: "y7s_Wby3woo" },
+    { n: "Doble Queso", d: "Doble medallón, doble cheddar y cebolla caramelizada", p: 12900, img: "88YAXjnpvrM" },
+    { n: "Bacon Crispy", d: "Doble medallón, panceta crocante, cheddar y barbacoa", p: 13900, img: "CK6tjAIMJWM" },
+    { n: "La Torre", d: "Triple medallón para compartir (o no)", p: 16500, img: "FTQJBGDxKXg" },
+  ],
+  "Pizzas": [
+    { n: "Muzzarella", d: "Salsa de tomate, muzza y aceitunas. 8 porciones", p: 11000, img: "YKvGUO4Zb7Y" },
+    { n: "Jamón y morrones", d: "Muzza, jamón cocido y morrones asados", p: 13500, img: "Vv5u98EFfWk" },
+    { n: "Fugazzeta", d: "Rellena de muzza con cebolla y orégano", p: 14000 },
+  ],
+  "Papas y extras": [
+    { n: "Papas fritas", d: "Porción grande", p: 5000 },
+    { n: "Papas cheddar y panceta", d: "Para compartir", p: 7900 },
+    { n: "Aros de cebolla", d: "12 unidades", p: 5500 },
+  ],
+  "Bebidas": [
+    { n: "Gaseosa 1,5 L", d: "Cola, lima limón o naranja", p: 3800 },
+    { n: "Cerveza lata 473 cc", d: "Rubia o roja", p: 3200 },
+    { n: "Agua 500 cc", d: "Con o sin gas", p: 1800 },
+  ],
+};
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const cart = {};
+let modo = "Delivery";
+const menu = document.getElementById("menu"), tabs = document.getElementById("tabs");
+Object.entries(carta).forEach(([cat, items], ci) => {
+  const id = "c" + ci;
+  tabs.insertAdjacentHTML("beforeend", `<a href="#${id}">${cat}</a>`);
+  const sec = document.createElement("section"); sec.id = id;
+  sec.innerHTML = `<h2>${cat}</h2><div class="menu"></div>`;
+  const grid = sec.querySelector(".menu");
+  items.forEach(it => {
+    const el = document.createElement("div");
+    el.className = "item" + (it.img ? "" : " noimg");
+    el.innerHTML = `${it.img ? `<img src="https://unsplash.com/photos/${it.img}/download?w=300" alt="${it.n}" loading="lazy">` : ""}<div><h3>${it.n}</h3><p>${it.d}</p><div class="row"><span class="price">${fmt(it.p)}</span><div class="qty"><button class="minus" aria-label="Quitar">−</button><b>0</b><button aria-label="Agregar">+</button></div></div></div>`;
+    const [minus, plus] = el.querySelectorAll("button"), q = el.querySelector(".qty b");
+    const set = v => { cart[it.n] = { ...it, q: Math.max(0, v) }; q.textContent = cart[it.n].q; upd(); };
+    plus.onclick = () => set((cart[it.n]?.q || 0) + 1);
+    minus.onclick = () => set((cart[it.n]?.q || 0) - 1);
+    grid.appendChild(el);
+  });
+  menu.appendChild(sec);
+});
+document.querySelectorAll("#mode button").forEach(b => b.onclick = () => { modo = b.dataset.m; document.querySelectorAll("#mode button").forEach(x => x.classList.toggle("on", x === b)); upd(); });
+function upd() {
+  const items = Object.values(cart).filter(i => i.q > 0);
+  const sub = items.reduce((s, i) => s + i.p * i.q, 0);
+  const envio = modo === "Delivery" && sub > 0 ? 1500 : 0;
+  const n = items.reduce((s, i) => s + i.q, 0);
+  document.getElementById("tot").textContent = fmt(sub + envio);
+  document.getElementById("cnt").textContent = n ? `${n} producto${n > 1 ? "s" : ""}${envio ? " + envío" : ""}` : "Tu pedido está vacío";
+  const send = document.getElementById("send");
+  send.classList.toggle("off", !n);
+  const txt = `Hola Doble Queso! Quiero hacer un pedido (${modo}):\n` + items.map(i => `- ${i.q} x ${i.n} (${fmt(i.p * i.q)})`).join("\n") + (envio ? `\n- Envío (${fmt(envio)})` : "") + `\nTotal: ${fmt(sub + envio)}`;
+  send.href = "https://wa.me/?text=" + encodeURIComponent(txt);
+}
+upd();
+const h = new Date().getHours(), abierto = h >= 19 || h < 1;
+document.getElementById("open").classList.toggle("closed", !abierto);
+document.getElementById("openTxt").textContent = abierto ? "Abierto ahora" : "Abre a las 19 h";
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-block"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

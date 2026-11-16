@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>dmith Sitios para Negocios</title>
+<meta name="description" content="Sitio web a medida + app para tu negocio en 24 horas. Pedidos, turnos y reservas por WhatsApp. Desde $25.000 por mes, sin permanencia. Muestra gratis.">
+<meta name="theme-color" content="#181B4A">
+<link rel="canonical" href="https://dmith.app/sitios/">
+<meta property="og:url" content="https://dmith.app/sitios/">
+<meta property="og:title" content="Tu negocio con sitio y app en 24 horas">
+<meta property="og:description" content="Sitios a medida con pedidos por WhatsApp. Muestra gratis con tu nombre antes de pagar.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='2' y='2' width='17' height='17' rx='4' fill='%233E9BFF'/%3E%3Crect x='21' y='2' width='17' height='17' rx='4' fill='%23FFC23D'/%3E%3Crect x='2' y='21' width='17' height='17' rx='4' fill='%2326D6A0'/%3E%3Crect x='21' y='21' width='17' height='17' rx='4' fill='%23FF5A6E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --night: #181B4A; --night2: #22266A; --ink: #15172E; --paper: #F6F5FB; --white: #fff; --blue: #3E9BFF; --sun: #FFC23D; --mint: #26D6A0; --coral: #FF5A6E; --mute: #6A6C8A; --line: #E3E2EF; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 "DM Sans", system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo, .price { font-family: Unbounded, system-ui, sans-serif; letter-spacing: -.01em; }
+
+  header { position: sticky; top: 0; z-index: 30; background: rgba(24,27,74,.94); backdrop-filter: blur(10px); color: #fff; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 26px; }
+  .mark i { aspect-ratio: 1; border-radius: 4px; background: var(--blue); } .mark i:nth-child(2) { background: var(--sun); } .mark i:nth-child(3) { background: var(--mint); } .mark i:nth-child(4) { background: var(--coral); }
+  .logo small { font: 500 13px "DM Sans", sans-serif; color: #A9ABDA; margin-left: 2px; }
+  nav { display: flex; gap: 24px; }
+  nav a { text-decoration: none; color: #C9CAEE; }
+  nav a:hover { color: #fff; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--sun); color: var(--ink); text-decoration: none; font: 700 16px "DM Sans", sans-serif; padding: 13px 22px; border-radius: 12px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 19px; height: 19px; }
+  .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+  .btn.dark { background: var(--night); color: #fff; }
+  .btn:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  .hero { background: var(--night); color: #fff; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 30px; align-items: center; padding-top: 56px; padding-bottom: 72px; }
+  .hero h1 { font-size: clamp(38px, 5.4vw, 70px); line-height: 1.02; margin: 0 0 20px; font-weight: 800; text-wrap: balance; }
+  .hero h1 .hl { color: var(--sun); }
+  .hero p { font-size: 19px; color: #C9CAEE; max-width: 40ch; margin: 0 0 28px; }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ticks { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 28px; color: #C9CAEE; font-size: 15px; }
+  .ticks span { display: flex; align-items: center; gap: 8px; }
+  .ticks span::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--mint); }
+
+  .phones { position: relative; height: 560px; }
+  .phone { position: absolute; width: 230px; height: 470px; background: #0B0C22; border-radius: 34px; padding: 10px; box-shadow: 0 30px 60px rgba(0,0,0,.45); }
+  .phone .screen { width: 100%; height: 100%; border-radius: 25px; overflow: hidden; background: #fff; position: relative; }
+  .phone iframe { width: 390px; height: 785px; border: 0; transform: scale(.5385); transform-origin: 0 0; pointer-events: none; }
+  .phone .cover { position: absolute; inset: 0; display: block; }
+  .phone.p1 { left: 0; top: 60px; transform: rotate(-7deg); }
+  .phone.p2 { left: 50%; top: 0; transform: translateX(-50%); z-index: 2; }
+  .phone.p3 { right: 0; top: 70px; transform: rotate(7deg); }
+  .phone-label { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%); white-space: nowrap; font-size: 13px; color: #A9ABDA; }
+
+  section { padding: 84px 0; }
+  .eyebrow { font: 700 15px "DM Sans", sans-serif; color: var(--blue); margin: 0 0 8px; }
+  h2 { font-size: clamp(30px, 4.2vw, 50px); line-height: 1.08; margin: 0 0 14px; font-weight: 800; text-wrap: balance; }
+  .lead { color: var(--mute); max-width: 58ch; margin: 0 0 36px; font-size: 18px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .step { background: var(--white); border-radius: 22px; padding: 28px; border: 1px solid var(--line); position: relative; }
+  .step .n { font: 800 44px/1 Unbounded, sans-serif; color: var(--line); }
+  .step h3 { font-size: 21px; margin: 12px 0 8px; }
+  .step p { margin: 0; color: var(--mute); }
+  .step:nth-child(1) .n { color: var(--blue); } .step:nth-child(2) .n { color: var(--sun); } .step:nth-child(3) .n { color: var(--mint); }
+
+  .examples { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .ex { text-decoration: none; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--line); transition: transform .2s; }
+  .ex:hover { transform: translateY(-3px); }
+  .ex img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+  .ex div { padding: 10px 12px 14px; }
+  .ex b { display: block; font-size: 15px; }
+  .ex small { color: var(--mute); font-size: 13px; }
+  .ex-more { margin-top: 18px; color: var(--mute); }
+
+  .plans-sec { background: var(--white); }
+  .toggle { display: inline-flex; background: var(--paper); border-radius: 999px; padding: 5px; margin-bottom: 30px; border: 1px solid var(--line); }
+  .toggle button { border: 0; background: none; padding: 10px 18px; border-radius: 999px; font: 700 15px "DM Sans", sans-serif; cursor: pointer; color: var(--ink); }
+  .toggle button.on { background: var(--night); color: #fff; }
+  .toggle em { font-style: normal; color: var(--mint); font-weight: 700; }
+  .toggle button.on em { color: var(--sun); }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+  .plan { border-radius: 24px; padding: 30px; border: 1.5px solid var(--line); background: var(--paper); display: flex; flex-direction: column; gap: 14px; }
+  .plan.star { background: var(--night); color: #fff; border-color: var(--night); position: relative; }
+  .plan.star::before { content: "El más elegido"; position: absolute; top: -14px; left: 28px; background: var(--sun); color: var(--ink); font-weight: 700; font-size: 13px; padding: 4px 12px; border-radius: 999px; }
+  .plan h3 { margin: 0; font-size: 24px; }
+  .plan .for { margin: 0; color: var(--mute); font-size: 15px; }
+  .plan.star .for { color: #A9ABDA; }
+  .price { font-size: 40px; font-weight: 800; line-height: 1; }
+  .price small { font: 500 15px "DM Sans", sans-serif; color: var(--mute); }
+  .plan.star .price small { color: #A9ABDA; }
+  .save { font-size: 14px; color: var(--mint); font-weight: 700; min-height: 20px; }
+  .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; flex: 1; }
+  .plan li { padding-left: 26px; position: relative; }
+  .plan li::before { content: ""; position: absolute; left: 0; top: 7px; width: 14px; height: 8px; border-left: 2.5px solid var(--mint); border-bottom: 2.5px solid var(--mint); transform: rotate(-45deg); }
+  .plan li.no { color: var(--mute); }
+  .plan li.no::before { border: 0; height: 2.5px; top: 11px; background: #B7B8CF; transform: none; }
+  .plan.star li.no { color: #8E90C4; }
+  .always { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .always span { background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: 15px; }
+
+  .faq { display: grid; grid-template-columns: .8fr 1.2fr; gap: 48px; align-items: start; }
+  .faq aside { position: sticky; top: 90px; }
+  .faq details { background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 0 22px; margin-bottom: 10px; }
+  .faq summary { cursor: pointer; padding: 18px 0; font-weight: 700; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 14px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font: 700 24px/1 Unbounded, sans-serif; color: var(--blue); flex: none; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq details p { margin: 0 0 20px; color: #43465F; }
+
+  .final { background: var(--night); color: #fff; border-radius: 32px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .final p { color: #C9CAEE; }
+  .form { background: var(--night2); border-radius: 22px; padding: 26px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .form .btn { white-space: normal; text-align: center; }
+  .final > div, .form label { min-width: 0; }
+  .final .note { font-size: 15px; color: #A9ABDA; }
+  .msg { background: #fff; color: var(--ink); border-radius: 12px; padding: 12px 14px; font-size: 15px; }
+  .msg small { display: block; color: var(--mute); font-weight: 700; margin-bottom: 2px; }
+  .hint { color: #A9ABDA; font-size: 13px; }
+  .form label { display: grid; gap: 6px; font-weight: 700; font-size: 15px; }
+  .form input, .form select { min-width: 0; padding: 13px 14px; border-radius: 12px; border: 0; font: 500 16px "DM Sans", sans-serif; background: #fff; color: var(--ink); width: 100%; }
+
+  footer { padding: 34px 0 44px; color: var(--mute); font-size: 15px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  .float { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(45deg, #F9A23B, #E1306C 50%, #833AB4); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 26px rgba(225,48,108,.4); }
+  .float svg { width: 30px; height: 30px; }
+
+  @media (max-width: 880px) {
+    nav { display: none; }
+    .hero .wrap, .faq, .final { grid-template-columns: minmax(0, 1fr); }
+    .hero .wrap { padding-top: 36px; }
+    .phones { height: 430px; margin-top: 10px; }
+    .phone { width: 180px; height: 368px; border-radius: 28px; padding: 8px; }
+    .phone .screen { border-radius: 21px; }
+    .phone iframe { transform: scale(.4205); }
+    .phone.p1 { left: -10px; } .phone.p3 { right: -10px; }
+    .steps, .plans { grid-template-columns: 1fr; }
+    .plans { gap: 26px; }
+    .examples { grid-template-columns: repeat(2, 1fr); }
+    .faq aside { position: static; }
+    .final { padding: 22px 16px; border-radius: 24px; gap: 22px; }
+    .form { padding: 18px 14px; }
+    section { padding: 60px 0; }
+  }
+  @media (max-width: 420px) { header .btn span { display: none; } .phone.p1, .phone.p3 { opacity: .9; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .ex { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith<small>sitios</small></a>
+    <nav><a href="#como">Cómo funciona</a><a href="#ejemplos">Ejemplos</a><a href="#planes">Planes</a><a href="#preguntas">Preguntas</a></nav>
+    <a class="btn" href="#muestra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Muestra gratis</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Tu negocio con sitio y app en <span class="hl">24 horas</span></h1>
+      <p>Hecho a medida, con tus fotos y tus colores, y se instala como app en el celular con tu logo. Los pedidos, turnos y reservas te llegan al WhatsApp ya escritos. Desde $25.000 por mes, sin permanencia.</p>
+      <div class="hero-btns"><a class="btn" href="#muestra">Quiero mi muestra gratis</a><a class="btn ghost" href="#ejemplos">Ver ejemplos</a></div>
+      <div class="ticks"><span>Muestra gratis con tu nombre</span><span>Sin costo de alta</span><span>Te das de baja cuando quieras</span></div>
+    </div>
+    <div class="phones" aria-label="Ejemplos de sitios en el celular">
+      <div class="phone p1"><div class="screen"><iframe src="../ejemplos/ropa-mujer/" title="Ejemplo tienda de ropa" loading="lazy" tabindex="-1"></iframe><a class="cover" href="../ejemplos/ropa-mujer/" aria-label="Ver ejemplo de tienda de ropa"></a></div><span class="phone-label">Tienda de ropa</span></div>
+      <div class="phone p2"><div class="screen"><iframe src="../ejemplos/hamburgueseria/" title="Ejemplo hamburguesería" loading="lazy" tabindex="-1"></iframe><a class="cover" href="../ejemplos/hamburgueseria/" aria-label="Ver ejemplo de hamburguesería"></a></div><span class="phone-label">Hamburguesería</span></div>
+      <div class="phone p3"><div class="screen"><iframe src="../ejemplos/barberia/" title="Ejemplo barbería" loading="lazy" tabindex="-1"></iframe><a class="cover" href="../ejemplos/barberia/" aria-label="Ver ejemplo de barbería"></a></div><span class="phone-label">Barbería</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="como">
+  <div class="wrap">
+    <p class="eyebrow">Cómo funciona</p>
+    <h2>Vos atendés tu negocio, nosotros el resto</h2>
+    <p class="lead">No tenés que saber nada de computación. Si sabés mandar un audio de WhatsApp, alcanza.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h3>Nos escribís por Instagram</h3><p>Desde la cuenta de tu negocio, así vemos qué vendés y tomamos tus fotos y tu logo de ahí. Si no tenés logo, lo resolvemos.</p></div>
+      <div class="step"><span class="n">2</span><h3>Te armamos la muestra gratis</h3><p>En 24 horas ves tu sitio armado, con tu nombre. Si algo no te gusta, lo cambiamos.</p></div>
+      <div class="step"><span class="n">3</span><h3>Lo publicamos</h3><p>Lo conectamos a tu dominio y empezás a recibir pedidos. Pagás recién cuando está online.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ejemplos" style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">Ejemplos</p>
+    <h2>Mirá cómo puede quedar el tuyo</h2>
+    <p class="lead">Tocá cualquiera y probalo: los botones funcionan de verdad. Cada uno tiene su propio estilo, porque cada negocio es distinto.</p>
+    <div class="examples" id="examples"></div>
+    <p class="ex-more">¿Tu rubro no está? No pasa nada: lo hacemos igual.</p>
+  </div>
+</section>
+
+<section class="plans-sec" id="planes">
+  <div class="wrap">
+    <p class="eyebrow">Planes</p>
+    <h2>Precios claros, sin letra chica</h2>
+    <p class="lead">Sin costo de alta y sin permanencia. Si pagás el año, te regalamos 2 meses.</p>
+    <div class="toggle" role="group" aria-label="Forma de pago"><button class="on" data-p="m">Por mes</button><button data-p="a">Por año <em>2 meses gratis</em></button></div>
+    <div class="plans" id="plans"></div>
+    <div class="always"><span>Siempre incluido:</span><span>Hosting</span><span>Candadito de seguridad (https)</span><span>Se instala como app con tu logo</span><span>Se ve perfecto en el celular</span><span>Aparece en Google</span><span>Botón de WhatsApp</span></div>
+  </div>
+</section>
+
+<section id="preguntas">
+  <div class="wrap faq">
+    <aside>
+      <p class="eyebrow">Preguntas</p>
+      <h2>Lo que todos nos preguntan</h2>
+      <p class="lead">Y lo contestamos con la verdad, aunque a veces nos juegue en contra.</p>
+    </aside>
+    <div>
+      <details open><summary>¿Trabajan con inteligencia artificial?</summary><p>Sí, y no lo vamos a esconder. La IA escribe código rapidísimo y nunca pide vacaciones (todavía). Pero alguien tiene que decirle qué hacer, revisar que no ponga tu pizzería en Noruega y contestarte los mensajes. Ese soy yo, peleando por mi puesto todos los días. Gracias a eso podemos ser tan rápidos y tan baratos.</p></details>
+      <details><summary>¿Cómo pueden cobrar tan poco?</summary><p>Porque no tenemos oficina con mesa de ping pong ni un gerente de "sinergias". Usamos IA para lo repetitivo y ponemos el tiempo donde importa: que tu sitio venda.</p></details>
+      <details><summary>¿En serio está listo en 24 horas?</summary><p>Sí, si nos mandás las fotos y los datos. Si tardás tres semanas en elegir el color del logo, eso no corre por nuestra cuenta.</p></details>
+      <details><summary>¿Es una plantilla?</summary><p>No. Cada sitio se hace para tu negocio, con tus colores, tus fotos y lo que vos vendés. Si querés una plantilla, hay miles gratis; te va a quedar igual que a otros 40 mil negocios.</p></details>
+      <details><summary>¿Qué pasa si no me gusta?</summary><p>Lo cambiamos hasta que te guste. Y si igual no te convence, no pagás. Así de simple.</p></details>
+      <details><summary>¿Tengo que firmar algo por 12 meses?</summary><p>No. Sin permanencia. Si un día no lo querés más, avisás y listo. No te vamos a llamar llorando (bueno, capaz un poquito).</p></details>
+      <details><summary>¿El dominio es mío?</summary><p>Sí, 100% tuyo. Lo comprás vos (un .com.ar sale poco por año) y nosotros lo conectamos. Si algún día te vas, te lo llevás. No secuestramos dominios.</p></details>
+      <details><summary>¿Necesito saber de computación?</summary><p>Si sabés mandar un audio de WhatsApp, estás sobrecalificado.</p></details>
+      <details><summary>¿Los pedidos llegan a mi WhatsApp?</summary><p>Sí, al toque y ya escritos: qué quiere, el talle o el gusto, y el total. Vos solo respondés "dale, te lo mando".</p></details>
+      <details><summary>¿Y si necesito cambiar un precio a las 11 de la noche?</summary><p>Con el plan Catálogo lo cambiás vos desde el celular. Con el plan Vidriera nos escribís y lo cambiamos. A las 11 de la noche capaz estamos durmiendo, pero a primera hora queda.</p></details>
+      <details><summary>¿La app está en Play Store?</summary><p>No, y te lo decimos de entrada. Tu sitio se instala en el celular como una app: ícono con tu logo, pantalla completa, sin barra del navegador. Tus clientes la instalan desde tu sitio en dos toques, sin buscarla en ninguna tienda. Si igual querés tu app publicada en Play Store, se puede: es un extra que se cotiza aparte.</p></details>
+      <details><summary>¿Por qué la muestra se pide por Instagram?</summary><p>Porque necesitamos saber que tu negocio existe. Si nos escribís desde la cuenta de tu local, vemos qué vendés, usamos tus fotos de verdad y no terminamos armándole una muestra gratis a tu primo que nos quería hacer laburar de onda.</p></details>
+      <details><summary>¿Por qué tendría que confiar en ustedes?</summary><p>Porque te armamos una muestra gratis con tu nombre antes de que pongas un peso. Si no te gusta, no perdiste nada. Si te gusta… bueno, ya sabés dónde escribirnos.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="muestra" style="padding-top:0">
+  <div class="wrap">
+    <div class="final">
+      <div>
+        <h2>Pedí tu muestra gratis</h2>
+        <p>Escribinos <b style="color:#fff">desde el Instagram de tu negocio</b>. Así vemos qué vendés y armamos la muestra con tus fotos reales. En 24 horas la tenés en el celular. Sin compromiso.</p>
+        <p class="note">Mensajes de cuentas personales o sin negocio no los respondemos. Nada personal: es para poder dedicarle tiempo a los negocios de verdad.</p>
+      </div>
+      <div class="form">
+        <label>¿Qué es tu negocio?<select id="m-type"><option>Tienda de ropa</option><option>Comida (hamburguesas, pizzas, rotisería)</option><option>Peluquería o barbería</option><option>Uñas o estética</option><option>Gimnasio</option><option>Pet shop o veterinaria</option><option>Cafetería o panadería</option><option>Heladería</option><option>Florería</option><option>Verdulería o almacén</option><option>Inmobiliaria</option><option>Taller mecánico</option><option>Restaurante o parrilla</option><option>Profesional (contador, abogado, etc.)</option><option>Otro</option></select></label>
+        <label>Plan que te interesa<select id="m-plan"><option>Todavía no sé</option><option>Vidriera</option><option>Catálogo</option><option>Negocio</option></select></label>
+        <div class="msg"><small>Tu mensaje</small><span id="m-text"></span></div>
+        <button class="btn" id="m-go" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Copiar mensaje y abrir Instagram</button>
+        <small class="hint" id="m-hint">Se copia el mensaje: cuando se abra nuestro chat, mantené apretado y pegalo.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><a class="logo" href="#" style="color:var(--ink)"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith<small style="color:var(--mute)">sitios</small></a><span>Hecho en Quilmes, para negocios de todo el país.</span></div></footer>
+
+<a class="float" id="float" target="_blank" rel="noopener" aria-label="Escribinos por Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+
+<script>
+// Instagram donde llegan los pedidos de muestra
+const IG_USER = "dmith_app";
+const IG = `https://ig.me/m/${IG_USER}`;
+const fmt = n => "$" + n.toLocaleString("es-AR");
+
+const ex = [
+  ["ropa-mujer", "Lirio Boutique", "Ropa de mujer", "IuVz1J2dajY"],
+  ["ropa-urbana", "Andén 9", "Ropa urbana", "GiAaGUimWok"],
+  ["ropa-chicos", "Pompón", "Ropa infantil", "RUHUy-21oHo"],
+  ["hamburgueseria", "Doble Queso", "Hamburguesas y pizzas", "88YAXjnpvrM"],
+  ["barberia", "Navaja Sur", "Barbería", "BBGyxhtPpC0"],
+  ["unas", "Nácar Nails", "Uñas y estética", "3rSc8jGIVHI"],
+  ["gimnasio", "Hierro Gym", "Gimnasio", "IYLLF511aOY"],
+  ["petshop", "Trufa", "Pet shop", "ufPziMiRqU8"],
+  ["cafeteria", "Miga", "Café y panadería", "MH8Iu7OC_UE"],
+  ["heladeria", "Nieve", "Heladería", "G5ZenftPPOA"],
+  ["floreria", "Malva", "Florería", "vN8HQcKv8Lg"],
+  ["parrilla", "Brasa", "Parrilla", "Qi7NlvF-ZsY"],
+  ["inmobiliaria", "Umbral", "Inmobiliaria", "KtOid0FLjqU"],
+  ["taller", "Pistón", "Taller mecánico", "XP8o9_Arwqg"],
+  ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA"],
+  ["verduleria", "La Canasta", "Verdulería", "GPxxXAbzsXU"],
+];
+document.getElementById("examples").innerHTML = ex.map(([p, n, r, img]) => `<a class="ex" href="../ejemplos/${p}/" target="_blank" rel="noopener"><img src="https://unsplash.com/photos/${img}/download?w=500" alt="" loading="lazy"><div><b>${n}</b><small>${r}</small></div></a>`).join("");
+
+const plans = [
+  { n: "Vidriera", for: "Para que te encuentren y te escriban", m: 25000, f: ["Sitio a medida con tu logo, fotos y colores", "Pedidos, turnos o reservas por WhatsApp", "Mapa, horarios e Instagram", "Se instala como app en el celular, con tu logo", "Hasta 2 cambios por mes, los hacemos nosotros"], no: ["Panel para cambiar vos precios y fotos"] },
+  { n: "Catálogo", star: true, for: "Para los que cambian precios y productos seguido", m: 40000, f: ["Todo lo del plan Vidriera", "Panel desde el celular: cambiás precios, fotos y productos", "Marcás \"sin stock\" en un toque", "Cambios de diseño cuando los necesites"], no: [] },
+  { n: "Negocio", for: "Para los que quieren ordenar todo", m: 60000, f: ["Todo lo del plan Catálogo", "Pedidos y turnos guardados en el panel", "Turnos reales: un horario tomado ya no aparece", "Estadísticas de visitas y pedidos", "Correo con el nombre de tu negocio"], no: [] },
+];
+let mode = "m";
+function renderPlans() {
+  document.getElementById("plans").innerHTML = plans.map(p => {
+    const year = p.m * 10;
+    const price = mode === "m" ? `${fmt(p.m)} <small>por mes</small>` : `${fmt(year)} <small>por año</small>`;
+    const save = mode === "a" ? `Ahorrás ${fmt(p.m * 2)}` : "";
+    return `<div class="plan${p.star ? " star" : ""}"><h3>${p.n}</h3><p class="for">${p.for}</p><div class="price">${price}</div><div class="save">${save}</div><ul>${p.f.map(x => `<li>${x}</li>`).join("")}${p.no.map(x => `<li class="no">${x}</li>`).join("")}</ul><a class="btn${p.star ? "" : " dark"}" href="#muestra" data-plan="${p.n}">Quiero el plan ${p.n}</a></div>`;
+  }).join("");
+}
+document.querySelectorAll(".toggle button").forEach(b => b.onclick = () => { mode = b.dataset.p; document.querySelectorAll(".toggle button").forEach(x => x.classList.toggle("on", x === b)); renderPlans(); });
+renderPlans();
+document.getElementById("plans").addEventListener("click", e => { const a = e.target.closest("[data-plan]"); if (a) { document.getElementById("m-plan").value = a.dataset.plan; upd(); } });
+
+const v = id => document.getElementById(id).value.trim();
+function text() {
+  const plan = v("m-plan");
+  return `Hola! Quiero mi muestra gratis. Mi negocio es: ${v("m-type").toLowerCase()}.${plan !== "Todavía no sé" ? ` Me interesa el plan ${plan}.` : ""}`;
+}
+function upd() { document.getElementById("m-text").textContent = text(); }
+["m-type", "m-plan"].forEach(id => document.getElementById(id).addEventListener("input", upd));
+upd();
+document.getElementById("m-go").onclick = async () => {
+  try { await navigator.clipboard.writeText(text()); document.getElementById("m-hint").textContent = "Mensaje copiado. Pegalo en nuestro chat de Instagram."; }
+  catch (e) { document.getElementById("m-hint").textContent = "Copiá el mensaje de arriba y pegalo en nuestro chat de Instagram."; }
+  window.location.href = IG;
+};
+document.getElementById("float").href = IG;
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+ "name": "Trufa Pet Shop",
+ "short_name": "Trufa",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FFF9EF",
+ "theme_color": "#127C74",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

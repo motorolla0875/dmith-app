@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brasa Parrilla</title>
+<meta name="description" content="Parrilla de barrio en Quilmes. Cortes a la leña, achuras y vinos. Reservá tu mesa por WhatsApp.">
+<meta name="theme-color" content="#1C1410">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,500;0,800;1,500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --char: #1C1410; --char2: #2A1E18; --ember: #E2672B; --ash: #F3EBE1; --bone: #D9CBB8; --mute: #A8968A; --line: #3A2C24; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--char); color: var(--ash); font: 400 17px/1.6 "Source Sans 3", system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-family: Bitter, Georgia, serif; }
+
+  header { position: absolute; left: 0; right: 0; top: 0; z-index: 10; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 78px; gap: 12px; }
+  .logo { font-size: 30px; font-weight: 800; text-decoration: none; letter-spacing: .04em; }
+  .logo span { color: var(--ember); }
+  nav { display: flex; gap: 26px; }
+  nav a { text-decoration: none; color: var(--bone); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--ember); color: #fff; text-decoration: none; font: 600 16px "Source Sans 3", sans-serif; padding: 12px 22px; border-radius: 2px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn.line { background: transparent; border: 1.5px solid var(--ash); }
+
+  .hero { position: relative; min-height: min(92vh, 760px); display: flex; align-items: center; overflow: hidden; }
+  .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 60%, rgba(28,20,16,.15), rgba(28,20,16,.92) 70%); }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; padding-top: 80px; }
+  .hero h1 { font-size: clamp(50px, 8vw, 104px); line-height: .95; margin: 0 0 18px; font-weight: 800; max-width: 10ch; }
+  .hero h1 em { font-weight: 500; color: var(--ember); }
+  .hero p { color: var(--bone); font-size: 19px; max-width: 38ch; margin: 0 0 28px; }
+
+  section { padding: 76px 0; }
+  h2 { font-size: clamp(38px, 5vw, 58px); margin: 0 0 8px; line-height: 1.02; font-weight: 800; }
+  h2 em { font-weight: 500; color: var(--ember); }
+  .lead { color: var(--mute); margin: 0 0 32px; max-width: 54ch; }
+
+  .menu { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: start; }
+  .menu img { border-radius: 2px; aspect-ratio: 4/5; object-fit: cover; width: 100%; position: sticky; top: 20px; }
+  .cat { margin-bottom: 30px; }
+  .cat h3 { font-size: 15px; letter-spacing: .14em; color: var(--ember); margin: 0 0 8px; font-family: "Source Sans 3", sans-serif; font-weight: 600; text-transform: uppercase; }
+  .it { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .it b { font: 500 21px Bitter, serif; }
+  .it span { font: 800 20px Bitter, serif; color: var(--bone); }
+  .it small { color: var(--mute); grid-column: 1 / -1; }
+
+  .book { background: var(--ash); color: var(--char); }
+  .book .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .book .lead { color: #6E5D52; }
+  .people { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .people button { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--char); background: none; font: 800 22px Bitter, serif; cursor: pointer; color: var(--char); }
+  .people b { font: 800 40px Bitter, serif; min-width: 54px; text-align: center; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; }
+  .slots button { border: 1.5px solid #CDBFAE; background: #fff; padding: 9px 14px; border-radius: 2px; font: 600 15px "Source Sans 3", sans-serif; cursor: pointer; color: var(--char); }
+  .slots button.on { background: var(--char); color: var(--ash); border-color: var(--char); }
+  .slots button:disabled { opacity: .35; text-decoration: line-through; cursor: default; }
+  .book label { font-weight: 600; display: block; margin-bottom: 4px; }
+  .book input[type=date] { padding: 11px 12px; border: 1.5px solid #CDBFAE; border-radius: 2px; font: 500 16px "Source Sans 3", sans-serif; background: #fff; margin-bottom: 16px; }
+  .ticket { background: var(--char); color: var(--ash); padding: 28px; border-radius: 2px; position: relative; }
+  .ticket::before, .ticket::after { content: ""; position: absolute; left: -12px; top: 50%; width: 24px; height: 24px; border-radius: 50%; background: var(--ash); transform: translateY(-50%); }
+  .ticket::after { left: auto; right: -12px; }
+  .ticket small { color: var(--mute); display: block; }
+  .ticket .big { font: 800 34px Bitter, serif; margin-bottom: 14px; }
+  .ticket .line { border-top: 1.5px dashed var(--line); margin: 16px 0; }
+
+  .info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .info div { border-top: 2px solid var(--ember); padding-top: 12px; }
+  .info small { color: var(--mute); display: block; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; box-shadow: 0 10px 26px rgba(0,0,0,.4); }
+  footer { padding: 30px 0 40px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 880px) {
+    nav { display: none; }
+    .menu, .book .wrap, .info { grid-template-columns: 1fr; }
+    .menu img { position: static; aspect-ratio: 16/10; }
+    section { padding: 52px 0; }
+  }
+  @media (max-width: 420px) { header .btn span { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">BRASA<span>.</span></a>
+    <nav><a href="#carta">La carta</a><a href="#reservas">Reservas</a><a href="#donde">Dónde estamos</a></nav>
+    <a class="btn" href="#reservas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Reservar</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <img src="https://unsplash.com/photos/Qi7NlvF-ZsY/download?w=1900" alt="Carne cocinándose en la parrilla">
+  <div class="wrap">
+    <h1>Fuego lento, <em>como en casa</em></h1>
+    <p>Cortes a la leña, achuras crocantes y vino de la casa. Desde 1998 en el mismo lugar.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#reservas">Reservar mesa</a><a class="btn line" href="#carta">Ver la carta</a></div>
+  </div>
+</div>
+
+<section id="carta">
+  <div class="wrap">
+    <h2>La <em>carta</em></h2>
+    <p class="lead">Las carnes salen con guarnición a elección: papas fritas, ensalada mixta o puré.</p>
+    <div class="menu">
+      <img src="https://unsplash.com/photos/t3cB6gqtXog/download?w=900" alt="Carne asada en la parrilla" loading="lazy">
+      <div id="carta-box"></div>
+    </div>
+  </div>
+</section>
+
+<section class="book" id="reservas">
+  <div class="wrap">
+    <div>
+      <h2>Reservá tu mesa</h2>
+      <p class="lead">Viernes y sábados se llena: mejor reservar. Te confirmamos por WhatsApp.</p>
+      <label>¿Cuántos son?</label>
+      <div class="people"><button id="minus" aria-label="Menos">−</button><b id="ppl">2</b><button id="plus" aria-label="Más">+</button></div>
+      <label for="r-date">Día</label>
+      <input type="date" id="r-date">
+      <label>Horario</label>
+      <div class="slots" id="slots"></div>
+    </div>
+    <div class="ticket">
+      <small>Tu reserva</small>
+      <div class="big" id="t-sum">2 personas</div>
+      <small>Día y hora</small><div id="t-when">Elegí el horario</div>
+      <div class="line"></div>
+      <a class="btn" id="r-go" target="_blank" rel="noopener" style="width:100%">Reservar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section id="donde">
+  <div class="wrap info">
+    <div><small>Dónde</small>Quilmes, a media cuadra de la avenida</div>
+    <div><small>Horarios</small>Mar a dom · mediodía y noche</div>
+    <div><small>También</small>Pedidos para llevar y viandas</div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Brasa Parrilla · @brasa.parrilla</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+<button class="btn install" id="install">Instalar la app</button>
+
+<script>
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const carta = {
+  "Para empezar": [["Provoleta", 9500, "Con orégano y tomates asados"], ["Chorizo y morcilla", 7800, "Con pan casero y chimichurri"], ["Mollejas", 16500, "Crocantes, con limón"]],
+  "Cortes": [["Bife de chorizo", 22000, "400 g, jugoso o a punto"], ["Vacío", 19500, "350 g, el de siempre"], ["Entraña", 21000, "La más pedida"], ["Ojo de bife", 24500, "400 g"]],
+  "Para compartir": [["Parrillada para 2", 42000, "Asado, vacío, chorizo, morcilla y mollejas"], ["Parrillada para 4", 78000, "Lo mismo, el doble y con más achuras"]],
+};
+document.getElementById("carta-box").innerHTML = Object.entries(carta).map(([c, items]) => `<div class="cat"><h3>${c}</h3>${items.map(([n, p, d]) => `<div class="it"><b>${n}</b><span>${fmt(p)}</span><small>${d}</small></div>`).join("")}</div>`).join("");
+let ppl = 2, slot = null;
+const date = document.getElementById("r-date");
+let d0 = new Date(); if (d0.getDay() === 1) d0.setDate(d0.getDate() + 1);
+date.min = new Date().toISOString().slice(0, 10); date.value = d0.toISOString().slice(0, 10);
+function slots() {
+  const box = document.getElementById("slots"); box.innerHTML = ""; slot = null;
+  const dd = new Date(date.value + "T12:00"); const seed = dd.getDate();
+  if (dd.getDay() === 1) { box.innerHTML = "<span style='color:#8A776B'>Los lunes está cerrado.</span>"; upd(); return; }
+  ["12:30","13:00","13:30","20:30","21:00","21:30","22:00","22:30"].forEach((h, i) => {
+    const b = document.createElement("button"); b.textContent = h; b.disabled = (i * 3 + seed) % 4 === 0;
+    b.onclick = () => { box.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); slot = h; upd(); };
+    box.appendChild(b);
+  });
+  upd();
+}
+function upd() {
+  document.getElementById("ppl").textContent = ppl;
+  document.getElementById("t-sum").textContent = `${ppl} persona${ppl > 1 ? "s" : ""}`;
+  const [y, m, d] = date.value.split("-");
+  document.getElementById("t-when").textContent = slot ? `${d}/${m} a las ${slot} h` : "Elegí el horario";
+  document.getElementById("r-go").href = "https://wa.me/?text=" + encodeURIComponent(slot ? `Hola Brasa! Quiero reservar una mesa para ${ppl} el ${d}/${m} a las ${slot}. ¿Hay lugar?` : `Hola Brasa! Quiero reservar una mesa para ${ppl}.`);
+}
+document.getElementById("minus").onclick = () => { ppl = Math.max(1, ppl - 1); upd(); };
+document.getElementById("plus").onclick = () => { ppl = Math.min(20, ppl + 1); upd(); };
+date.addEventListener("input", slots);
+slots();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-flex"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

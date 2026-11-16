@@ -1,0 +1,17 @@
+{
+ "name": "Lirio Boutique",
+ "short_name": "Lirio",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FFFAF8",
+ "theme_color": "#4A1F3D",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

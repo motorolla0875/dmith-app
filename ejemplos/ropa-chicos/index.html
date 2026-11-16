@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pompón Ropa Infantil</title>
+<meta name="description" content="Ropa para bebés y chicos en Quilmes. Talles del 0 al 14. Pedí por WhatsApp.">
+<meta name="theme-color" content="#FF8A3D">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --sky: #DDF1FB; --sky2: #BFE4F6; --orange: #FF8A3D; --leaf: #2F9E62; --sun: #FFD25C; --ink: #22344A; --mute: #5D6F84; --white: #FFFFFF; --bg: #FBFDFF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 Nunito, system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-family: "Baloo 2", system-ui, sans-serif; }
+
+  header { position: sticky; top: 0; z-index: 10; background: rgba(251,253,255,.94); backdrop-filter: blur(8px); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 12px; }
+  .logo { font-size: 32px; font-weight: 800; text-decoration: none; color: var(--orange); display: flex; align-items: center; gap: 8px; line-height: 1; }
+  .logo i { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE59A, var(--sun) 60%, #F2B92E); display: inline-block; }
+  nav { display: flex; gap: 22px; font-weight: 700; }
+  nav a { text-decoration: none; color: var(--mute); }
+  nav a:hover { color: var(--orange); }
+  .wa { display: inline-flex; align-items: center; gap: 8px; background: var(--leaf); color: #fff; text-decoration: none; font-weight: 700; padding: 10px 18px; border-radius: 999px; white-space: nowrap; }
+  .wa svg { width: 18px; height: 18px; }
+
+  .hero { background: var(--sky); border-radius: 0 0 48px 48px; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; padding-top: 40px; padding-bottom: 56px; }
+  .hero h1 { font-size: clamp(42px, 6vw, 72px); line-height: 1; margin: 0 0 16px; font-weight: 800; text-wrap: balance; }
+  .hero h1 span { color: var(--orange); }
+  .hero p { font-size: 19px; color: var(--mute); margin: 0 0 24px; max-width: 34ch; }
+  .ages { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+  .ages a { background: var(--white); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 700; box-shadow: 0 3px 0 var(--sky2); }
+  .ages a small { color: var(--mute); font-weight: 600; margin-left: 4px; }
+  .pics { position: relative; height: 460px; }
+  .pics img { position: absolute; object-fit: cover; border: 6px solid var(--white); box-shadow: 0 14px 30px rgba(34,52,74,.15); }
+  .pics .a { width: 64%; height: 82%; right: 0; top: 0; border-radius: 40px; }
+  .pics .b { width: 46%; height: 52%; left: 0; bottom: 0; border-radius: 50%; }
+  .sticker { position: absolute; left: 8%; top: 8%; background: var(--orange); color: #fff; border-radius: 50%; width: 112px; height: 112px; display: grid; place-items: center; text-align: center; font: 800 18px/1.05 "Baloo 2", sans-serif; transform: rotate(-10deg); box-shadow: 0 8px 20px rgba(255,138,61,.35); }
+  .sticker b { font-size: 30px; display: block; }
+
+  section { padding: 64px 0; }
+  .head { text-align: center; margin-bottom: 28px; }
+  h2 { font-size: clamp(34px, 4.5vw, 48px); margin: 0; font-weight: 800; line-height: 1.05; }
+  .head p { color: var(--mute); margin: 6px 0 0; }
+
+  .tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
+  .tabs button { border: 0; background: var(--sky); color: var(--ink); padding: 9px 18px; border-radius: 999px; font: 700 15px Nunito, sans-serif; cursor: pointer; }
+  .tabs button.on { background: var(--orange); color: #fff; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .card { background: var(--white); border-radius: 28px; padding: 12px; box-shadow: 0 6px 0 var(--sky); border: 2px solid var(--sky); display: flex; flex-direction: column; }
+  .card .ph { position: relative; aspect-ratio: 1; border-radius: 20px; overflow: hidden; background: var(--sky); }
+  .card .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .badge { position: absolute; top: 10px; right: 10px; background: var(--sun); color: var(--ink); font: 800 14px "Baloo 2", sans-serif; padding: 2px 12px; border-radius: 999px; }
+  .card .body { padding: 12px 6px 4px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card h3 { margin: 0; font-size: 21px; font-weight: 600; line-height: 1.15; }
+  .price { color: var(--orange); font: 800 22px "Baloo 2", sans-serif; line-height: 1; }
+  .sizes { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sizes button { min-width: 44px; height: 34px; padding: 0 8px; border: 2px solid var(--sky2); background: #fff; border-radius: 999px; font: 700 13px Nunito, sans-serif; color: var(--ink); cursor: pointer; }
+  .sizes button.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .sizes button:disabled { color: #B5C2CF; text-decoration: line-through; cursor: default; }
+  .ask { margin-top: auto; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 11px; background: var(--leaf); color: #fff; text-decoration: none; font-weight: 700; border-radius: 999px; }
+  .ask svg { width: 17px; height: 17px; }
+
+  .perks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .perk { border-radius: 28px; padding: 26px; }
+  .perk:nth-child(1) { background: #FFE9DA; } .perk:nth-child(2) { background: #E1F5E9; } .perk:nth-child(3) { background: #FFF4CF; }
+  .perk h3 { margin: 0 0 6px; font-size: 24px; }
+  .perk p { margin: 0; color: var(--mute); }
+
+  .visit { background: var(--ink); color: #fff; border-radius: 40px; padding: 40px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; }
+  .visit h2 { color: var(--sun); }
+  .visit p { color: #C8D4E1; }
+  .visit ul { list-style: none; padding: 0; margin: 16px 0 24px; display: grid; gap: 8px; }
+  .visit li b { color: var(--sun); }
+  .visit img { border-radius: 28px; aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; background: var(--orange); color: #fff; border: 0; border-radius: 999px; padding: 12px 22px; font: 700 15px Nunito, sans-serif; box-shadow: 0 10px 26px rgba(255,138,61,.45); cursor: pointer; }
+  footer { padding: 36px 0 44px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  @media (max-width: 880px) {
+    nav { display: none; }
+    .hero .wrap { grid-template-columns: 1fr; padding-top: 16px; }
+    .pics { height: 340px; order: -1; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .card { border-radius: 22px; padding: 8px; }
+    .card h3 { font-size: 18px; }
+    .perks, .visit { grid-template-columns: 1fr; }
+    .visit { padding: 26px; border-radius: 28px; }
+    section { padding: 48px 0; }
+  }
+  @media (max-width: 420px) { .wa span { display: none; } .sticker { width: 92px; height: 92px; font-size: 15px; } .sticker b { font-size: 24px; } .sizes button { min-width: 38px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><i></i>pompón</a>
+    <nav><a href="#ropa">La ropa</a><a href="#por-que">Por qué Pompón</a><a href="#local">El local</a></nav>
+    <a class="wa" href="https://wa.me/?text=Hola%20Pomp%C3%B3n%2C%20quiero%20consultar" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>Escribinos</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Ropa que aguanta <span>jugar todo el día</span></h1>
+      <p>Algodón suave, colores que no se lavan y talles del 0 al 14. Elegí, marcá el talle y pedilo por WhatsApp.</p>
+      <div class="ages">
+        <a href="#ropa" data-age="Bebés">Bebés <small>0 a 2</small></a>
+        <a href="#ropa" data-age="Chicos">Chicos <small>2 a 8</small></a>
+        <a href="#ropa" data-age="Grandes">Grandes <small>8 a 14</small></a>
+      </div>
+      <a class="wa" href="#ropa">Ver toda la ropa</a>
+    </div>
+    <div class="pics">
+      <img class="a" src="https://unsplash.com/photos/RUHUy-21oHo/download?w=900" alt="Nena con vestido rojo sonriendo">
+      <img class="b" src="https://unsplash.com/photos/Cg_GS_2RUGo/download?w=600" alt="Bebé con camiseta a rayas sonriendo">
+      <div class="sticker"><span><b>20%</b>en tu primera compra</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="ropa">
+  <div class="wrap">
+    <div class="head"><h2>La ropa de esta semana</h2><p>Lo tachado ya se agotó en ese talle.</p></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="grid" id="productos"></div>
+  </div>
+</section>
+
+<section id="por-que" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><h2>Por qué Pompón</h2></div>
+    <div class="perks">
+      <div class="perk"><h3>Cambio fácil</h3><p>Si no le quedó, lo cambiás hasta 30 días después. Sin preguntas.</p></div>
+      <div class="perk"><h3>Telas lindas</h3><p>Algodón y frisa que no pican y duran lavado tras lavado.</p></div>
+      <div class="perk"><h3>Te lo llevamos</h3><p>Envíos a Quilmes, Bernal y Berazategui en el día.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="local" style="padding-top:0">
+  <div class="wrap">
+    <div class="visit">
+      <div>
+        <h2>Vení con los chicos</h2>
+        <p>Tenemos probador grande y un rincón para que jueguen mientras elegís.</p>
+        <ul>
+          <li><b>Dónde:</b> Quilmes Oeste</li>
+          <li><b>Horarios:</b> Lunes a sábado de 9:30 a 19:30</li>
+          <li><b>Instagram:</b> @pompon.infantil</li>
+        </ul>
+        <a class="wa" href="https://wa.me/?text=Hola%20Pomp%C3%B3n%2C%20%C2%BFcu%C3%A1l%20es%20la%20direcci%C3%B3n%3F" target="_blank" rel="noopener">Pedir la dirección</a>
+      </div>
+      <img src="https://unsplash.com/photos/_BbXjjuCDFo/download?w=900" alt="Nena con campera verde y bufanda naranja" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span class="logo" style="font-size:24px"><i></i>pompón</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+<button class="install" id="install">Instalar la app de Pompón</button>
+
+<script>
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>';
+const productos = [
+  { n: "Camiseta Beisbolera", e: "Bebés", p: 16900, img: "Cg_GS_2RUGo", talles: ["6m","12m","18m","24m"], sin: ["6m"], badge: "Nuevo" },
+  { n: "Conjunto Frisa Bordó", e: "Bebés", p: 24500, img: "jJueqz0Mptw", talles: ["12m","18m","24m"], sin: [] },
+  { n: "Remera Básica Negra", e: "Chicos", p: 12900, img: "zrTGh0_EZaY", talles: ["2","4","6","8"], sin: [] },
+  { n: "Remera Rayitas", e: "Chicos", p: 14500, img: "jp7l-e09eMs", talles: ["4","6","8"], sin: ["8"] },
+  { n: "Vestido Amapola", e: "Chicos", p: 22900, img: "RUHUy-21oHo", talles: ["4","6","8"], sin: [], badge: "Favorito" },
+  { n: "Buzo Polera Verde", e: "Grandes", p: 26900, img: "5zaweEWW7GM", talles: ["8","10","12","14"], sin: [] },
+  { n: "Campera Parka Verde", e: "Grandes", p: 48900, img: "_BbXjjuCDFo", talles: ["8","10","12"], sin: ["12"] },
+  { n: "Pack Remeras Colores", e: "Chicos", p: 29900, img: "xXJ6utyoSw0", talles: ["4","6","8"], sin: [], badge: "Combo" },
+];
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const box = document.getElementById("productos");
+const tabs = document.getElementById("tabs");
+let actual = "Todo";
+function setAge(a) { actual = a; tabs.querySelectorAll("button").forEach(x => x.classList.toggle("on", x.textContent === a)); render(); }
+["Todo","Bebés","Chicos","Grandes"].forEach(c => { const b = document.createElement("button"); b.textContent = c; b.onclick = () => setAge(c); tabs.appendChild(b); });
+document.querySelectorAll("[data-age]").forEach(a => a.addEventListener("click", () => setAge(a.dataset.age)));
+function render() {
+  box.innerHTML = "";
+  productos.filter(p => actual === "Todo" || p.e === actual).forEach(pr => {
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerHTML = `<div class="ph"><img src="https://unsplash.com/photos/${pr.img}/download?w=600" alt="${pr.n}" loading="lazy">${pr.badge ? `<span class="badge">${pr.badge}</span>` : ""}</div>
+      <div class="body"><h3>${pr.n}</h3><div class="price">${fmt(pr.p)}</div>
+      <div class="sizes">${pr.talles.map(t => `<button ${pr.sin.includes(t) ? "disabled title='Sin stock'" : ""}>${t}</button>`).join("")}</div>
+      <a class="ask" target="_blank" rel="noopener">${WA_ICON}Pedir</a></div>`;
+    let talle = "";
+    const link = el.querySelector(".ask");
+    const upd = () => { link.href = "https://wa.me/?text=" + encodeURIComponent(`Hola Pompón! Quiero ${pr.n}${talle ? " talle " + talle : ""} (${fmt(pr.p)}). ¿Lo tienen?`); };
+    el.querySelectorAll(".sizes button").forEach(b => b.onclick = () => { el.querySelectorAll(".sizes button").forEach(x => x.classList.remove("on")); b.classList.add("on"); talle = b.textContent; upd(); });
+    upd(); box.appendChild(el);
+  });
+}
+setAge("Todo");
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "block"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

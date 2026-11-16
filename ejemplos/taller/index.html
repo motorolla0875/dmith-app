@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pistón Taller Mecánico</title>
+<meta name="description" content="Taller mecánico en Quilmes. Service, frenos, tren delantero y diagnóstico. Pedí presupuesto por WhatsApp.">
+<meta name="theme-color" content="#1A1D21">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --steel: #1A1D21; --steel2: #24282E; --red: #D7263D; --plate: #E9EBEE; --mute: #8A9099; --line: #343A42; --white: #fff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--plate); color: var(--steel); font: 400 16px/1.6 "IBM Plex Sans", system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo, .num { font-family: "Chakra Petch", sans-serif; font-weight: 700; text-transform: uppercase; }
+
+  header { position: sticky; top: 0; z-index: 10; background: var(--steel); color: #fff; border-bottom: 3px solid var(--red); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
+  .logo { font-size: 26px; text-decoration: none; display: flex; align-items: center; gap: 10px; letter-spacing: .03em; }
+  .logo i { width: 28px; height: 28px; border: 3px solid var(--red); border-radius: 50%; position: relative; }
+  .logo i::after { content: ""; position: absolute; inset: 6px; background: var(--red); border-radius: 50%; }
+  nav { display: flex; gap: 24px; }
+  nav a { text-decoration: none; color: #B9BFC7; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--red); color: #fff; text-decoration: none; font: 600 15px "IBM Plex Sans", sans-serif; padding: 12px 18px; border-radius: 3px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn.line { background: transparent; border: 1.5px solid #fff; }
+
+  .hero { background: var(--steel); color: #fff; position: relative; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding-top: 56px; padding-bottom: 56px; }
+  .hero h1 { font-size: clamp(46px, 7vw, 86px); line-height: .95; margin: 0 0 18px; }
+  .hero h1 span { color: var(--red); }
+  .hero p { color: #C3C8CF; font-size: 18px; max-width: 40ch; margin: 0 0 26px; }
+  .hero-img { position: relative; }
+  .hero-img img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px; }
+  .hero-img::before { content: ""; position: absolute; inset: 14px -14px -14px 14px; border: 2px solid var(--red); border-radius: 4px; z-index: -0; }
+  .hero-img img { position: relative; z-index: 1; }
+  .trust { display: flex; gap: 26px; margin-top: 30px; flex-wrap: wrap; }
+  .trust .num { font-size: 32px; color: #fff; line-height: 1; display: block; }
+  .trust small { color: var(--mute); }
+
+  section { padding: 72px 0; }
+  h2 { font-size: clamp(36px, 5vw, 56px); margin: 0 0 8px; line-height: 1; }
+  .lead { color: #5B626C; margin: 0 0 30px; max-width: 56ch; }
+
+  .svcs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: #CDD1D6; border: 2px solid #CDD1D6; }
+  .svc { background: var(--white); padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .svc .code { font: 700 13px "Chakra Petch", sans-serif; color: var(--red); letter-spacing: .08em; }
+  .svc h3 { margin: 0; font-size: 22px; }
+  .svc p { margin: 0; color: #5B626C; flex: 1; }
+  .svc .from { font-weight: 600; }
+  .svc .from b { font: 700 24px "Chakra Petch", sans-serif; }
+
+  .quote { background: var(--steel); color: #fff; }
+  .quote .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; }
+  .quote .lead { color: #B9BFC7; }
+  .quote ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .quote li { display: flex; gap: 10px; align-items: start; color: #D6DAE0; }
+  .quote li::before { content: ""; flex: none; width: 10px; height: 10px; margin-top: 8px; background: var(--red); transform: rotate(45deg); }
+  .form { background: var(--steel2); border: 1px solid var(--line); border-radius: 4px; padding: 24px; display: grid; gap: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form label { display: grid; gap: 6px; font-size: 14px; color: #B9BFC7; }
+  .form input, .form select, .form textarea { padding: 12px; border-radius: 3px; border: 1px solid var(--line); background: var(--steel); color: #fff; font: 400 16px "IBM Plex Sans", sans-serif; width: 100%; }
+  .form textarea { min-height: 80px; resize: vertical; }
+  .plate { justify-self: start; background: #fff; color: var(--steel); border: 3px solid var(--steel); outline: 2px solid #fff; border-radius: 6px; padding: 4px 14px; font: 700 26px "Chakra Petch", monospace; letter-spacing: .12em; min-width: 180px; text-align: center; }
+  .plate small { display: block; font: 600 9px "IBM Plex Sans", sans-serif; letter-spacing: .1em; color: #2A5DB0; }
+
+  .gal { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+  .gal img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; aspect-ratio: 16/10; }
+  .hours { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+  .hours div { background: var(--white); padding: 18px; border-left: 4px solid var(--red); }
+  .hours small { color: #5B626C; display: block; }
+
+  .install { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+  footer { padding: 30px 0; color: #5B626C; font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 880px) {
+    nav { display: none; }
+    .hero .wrap, .quote .wrap, .gal { grid-template-columns: 1fr; }
+    .hero-img { order: -1; margin-right: 14px; }
+    .svcs { grid-template-columns: 1fr; }
+    .hours { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+  }
+  @media (max-width: 420px) { header .btn span { display: none; } .row2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><i></i>Pistón</a>
+    <nav><a href="#servicios">Servicios</a><a href="#presupuesto">Presupuesto</a><a href="#taller">El taller</a></nav>
+    <a class="btn" href="#presupuesto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg><span>Presupuesto</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Tu auto en manos <span>que saben</span></h1>
+      <p>Service, frenos, tren delantero y diagnóstico computarizado. Te mandamos fotos del arreglo y el presupuesto antes de tocar nada.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#presupuesto">Pedir presupuesto</a><a class="btn line" href="#servicios">Ver servicios</a></div>
+      <div class="trust">
+        <div><span class="num">22 años</span><small>en el barrio</small></div>
+        <div><span class="num">6 meses</span><small>de garantía</small></div>
+        <div><span class="num">48 h</span><small>la mayoría de arreglos</small></div>
+      </div>
+    </div>
+    <div class="hero-img"><img src="https://unsplash.com/photos/XP8o9_Arwqg/download?w=1100" alt="Mecánico trabajando en un auto en el taller"></div>
+  </div>
+</div>
+
+<section id="servicios">
+  <div class="wrap">
+    <h2>Servicios</h2>
+    <p class="lead">Precios de mano de obra para autos chicos y medianos. Los repuestos se presupuestan aparte, con marca y garantía.</p>
+    <div class="svcs" id="svcs"></div>
+  </div>
+</section>
+
+<section class="quote" id="presupuesto">
+  <div class="wrap">
+    <div>
+      <h2>Pedí tu presupuesto</h2>
+      <p class="lead">Contanos qué tiene el auto y te respondemos el mismo día.</p>
+      <ul>
+        <li>Te mandamos fotos y video de lo que encontramos.</li>
+        <li>No arreglamos nada sin tu OK.</li>
+        <li>Pagás con efectivo, transferencia o hasta 3 cuotas.</li>
+      </ul>
+    </div>
+    <div class="form">
+      <div class="plate" id="plate"><small>ARGENTINA</small><span id="plate-txt">AB 123 CD</span></div>
+      <div class="row2">
+        <label>Marca y modelo<input id="q-car" placeholder="Ej: Gol Trend"></label>
+        <label>Año<input id="q-year" inputmode="numeric" maxlength="4" placeholder="2016"></label>
+      </div>
+      <div class="row2">
+        <label>Patente<input id="q-plate" maxlength="9" placeholder="AB 123 CD"></label>
+        <label>¿Qué necesitás?<select id="q-svc"></select></label>
+      </div>
+      <label>Contanos un poco más<textarea id="q-desc" placeholder="Hace ruido al frenar, se prendió una luz en el tablero..."></textarea></label>
+      <a class="btn" id="q-go" target="_blank" rel="noopener">Mandar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section id="taller">
+  <div class="wrap">
+    <div class="gal">
+      <img src="https://unsplash.com/photos/pLzaoTiUjyA/download?w=1000" alt="Mecánico trabajando, en blanco y negro" loading="lazy">
+      <img src="https://unsplash.com/photos/8k_T1EwTySs/download?w=700" alt="Cambio de rueda" loading="lazy">
+    </div>
+    <div class="hours">
+      <div><small>Dónde</small><b>Quilmes Oeste, sobre avenida</b></div>
+      <div><small>Horarios</small><b>Lun a vie 8 a 18 · Sáb 8 a 13</b></div>
+      <div><small>Turnos</small><b>Por WhatsApp, te avisamos cuando está listo</b></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Pistón Taller Mecánico</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+<button class="btn install" id="install">Instalar la app</button>
+
+<script>
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const svcs = [
+  { c: "SRV-01", n: "Service completo", d: "Cambio de aceite, filtros de aceite, aire y combustible, revisión de 30 puntos.", p: 45000 },
+  { c: "SRV-02", n: "Frenos", d: "Pastillas, discos y líquido. Te mostramos el desgaste antes de cambiar.", p: 38000 },
+  { c: "SRV-03", n: "Tren delantero", d: "Bujes, rótulas, extremos y alineación.", p: 52000 },
+  { c: "SRV-04", n: "Distribución", d: "Kit de distribución y bomba de agua.", p: 95000 },
+  { c: "SRV-05", n: "Diagnóstico", d: "Scanner computarizado para luces del tablero y fallas de motor.", p: 18000 },
+  { c: "SRV-06", n: "Embrague", d: "Kit de embrague completo y revisión de volante.", p: 110000 },
+];
+document.getElementById("svcs").innerHTML = svcs.map(s => `<div class="svc"><span class="code">${s.c}</span><h3>${s.n}</h3><p>${s.d}</p><span class="from">Desde <b>${fmt(s.p)}</b></span></div>`).join("");
+document.getElementById("q-svc").innerHTML = svcs.map(s => `<option>${s.n}</option>`).join("") + "<option>Otro / no sé</option>";
+const v = id => document.getElementById(id).value.trim();
+function upd() {
+  const plate = v("q-plate").toUpperCase();
+  document.getElementById("plate-txt").textContent = plate || "AB 123 CD";
+  const car = [v("q-car"), v("q-year")].filter(Boolean).join(" ");
+  const txt = `Hola Pistón! Quiero presupuesto de ${v("q-svc").toLowerCase()}${car ? ` para un ${car}` : ""}${plate ? ` (patente ${plate})` : ""}.${v("q-desc") ? `\n${v("q-desc")}` : ""}`;
+  document.getElementById("q-go").href = "https://wa.me/?text=" + encodeURIComponent(txt);
+}
+["q-car","q-year","q-plate","q-svc","q-desc"].forEach(id => document.getElementById(id).addEventListener("input", upd));
+upd();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-flex"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

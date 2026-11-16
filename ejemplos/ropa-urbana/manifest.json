@@ -1,0 +1,17 @@
+{
+ "name": "Andén 9 Streetwear",
+ "short_name": "Andén 9",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#141414",
+ "theme_color": "#141414",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}

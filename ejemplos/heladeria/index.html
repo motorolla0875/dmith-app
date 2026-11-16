@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nieve Helados Artesanales</title>
+<meta name="description" content="Heladería artesanal en Bernal. Pedí tu kilo eligiendo los gustos y te lo llevamos. Delivery hasta la 1 de la mañana.">
+<meta name="theme-color" content="#FF6F91">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root { --pink: #FF6F91; --mint: #9FE2C9; --cream: #FFF8EC; --choco: #3D2420; --lemon: #FFE27A; --sky: #BFE6FF; --mute: #7E6A64; --line: #F1E3CF; --white: #fff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--choco); font: 500 16px/1.55 "Bricolage Grotesque", system-ui, sans-serif; padding-bottom: 86px; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  h1, h2, h3, .logo { font-weight: 800; letter-spacing: -.02em; }
+
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 12px; }
+  .logo { font-size: 32px; text-decoration: none; color: var(--pink); }
+  .logo span { color: var(--choco); }
+  .pill { background: var(--choco); color: var(--cream); border-radius: 999px; padding: 7px 14px; font-size: 14px; }
+
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; align-items: center; padding-top: 10px; padding-bottom: 40px; }
+  .hero h1 { font-size: clamp(54px, 9vw, 120px); line-height: .9; margin: 0 0 18px; }
+  .hero h1 em { font-style: normal; color: var(--pink); }
+  .hero p { font-size: 19px; color: var(--mute); max-width: 36ch; margin: 0 0 24px; }
+  .scoops { position: relative; height: 480px; }
+  .scoops img { position: absolute; object-fit: cover; border-radius: 999px; border: 8px solid var(--white); box-shadow: 0 16px 34px rgba(61,36,32,.15); }
+  .scoops .a { width: 62%; aspect-ratio: 3/4; right: 4%; top: 0; border-radius: 999px 999px 40px 40px; }
+  .scoops .b { width: 40%; aspect-ratio: 1; left: 0; bottom: 6%; }
+  .scoops .c { width: 30%; aspect-ratio: 1; right: 0; bottom: 0; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--choco); color: var(--cream); text-decoration: none; font: 800 16px "Bricolage Grotesque", sans-serif; padding: 13px 22px; border-radius: 999px; border: 0; cursor: pointer; white-space: nowrap; }
+  .btn.pink { background: var(--pink); color: #fff; }
+  .btn svg { width: 18px; height: 18px; }
+
+  section { padding: 56px 0; }
+  h2 { font-size: clamp(38px, 6vw, 64px); margin: 0 0 6px; line-height: 1; }
+  .lead { color: var(--mute); margin: 0 0 24px; }
+
+  .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+  .size { border: 0; border-radius: 22px; padding: 18px 14px; text-align: left; cursor: pointer; font: inherit; color: var(--choco); background: var(--white); box-shadow: inset 0 0 0 2px var(--line); }
+  .size b { display: block; font-size: 28px; font-weight: 800; line-height: 1; }
+  .size small { color: var(--mute); }
+  .size .pr { display: block; margin-top: 8px; font-weight: 800; font-size: 18px; }
+  .size.on { background: var(--pink); color: #fff; box-shadow: none; }
+  .size.on small { color: #FFE3EA; }
+
+  .flv-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .flv-head h3 { margin: 0; font-size: 26px; }
+  .left { background: var(--lemon); padding: 4px 12px; border-radius: 999px; font-weight: 800; }
+  .group { margin-bottom: 18px; }
+  .group p { margin: 0 0 8px; color: var(--mute); font-weight: 800; font-size: 14px; }
+  .flavors { display: flex; flex-wrap: wrap; gap: 8px; }
+  .flavors button { border: 0; border-radius: 999px; padding: 9px 16px; font: 500 15px "Bricolage Grotesque", sans-serif; cursor: pointer; color: var(--choco); display: inline-flex; gap: 8px; align-items: center; }
+  .flavors button i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.15); }
+  .flavors button.on { background: var(--choco) !important; color: var(--cream); }
+  .flavors button:disabled { opacity: .4; cursor: default; }
+
+  .gal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .gal img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 22px; }
+  .info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+  .info div { background: var(--white); border-radius: 22px; padding: 18px; box-shadow: inset 0 0 0 2px var(--line); }
+  .info b { display: block; font-size: 20px; }
+
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--choco); color: var(--cream); padding: 12px max(16px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-bottom)); }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; }
+  .bar b { font-size: 24px; display: block; line-height: 1; }
+  .bar small { color: #D9C6BE; }
+  .bar .btn.off { opacity: .45; pointer-events: none; }
+  .install { display: none; background: var(--mint); color: var(--choco); border: 0; border-radius: 999px; padding: 7px 14px; font: 800 14px "Bricolage Grotesque", sans-serif; cursor: pointer; }
+  footer { padding: 20px 0 30px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 880px) {
+    .hero .wrap { grid-template-columns: 1fr; }
+    .scoops { height: 320px; order: -1; }
+    .sizes { grid-template-columns: repeat(2, 1fr); }
+    .gal { grid-template-columns: repeat(2, 1fr); }
+    .info { grid-template-columns: 1fr; }
+    section { padding: 40px 0; }
+  }
+  @media (max-width: 420px) { .bar .btn span { display: none; } .pill { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">nieve<span>.</span></a>
+    <div style="display:flex;gap:8px;align-items:center"><button class="install" id="install">Instalar app</button><span class="pill">Delivery hasta la 1 h</span></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Helado <em>de verdad</em>, en tu casa</h1>
+      <p>Lo hacemos todos los días con leche entera, fruta fresca y chocolate amargo. Elegí el tamaño, los gustos y te lo llevamos.</p>
+      <a class="btn pink" href="#pedido">Armar mi pedido</a>
+    </div>
+    <div class="scoops">
+      <img class="a" src="https://unsplash.com/photos/G5ZenftPPOA/download?w=800" alt="Tres cucuruchos de helado">
+      <img class="b" src="https://unsplash.com/photos/NEab1U1FfKM/download?w=500" alt="Helado de chocolate en cucurucho">
+      <img class="c" src="https://unsplash.com/photos/1w1owJaMeDw/download?w=400" alt="Copa de helado">
+    </div>
+  </div>
+</div>
+
+<section id="pedido">
+  <div class="wrap">
+    <h2>Armá tu pedido</h2>
+    <p class="lead">1. Elegí el tamaño · 2. Tocá los gustos · 3. Mandalo por WhatsApp</p>
+    <div class="sizes" id="sizes"></div>
+    <div class="flv-head"><h3>Gustos</h3><span class="left" id="left"></span></div>
+    <div id="flavors"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="gal">
+      <img src="https://unsplash.com/photos/dcd4jdc8IYA/download?w=500" alt="Bachas de helado" loading="lazy">
+      <img src="https://unsplash.com/photos/_dWyfbhIvKo/download?w=500" alt="Cucurucho frente al mar" loading="lazy">
+      <img src="https://unsplash.com/photos/Q36Ti1V-DbQ/download?w=500" alt="Vasito de helado de frutilla" loading="lazy">
+      <img src="https://unsplash.com/photos/d-04bmrdLrw/download?w=500" alt="Helado entre palmeras" loading="lazy">
+    </div>
+    <div class="info">
+      <div><b>Bernal centro</b>Frente a la estación</div>
+      <div><b>Todos los días</b>De 12 a 1 h</div>
+      <div><b>Envío gratis</b>Pidiendo 1 kg o más</div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Nieve Helados Artesanales · @nieve.helados</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
+
+<div class="bar">
+  <div class="wrap">
+    <div><b id="b-total">$0</b><small id="b-txt">Elegí el tamaño</small></div>
+    <a class="btn pink off" id="go" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg><span>Pedir</span></a>
+  </div>
+</div>
+
+<script>
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const sizes = [{ n: "1/4 kg", max: 3, p: 7500 }, { n: "1/2 kg", max: 3, p: 13500 }, { n: "1 kg", max: 4, p: 24000, free: true }, { n: "Cucurucho", max: 2, p: 5000 }];
+const groups = {
+  "Cremas": [["Dulce de leche", "#C98A4B"], ["Dulce de leche granizado", "#B57A40"], ["Vainilla", "#F6E7B8"], ["Crema americana", "#FFF4DA"], ["Sambayón", "#F2D27A"], ["Tramontana", "#E8C08F"]],
+  "Chocolates": [["Chocolate amargo", "#4B2A20"], ["Chocolate con almendras", "#6B3A2A"], ["Chocolate blanco", "#F5EFE3"], ["Mousse de chocolate", "#7A4A36"]],
+  "Frutales": [["Frutilla al agua", "#FF6F91"], ["Limón", "#FFF07A"], ["Maracuyá", "#FFC43D"], ["Frutos rojos", "#B8325A"], ["Durazno", "#FFB38A"]],
+};
+let size = null; const chosen = [];
+const sBox = document.getElementById("sizes");
+sizes.forEach(s => {
+  const b = document.createElement("button"); b.className = "size";
+  b.innerHTML = `<b>${s.n}</b><small>hasta ${s.max} gustos${s.free ? " · envío gratis" : ""}</small><span class="pr">${fmt(s.p)}</span>`;
+  b.onclick = () => { sBox.querySelectorAll(".size").forEach(x => x.classList.remove("on")); b.classList.add("on"); size = s; while (chosen.length > s.max) chosen.pop(); paint(); };
+  sBox.appendChild(b);
+});
+const fBox = document.getElementById("flavors");
+Object.entries(groups).forEach(([g, list]) => {
+  const div = document.createElement("div"); div.className = "group";
+  div.innerHTML = `<p>${g}</p><div class="flavors"></div>`;
+  list.forEach(([n, c]) => {
+    const b = document.createElement("button"); b.dataset.n = n; b.style.background = "#fff";
+    b.innerHTML = `<i style="background:${c}"></i>${n}`;
+    b.onclick = () => { const i = chosen.indexOf(n); if (i >= 0) chosen.splice(i, 1); else if (size && chosen.length < size.max) chosen.push(n); else if (!size) { sBox.scrollIntoView({ behavior: "smooth", block: "center" }); return; } paint(); };
+    div.querySelector(".flavors").appendChild(b);
+  });
+  fBox.appendChild(div);
+});
+function paint() {
+  const max = size ? size.max : 0;
+  fBox.querySelectorAll("button").forEach(b => { const on = chosen.includes(b.dataset.n); b.classList.toggle("on", on); b.disabled = !on && size && chosen.length >= max; });
+  document.getElementById("left").textContent = size ? `${chosen.length} de ${max}` : "Primero elegí el tamaño";
+  const go = document.getElementById("go");
+  if (!size) return;
+  const envio = size.free || size.n === "Cucurucho" ? 0 : 1500;
+  document.getElementById("b-total").textContent = fmt(size.p + envio);
+  document.getElementById("b-txt").textContent = chosen.length ? `${size.n}: ${chosen.join(", ")}` : `${size.n} · elegí los gustos`;
+  go.classList.toggle("off", !chosen.length);
+  go.href = "https://wa.me/?text=" + encodeURIComponent(`Hola Nieve! Quiero ${size.n} de: ${chosen.join(", ")}.\n${envio ? `Envío: ${fmt(envio)}\n` : ""}Total: ${fmt(size.p + envio)}`);
+}
+paint();
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; document.getElementById("install").style.display = "inline-block"; });
+document.getElementById("install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; document.getElementById("install").style.display = "none"; };
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
