@@ -23,6 +23,10 @@ const save = (d) => { fs.mkdirSync(DIR, { recursive: true }); fs.writeFileSync(D
 const PLANES = { 25000: "Vidriera", 40000: "Catálogo", 60000: "Negocio" };
 const err = (code, msg) => Object.assign(new Error(msg), { code });
 
+async function mpCancelar(id) {
+  const r = await fetch(MP_API + "/preapproval/" + encodeURIComponent(id), { method: "PUT", headers: { Authorization: "Bearer " + env().MP_ACCESS_TOKEN, "Content-Type": "application/json" }, body: JSON.stringify({ status: "cancelled" }) });
+  if (!r.ok) throw err(502, "Mercado Pago respondió " + r.status);
+}
 async function mp(id) {
   const t = env().MP_ACCESS_TOKEN;
   if (!t) throw err(503, "Falta MP_ACCESS_TOKEN en el servidor");
@@ -88,6 +92,26 @@ const rutas = {
     aplicar(c, p);
     d.clientes.push(c); save(d);
     return { token: c.token };
+  },
+
+  // El cliente se cambió de plan: pagó una suscripción nueva, cancelamos la vieja
+  "POST /api/sitios/cambiar-plan": async (req) => {
+    const b = await body(req); const id = String(b.preapproval_id || "").trim();
+    if (!/^[A-Za-z0-9_-]{6,80}$/.test(id)) throw err(400, "Falta el código de la suscripción");
+    const d = load(); const c = porToken(d, b.t);
+    if (c.preapproval_id === id) return { ok: true }; // ya estaba hecho
+    if (d.clientes.some((x) => x.preapproval_id === id)) throw err(409, "Esa suscripción ya está usada");
+    const p = await mp(id);
+    if (!["authorized", "pending"].includes(p.status)) throw err(402, "La suscripción no está activa (" + p.status + ")");
+    const viejo = c.preapproval_id, planViejo = c.plan;
+    c.anteriores = [...(c.anteriores || []), { preapproval_id: viejo, plan: planViejo, hasta: ahora() }];
+    c.preapproval_id = id; aplicar(c, p);
+    let aviso = "";
+    if (!c.prueba) { try { await mpCancelar(viejo); } catch (e) { aviso = " ⚠️ No se pudo cancelar la suscripción vieja (" + viejo + "): cancelala a mano en Mercado Pago."; } }
+    c.tareas = c.tareas || []; c.tareas.push({ id: crypto.randomBytes(6).toString("hex"), texto: "Pasó de " + planViejo + " a " + c.plan + ": activarle lo nuevo (panel propio)." + aviso, fecha: ahora(), hecha: false });
+    c.mensajes = c.mensajes || []; c.mensajes.push({ de: "dmith", texto: "🎉 ¡Listo! Ya estás en el plan " + c.plan + ". Te avisamos por acá cuando tengas lo nuevo activado.", fecha: ahora() });
+    c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; c.cliente_sin_leer = (c.cliente_sin_leer || 0) + 1; save(d);
+    return { ok: true };
   },
 
   // Datos del panel del cliente (se actualizan con Mercado Pago cada 10 minutos)

@@ -49,6 +49,15 @@
     document.getElementById("msg").textContent = m;
     document.getElementById("go").onclick = () => { try { navigator.clipboard.writeText(m); } catch (e) {} };
   };
+  let cambio = null; try { cambio = JSON.parse(localStorage.getItem("dm-cambio-plan") || "null"); } catch (e) {}
+  if (id && cambio && cambio.t) {
+    try {
+      const r = await fetch("/api/sitios/cambiar-plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: cambio.t, preapproval_id: id }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error);
+      try { localStorage.removeItem("dm-cambio-plan"); } catch (e) {}
+      return location.replace("/panel/?t=" + cambio.t);
+    } catch (e) { m = "Hola! Me cambié al plan " + (cambio.plan || "") + " y ya pagué.\nCódigo de pago: " + id; return manual(); }
+  }
   if (!id || !pedido.slug) return manual();
   try {
     const r = await fetch("/api/sitios/activar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ preapproval_id: id, ...pedido }) });

@@ -54,6 +54,14 @@
   .vacio { color: var(--mute); font-size: 15px; text-align: center; padding: 10px; }
   .send { display: flex; gap: 8px; align-items: flex-end; } .send textarea { margin: 0; }
   .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--coral); vertical-align: 3px; }
+  #todo { display: grid; gap: 16px; }
+  .dombox { border-top: 2px solid var(--line); margin-top: 18px; padding-top: 16px; }
+  .incl { background: var(--paper); border-radius: 12px; padding: 12px 14px; font-size: 15px; margin: 14px 0 0; }
+  .up { border: 2px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 10px 0 0; }
+  .up h3 { font: 700 16px Unbounded, sans-serif; margin: 0 0 4px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .up h3 span { font: 700 16px "DM Sans", sans-serif; color: var(--blue); }
+  .up ul { margin: 6px 0 12px; padding-left: 20px; font-size: 15px; } .up li { margin: 2px 0; }
+  .up.star { border-color: var(--sun); }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -72,29 +80,15 @@
     <section class="card">
       <h2>Tu web</h2>
       <div class="site"><a class="addr" id="addr" target="_blank"></a><span class="live">● Funcionando</span></div>
-      <p class="note" id="addr-note">Esta dirección ya funciona y la podés compartir. Cuando conectes tu dominio, la web va a abrir también ahí.</p>
+      <p class="note" id="dom-estado"></p>
       <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
         <button class="btn light" id="copiar">Copiar link</button>
         <a class="btn light" id="ver" target="_blank">Ver mi web</a>
+        <button class="btn" id="abrir-dom">🌐 Conectar mi dominio</button>
       </div>
-    </section>
-
-    <section class="card">
-      <h2>Tu plan</h2>
-      <div class="grid">
-        <div><span>Plan</span><strong id="plan"></strong></div>
-        <div><span>Precio</span><strong id="monto"></strong></div>
-        <div><span id="hasta-l">Pagado hasta</span><strong id="hasta"></strong></div>
-        <div><span>Cliente desde</span><strong id="alta"></strong></div>
-      </div>
-      <p class="note">El cobro es automático con Mercado Pago. Para cambiar de plan o darte de baja, escribinos.</p>
-    </section>
-
-    <section class="card">
-      <h2>Tu dominio</h2>
-      <p id="dom-estado" class="note" style="margin:0 0 12px"></p>
-      <div class="tabs"><button class="on" data-t="conectar">Ya tengo dominio</button><button data-t="comprar">Quiero comprar uno</button></div>
-
+      <div class="dombox" id="dombox" hidden>
+        <h2>Conectar mi dominio</h2>
+        <div class="tabs"><button class="on" data-t="conectar">Ya tengo dominio</button><button data-t="comprar">Quiero comprar uno</button></div>
       <div id="t-conectar">
         <div class="sub">Si tu dominio termina en .com.ar o .ar (NIC Argentina)</div>
         <ol>
@@ -129,6 +123,21 @@
         </ol>
         <p class="note">¿Preferís un .com? Lo podés comprar en GoDaddy, Hostinger o DonWeb y seguir los mismos pasos.</p>
       </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Tu plan</h2>
+      <div class="grid">
+        <div><span>Plan</span><strong id="plan"></strong></div>
+        <div><span>Precio</span><strong id="monto"></strong></div>
+        <div><span id="hasta-l">Pagado hasta</span><strong id="hasta"></strong></div>
+        <div><span>Cliente desde</span><strong id="alta"></strong></div>
+      </div>
+      <div class="incl" id="plan-incl"></div>
+      <div id="plan-up"></div>
+      <p class="note" id="plan-err" hidden></p>
+      <p class="note">El cobro es automático con Mercado Pago. Para darte de baja, escribinos en Mensajes.</p>
     </section>
 
     <section class="card" id="sec-cambios">
@@ -166,8 +175,8 @@ async function cargar() {
   if (DEMO) {
     const hoy = new Date(), prox = new Date(hoy); prox.setMonth(prox.getMonth() + 1);
     document.title = "Panel de ejemplo · dmith Sitios";
-    return pintar({ negocio: "Navaja Sur", slug: "navaja-sur", plan: "Catálogo", monto: 40000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: hoy.toISOString(), dominio: "navajasur.com.ar", dominio_estado: "falta_conectar",
-      cambios_limite: null, cambios_mes: 1, sin_leer: 1,
+    return pintar({ negocio: "Navaja Sur", slug: "navaja-sur", plan: "Vidriera", monto: 25000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: hoy.toISOString(), dominio: "navajasur.com.ar", dominio_estado: "falta_conectar",
+      cambios_limite: 2, cambios_mes: 1, sin_leer: 1,
       tareas: [{ texto: "Agregar el corte con diseño a $9.000", fecha: hoy.toISOString(), hecha: true }],
       mensajes: [{ de: "cliente", texto: "Hola! Quiero agregar el corte con diseño a $9.000", fecha: hoy.toISOString() }, { de: "dmith", texto: "✅ Listo: Agregar el corte con diseño a $9.000", fecha: hoy.toISOString() }] });
   }
@@ -193,13 +202,15 @@ function pintar(d) {
   $("hasta").textContent = fecha(d.proximo_cobro); $("alta").textContent = fecha(d.alta);
   if (d.dominio) $("dom").value = d.dominio;
   const de = {
-    falta_conectar: "Elegiste usar tu dominio <b>" + d.dominio + "</b>. Seguí los pasos de abajo para conectarlo.",
-    comprando: "Elegiste comprar un dominio. Mirá los pasos en <b>Quiero comprar uno</b>.",
+    falta_conectar: "Elegiste usar tu dominio <b>" + d.dominio + "</b>. Tocá <b>Conectar mi dominio</b> para ver los pasos.",
+    comprando: "Elegiste comprar un dominio. Tocá <b>Conectar mi dominio</b> y mirá <b>Quiero comprar uno</b>.",
     revisar: "Nos avisaste que conectaste <b>" + d.dominio + "</b>. Lo estamos revisando y te avisamos cuando abra tu web.",
     listo: "✅ Tu dominio <b>" + d.dominio + "</b> ya está conectado.",
-  }[d.dominio_estado] || "Tu web funciona en tu dirección de dmith.app. Si querés un dominio propio, seguí estos pasos.";
+  }[d.dominio_estado] || "Esta dirección ya funciona y la podés compartir. Si tenés (o querés) un dominio propio, tocá Conectar mi dominio.";
   $("dom-estado").innerHTML = de;
   if (d.dominio_estado === "comprando") tab("comprar");
+  $("abrir-dom").hidden = d.dominio_estado === "listo";
+  pintarPlan(d);
   // pedidos de cambio
   const quedan = d.cambios_limite ? Math.max(0, d.cambios_limite - d.cambios_mes) : null;
   $("cupo").textContent = quedan === null ? "" : "Te quedan " + quedan + " de " + d.cambios_limite + " cambios este mes.";
@@ -238,6 +249,37 @@ $("msg-env").onclick = async () => {
   $("msg-env").disabled = false;
 };
 function copiar(t) { try { navigator.clipboard.writeText(t); } catch (e) {} }
+
+$("abrir-dom").onclick = () => { const b = $("dombox"); b.hidden = !b.hidden; $("abrir-dom").textContent = b.hidden ? "🌐 Conectar mi dominio" : "Cerrar pasos"; if (!b.hidden) b.scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+// Planes: qué incluye cada uno y link directo para cambiarse
+const PLANES = [
+  { n: "Vidriera", m: 25000, link: "https://mpago.la/1RAANtF", f: ["Web a medida con tu logo y fotos", "Pedidos y turnos por WhatsApp", "App con tu logo en el celular", "2 cambios por mes, los hacemos nosotros"] },
+  { n: "Catálogo", m: 40000, link: "https://mpago.la/279MSHR", star: true, f: ["Todo lo de Vidriera", "Tu propio panel: cambiás precios, fotos y productos cuando quieras", "\"Sin stock\" en un toque", "Cambios sin límite"] },
+  { n: "Negocio", m: 60000, link: "https://mpago.la/1gYzdji", f: ["Todo lo de Catálogo", "Pedidos y turnos guardados en tu panel", "Turnos reales y estadísticas de tu negocio"] },
+];
+const INCLUYE = {
+  Vidriera: "<b>Tu plan Vidriera:</b> nosotros nos ocupamos de tu web. Para subir contenido nuevo (fotos, precios, productos, horarios) <b>pedínoslo en \"Pedí un cambio\"</b> y lo hacemos por vos. Tenés <b>2 cambios por mes</b>.<br><br>¿Preferís cambiarlo vos mismo cuando quieras, sin esperar? Para eso están los planes con <b>panel propio</b>:",
+  "Catálogo": "<b>Tu plan Catálogo:</b> tenés tu <b>propio panel</b> para cambiar precios, fotos y productos cuando quieras. Si necesitás algo más, pedínoslo en \"Pedí un cambio\".<br><br>¿Querés guardar pedidos y turnos y ver estadísticas?",
+  Negocio: "<b>Tu plan Negocio:</b> tenés todo incluido: panel propio, pedidos y turnos guardados y estadísticas. Si necesitás algo, pedínoslo en \"Pedí un cambio\".",
+};
+function pintarPlan(d) {
+  $("plan-incl").innerHTML = INCLUYE[d.plan] || "";
+  const yo = PLANES.findIndex((p) => p.n === d.plan);
+  const mejores = PLANES.filter((p, i) => i > yo);
+  $("plan-up").innerHTML = mejores.map((p) => `<div class="up${p.star && mejores.length > 1 ? " star" : ""}">
+      <h3>${p.n}<span>$${p.m.toLocaleString("es-AR")}/mes</span></h3>
+      <ul>${p.f.map((x) => "<li>" + x + "</li>").join("")}</ul>
+      <button class="btn${p.star && mejores.length > 1 ? "" : " light"}" data-plan="${p.n}">Cambiarme a ${p.n}</button>
+    </div>`).join("") + (mejores.length ? '<p class="note">Pagás el plan nuevo con Mercado Pago y <b>cancelamos el anterior automáticamente</b>. Tu web sigue igual, sin cortes.</p>' : "");
+}
+$("plan-up").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-plan]"); if (!b) return;
+  const p = PLANES.find((x) => x.n === b.dataset.plan);
+  if (DEMO) { $("plan-err").hidden = false; $("plan-err").textContent = "Esto es un ejemplo: acá el cliente iría a Mercado Pago a pagar el plan " + p.n + "."; return; }
+  try { localStorage.setItem("dm-cambio-plan", JSON.stringify({ t: token, plan: p.n })); } catch (e) {}
+  b.textContent = "Abriendo Mercado Pago…"; location.href = p.link;
+});
 
 function tab(t) {
   document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
