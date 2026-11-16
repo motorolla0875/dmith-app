@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activá tu web · dmith Sitios</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='2' y='2' width='17' height='17' rx='4' fill='%233E9BFF'/%3E%3Crect x='21' y='2' width='17' height='17' rx='4' fill='%23FFC23D'/%3E%3Crect x='2' y='21' width='17' height='17' rx='4' fill='%2326D6A0'/%3E%3Crect x='21' y='21' width='17' height='17' rx='4' fill='%23FF5A6E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --night: #181B4A; --ink: #15172E; --paper: #F6F5FB; --blue: #3E9BFF; --sun: #FFC23D; --mint: #26D6A0; --coral: #FF5A6E; --mute: #6A6C8A; --line: #E3E2EF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 "DM Sans", system-ui, sans-serif; }
+  header { background: var(--night); color: #fff; padding: 18px 20px 26px; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 10px; font: 700 18px Unbounded, sans-serif; color: #fff; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 26px; }
+  .mark i { aspect-ratio: 1; border-radius: 3px; background: var(--blue); } .mark i:nth-child(2) { background: var(--sun); } .mark i:nth-child(3) { background: var(--mint); } .mark i:nth-child(4) { background: var(--coral); }
+  h1 { font: 800 clamp(26px, 6vw, 38px)/1.1 Unbounded, sans-serif; margin: 22px 0 6px; }
+  header p { margin: 0; color: #C9CAEE; }
+  .steps { display: flex; gap: 6px; margin: 22px 0 0; }
+  .steps span { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.18); }
+  .steps span.on { background: var(--sun); }
+  main { padding: 22px 20px 60px; }
+  h2 { font: 700 21px/1.25 Unbounded, sans-serif; margin: 0 0 16px; }
+  .opt { display: block; width: 100%; text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px; margin: 0 0 12px; cursor: pointer; font: inherit; color: inherit; }
+  .opt:hover { border-color: #C8C6E2; }
+  .opt.sel { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(62,155,255,.15); }
+  .opt b { display: block; font-size: 18px; margin-bottom: 2px; }
+  .opt small { color: var(--mute); font-size: 15px; }
+  .opt .tag { display: inline-block; background: #E5F8F1; color: #0E7A58; font: 700 12px "DM Sans", sans-serif; padding: 2px 8px; border-radius: 99px; margin-left: 6px; vertical-align: 2px; }
+  .extra { display: none; margin: -2px 0 14px; padding: 14px 16px; background: #fff; border-radius: 14px; border: 1px dashed #C8C6E2; font-size: 15px; }
+  .extra.on { display: block; }
+  input[type=text] { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; margin-top: 6px; }
+  input[type=text]:focus { outline: none; border-color: var(--blue); }
+  .addr { font: 700 16px "DM Sans", monospace; background: var(--paper); padding: 8px 12px; border-radius: 10px; display: inline-block; margin-top: 6px; word-break: break-all; }
+  .price { font: 800 22px Unbounded, sans-serif; float: right; }
+  .price small { font: 500 13px "DM Sans", sans-serif; color: var(--mute); }
+  .opt ul { margin: 8px 0 0; padding-left: 18px; font-size: 15px; color: #3B3D5C; clear: both; }
+  .row { display: flex; gap: 10px; margin-top: 18px; }
+  .btn { flex: 1; display: inline-flex; justify-content: center; align-items: center; gap: 8px; border: 0; border-radius: 14px; padding: 15px 18px; font: 700 17px "DM Sans", sans-serif; cursor: pointer; text-decoration: none; }
+  .btn.go { background: var(--sun); color: var(--ink); }
+  .btn.go:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.back { flex: 0 0 auto; background: #fff; color: var(--ink); border: 2px solid var(--line); }
+  .sum { background: #fff; border-radius: 16px; padding: 6px 18px; border: 2px solid var(--line); }
+  .sum div { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .sum div:last-child { border: 0; }
+  .sum span { color: var(--mute); }
+  .sum strong { text-align: right; }
+  .note { font-size: 14px; color: var(--mute); margin-top: 14px; }
+  .ok { text-align: center; padding: 20px 0; }
+  .ok .big { font-size: 56px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith Sitios</a>
+    <h1>Activá tu web</h1>
+    <p id="sub">Tres pasos y tu web queda online.</p>
+    <div class="steps"><span class="on"></span><span></span><span></span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- Paso 1: dirección -->
+  <section id="p1">
+    <h2>¿Con qué dirección querés tu web?</h2>
+    <button class="opt" data-dom="gratis"><b>Usar la dirección gratis <span class="tag">Al instante</span></b><small>Tu web funciona ya mismo. Más adelante podés pasarte a un dominio propio sin perder nada.</small></button>
+    <div class="extra" id="x-gratis">Tu web va a estar en:<br><span class="addr" id="sub-addr"></span></div>
+
+    <button class="opt" data-dom="propio"><b>Ya tengo dominio</b><small>Por ejemplo minegocio.com.ar. Lo conectamos a tu web nueva.</small></button>
+    <div class="extra" id="x-propio">
+      ¿Cuál es tu dominio?
+      <input type="text" id="dom" placeholder="minegocio.com.ar" autocomplete="off" inputmode="url">
+      <div class="note">Después del pago te pasamos los pasos para conectarlo. Si no sabés cómo, lo hacemos nosotros.</div>
+    </div>
+
+    <button class="opt" data-dom="comprar"><b>Quiero comprar uno</b><small>Te ayudamos a sacarlo a tu nombre, así es tuyo para siempre.</small></button>
+    <div class="extra" id="x-comprar">Los .com.ar se compran en <b>NIC Argentina</b> (nic.ar) a tu nombre y se pagan una vez por año. Mientras lo sacás, arrancás con la dirección gratis y después lo conectamos.</div>
+
+    <div class="row"><button class="btn go" id="n1" disabled>Siguiente</button></div>
+  </section>
+
+  <!-- Paso 2: plan -->
+  <section id="p2" hidden>
+    <h2>Elegí tu plan</h2>
+    <div id="plans"></div>
+    <p class="note">Sin costo de alta y sin permanencia: lo cancelás cuando quieras.</p>
+    <div class="row"><button class="btn back" data-back="1">Atrás</button><button class="btn go" id="n2" disabled>Siguiente</button></div>
+  </section>
+
+  <!-- Paso 3: resumen y pago -->
+  <section id="p3" hidden>
+    <h2>Revisá y pagá</h2>
+    <div class="sum" id="sum"></div>
+    <p class="note">El pago es con <b>Mercado Pago</b>: cargás la tarjeta una vez y se cobra solo cada mes. Podés cancelarlo cuando quieras.</p>
+    <div class="row"><button class="btn back" data-back="2">Atrás</button><button class="btn go" id="pay">Pagar con Mercado Pago</button></div>
+  </section>
+
+  <!-- Final -->
+  <section id="p4" hidden>
+    <div class="ok">
+      <div class="big">🎉</div>
+      <h2 id="ok-t">¡Listo!</h2>
+      <p id="ok-p"></p>
+    </div>
+    <a class="btn go" id="ig" href="https://ig.me/m/dmith_app">Abrir el chat de Instagram</a>
+  </section>
+</main>
+
+<script>
+// ===== Configuración (Diego): pegá acá los links de suscripción de Mercado Pago de cada plan =====
+const MP_LINKS = {
+  Vidriera: "",   // ej: https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=...
+  "Catálogo": "",
+  Negocio: "",
+};
+const IG = "https://ig.me/m/dmith_app";
+// ================================================================================================
+
+const plans = [
+  { n: "Vidriera", m: 25000, f: ["Web a medida con tu logo y fotos", "Pedidos y turnos por WhatsApp", "App con tu logo en el celular", "2 cambios por mes, los hacemos nosotros"] },
+  { n: "Catálogo", m: 40000, star: true, f: ["Todo lo de Vidriera", "Panel: cambiás precios, fotos y productos", "\"Sin stock\" en un toque"] },
+  { n: "Negocio", m: 60000, f: ["Todo lo de Catálogo", "Pedidos y turnos guardados en el panel", "Turnos reales y estadísticas"] },
+];
+const q = new URLSearchParams(location.search);
+const negocio = (q.get("n") || "").trim();
+const slug = (q.get("s") || negocio).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "tu-negocio";
+const fmt = n => "$" + n.toLocaleString("es-AR");
+const $ = id => document.getElementById(id);
+const st = { dom: null, plan: null };
+
+if (negocio) $("sub").textContent = "Web de " + negocio + " · tres pasos y queda online.";
+$("sub-addr").textContent = slug + ".dmith.app";
+
+function go(n) {
+  ["p1", "p2", "p3", "p4"].forEach((id, i) => $(id).hidden = i !== n - 1);
+  document.querySelectorAll(".steps span").forEach((s, i) => s.classList.toggle("on", i < Math.min(n, 3)));
+  scrollTo({ top: 0, behavior: "smooth" });
+}
+document.querySelectorAll("[data-back]").forEach(b => b.onclick = () => go(+b.dataset.back));
+
+// Paso 1
+function okDom() { return st.dom === "gratis" || st.dom === "comprar" || (st.dom === "propio" && /\.[a-z]{2,}/i.test($("dom").value.trim())); }
+document.querySelectorAll("[data-dom]").forEach(b => b.onclick = () => {
+  st.dom = b.dataset.dom;
+  document.querySelectorAll("[data-dom]").forEach(x => x.classList.toggle("sel", x === b));
+  ["gratis", "propio", "comprar"].forEach(k => $("x-" + k).classList.toggle("on", k === st.dom));
+  if (st.dom === "propio") $("dom").focus();
+  $("n1").disabled = !okDom();
+});
+$("dom").oninput = () => $("n1").disabled = !okDom();
+$("n1").onclick = () => go(2);
+
+// Paso 2
+$("plans").innerHTML = plans.map(p => `<button class="opt" data-plan="${p.n}"><span class="price">${fmt(p.m)} <small>/mes</small></span><b>${p.n}${p.star ? ' <span class="tag">El más elegido</span>' : ""}</b><ul>${p.f.map(x => `<li>${x}</li>`).join("")}</ul></button>`).join("");
+document.querySelectorAll("[data-plan]").forEach(b => b.onclick = () => {
+  st.plan = plans.find(p => p.n === b.dataset.plan);
+  document.querySelectorAll("[data-plan]").forEach(x => x.classList.toggle("sel", x === b));
+  $("n2").disabled = false;
+});
+$("n2").onclick = () => { resumen(); go(3); };
+
+// Paso 3
+function direccion() {
+  if (st.dom === "propio") return $("dom").value.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+  if (st.dom === "comprar") return slug + ".dmith.app (después pasamos a tu dominio)";
+  return slug + ".dmith.app";
+}
+function resumen() {
+  $("sum").innerHTML = [
+    ["Negocio", negocio || "—"],
+    ["Dirección", direccion()],
+    ["Plan", st.plan.n],
+    ["Total", fmt(st.plan.m) + " por mes"],
+  ].map(([a, b]) => `<div><span>${a}</span><strong>${b}</strong></div>`).join("");
+}
+function mensaje() {
+  return `Hola! Quiero activar mi web.\nNegocio: ${negocio || "-"}\nMuestra: ${slug}\nPlan: ${st.plan.n} (${fmt(st.plan.m)}/mes)\nDirección: ${direccion()}`;
+}
+$("pay").onclick = async () => {
+  const link = MP_LINKS[st.plan.n];
+  try { await navigator.clipboard.writeText(mensaje()); } catch (e) {}
+  if (link) {
+    $("ok-t").textContent = "¡Ya casi!";
+    $("ok-p").innerHTML = "Se abrió Mercado Pago en otra pestaña. Cuando termines el pago, mandanos el mensaje que te copiamos por Instagram y activamos tu web.";
+    go(4);
+    window.open(link, "_blank");
+  } else {
+    $("ok-t").textContent = "¡Genial, " + (negocio || "ya casi") + "!";
+    $("ok-p").innerHTML = "Te copiamos un mensaje con tu pedido. Pegalo en nuestro chat de Instagram y te mandamos el link de pago al toque.";
+    go(4);
+  }
+};
+</script>
+</body>
+</html>
