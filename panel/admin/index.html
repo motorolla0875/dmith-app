@@ -34,6 +34,7 @@
 <header><h1>Mis clientes · dmith Sitios</h1><div class="s" id="tot"></div></header>
 <main>
   <div class="card" id="login"><p>Clave (la línea ADMIN_KEY del archivo .env del servidor):</p><input id="k" type="password"> <button id="entrar">Entrar</button></div>
+  <div class="card" id="herr" hidden><button class="l" id="nueva-prueba">+ Crear cliente de prueba</button> <span class="s">Para probar mensajes y pedidos. No cobra nada.</span></div>
   <div class="card" id="hoy" hidden><h2>Para hacer hoy</h2><div id="pend"></div></div>
   <div id="lista"></div>
 </main>
@@ -62,7 +63,7 @@ async function cargar() {
     if (c.dominio_estado === "revisar") pend.push(`<div class="tarea"><span>🌐 <b>${esc(c.negocio)}:</b> conectar dominio ${esc(c.dominio)} en el servidor</span></div>`);
     if (c.admin_sin_leer) pend.push(`<div class="tarea"><span>💬 <b>${esc(c.negocio)}:</b> ${c.admin_sin_leer} mensaje(s) sin leer</span></div>`);
   });
-  $("hoy").hidden = false;
+  $("hoy").hidden = false; $("herr").hidden = false;
   $("pend").innerHTML = pend.join("") || '<p class="s">Nada pendiente. 🎉</p>';
 
   $("lista").innerHTML = l.map((c) => {
@@ -70,6 +71,7 @@ async function cargar() {
     return `<details class="card cli" data-id="${c.id}" ${abiertos.has(c.id) ? "open" : ""}>
     <summary><b>${esc(c.negocio)}</b><span class="t ${c.estado}">${c.estado === "authorized" ? "activo" : c.estado}</span>${c.admin_sin_leer ? `<span class="t n">${c.admin_sin_leer} nuevo</span>` : ""}${pt ? `<span class="t p">${pt} pendiente</span>` : ""}
       <div class="s">${c.plan || ""} · $${(c.monto || 0).toLocaleString("es-AR")}/mes · próximo cobro ${f(c.proximo_cobro)}</div></summary>
+    ${c.prueba ? `<div class="dom">🧪 Cliente de prueba · <a href="/panel/?t=${c.token}" target="_blank"><b>Abrir su panel (como lo ve el cliente)</b></a> · <button class="l" data-borrar="${c.id}">Borrar</button></div>` : ""}
     <div class="s"><a href="/${c.slug}/" target="_blank">dmith.app/${c.slug}</a> · ${esc(c.email || "")} · cliente desde ${f(c.alta)}</div>
     ${c.dominio ? `<div class="dom">🌐 Dominio: <b>${esc(c.dominio)}</b> · ${({ falta_conectar: "todavía no lo conectó", comprando: "lo está comprando", revisar: "⚠ avisó que lo conectó: hay que activarlo en el servidor", listo: "✅ conectado" })[c.dominio_estado] || c.dominio_estado}
       ${c.dominio_estado === "revisar" ? `<div style="margin-top:6px"><button class="l" data-dom="${c.id}">Ya lo activé</button></div>` : ""}</div>` : ""}
@@ -93,6 +95,8 @@ document.addEventListener("click", async (e) => {
     const ta = b.parentElement.querySelector("textarea"); if (!ta.value.trim()) return ta.focus();
     b.disabled = true; try { await post("/api/sitios/admin/mensaje", { id: b.dataset.resp, texto: ta.value }); } catch (er) {} cargar();
   }
+  if (b.dataset.borrar) { await post("/api/sitios/admin/borrar", { id: b.dataset.borrar }).catch(() => {}); cargar(); }
+  if (b.id === "nueva-prueba") { await post("/api/sitios/admin/prueba", {}).catch(() => {}); abiertos.clear(); await cargar(); const d = document.querySelector("details.cli"); if (d) { d.open = true; } }
   if (b.dataset.dom) { await post("/api/sitios/admin/dominio", { id: b.dataset.dom }).catch(() => {}); cargar(); }
 });
 document.addEventListener("toggle", (e) => {

@@ -94,7 +94,7 @@ const rutas = {
   "GET /api/sitios/panel": async (req, q) => {
     const d = load(); const c = d.clientes.find((x) => x.token === q.get("t"));
     if (!c) throw err(404, "Panel no encontrado");
-    if (Date.now() - (c.revisado || 0) > 10 * 60 * 1000) {
+    if (!c.prueba && Date.now() - (c.revisado || 0) > 10 * 60 * 1000) {
       try { aplicar(c, await mp(c.preapproval_id)); save(d); } catch (e) {}
     }
     const out = publico(c);
@@ -133,6 +133,19 @@ const rutas = {
     if (t.hecha) { c.mensajes = c.mensajes || []; c.mensajes.push({ de: "dmith", texto: "✅ Listo: " + t.texto, fecha: ahora() }); c.cliente_sin_leer = (c.cliente_sin_leer || 0) + 1; }
     save(d); return { ok: true };
   },
+  // Cliente de prueba (no pasa por Mercado Pago, no saca la franja de ninguna web)
+  "POST /api/sitios/admin/prueba": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load();
+    const prox = new Date(); prox.setMonth(prox.getMonth() + 1);
+    const c = { token: crypto.randomBytes(18).toString("hex"), preapproval_id: "prueba-" + crypto.randomBytes(4).toString("hex"), prueba: true,
+      slug: "navaja-sur", negocio: "Cliente de prueba", plan: "Vidriera", monto: 25000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: ahora(), dominio: "", dominio_estado: "" };
+    d.clientes.push(c); save(d); return { token: c.token };
+  },
+  "POST /api/sitios/admin/borrar": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id);
+    if (!c.prueba) throw err(400, "Solo se pueden borrar clientes de prueba");
+    d.clientes = d.clientes.filter((x) => x !== c); save(d); return { ok: true };
+  },
   "POST /api/sitios/admin/leido": async (req) => {
     const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id); c.admin_sin_leer = 0; save(d); return { ok: true };
   },
@@ -153,14 +166,14 @@ const rutas = {
 
   // ¿Esta web ya está pagada? (para sacar la franja de muestra)
   "GET /api/sitios/estado": async (req, q) => {
-    const c = load().clientes.find((x) => x.slug === q.get("slug") && x.estado === "authorized");
+    const c = load().clientes.find((x) => x.slug === q.get("slug") && x.estado === "authorized" && !x.prueba);
     return { activo: !!c };
   },
 
   // Lista para Diego (clave en .env: ADMIN_KEY)
   "GET /api/sitios/admin": async (req, q) => {
     esAdmin(q.get("k"));
-    return load().clientes.map((c) => ({ ...publico(c), id: c.preapproval_id, email: c.email || "", dominio_aviso: c.dominio_aviso || "", admin_sin_leer: c.admin_sin_leer || 0 })).reverse();
+    return load().clientes.map((c) => ({ ...publico(c), id: c.preapproval_id, prueba: !!c.prueba, token: c.prueba ? c.token : undefined, email: c.email || "", dominio_aviso: c.dominio_aviso || "", admin_sin_leer: c.admin_sin_leer || 0 })).reverse();
   },
 };
 
