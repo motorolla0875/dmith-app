@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Pago listo! · dmith Sitios</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #181B4A; color: #fff; font: 400 17px/1.55 "DM Sans", system-ui, sans-serif; padding: 24px; box-sizing: border-box; }
+  .card { max-width: 460px; width: 100%; background: #fff; color: #15172E; border-radius: 22px; padding: 30px 24px; text-align: center; }
+  .big { font-size: 60px; }
+  h1 { font: 800 28px/1.15 Unbounded, sans-serif; margin: 6px 0 10px; }
+  p { margin: 0 0 14px; color: #3B3D5C; }
+  pre { text-align: left; white-space: pre-wrap; background: #F6F5FB; border-radius: 12px; padding: 12px 14px; font: 500 14px/1.5 "DM Sans", sans-serif; margin: 0 0 16px; }
+  a.btn { display: block; background: #FFC23D; color: #15172E; text-decoration: none; font: 700 17px "DM Sans", sans-serif; padding: 15px; border-radius: 14px; }
+  small { display: block; margin-top: 12px; color: #6A6C8A; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="big">🎉</div>
+  <h1>¡Gracias! Tu suscripción quedó hecha</h1>
+  <p>En menos de 24 h activamos tu web y te avisamos por Instagram. Para ir más rápido, mandanos este mensaje:</p>
+  <pre id="msg">Hola! Ya pagué la suscripción de mi web.</pre>
+  <a class="btn" id="go" href="https://ig.me/m/dmith_app">Avisar por Instagram</a>
+  <small>Si tenés dominio propio, te pasamos los pasos para conectarlo.</small>
+</div>
+<script>
+  let m = "Hola! Ya pagué la suscripción de mi web.";
+  try { const p = localStorage.getItem("dm-pedido"); if (p) m = p.replace("Quiero activar mi web.", "Ya pagué la suscripción de mi web."); } catch (e) {}
+  document.getElementById("msg").textContent = m;
+  document.getElementById("go").onclick = () => { try { navigator.clipboard.writeText(m); } catch (e) {} };
+</script>
+</body>
+</html>

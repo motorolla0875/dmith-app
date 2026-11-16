@@ -115,9 +115,9 @@
 <script>
 // ===== Configuración (Diego): pegá acá los links de suscripción de Mercado Pago de cada plan =====
 const MP_LINKS = {
-  Vidriera: "",   // ej: https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=...
-  "Catálogo": "",
-  Negocio: "",
+  Vidriera: "https://mpago.la/1RAANtF",
+  "Catálogo": "https://mpago.la/279MSHR",
+  Negocio: "https://mpago.la/1gYzdji",
 };
 const IG = "https://ig.me/m/dmith_app";
 // ================================================================================================
@@ -186,10 +186,9 @@ $("pay").onclick = async () => {
   const link = MP_LINKS[st.plan.n];
   try { await navigator.clipboard.writeText(mensaje()); } catch (e) {}
   if (link) {
-    $("ok-t").textContent = "¡Ya casi!";
-    $("ok-p").innerHTML = "Se abrió Mercado Pago en otra pestaña. Cuando termines el pago, mandanos el mensaje que te copiamos por Instagram y activamos tu web.";
-    go(4);
-    window.open(link, "_blank");
+    try { localStorage.setItem("dm-pedido", mensaje()); } catch (e) {}
+    $("pay").textContent = "Abriendo Mercado Pago…"; $("pay").disabled = true;
+    location.href = link;
   } else {
     $("ok-t").textContent = "¡Genial, " + (negocio || "ya casi") + "!";
     $("ok-p").innerHTML = "Te copiamos un mensaje con tu pedido. Pegalo en nuestro chat de Instagram y te mandamos el link de pago al toque.";
