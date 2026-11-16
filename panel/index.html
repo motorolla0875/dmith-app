@@ -99,10 +99,12 @@
         <ol>
           <li>Entrá a <b>nic.ar</b> con tu clave fiscal.</li>
           <li>Andá a <b>Mis dominios</b>, elegí tu dominio y tocá <b>Delegar</b>.</li>
-          <li>Tocá el botón de abajo y <b>pedinos los servidores DNS</b>. Te los mandamos y los pegás ahí.</li>
+          <li>Escribí tu dominio abajo y tocá <b>Pedir los servidores DNS</b>. Te los mandamos por <b>Mensajes</b>, acá en tu panel, y los pegás ahí.</li>
           <li>Guardá. Puede tardar hasta 24–48 h en funcionar.</li>
         </ol>
-        <a class="btn light" id="pedir-dns" href="https://ig.me/m/dmith_app">Pedir los servidores DNS</a>
+        <input type="text" id="dns-dom" placeholder="Tu dominio, ej: minegocio.com.ar" inputmode="url" autocomplete="off">
+        <button class="btn light" id="pedir-dns">Pedir los servidores DNS</button>
+        <p class="note" id="dns-ok" hidden></p>
 
         <div class="sub" style="margin-top:22px">Si es .com u otro (GoDaddy, Hostinger, DonWeb…)</div>
         <ol>
@@ -226,7 +228,7 @@ function pintar(d) {
   $("chat").innerHTML = m.length ? m.map((x) => `<div class="b ${x.de === "cliente" ? "yo" : "el"}">${esc(x.texto)}<small>${hora(x.fecha)}</small></div>`).join("") : '<div class="vacio">Todavía no hay mensajes. Escribinos lo que necesites.</div>';
   $("chat").scrollTop = 1e9;
   contarNuevos();
-  $("pedir-dns").onclick = () => copiar("Hola! Soy " + d.negocio + ". Mi dominio es " + ($("dom").value.trim() || "...") + " (NIC.ar). Pásenme los servidores DNS.");
+  if (d.dominio && !$("dns-dom").value) $("dns-dom").value = d.dominio;
 }
 function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 const hora = (s) => new Date(s).toLocaleString("es-AR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
@@ -242,6 +244,16 @@ $("cambio-env").onclick = async () => {
     else pintar(await api("/api/sitios/cambio", { texto: t }));
     $("cambio-txt").value = "";
   } catch (e) { $("cambio-err").hidden = false; $("cambio-err").textContent = e.message; $("cambio-env").disabled = false; }
+};
+$("pedir-dns").onclick = async () => {
+  const dom = $("dns-dom").value.trim(); if (!dom) return $("dns-dom").focus();
+  const t = "🌐 Necesito los servidores DNS para conectar mi dominio " + dom + " (NIC.ar).";
+  const b = $("pedir-dns"); b.disabled = true; $("dns-ok").hidden = false; $("dns-ok").textContent = "Enviando…";
+  try {
+    if (DEMO) { datos.mensajes = [...(datos.mensajes || []), { de: "cliente", texto: t, fecha: new Date().toISOString() }]; pintar(datos); }
+    else pintar(await api("/api/sitios/mensaje", { texto: t }));
+    $("dns-ok").textContent = "✅ ¡Pedido! Te los mandamos por Mensajes, acá en tu panel.";
+  } catch (e) { $("dns-ok").textContent = e.message; b.disabled = false; }
 };
 $("msg-env").onclick = async () => {
   const t = $("msg-txt").value.trim(); if (!t) return $("msg-txt").focus();
