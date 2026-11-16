@@ -39,7 +39,16 @@ function aplicar(c, p) {
   if (p.payer_email) c.email = p.payer_email;
   c.revisado = Date.now();
 }
-const publico = (c) => ({ negocio: c.negocio, slug: c.slug, plan: c.plan, monto: c.monto, estado: c.estado, proximo_cobro: c.proximo_cobro, dominio: c.dominio || "", dominio_estado: c.dominio_estado || "", alta: c.alta });
+const MES = () => new Date().toISOString().slice(0, 7);
+const cambiosMes = (c) => (c.tareas || []).filter((t) => t.fecha.slice(0, 7) === MES()).length;
+const LIMITE = { Vidriera: 2 };
+const publico = (c) => ({ negocio: c.negocio, slug: c.slug, plan: c.plan, monto: c.monto, estado: c.estado, proximo_cobro: c.proximo_cobro, dominio: c.dominio || "", dominio_estado: c.dominio_estado || "", alta: c.alta,
+  tareas: (c.tareas || []).slice().reverse(), mensajes: c.mensajes || [], cambios_mes: cambiosMes(c), cambios_limite: LIMITE[c.plan] || null, sin_leer: c.cliente_sin_leer || 0 });
+const texto = (t) => { const s = String(t || "").trim().slice(0, 1500); if (!s) throw err(400, "Escribí algo"); return s; };
+const ahora = () => new Date().toISOString();
+const porToken = (d, t) => { const c = d.clientes.find((x) => x.token === t); if (!c) throw err(404, "Panel no encontrado"); return c; };
+const esAdmin = (k) => { const a = env().ADMIN_KEY; if (!a || k !== a) throw err(403, "Clave incorrecta"); };
+const porId = (d, id) => { const c = d.clientes.find((x) => x.preapproval_id === id); if (!c) throw err(404, "Cliente no encontrado"); return c; };
 const limpiarDominio = (d) => String(d || "").trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").slice(0, 100);
 
 function body(req) {
@@ -88,7 +97,47 @@ const rutas = {
     if (Date.now() - (c.revisado || 0) > 10 * 60 * 1000) {
       try { aplicar(c, await mp(c.preapproval_id)); save(d); } catch (e) {}
     }
+    const out = publico(c);
+    if (c.cliente_sin_leer) { c.cliente_sin_leer = 0; save(d); }
+    return out;
+  },
+
+  // El cliente pide un cambio: se convierte en una tarea para Diego
+  "POST /api/sitios/cambio": async (req) => {
+    const b = await body(req); const d = load(); const c = porToken(d, b.t);
+    const lim = LIMITE[c.plan];
+    if (lim && cambiosMes(c) >= lim) throw err(429, "Ya usaste los " + lim + " cambios de este mes. Se renuevan el mes que viene (o pasate al plan Catálogo).");
+    c.tareas = c.tareas || []; c.tareas.push({ id: crypto.randomBytes(6).toString("hex"), texto: texto(b.texto), fecha: ahora(), hecha: false });
+    c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; save(d);
     return publico(c);
+  },
+
+  // Chat cliente -> Diego
+  "POST /api/sitios/mensaje": async (req) => {
+    const b = await body(req); const d = load(); const c = porToken(d, b.t);
+    c.mensajes = c.mensajes || []; c.mensajes.push({ de: "cliente", texto: texto(b.texto), fecha: ahora() });
+    c.mensajes = c.mensajes.slice(-200); c.admin_sin_leer = (c.admin_sin_leer || 0) + 1; save(d);
+    return publico(c);
+  },
+
+  // Diego: responder, tildar tareas, marcar leído
+  "POST /api/sitios/admin/mensaje": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id);
+    c.mensajes = c.mensajes || []; c.mensajes.push({ de: "dmith", texto: texto(b.texto), fecha: ahora() });
+    c.cliente_sin_leer = (c.cliente_sin_leer || 0) + 1; c.admin_sin_leer = 0; save(d); return { ok: true };
+  },
+  "POST /api/sitios/admin/tarea": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id);
+    const t = (c.tareas || []).find((x) => x.id === b.tarea); if (!t) throw err(404, "Tarea no encontrada");
+    t.hecha = !!b.hecha; t.hecha_fecha = t.hecha ? ahora() : null;
+    if (t.hecha) { c.mensajes = c.mensajes || []; c.mensajes.push({ de: "dmith", texto: "✅ Listo: " + t.texto, fecha: ahora() }); c.cliente_sin_leer = (c.cliente_sin_leer || 0) + 1; }
+    save(d); return { ok: true };
+  },
+  "POST /api/sitios/admin/leido": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id); c.admin_sin_leer = 0; save(d); return { ok: true };
+  },
+  "POST /api/sitios/admin/dominio": async (req) => {
+    const b = await body(req); esAdmin(b.k); const d = load(); const c = porId(d, b.id); c.dominio_estado = "listo"; save(d); return { ok: true };
   },
 
   // El cliente avisa que ya conectó (o compró) su dominio
@@ -110,9 +159,8 @@ const rutas = {
 
   // Lista para Diego (clave en .env: ADMIN_KEY)
   "GET /api/sitios/admin": async (req, q) => {
-    const k = env().ADMIN_KEY;
-    if (!k || q.get("k") !== k) throw err(403, "Clave incorrecta");
-    return load().clientes.map((c) => ({ ...publico(c), email: c.email || "", dominio_aviso: c.dominio_aviso || "" })).reverse();
+    esAdmin(q.get("k"));
+    return load().clientes.map((c) => ({ ...publico(c), id: c.preapproval_id, email: c.email || "", dominio_aviso: c.dominio_aviso || "", admin_sin_leer: c.admin_sin_leer || 0 })).reverse();
   },
 };
 

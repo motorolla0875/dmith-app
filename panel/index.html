@@ -39,6 +39,21 @@
   .note { font-size: 14px; color: var(--mute); margin: 10px 0 0; }
   .sub { font-size: 15px; font-weight: 700; margin: 16px 0 6px; }
   .msg { padding: 40px 0; text-align: center; }
+  textarea { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; margin: 0 0 10px; resize: vertical; }
+  textarea:focus, input[type=text]:focus { outline: none; border-color: var(--blue); }
+  .tarea { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 15px; }
+  .tarea:first-child { margin-top: 14px; }
+  .tarea .e { flex: none; font-size: 13px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: #FFF1D1; color: #8A5A00; }
+  .tarea .e.ok { background: #DDF8EE; color: #0E7A58; }
+  .tarea small { display: block; color: var(--mute); font-size: 13px; }
+  #chat { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; margin: 0 0 12px; }
+  .b { max-width: 82%; padding: 9px 13px; border-radius: 16px; font-size: 15px; white-space: pre-wrap; word-wrap: break-word; }
+  .b small { display: block; font-size: 11px; opacity: .6; margin-top: 2px; }
+  .b.yo { align-self: flex-end; background: var(--blue); color: #fff; border-bottom-right-radius: 4px; }
+  .b.el { align-self: flex-start; background: var(--paper); border-bottom-left-radius: 4px; }
+  .vacio { color: var(--mute); font-size: 15px; text-align: center; padding: 10px; }
+  .send { display: flex; gap: 8px; align-items: flex-end; } .send textarea { margin: 0; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--coral); vertical-align: 3px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -116,10 +131,19 @@
       </div>
     </section>
 
-    <section class="card">
-      <h2>¿Necesitás un cambio?</h2>
-      <p class="note" style="margin:0 0 12px">Contanos qué querés cambiar (fotos, precios, horarios) y lo hacemos.</p>
-      <a class="btn" id="cambio" href="https://ig.me/m/dmith_app">Pedir un cambio</a>
+    <section class="card" id="sec-cambios">
+      <h2>Pedí un cambio</h2>
+      <p class="note" style="margin:0 0 10px">Contanos qué querés cambiar (fotos, precios, horarios) y lo hacemos. <span id="cupo"></span></p>
+      <textarea id="cambio-txt" rows="3" placeholder="Ej: cambiar la foto de portada por la que les mando, y el horario del sábado de 10 a 14"></textarea>
+      <button class="btn" id="cambio-env">Enviar pedido</button>
+      <p class="note" id="cambio-err" hidden></p>
+      <div id="tareas"></div>
+    </section>
+
+    <section class="card" id="sec-chat">
+      <h2>Mensajes <span class="dot" id="dot" hidden></span></h2>
+      <div id="chat"></div>
+      <div class="send"><textarea id="msg-txt" rows="2" placeholder="Escribinos lo que necesites…"></textarea><button class="btn" id="msg-env">Enviar</button></div>
     </section>
   </div>
 </main>
@@ -142,7 +166,10 @@ async function cargar() {
   if (DEMO) {
     const hoy = new Date(), prox = new Date(hoy); prox.setMonth(prox.getMonth() + 1);
     document.title = "Panel de ejemplo · dmith Sitios";
-    return pintar({ negocio: "Navaja Sur", slug: "navaja-sur", plan: "Catálogo", monto: 40000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: hoy.toISOString(), dominio: "navajasur.com.ar", dominio_estado: "falta_conectar" });
+    return pintar({ negocio: "Navaja Sur", slug: "navaja-sur", plan: "Catálogo", monto: 40000, estado: "authorized", proximo_cobro: prox.toISOString(), alta: hoy.toISOString(), dominio: "navajasur.com.ar", dominio_estado: "falta_conectar",
+      cambios_limite: null, cambios_mes: 1, sin_leer: 1,
+      tareas: [{ texto: "Agregar el corte con diseño a $9.000", fecha: hoy.toISOString(), hecha: true }],
+      mensajes: [{ de: "cliente", texto: "Hola! Quiero agregar el corte con diseño a $9.000", fecha: hoy.toISOString() }, { de: "dmith", texto: "✅ Listo: Agregar el corte con diseño a $9.000", fecha: hoy.toISOString() }] });
   }
   if (!token) return fallo('No encontramos tu panel en este celular.<br><br><a class="btn" href="' + IG + '">Pedir mi link por Instagram</a>');
   try {
@@ -173,10 +200,43 @@ function pintar(d) {
   }[d.dominio_estado] || "Tu web funciona en tu dirección de dmith.app. Si querés un dominio propio, seguí estos pasos.";
   $("dom-estado").innerHTML = de;
   if (d.dominio_estado === "comprando") tab("comprar");
-  const msg = (t) => IG + "?text=" + encodeURIComponent(t);
-  $("cambio").href = IG; $("cambio").onclick = () => copiar("Hola! Soy " + d.negocio + " (dmith.app/" + d.slug + "). Quiero este cambio: ");
+  // pedidos de cambio
+  const quedan = d.cambios_limite ? Math.max(0, d.cambios_limite - d.cambios_mes) : null;
+  $("cupo").textContent = quedan === null ? "" : "Te quedan " + quedan + " de " + d.cambios_limite + " cambios este mes.";
+  $("cambio-env").disabled = quedan === 0;
+  $("tareas").innerHTML = (d.tareas || []).map((t) => `<div class="tarea"><span class="e${t.hecha ? " ok" : ""}">${t.hecha ? "✅ Listo" : "⏳ Pendiente"}</span><div>${esc(t.texto)}<small>Pedido el ${fecha(t.fecha)}</small></div></div>`).join("");
+  // chat
+  const m = d.mensajes || [];
+  $("chat").innerHTML = m.length ? m.map((x) => `<div class="b ${x.de === "cliente" ? "yo" : "el"}">${esc(x.texto)}<small>${hora(x.fecha)}</small></div>`).join("") : '<div class="vacio">Todavía no hay mensajes. Escribinos lo que necesites.</div>';
+  $("chat").scrollTop = 1e9;
+  $("dot").hidden = !d.sin_leer;
   $("pedir-dns").onclick = () => copiar("Hola! Soy " + d.negocio + ". Mi dominio es " + ($("dom").value.trim() || "...") + " (NIC.ar). Pásenme los servidores DNS.");
 }
+function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+const hora = (s) => new Date(s).toLocaleString("es-AR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+async function api(ruta, datosEnv) {
+  const r = await fetch(ruta, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, ...datosEnv }) });
+  const j = await r.json(); if (!r.ok) throw new Error(j.error || "No se pudo enviar"); return j;
+}
+$("cambio-env").onclick = async () => {
+  const t = $("cambio-txt").value.trim(); if (!t) return $("cambio-txt").focus();
+  $("cambio-err").hidden = true; $("cambio-env").disabled = true;
+  try {
+    if (DEMO) { datos.tareas = [{ texto: t, fecha: new Date().toISOString(), hecha: false }, ...(datos.tareas || [])]; datos.cambios_mes++; pintar(datos); }
+    else pintar(await api("/api/sitios/cambio", { texto: t }));
+    $("cambio-txt").value = "";
+  } catch (e) { $("cambio-err").hidden = false; $("cambio-err").textContent = e.message; $("cambio-env").disabled = false; }
+};
+$("msg-env").onclick = async () => {
+  const t = $("msg-txt").value.trim(); if (!t) return $("msg-txt").focus();
+  $("msg-env").disabled = true;
+  try {
+    if (DEMO) { datos.mensajes = [...(datos.mensajes || []), { de: "cliente", texto: t, fecha: new Date().toISOString() }]; pintar(datos); }
+    else pintar(await api("/api/sitios/mensaje", { texto: t }));
+    $("msg-txt").value = "";
+  } catch (e) { $("chat").insertAdjacentHTML("beforeend", `<div class="vacio">${esc(e.message)}</div>`); }
+  $("msg-env").disabled = false;
+};
 function copiar(t) { try { navigator.clipboard.writeText(t); } catch (e) {} }
 
 function tab(t) {
