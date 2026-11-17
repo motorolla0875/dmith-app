@@ -127,11 +127,11 @@ Respondé SOLO con JSON: {"respuesta":"...","aprendio":["..."],"emocion":"feliz|
   for (const model of ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]) {
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST", headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
       body: JSON.stringify({ model, messages: msgs, temperature: 0.8, max_tokens: 400, response_format: { type: "json_object" } }) }).catch(() => null);
-    if (!r || !r.ok) continue;
+    if (!r || !r.ok) { console.log("mascota: Groq", model, r ? r.status + " " + (await r.text()).slice(0, 300) : "sin conexión"); continue; }
     try {
       const j = JSON.parse((await r.json()).choices[0].message.content);
       return { respuesta: txt(j.respuesta, 400) || "¿eh?", aprendio: (Array.isArray(j.aprendio) ? j.aprendio : []).map((x) => txt(x, 140)).filter(Boolean).slice(0, 3), emocion: txt(j.emocion, 12) || "feliz", duenio: txt(j.duenio, 30) };
-    } catch (e) { continue; }
+    } catch (e) { console.log("mascota: respuesta rara", e.message); continue; }
   }
   throw err(502, "La IA no respondió, probá de nuevo");
 }

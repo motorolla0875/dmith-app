@@ -337,8 +337,8 @@ async function enviar(texto) {
       mensaje: texto, nombre: M.nombre, duenio: M.duenio, etapa: antes.id, recuerdos: M.recuerdos.map((x) => x.t),
       historial: M.historial.slice(-9, -1), estado: { hambre: M.hambre, energia: M.energia, animo: M.animo },
     }) });
-    const j = await r.json();
-    if (!r.ok) throw new Error(j.error || "error");
+    const j = await r.json().catch(() => ({ error: "el servidor respondió " + r.status }));
+    if (!r.ok) throw new Error(j.error || "error " + r.status);
     M.historial.push({ t: j.respuesta, yo: true }); M.historial = M.historial.slice(-20);
     if (j.duenio && !M.duenio) M.duenio = j.duenio;
     M.animo = clamp(M.animo + 4);
@@ -353,6 +353,7 @@ async function enviar(texto) {
   } catch (e) {
     pensando = false; M.historial.pop();
     decir(/cansad/i.test(e.message) ? e.message : "¿eh? No te escuché bien… decímelo otra vez 🥺", "triste");
+    logMsg("⚠️ Error: " + (e.message || "sin conexión"), "ap");
   }
 }
 function crecio(et) {
