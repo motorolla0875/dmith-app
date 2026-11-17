@@ -124,9 +124,10 @@ Reglas:
 - Nunca decís que sos humano ni das consejos médicos o peligrosos.
 Respondé SOLO con JSON: {"respuesta":"...","aprendio":["..."],"emocion":"feliz|risa|triste|sorpresa|pensando|amor|sueno|hambre|enojo","duenio":"nombre del dueño si te lo acaba de decir, o vacío"}`;
   const msgs = [{ role: "system", content: sistema }, ...hist, { role: "user", content: txt(b.mensaje, 400) }];
-  for (const model of ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]) {
+  for (const model of ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "llama-3.3-70b-versatile", "llama-3.1-8b-instant"]) {
+    const oss = model.startsWith("openai/");
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST", headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
-      body: JSON.stringify({ model, messages: msgs, temperature: 0.8, max_tokens: 400, response_format: { type: "json_object" } }) }).catch(() => null);
+      body: JSON.stringify({ model, messages: msgs, temperature: 0.8, max_tokens: oss ? 2000 : 400, ...(oss ? { reasoning_effort: "low" } : {}), response_format: { type: "json_object" } }) }).catch(() => null);
     if (!r || !r.ok) { console.log("mascota: Groq", model, r ? r.status + " " + (await r.text()).slice(0, 300) : "sin conexión"); continue; }
     try {
       const j = JSON.parse((await r.json()).choices[0].message.content);
