@@ -1,0 +1,119 @@
+{
+  "sitio": "https://dmith.app",
+  "base": "/sitios/guias",
+  "marca": "dmith Sitios",
+  "marcaSub": "guías",
+  "autor": "dmith Sitios",
+  "icono": "/icon.png",
+  "datos": "/root/dmith-guias",
+  "web": "/var/www/dmith-app/sitios/guias",
+  "colores": {
+    "papel": "#F6F5FB",
+    "tinta": "#15172E",
+    "tinta2": "#6A6C8A",
+    "acento": "#3E9BFF",
+    "linea": "#E3E2EF",
+    "promo": "#181B4A",
+    "promoLink": "#FFC23D"
+  },
+  "fuente": "DM Sans",
+  "fuenteUrl": "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700&display=swap",
+  "promo": "<b>¿No tenés tiempo de hacerlo vos?</b> Te armamos la página web de tu negocio en 24 horas, con pedidos y turnos por WhatsApp, hosting incluido y app instalable en el celular. Desde $25.000 por mes, sin permanencia. <a href=\"/sitios/?ref=guias#muestra\">Pedí tu muestra gratis →</a>",
+  "portadaTitulo": "Guías de páginas web, Google y tecnología para negocios",
+  "portadaDesc": "Explicaciones simples para dueños de negocios en Argentina: cómo tener tu página web, registrar un dominio, aparecer en Google, vender online y usar la tecnología a tu favor.",
+  "contexto": "Es el blog de dmith Sitios, un servicio argentino que hace páginas web a medida para negocios chicos (comercios, gastronomía, peluquerías, profesionales, emprendedores). El lector es dueño de un negocio o emprendedor de Argentina, NO es programador: explicá todo simple, paso a paso, sin jerga técnica (y si usás un término técnico, explicalo en una frase). Usá ejemplos concretos de negocios argentinos y, si das precios, que sean en pesos argentinos con valores actuales y realistas, o mejor rangos aproximados aclarando que cambian. La guía tiene que servir de verdad aunque el lector lo haga solo. Podés mencionar al final, una sola vez y de forma natural, que si no tiene tiempo, dmith Sitios se lo arma. Datos REALES de dmith Sitios (no inventes otros): página web a medida lista en 24 horas, pedidos, turnos o reservas por WhatsApp, mapa, horarios e Instagram, hosting incluido, se instala como app en el celular con el logo del negocio (no está en Play Store), muestra gratis antes de pagar, sin permanencia, el dominio es del cliente. Planes: Vidriera $25.000/mes (2 cambios por mes los hace dmith), Catálogo $40.000/mes (panel para cambiar precios, fotos y productos desde el celular), Negocio $60.000/mes (pedidos y turnos guardados en el panel, estadísticas, correo con el nombre del negocio). NO des consejos de impuestos, AFIP/ARCA, leyes, préstamos, inversiones ni cripto. NO expliques cómo hackear, piratear ni nada ilegal.",
+  "excluir": "\\b(afip|arca|monotributo|impuesto|ley|prestamo|credito|inversion|cripto|bitcoin|hackear|hack|crack|pirata|gratis descargar|apk mod|trabajo desde casa|ganar dinero rapido|tesis|monografia|tp|resumen|pdf|wikipedia|que es la|historia de)\\b",
+  "grandes": [
+    "hostinger.",
+    "godaddy.",
+    "wix.",
+    "wordpress.",
+    "tiendanube.",
+    "nic.ar",
+    "donweb.",
+    "google.",
+    "hubspot.",
+    "shopify.",
+    "mercadopago.",
+    "gob.ar"
+  ],
+  "categorias": {
+    "tener-tu-pagina-web": {
+      "nombre": "Tener tu página web",
+      "desc": "Cuánto cuesta, qué tiene que tener y cómo hacer la página web de tu negocio.",
+      "semillas": [
+        "cuanto cuesta una pagina web",
+        "como hacer una pagina web para mi",
+        "que debe tener una pagina web de",
+        "pagina web para negocio",
+        "pagina web o instagram"
+      ]
+    },
+    "dominios-y-hosting": {
+      "nombre": "Dominios y hosting",
+      "desc": "Qué es un dominio, cómo registrar un .com.ar y qué hosting conviene.",
+      "semillas": [
+        "como registrar un dominio",
+        "dominio com ar",
+        "que es un hosting",
+        "como conectar un dominio",
+        "diferencia entre dominio y hosting"
+      ]
+    },
+    "aparecer-en-google": {
+      "nombre": "Aparecer en Google",
+      "desc": "Cómo hacer que tu negocio aparezca en Google y en Google Maps.",
+      "semillas": [
+        "como aparecer en google",
+        "como poner mi negocio en google maps",
+        "perfil de empresa en google",
+        "como aparecer primero en google",
+        "reseñas de google para mi"
+      ]
+    },
+    "vender-online": {
+      "nombre": "Vender online",
+      "desc": "Catálogo online, pedidos por WhatsApp, cobros y tienda en internet.",
+      "semillas": [
+        "como vender por internet",
+        "catalogo online para",
+        "como hacer pedidos por whatsapp",
+        "tienda online para",
+        "como cobrar con link de pago"
+      ]
+    },
+    "redes-y-whatsapp": {
+      "nombre": "Redes y WhatsApp",
+      "desc": "Instagram, WhatsApp Business y redes para atraer clientes.",
+      "semillas": [
+        "whatsapp business para",
+        "como usar instagram para mi negocio",
+        "como conseguir clientes por instagram",
+        "respuestas automaticas whatsapp",
+        "link de whatsapp para"
+      ]
+    },
+    "webs-por-rubro": {
+      "nombre": "Webs por rubro",
+      "desc": "Ideas de página web para cada tipo de negocio: gastronomía, belleza, comercios y profesionales.",
+      "semillas": [
+        "pagina web para restaurante",
+        "pagina web para peluqueria",
+        "pagina web para hamburgueseria",
+        "pagina web para estetica",
+        "pagina web para gimnasio"
+      ]
+    },
+    "tecnologia-para-tu-negocio": {
+      "nombre": "Tecnología para tu negocio",
+      "desc": "Apps, inteligencia artificial, códigos QR y herramientas que te ahorran tiempo.",
+      "semillas": [
+        "inteligencia artificial para mi negocio",
+        "como usar chatgpt para",
+        "menu qr para",
+        "apps para negocios",
+        "turnos online para"
+      ]
+    }
+  }
+}

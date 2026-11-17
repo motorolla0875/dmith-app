@@ -1,3 +1,4 @@
 *.apk
 voxelium-servidor/node_modules/
 *.log
+sitios/guias/
