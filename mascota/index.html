@@ -284,6 +284,12 @@ function pintar() {
 let vozOn = true; try { vozOn = localStorage.getItem("bebe-ia-voz") !== "0"; } catch (e) {}
 $("voz").textContent = vozOn ? "🔊" : "🔈";
 $("voz").onclick = () => { vozOn = !vozOn; $("voz").textContent = vozOn ? "🔊" : "🔈"; try { localStorage.setItem("bebe-ia-voz", vozOn ? "1" : "0"); } catch (e) {} if (!vozOn) speechSynthesis.cancel(); };
+let vozLista = false;
+function desbloquearVoz() {
+  if (vozLista || !("speechSynthesis" in window)) return;
+  try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); vozLista = true; } catch (e) {}
+}
+document.addEventListener("pointerdown", desbloquearVoz, { once: true });
 function hablar(t) {
   if (!vozOn || !("speechSynthesis" in window)) return;
   try {
@@ -417,15 +423,29 @@ $("reiniciar").onclick = () => {
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SR) {
   $("mic").hidden = false;
-  let rec = null;
+  let rec = null, dicho = "", corte = null;
   $("mic").onclick = () => {
+    desbloquearVoz();
     if (rec) { rec.stop(); return; }
-    rec = new SR(); rec.lang = "es-AR"; rec.interimResults = false;
-    $("mic").classList.add("oye");
-    rec.onresult = (e) => enviar(e.results[0][0].transcript);
-    rec.onend = () => { $("mic").classList.remove("oye"); rec = null; };
-    rec.onerror = () => {};
-    rec.start();
+    try { rec = new SR(); } catch (e) { aviso("Tu navegador no deja usar el micrófono acá. Escribile 🙂"); return; }
+    rec.lang = "es-AR"; rec.interimResults = true; rec.continuous = false; dicho = "";
+    $("mic").classList.add("oye"); $("txt").value = ""; $("txt").placeholder = "Te escucho… (tocá 🎤 para terminar)";
+    rec.onresult = (e) => {
+      dicho = Array.from(e.results).map((r) => r[0].transcript).join(" ").trim();
+      $("txt").value = dicho;
+      clearTimeout(corte); corte = setTimeout(() => rec && rec.stop(), 1800); // en iPhone a veces no corta solo
+    };
+    rec.onerror = (e) => {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") aviso("Tenés que darle permiso al micrófono 🎤");
+      else if (e.error === "no-speech") aviso("No escuché nada… probá de nuevo");
+    };
+    rec.onend = () => {
+      clearTimeout(corte); $("mic").classList.remove("oye"); rec = null; pintar();
+      const t = (dicho || $("txt").value).trim(); dicho = "";
+      if (t) { $("txt").value = ""; enviar(t); }
+    };
+    try { rec.start(); corte = setTimeout(() => rec && rec.stop(), 9000); }
+    catch (e) { $("mic").classList.remove("oye"); rec = null; aviso("No pude abrir el micrófono"); }
   };
 }
 
