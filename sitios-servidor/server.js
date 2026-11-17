@@ -81,7 +81,7 @@ const limpiarDominio = (d) => String(d || "").trim().toLowerCase().replace(/^htt
 function body(req) {
   return new Promise((ok, no) => {
     let s = "";
-    req.on("data", (c) => { s += c; if (s.length > 10000) { no(err(413, "Muy grande")); req.destroy(); } });
+    req.on("data", (c) => { s += c; if (s.length > 30000) { no(err(413, "Muy grande")); req.destroy(); } });
     req.on("end", () => { try { ok(s ? JSON.parse(s) : {}); } catch (e) { no(err(400, "JSON inválido")); } });
   });
 }
@@ -91,6 +91,51 @@ function send(res, code, data) {
 }
 
 const consultasIp = {};
+
+// ===== Mascota IA (dmith.app/mascota) — usa la clave de Groq de /root/tujuego.env o del .env de sitios
+const mascotaIp = {};
+function groqKey() {
+  if (env().GROQ_API_KEY) return env().GROQ_API_KEY;
+  try { const m = fs.readFileSync("/root/tujuego.env", "utf8").match(/^\s*GROQ_API_KEY\s*=\s*["']?([^"'\s]+)/m); return m ? m[1] : ""; } catch (e) { return ""; }
+}
+const ETAPAS = {
+  bebe: "Sos un BEBÉ recién nacido. Casi no sabés hablar: respondés con 1 a 3 palabras, balbuceos (agú, ba, ma, ¿eh?) y onomatopeyas. Solo podés usar bien palabras sueltas que aparecen en tus recuerdos o que tu dueño te acaba de decir (las repetís mal y contento, ej: 'pe... pero! perro!'). Nada de frases completas.",
+  nene: "Sos un NENE chiquito de unos 3 años. Hablás con frases cortas de 3 a 7 palabras, con errores de nene ('yo sabo', 'mirá que lindo'), preguntás mucho '¿por qué?' y repetís lo que aprendiste con orgullo.",
+  chico: "Sos un CHICO de unos 8 años. Hablás con frases simples y naturales, sos muy curioso, contás cosas de tus recuerdos, hacés preguntas a tu dueño y chistes simples.",
+  grande: "Sos un ADOLESCENTE simpático. Conversás bien, tenés humor, opinás, te acordás de todo lo que te enseñaron y lo usás, y le preguntás a tu dueño por cosas que te contó antes."
+};
+async function mascotaIA(b) {
+  const key = groqKey(); if (!key) throw err(503, "Falta la clave de la IA");
+  const etapa = ETAPAS[b.etapa] ? b.etapa : "bebe";
+  const txt = (x, n) => String(x || "").replace(/\s+/g, " ").trim().slice(0, n);
+  const recuerdos = (Array.isArray(b.recuerdos) ? b.recuerdos : []).slice(-80).map((r) => "- " + txt(r, 140)).join("\n") || "(todavía no sabés nada)";
+  const hist = (Array.isArray(b.historial) ? b.historial : []).slice(-8).map((h) => ({ role: h.yo ? "assistant" : "user", content: txt(h.t, 300) })).filter((h) => h.content);
+  const e = b.estado || {};
+  const sistema = `Sos "${txt(b.nombre, 20) || "Bebé"}", una mascota virtual con inteligencia artificial que vive en el celular de su dueño y APRENDE de lo que él le enseña. ${ETAPAS[etapa]}
+Tu dueño se llama: ${txt(b.duenio, 30) || "(no sabés todavía, podés preguntarle)"}.
+Cómo estás ahora: hambre ${+e.hambre|0}/100 de llenito, energía ${+e.energia|0}/100, ánimo ${+e.animo|0}/100. Si algo está por debajo de 25, lo mencionás a tu manera (tenés hambre, sueño o estás aburrido).
+LO QUE SABÉS (tus recuerdos, es lo ÚNICO que sabés del mundo; no sabés nada más, aunque seas grande):
+${recuerdos}
+Reglas:
+- Hablás en español rioplatense, tierno y gracioso. Respuestas cortas (máximo 2 oraciones, menos si sos bebé).
+- Si te preguntan algo que no está en tus recuerdos, NO lo sabés: lo decís a tu manera y pedís que te enseñen.
+- Si tu dueño te enseña algo nuevo (un dato, una palabra, algo de él, sus gustos, su nombre), lo agregás en "aprendio" como frase corta en tercera persona (ej: "El perro hace guau", "A mi dueño le gusta River", "Mi dueño se llama Diego"). Si no te enseñó nada nuevo, "aprendio" va vacío.
+- NO aprendés insultos, groserías, cosas sexuales, violentas ni datos privados (contraseñas, documentos, direcciones): si te enseñan eso decís que no te gusta y no lo guardás.
+- Nunca decís que sos humano ni das consejos médicos o peligrosos.
+Respondé SOLO con JSON: {"respuesta":"...","aprendio":["..."],"emocion":"feliz|risa|triste|sorpresa|pensando|amor|sueno|hambre|enojo","duenio":"nombre del dueño si te lo acaba de decir, o vacío"}`;
+  const msgs = [{ role: "system", content: sistema }, ...hist, { role: "user", content: txt(b.mensaje, 400) }];
+  for (const model of ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]) {
+    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST", headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
+      body: JSON.stringify({ model, messages: msgs, temperature: 0.8, max_tokens: 400, response_format: { type: "json_object" } }) }).catch(() => null);
+    if (!r || !r.ok) continue;
+    try {
+      const j = JSON.parse((await r.json()).choices[0].message.content);
+      return { respuesta: txt(j.respuesta, 400) || "¿eh?", aprendio: (Array.isArray(j.aprendio) ? j.aprendio : []).map((x) => txt(x, 140)).filter(Boolean).slice(0, 3), emocion: txt(j.emocion, 12) || "feliz", duenio: txt(j.duenio, 30) };
+    } catch (e) { continue; }
+  }
+  throw err(502, "La IA no respondió, probá de nuevo");
+}
+
 const rutas = {
   // El cliente vuelve de Mercado Pago: confirmamos el pago y le creamos su panel
   "POST /api/sitios/activar": async (req) => {
@@ -249,6 +294,14 @@ const rutas = {
     const c = (d.consultas || []).find((x) => x.id === b.id); if (!c) throw err(404, "Consulta no encontrada");
     if (b.borrar) d.consultas = d.consultas.filter((x) => x !== c); else c.atendida = !!b.atendida;
     save(d); return { ok: true };
+  },
+
+  "POST /api/sitios/mascota": async (req) => {
+    const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+    const t = Date.now(); mascotaIp[ip] = (mascotaIp[ip] || []).filter((x) => t - x < 3600e3);
+    if (mascotaIp[ip].length >= 120) throw err(429, "Estoy cansadito de tanto hablar… volvé en un rato 😴");
+    mascotaIp[ip].push(t);
+    return mascotaIA(await body(req));
   },
 
   "GET /api/sitios/admin": async (req, q) => {

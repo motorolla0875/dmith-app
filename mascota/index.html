@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut, user-scalable=no">
+<title>Bebé IA — criá una mascota que aprende de vos</title>
+<meta name="description" content="Una mascota con inteligencia artificial que nace sin saber nada. Vos le enseñás palabras, cosas y quién sos, y va creciendo: bebé, nene, chico y grande.">
+<meta name="theme-color" content="#FFE7D6">
+<link rel="icon" href="/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg1:#FFE7D6; --bg2:#FFD1E3; --ink:#3B2A4A; --mute:#8A7A96; --card:#ffffffcc; --c:#7FD4C1; --c2:#5BBFA9; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body { font-family: "Fredoka", system-ui, sans-serif; color: var(--ink); background: linear-gradient(170deg, var(--bg1), var(--bg2)); transition: background .8s; overflow: hidden; }
+  body.noche { --bg1:#2B2650; --bg2:#4A3A7A; --ink:#F4EEFF; --mute:#B9AEDB; --card:#ffffff22; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  .app { max-width: 480px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; padding: max(12px, env(safe-area-inset-top)) 14px max(12px, env(safe-area-inset-bottom)); }
+
+  /* arriba */
+  .top { display: flex; align-items: center; gap: 10px; }
+  .top h1 { font-size: 24px; margin: 0; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chip { background: var(--card); border-radius: 999px; padding: 5px 12px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .ico { width: 40px; height: 40px; border-radius: 50%; background: var(--card); font-size: 19px; display: grid; place-items: center; flex: none; }
+  .barras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .barra { background: var(--card); border-radius: 14px; padding: 6px 9px; font-size: 13px; }
+  .barra b { font-weight: 600; }
+  .barra i { display: block; height: 7px; border-radius: 9px; background: #0001; margin-top: 4px; overflow: hidden; }
+  .barra i span { display: block; height: 100%; border-radius: 9px; background: #5BBF7A; transition: width .6s, background .6s; }
+  .crece { margin-top: 8px; font-size: 13px; color: var(--mute); display: flex; align-items: center; gap: 8px; }
+  .crece i { flex: 1; height: 8px; border-radius: 9px; background: #0001; overflow: hidden; }
+  .crece i span { display: block; height: 100%; background: linear-gradient(90deg, #FFB74D, #FF6F91); border-radius: 9px; transition: width .8s; }
+
+  /* escena */
+  .escena { flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .globo { position: relative; background: #fff; color: #3B2A4A; border-radius: 22px; padding: 12px 16px; font-size: 18px; line-height: 1.3; max-width: 92%; box-shadow: 0 6px 20px #0001; margin-bottom: 8px; text-align: center; min-height: 48px; opacity: 0; transform: translateY(6px) scale(.97); transition: .25s; }
+  .globo.ver { opacity: 1; transform: none; }
+  .globo::after { content: ""; position: absolute; bottom: -9px; left: 50%; margin-left: -9px; border: 9px solid transparent; border-top-color: #fff; border-bottom: 0; }
+  .puntos span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #C9B8D6; margin: 0 2px; animation: pt 1s infinite; }
+  .puntos span:nth-child(2) { animation-delay: .15s } .puntos span:nth-child(3) { animation-delay: .3s }
+  @keyframes pt { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+  .bicho { width: min(240px, 60vw); height: min(240px, 60vw); position: relative; transition: transform .8s cubic-bezier(.3,1.6,.5,1); }
+  .bicho svg { width: 100%; height: 100%; overflow: visible; animation: flota 3.2s ease-in-out infinite; }
+  @keyframes flota { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+  .bicho.salta svg { animation: salta .5s ease 2; }
+  @keyframes salta { 0%,100% { transform: translateY(0) scale(1) } 30% { transform: translateY(4px) scale(1.06,.94) } 60% { transform: translateY(-26px) scale(.96,1.05) } }
+  .bicho.dormido svg { animation: respira 2.6s ease-in-out infinite; }
+  @keyframes respira { 0%,100% { transform: scale(1) } 50% { transform: scale(1.03,.97) } }
+  .ojo { transform-box: fill-box; transform-origin: center; animation: parpadeo 4.5s infinite; }
+  @keyframes parpadeo { 0%,92%,100% { transform: scaleY(1) } 95% { transform: scaleY(.1) } }
+  .sombra { width: 46%; height: 14px; border-radius: 50%; background: #0000001a; margin-top: -10px; }
+  .zzz { position: absolute; right: 8%; top: 4%; font-size: 26px; font-weight: 700; color: var(--mute); animation: zz 2s infinite; display: none; }
+  .bicho.dormido .zzz { display: block; }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0,10px) } 50% { opacity: 1 } 100% { opacity: 0; transform: translate(14px,-22px) } }
+  .vuela { position: fixed; font-size: 40px; z-index: 30; pointer-events: none; transition: transform .7s cubic-bezier(.4,0,.6,1), opacity .3s .6s; }
+  .chispa { position: absolute; pointer-events: none; font-size: 20px; animation: ch 1.2s ease-out forwards; }
+  @keyframes ch { from { opacity: 1; transform: translate(0,0) scale(.6) } to { opacity: 0; transform: translate(var(--x), var(--y)) scale(1.2) } }
+
+  /* charla */
+  .log { max-height: 26vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 8px 2px; margin-top: 6px; scrollbar-width: none; }
+  .log::-webkit-scrollbar { display: none; }
+  .m { max-width: 82%; padding: 7px 12px; border-radius: 16px; font-size: 15px; line-height: 1.3; }
+  .m.yo { align-self: flex-end; background: #6C5CE7; color: #fff; border-bottom-right-radius: 5px; }
+  .m.el { align-self: flex-start; background: var(--card); border-bottom-left-radius: 5px; }
+  .m.ap { align-self: center; background: #FFF3C4; color: #7A5A00; font-size: 13px; border-radius: 12px; }
+  .acciones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+  .acciones button { background: var(--card); border-radius: 16px; padding: 8px 0 6px; font-size: 13px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 1px; transition: transform .1s; }
+  .acciones button span { font-size: 24px; }
+  .acciones button:active, .enviar:active { transform: scale(.93); }
+  .acciones button:disabled { opacity: .45; }
+  form.charla { display: flex; gap: 8px; margin-top: 8px; }
+  form.charla input { flex: 1; min-width: 0; font: inherit; font-size: 17px; border: 0; border-radius: 999px; padding: 12px 16px; background: #fff; color: #3B2A4A; outline: none; box-shadow: 0 2px 10px #0000000d; }
+  .enviar { width: 48px; height: 48px; border-radius: 50%; background: #6C5CE7; color: #fff; font-size: 20px; flex: none; display: grid; place-items: center; transition: transform .1s; }
+  .enviar.mic { background: #fff; color: #6C5CE7; }
+  .enviar.mic.oye { background: #FF6F91; color: #fff; animation: pt 1s infinite; }
+
+  /* capas */
+  .capa { position: fixed; inset: 0; background: #2B2650aa; backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 20; padding: 18px; }
+  .capa.ver { display: flex; }
+  .caja { background: #fff; color: #3B2A4A; border-radius: 26px; padding: 22px; width: 100%; max-width: 420px; max-height: 86vh; overflow-y: auto; text-align: center; }
+  .caja h2 { margin: 0 0 6px; font-size: 26px; }
+  .caja p { margin: 6px 0; color: #8A7A96; }
+  .caja input { width: 100%; font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 14px; border: 2px solid #EEE6F5; margin-top: 10px; text-align: center; outline: none; }
+  .caja input:focus { border-color: #6C5CE7; }
+  .colores { display: flex; gap: 10px; justify-content: center; margin: 14px 0 4px; }
+  .colores button { width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #EEE6F5; }
+  .colores button.si { box-shadow: 0 0 0 3px #6C5CE7; }
+  .btn { display: block; width: 100%; margin-top: 16px; padding: 14px; border-radius: 16px; background: #6C5CE7; color: #fff; font-size: 18px; font-weight: 600; }
+  .btn.suave { background: #F3EEF8; color: #6C5CE7; }
+  .btn.peligro { background: #FFE3E8; color: #D2335B; }
+  .huevo { font-size: 90px; margin: 10px 0; display: inline-block; cursor: pointer; transition: transform .15s; user-select: none; }
+  .huevo.tiembla { animation: tiembla .35s; }
+  @keyframes tiembla { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-14deg) } 75% { transform: rotate(14deg) } }
+  .sabe { text-align: left; margin-top: 12px; display: grid; gap: 6px; }
+  .sabe div { background: #F7F3FB; border-radius: 12px; padding: 8px 10px 8px 12px; display: flex; gap: 8px; align-items: center; font-size: 15px; }
+  .sabe div span { flex: 1; }
+  .sabe button { color: #B9AEC8; font-size: 18px; padding: 0 4px; }
+  .fiesta h2 { font-size: 30px; }
+  .fiesta .grande { font-size: 70px; }
+  .aviso { position: fixed; left: 50%; top: 16px; transform: translate(-50%, -80px); background: #3B2A4A; color: #fff; padding: 10px 16px; border-radius: 14px; font-size: 15px; z-index: 40; transition: transform .35s; max-width: 90%; text-align: center; }
+  .aviso.ver { transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <h1 id="nombre">Bebé</h1>
+    <span class="chip" id="etapa">👶 Bebé</span>
+    <button class="ico" id="voz" title="Voz">🔊</button>
+  </div>
+  <div class="barras">
+    <div class="barra"><b>🍼 Panza</b><i><span id="b-hambre"></span></i></div>
+    <div class="barra"><b>⚡ Energía</b><i><span id="b-energia"></span></i></div>
+    <div class="barra"><b>😊 Ánimo</b><i><span id="b-animo"></span></i></div>
+  </div>
+  <div class="crece"><span id="crece-txt">Sabe 0 cosas</span><i><span id="b-crece"></span></i><span id="crece-sig">🧒</span></div>
+
+  <div class="escena" id="escena">
+    <div class="globo" id="globo"></div>
+    <div class="bicho" id="bicho"><div class="zzz">z z</div><svg id="svg" viewBox="0 0 200 200"></svg></div>
+    <div class="sombra"></div>
+  </div>
+
+  <div class="log" id="log"></div>
+  <div class="acciones">
+    <button id="a-comer"><span>🍼</span>Comer</button>
+    <button id="a-dormir"><span>😴</span>Dormir</button>
+    <button id="a-jugar"><span>🎾</span>Jugar</button>
+    <button id="a-sabe"><span>🧠</span>Lo que sabe</button>
+  </div>
+  <form class="charla" id="form" autocomplete="off">
+    <input id="txt" maxlength="300" placeholder="Hablale o enseñale algo…">
+    <button class="enviar mic" type="button" id="mic" title="Hablar" hidden>🎤</button>
+    <button class="enviar" type="submit" title="Enviar">➤</button>
+  </form>
+</div>
+
+<!-- Nacimiento -->
+<div class="capa" id="c-nace">
+  <div class="caja" id="nace1">
+    <h2>¡Tenés un huevo!</h2>
+    <p>Adentro hay un bebé con inteligencia artificial que <b>no sabe nada</b>. Todo lo que aprenda se lo vas a enseñar vos.</p>
+    <div class="huevo" id="huevo">🥚</div>
+    <p id="huevo-txt">Tocalo para que nazca</p>
+  </div>
+  <div class="caja" id="nace2" hidden>
+    <h2>¡Nació! 🎉</h2>
+    <p>¿Cómo se va a llamar?</p>
+    <input id="n-nombre" maxlength="16" placeholder="Nombre del bebé">
+    <div class="colores" id="colores"></div>
+    <input id="n-duenio" maxlength="24" placeholder="¿Y vos cómo te llamás? (opcional)">
+    <button class="btn" id="n-listo">Empezar a criarlo</button>
+  </div>
+</div>
+
+<!-- Lo que sabe -->
+<div class="capa" id="c-sabe">
+  <div class="caja">
+    <h2>🧠 Lo que sabe</h2>
+    <p id="sabe-txt"></p>
+    <div class="sabe" id="sabe"></div>
+    <button class="btn suave" id="sabe-cerrar">Cerrar</button>
+    <button class="btn peligro" id="reiniciar">Empezar con otro huevo</button>
+  </div>
+</div>
+
+<!-- Creció -->
+<div class="capa" id="c-fiesta">
+  <div class="caja fiesta">
+    <div class="grande" id="f-emoji">🧒</div>
+    <h2 id="f-tit">¡Creció!</h2>
+    <p id="f-txt"></p>
+    <button class="btn" id="f-ok">¡Vamos!</button>
+  </div>
+</div>
+
+<div class="aviso" id="aviso"></div>
+
+<script>
+// ===================== Datos =====================
+const API = "/api/sitios/mascota";
+const COLORES = ["#7FD4C1", "#FFB4A2", "#B9A6FF", "#FFD36E", "#8CC8FF", "#FF9EC7"];
+const ETAPAS = [
+  { id: "bebe",   min: 0,  nom: "Bebé",  emo: "👶", esc: .66, tono: 1.9 },
+  { id: "nene",   min: 8,  nom: "Nene",  emo: "🧒", esc: .78, tono: 1.65 },
+  { id: "chico",  min: 25, nom: "Chico", emo: "🧑", esc: .9,  tono: 1.4 },
+  { id: "grande", min: 60, nom: "Grande", emo: "😎", esc: 1,  tono: 1.15 },
+];
+const CLAVE = "bebe-ia-v1";
+let M = null;
+const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(M)); } catch (e) {} };
+try { M = JSON.parse(localStorage.getItem(CLAVE)); } catch (e) {}
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v) => Math.max(0, Math.min(100, v));
+const etapaDe = (n) => ETAPAS.filter((e) => n >= e.min).pop();
+const etapa = () => etapaDe(M.recuerdos.length);
+
+// ===================== Necesidades (bajan con el tiempo real) =====================
+function pasarTiempo() {
+  const ahora = Date.now(), h = Math.min(48, (ahora - (M.t || ahora)) / 3600e3);
+  M.hambre = clamp(M.hambre - 7 * h);
+  M.energia = clamp(M.energia - (M.durmiendo ? -40 : 4) * h);
+  M.animo = clamp(M.animo - 6 * h);
+  M.t = ahora;
+}
+
+// ===================== Dibujo =====================
+let emocion = "feliz", emoHasta = 0;
+function animoBase() {
+  if (M.durmiendo) return "sueno";
+  if (M.hambre < 25) return "hambre";
+  if (M.energia < 20) return "sueno";
+  if (M.animo < 25) return "triste";
+  return "feliz";
+}
+function oscurecer(hex, f) {
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return `rgb(${r * f | 0},${g * f | 0},${b * f | 0})`;
+}
+function dibujar() {
+  const e = M.durmiendo ? "sueno" : Date.now() < emoHasta ? emocion : animoBase();
+  const c = M.color, cs = oscurecer(c, .82), et = etapa().id;
+  const ojosCerrados = e === "sueno" || e === "risa";
+  let ojos;
+  if (e === "amor") ojos = [70, 130].map((x) => `<path d="M${x} 104 c-9 -9 -18 2 -9 10 l9 8 l9 -8 c9 -8 0 -19 -9 -10z" fill="#FF5C8A"/>`).join("");
+  else if (ojosCerrados) ojos = [70, 130].map((x) => e === "risa" ? `<path d="M${x - 10} 104 q10 -10 20 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>` : `<path d="M${x - 10} 102 q10 9 20 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("");
+  else {
+    const ry = e === "sorpresa" ? 15 : 13, py = e === "pensando" ? -5 : 0, px = e === "pensando" ? 4 : 0;
+    ojos = [70, 130].map((x) => `<g class="ojo"><ellipse cx="${x}" cy="102" rx="11" ry="${ry}" fill="#3B2A4A"/><circle cx="${x + 3 + px}" cy="${97 + py}" r="4" fill="#fff"/><circle cx="${x - 4 + px}" cy="${107 + py}" r="1.8" fill="#fff"/></g>`).join("");
+  }
+  const cejas = e === "enojo" ? `<path d="M58 84 l22 8 M142 84 l-22 8" stroke="#3B2A4A" stroke-width="5" stroke-linecap="round"/>` :
+    e === "triste" ? `<path d="M60 90 l18 -6 M140 90 l-18 -6" stroke="#3B2A4A" stroke-width="4" stroke-linecap="round"/>` : "";
+  const bocas = {
+    feliz: `<path d="M88 124 q12 12 24 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    amor: `<path d="M88 124 q12 12 24 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    risa: `<path d="M84 120 q16 26 32 0 z" fill="#3B2A4A"/><path d="M92 131 q8 6 16 0 q-8 -4 -16 0z" fill="#FF7A8A"/>`,
+    triste: `<path d="M89 132 q11 -10 22 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    sorpresa: `<ellipse cx="100" cy="128" rx="7" ry="9" fill="#3B2A4A"/>`,
+    pensando: `<path d="M92 128 l16 -3" stroke="#3B2A4A" stroke-width="5" stroke-linecap="round"/>`,
+    sueno: `<ellipse cx="100" cy="128" rx="5" ry="4" fill="#3B2A4A"/>`,
+    hambre: `<path d="M86 120 q14 24 28 0 z" fill="#3B2A4A"/><ellipse cx="100" cy="131" rx="7" ry="4" fill="#FF7A8A"/>`,
+    enojo: `<path d="M89 130 q11 -7 22 0" stroke="#3B2A4A" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+  };
+  const extra = {
+    bebe: `<path d="M100 38 q-14 -18 4 -24 q-10 10 2 14" stroke="${cs}" stroke-width="5" fill="none" stroke-linecap="round"/>` + (e === "feliz" || e === "sueno" ? `<circle cx="100" cy="130" r="9" fill="#9FD7FF" stroke="#6CB8F0" stroke-width="3"/><circle cx="100" cy="130" r="3" fill="#fff"/>` : ""),
+    nene: `<path d="M86 40 q-6 -20 6 -22 M100 37 q0 -22 10 -22 M114 40 q8 -18 16 -14" stroke="${cs}" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    chico: `<path d="M48 70 q52 -52 104 0 z" fill="#FF6F61"/><path d="M140 66 q26 -2 32 10 q-18 4 -36 -2z" fill="#E85A4F"/><circle cx="100" cy="36" r="5" fill="#E85A4F"/>`,
+    grande: `<path d="M40 100 q0 -70 60 -70 q60 0 60 70" stroke="#3B2A4A" stroke-width="7" fill="none"/><rect x="28" y="92" width="18" height="30" rx="8" fill="#6C5CE7"/><rect x="154" y="92" width="18" height="30" rx="8" fill="#6C5CE7"/>`,
+  };
+  $("svg").innerHTML = `
+    <ellipse cx="62" cy="168" rx="18" ry="11" fill="${cs}"/><ellipse cx="138" cy="168" rx="18" ry="11" fill="${cs}"/>
+    <path d="M100 30 C160 30 178 80 176 118 C174 160 142 176 100 176 C58 176 26 160 24 118 C22 80 40 30 100 30Z" fill="${c}"/>
+    <ellipse cx="100" cy="140" rx="46" ry="30" fill="#ffffff55"/>
+    <ellipse cx="34" cy="124" rx="10" ry="16" fill="${cs}" transform="rotate(20 34 124)"/><ellipse cx="166" cy="124" rx="10" ry="16" fill="${cs}" transform="rotate(-20 166 124)"/>
+    ${extra[et]}
+    <ellipse cx="54" cy="122" rx="11" ry="7" fill="#FF8FA3" opacity=".55"/><ellipse cx="146" cy="122" rx="11" ry="7" fill="#FF8FA3" opacity=".55"/>
+    ${cejas}${ojos}${bocas[e] || bocas.feliz}`;
+  $("bicho").style.transform = `scale(${etapa().esc})`;
+  $("bicho").classList.toggle("dormido", !!M.durmiendo);
+  document.body.classList.toggle("noche", !!M.durmiendo);
+}
+function pintar() {
+  pasarTiempo();
+  const et = etapa(), n = M.recuerdos.length, sig = ETAPAS[ETAPAS.indexOf(et) + 1];
+  $("nombre").textContent = M.nombre;
+  $("etapa").textContent = `${et.emo} ${et.nom}`;
+  for (const k of ["hambre", "energia", "animo"]) {
+    const v = M[k], s = $("b-" + k);
+    s.style.width = v + "%"; s.style.background = v < 25 ? "#FF6F61" : v < 50 ? "#FFB74D" : "#5BBF7A";
+  }
+  $("crece-txt").textContent = `Sabe ${n} ${n === 1 ? "cosa" : "cosas"}`;
+  $("b-crece").style.width = sig ? ((n - et.min) / (sig.min - et.min) * 100) + "%" : "100%";
+  $("crece-sig").textContent = sig ? sig.emo : "⭐";
+  $("crece-sig").title = sig ? `A las ${sig.min} cosas pasa a ${sig.nom}` : "Ya es grande";
+  for (const id of ["a-comer", "a-jugar"]) $(id).disabled = !!M.durmiendo;
+  $("a-dormir").innerHTML = M.durmiendo ? "<span>☀️</span>Despertar" : "<span>😴</span>Dormir";
+  $("txt").placeholder = M.durmiendo ? `${M.nombre} está durmiendo… shhh` : n === 0 ? "Enseñale su primera palabra…" : "Hablale o enseñale algo…";
+  dibujar(); guardar();
+}
+
+// ===================== Globo, charla y voz =====================
+let vozOn = true; try { vozOn = localStorage.getItem("bebe-ia-voz") !== "0"; } catch (e) {}
+$("voz").textContent = vozOn ? "🔊" : "🔈";
+$("voz").onclick = () => { vozOn = !vozOn; $("voz").textContent = vozOn ? "🔊" : "🔈"; try { localStorage.setItem("bebe-ia-voz", vozOn ? "1" : "0"); } catch (e) {} if (!vozOn) speechSynthesis.cancel(); };
+function hablar(t) {
+  if (!vozOn || !("speechSynthesis" in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ""));
+    const vs = speechSynthesis.getVoices(), v = vs.find((x) => /es[-_](AR|419|US|MX)/i.test(x.lang)) || vs.find((x) => /^es/i.test(x.lang));
+    if (v) u.voice = v; u.lang = v ? v.lang : "es-AR"; u.pitch = Math.min(2, etapa().tono); u.rate = 1.05;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+let globoT;
+function globo(html, segs = 7) {
+  const g = $("globo"); g.innerHTML = html; g.classList.add("ver");
+  clearTimeout(globoT); if (segs) globoT = setTimeout(() => g.classList.remove("ver"), segs * 1000);
+}
+function decir(t, emo) {
+  if (emo) { emocion = emo; emoHasta = Date.now() + 4500; }
+  const d = document.createElement("div"); d.textContent = t;
+  globo(d.innerHTML, Math.max(5, t.length / 9)); hablar(t); dibujar();
+}
+function logMsg(t, cls) {
+  const d = document.createElement("div"); d.className = "m " + cls; d.textContent = t;
+  $("log").appendChild(d); $("log").scrollTop = 1e6;
+  while ($("log").children.length > 40) $("log").firstChild.remove();
+}
+let avisoT;
+function aviso(t) { const a = $("aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(avisoT); avisoT = setTimeout(() => a.classList.remove("ver"), 2600); }
+function chispas(emoji, n = 8) {
+  const b = $("bicho");
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement("span"); s.className = "chispa"; s.textContent = emoji;
+    s.style.left = "45%"; s.style.top = "40%";
+    s.style.setProperty("--x", (Math.random() * 200 - 100) + "px"); s.style.setProperty("--y", (-40 - Math.random() * 110) + "px");
+    b.appendChild(s); setTimeout(() => s.remove(), 1300);
+  }
+}
+function saltar() { const b = $("bicho"); b.classList.remove("salta"); void b.offsetWidth; b.classList.add("salta"); }
+
+// ===================== Hablar con la IA =====================
+let pensando = false;
+async function enviar(texto) {
+  texto = texto.trim(); if (!texto || pensando) return;
+  if (M.durmiendo) { aviso(`${M.nombre} está durmiendo. Despertalo primero ☀️`); return; }
+  logMsg(texto, "yo");
+  M.historial.push({ t: texto, yo: false });
+  pensando = true; emocion = "pensando"; emoHasta = Date.now() + 60000; dibujar();
+  globo(`<span class="puntos"><span></span><span></span><span></span></span>`, 0);
+  const antes = etapa();
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+      mensaje: texto, nombre: M.nombre, duenio: M.duenio, etapa: antes.id, recuerdos: M.recuerdos.map((x) => x.t),
+      historial: M.historial.slice(-9, -1), estado: { hambre: M.hambre, energia: M.energia, animo: M.animo },
+    }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || "error");
+    M.historial.push({ t: j.respuesta, yo: true }); M.historial = M.historial.slice(-20);
+    if (j.duenio && !M.duenio) M.duenio = j.duenio;
+    M.animo = clamp(M.animo + 4);
+    const nuevos = (j.aprendio || []).filter((a) => !M.recuerdos.some((x) => x.t.toLowerCase() === a.toLowerCase()));
+    for (const a of nuevos) M.recuerdos.push({ t: a, f: Date.now() });
+    pensando = false;
+    decir(j.respuesta, j.emocion); logMsg(j.respuesta, "el");
+    if (nuevos.length) { for (const a of nuevos) logMsg("✨ Aprendió: " + a, "ap"); chispas("✨"); saltar(); }
+    pintar();
+    const ahora = etapa();
+    if (ahora !== antes) setTimeout(() => crecio(ahora), 1800);
+  } catch (e) {
+    pensando = false; M.historial.pop();
+    decir(/cansad/i.test(e.message) ? e.message : "¿eh? No te escuché bien… decímelo otra vez 🥺", "triste");
+  }
+}
+function crecio(et) {
+  const txt = {
+    nene: `${M.nombre} ya no es un bebé: ahora es un nene. Habla con frases cortas y pregunta "¿por qué?" todo el tiempo.`,
+    chico: `${M.nombre} ya es un chico. Habla bien, cuenta lo que aprendió y te hace preguntas.`,
+    grande: `${M.nombre} ya es grande. Conversa, tiene humor y se acuerda de todo lo que le enseñaste.`,
+  }[et.id];
+  $("f-emoji").textContent = et.emo; $("f-tit").textContent = "¡Creció!"; $("f-txt").textContent = txt;
+  $("c-fiesta").classList.add("ver"); chispas("🎉", 14);
+}
+$("f-ok").onclick = () => { $("c-fiesta").classList.remove("ver"); saltar(); };
+$("form").onsubmit = (ev) => { ev.preventDefault(); const t = $("txt").value; $("txt").value = ""; enviar(t); };
+
+// ===================== Acciones =====================
+const COMIDAS = ["🍼", "🍌", "🍎", "🍪", "🥕", "🍓"];
+$("a-comer").onclick = () => {
+  if (M.hambre > 92) { decir(etapa().id === "bebe" ? "¡nooo! 🙅" : "¡Ya estoy llenito!", "enojo"); return; }
+  const f = document.createElement("div"); f.className = "vuela"; f.textContent = COMIDAS[Math.random() * (etapa().id === "bebe" ? 1 : COMIDAS.length) | 0];
+  const a = $("a-comer").getBoundingClientRect(), b = $("bicho").getBoundingClientRect();
+  f.style.left = a.left + a.width / 2 - 20 + "px"; f.style.top = a.top - 10 + "px"; document.body.appendChild(f);
+  requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transform = `translate(${b.left + b.width / 2 - a.left - a.width / 2}px, ${b.top + b.height * .55 - a.top}px) scale(.5)`; f.style.opacity = "0"; }));
+  emocion = "hambre"; emoHasta = Date.now() + 700; dibujar();
+  setTimeout(() => { f.remove(); M.hambre = clamp(M.hambre + 30); M.animo = clamp(M.animo + 3); emocion = "amor"; emoHasta = Date.now() + 2000; chispas("💛", 5); pintar(); }, 750);
+};
+$("a-dormir").onclick = () => {
+  M.durmiendo = !M.durmiendo;
+  if (M.durmiendo) { $("globo").classList.remove("ver"); speechSynthesis && speechSynthesis.cancel(); }
+  else { emocion = "feliz"; emoHasta = Date.now() + 3000; decir(M.energia > 70 ? "¡Buen día! ☀️" : "mmm… sueñito todavía…", M.energia > 70 ? "feliz" : "sueno"); }
+  pintar();
+};
+$("a-jugar").onclick = () => {
+  if (M.energia < 12) { decir("estoy muy cansadito… 😴", "sueno"); return; }
+  M.animo = clamp(M.animo + 25); M.energia = clamp(M.energia - 8); M.hambre = clamp(M.hambre - 4);
+  saltar(); chispas(["🎾", "⭐", "🎈"][Math.random() * 3 | 0], 6);
+  const risas = { bebe: ["¡jijiji!", "¡agú! 😆", "¡otra vé!"], nene: ["¡Jajaja, otra vez!", "¡Me atrapaste!", "¡Yo gano!"], chico: ["¡Jaja, qué divertido!", "¡Una más, dale!", "¡Esta vez te gano!"], grande: ["Jaja, buena esa 😄", "Ok, admito que eso estuvo bueno", "¿Revancha?"] }[etapa().id];
+  decir(risas[Math.random() * risas.length | 0], "risa"); pintar();
+};
+function verSabe() {
+  const n = M.recuerdos.length, s = $("sabe"); s.innerHTML = "";
+  $("sabe-txt").textContent = n ? `${M.nombre} sabe ${n} ${n === 1 ? "cosa" : "cosas"}. Todo se lo enseñaste vos.` : `${M.nombre} todavía no sabe nada. ¡Enseñale algo hablándole!`;
+  M.recuerdos.slice().reverse().forEach((r) => {
+    const d = document.createElement("div"), sp = document.createElement("span"), x = document.createElement("button");
+    sp.textContent = r.t; x.textContent = "✕"; x.title = "Que se olvide";
+    x.onclick = () => { M.recuerdos = M.recuerdos.filter((y) => y !== r); pintar(); verSabe(); };
+    d.append(sp, x); s.appendChild(d);
+  });
+  $("reiniciar").textContent = "Empezar con otro huevo"; $("reiniciar").dataset.ok = "";
+  $("c-sabe").classList.add("ver");
+}
+$("a-sabe").onclick = verSabe;
+$("sabe-cerrar").onclick = () => $("c-sabe").classList.remove("ver");
+$("reiniciar").onclick = () => {
+  const b = $("reiniciar");
+  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = `¿Seguro? ${M.nombre} se va a ir para siempre`; return; }
+  try { localStorage.removeItem(CLAVE); } catch (e) {}
+  location.reload();
+};
+
+// Micrófono (si el navegador lo permite)
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SR) {
+  $("mic").hidden = false;
+  let rec = null;
+  $("mic").onclick = () => {
+    if (rec) { rec.stop(); return; }
+    rec = new SR(); rec.lang = "es-AR"; rec.interimResults = false;
+    $("mic").classList.add("oye");
+    rec.onresult = (e) => enviar(e.results[0][0].transcript);
+    rec.onend = () => { $("mic").classList.remove("oye"); rec = null; };
+    rec.onerror = () => {};
+    rec.start();
+  };
+}
+
+// ===================== Nacimiento =====================
+let colorElegido = COLORES[Math.random() * COLORES.length | 0];
+function nacer() {
+  $("c-nace").classList.add("ver");
+  let toques = 0;
+  $("huevo").onclick = () => {
+    toques++; const h = $("huevo"); h.classList.remove("tiembla"); void h.offsetWidth; h.classList.add("tiembla");
+    if (toques === 1) $("huevo-txt").textContent = "¡Se movió! Otra vez…";
+    if (toques === 2) { h.textContent = "🥚"; $("huevo-txt").textContent = "¡Se está rompiendo!"; }
+    if (toques >= 3) { h.textContent = "🐣"; setTimeout(() => { $("nace1").hidden = true; $("nace2").hidden = false; $("n-nombre").focus(); }, 700); }
+  };
+  const cs = $("colores");
+  COLORES.forEach((c) => {
+    const b = document.createElement("button"); b.style.background = c; b.className = c === colorElegido ? "si" : "";
+    b.onclick = () => { colorElegido = c; [...cs.children].forEach((x) => x.className = x === b ? "si" : ""); };
+    cs.appendChild(b);
+  });
+  $("n-listo").onclick = () => {
+    const nom = $("n-nombre").value.trim();
+    if (!nom) { $("n-nombre").focus(); $("n-nombre").style.borderColor = "#FF6F91"; return; }
+    M = { nombre: nom, duenio: $("n-duenio").value.trim(), color: colorElegido, recuerdos: [], historial: [], hambre: 70, energia: 90, animo: 80, t: Date.now(), nacio: Date.now(), durmiendo: false };
+    if (M.duenio) M.recuerdos.push({ t: "Mi dueño se llama " + M.duenio, f: Date.now() });
+    $("c-nace").classList.remove("ver"); pintar(); saltar(); chispas("💖", 10);
+    setTimeout(() => decir(M.duenio ? `¡${M.duenio.split(" ")[0].slice(0, 3)}…! ¡agú! 💕` : "¡agú! 👀", "amor"), 600);
+    setTimeout(() => logMsg("💡 No sabe nada todavía. Enseñale palabras (\"el perro hace guau\"), contale de vos, preguntale cosas… A las 8 cosas aprendidas pasa a ser un nene.", "ap"), 1500);
+  };
+}
+
+if (M && M.nombre) { pintar(); if (!M.durmiendo) setTimeout(() => decir(etapa().id === "bebe" ? "¡agú! 😊" : M.duenio ? `¡Hola ${M.duenio}! Te extrañé` : "¡Hola! Te extrañé", "amor"), 500); M.historial.slice(-6).forEach((h) => logMsg(h.t, h.yo ? "el" : "yo")); }
+else nacer();
+setInterval(() => { if (M && M.nombre && !pensando) pintar(); }, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden && M && M.nombre) pintar(); });
+</script>
+</body>
+</html>
