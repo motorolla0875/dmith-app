@@ -594,7 +594,7 @@ function explotar(b) {
     const d = dist(o, b);
     if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", "¡ayyy!", "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
   }
-  if (!muestra("aplastar", .9, rnd(.95, 1.08))) { sonido("aplastar"); sonido("ay", b); }
+  if (!muestra("aplastar", .55, rnd(.96, 1.06))) { sonido("aplastar"); sonido("ay", b); }
   if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
   if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); const i = E.islas.find((x) => x.capital); E.bichos.push(crearBicho(i.x + 1.5, i.z + 1.5, true, i.id)); }, 1500);
 }
@@ -605,19 +605,36 @@ try { sonidoOn = localStorage.getItem("brotitos-sonido") !== "0"; } catch (e) {}
 function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); cargarSonidos(); } if (AC.state === "suspended") AC.resume(); return AC; }
 // ---- sonidos grabados (colonia/sonidos) ----
 const MUESTRAS = { aplastar: ["aplastar1", "aplastar2", "aplastar3"], rebotar: ["rebotar1", "rebotar2", "rebotar3"], pasos: ["paso1", "paso2", "paso3", "paso4"], desbloqueo: ["desbloqueo"], boton: ["boton"] };
-const BUF = {};
+const BUF = {}, CRUDO = {};
+// se bajan apenas abre la página (así ya están listos al primer toque)
+for (const k in MUESTRAS) for (const n of MUESTRAS[k]) CRUDO[n] = fetch(`sonidos/${n}.mp3`).then((r) => r.arrayBuffer()).catch(() => null);
+let decodificando = false;
 function cargarSonidos() {
-  for (const k in MUESTRAS) for (const n of MUESTRAS[k]) {
-    fetch(`sonidos/${n}.mp3`).then((r) => r.arrayBuffer()).then((a) => new Promise((ok, mal) => AC.decodeAudioData(a, ok, mal))).then((b) => { BUF[n] = b; }).catch(() => {});
-  }
+  if (decodificando || !AC) return; decodificando = true;
+  for (const n in CRUDO) CRUDO[n].then((a) => a && new Promise((ok, mal) => AC.decodeAudioData(a.slice(0), ok, mal))).then((b) => { if (b) BUF[n] = b; }).catch(() => {});
+}
+// usa todas las variantes sin repetir la misma dos veces seguidas
+const bolsa = {}, ultimaDe = {};
+function siguiente(k) {
+  const listos = MUESTRAS[k].filter((n) => BUF[n]); if (!listos.length) return null;
+  if (!bolsa[k] || !bolsa[k].length) { bolsa[k] = listos.slice().sort(() => Math.random() - .5); if (bolsa[k].length > 1 && bolsa[k][0] === ultimaDe[k]) bolsa[k].push(bolsa[k].shift()); }
+  return (ultimaDe[k] = bolsa[k].shift());
 }
 function muestra(k, vol = 1, vel = 1) {
-  if (!sonidoOn || !AC) return null;
-  const lista = MUESTRAS[k].filter((n) => BUF[n]); if (!lista.length) return null;
-  const src = AC.createBufferSource(), g = AC.createGain();
-  src.buffer = BUF[elegir(lista)]; src.playbackRate.value = vel; g.gain.value = vol;
-  src.connect(g).connect(AC.destination); src.start(); return { src, g };
+  if (!sonidoOn) return null;
+  const ctx = audio(); if (!ctx) return null;
+  const n = siguiente(k); if (!n) return null;
+  const src = ctx.createBufferSource(), g = ctx.createGain();
+  src.buffer = BUF[n]; src.playbackRate.value = vel; g.gain.value = vol;
+  src.connect(g).connect(ctx.destination); src.start(0); return { src, g };
 }
+// el iPhone solo deja arrancar el sonido al levantar el dedo: lo destrabamos ahí también, con un sonido mudo
+let destrabado = false;
+function destrabar() {
+  const ctx = audio(); if (!ctx) return;
+  if (!destrabado) { try { const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); destrabado = true; } catch (e) {} }
+}
+for (const ev of ["touchend", "click", "keydown"]) document.addEventListener(ev, destrabar, { passive: true, capture: true });
 document.addEventListener("pointerdown", (e) => { if (e.target.closest && e.target.closest("button, #anillo")) { audio(); muestra("boton", .6); } }, true);
 function blip(ctx, t0, f, dur, tipo = "triangle", vol = .18) {
   const o = ctx.createOscillator(), g = ctx.createGain(); o.type = tipo;
@@ -1430,7 +1447,7 @@ let ultimoPie = 0;
 function pasos(on) {
   if (!on) return;
   const pie = Math.floor(yo.fase / Math.PI);
-  if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .5, rnd(.9, 1.1)); }
+  if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .12, rnd(.9, 1.1)); }
 }
 function salir() {
   dentroMundo = false; document.body.classList.remove("dentro");
@@ -1515,7 +1532,7 @@ function chocarBichos(mx, mz) {
     if (!(b.caida > 0) && (dx * mx + dz * mz) / d > .3) {
       b.caida = 1.8; b.kx = dx / d; b.kz = dz / d; b.dx = -b.kx; b.dz = -b.kz; b.carga = null; b.adentro = false;
       if (Math.random() < .7) setTimeout(() => hablar(b, elegir(["¡ay!", "¡ayyy!", "¡uy!", "😵"]), true), 80);
-      if (!muestra("rebotar", .9, rnd(.95, 1.1))) sonido("ay", b);
+      if (!muestra("rebotar", .8, rnd(.96, 1.08))) sonido("ay", b);
       for (const o of E.bichos) if (o !== b && !o.adentro && o.y === 0 && !o.caida && dist(o, b) < 6) { o.susto = rnd(2, 4); const dd = dist(o, yo) || 1; o.dx = (o.x - yo.x) / dd; o.dz = (o.z - yo.z) / dd; }
       E.animo = clamp(E.animo - .5, 0, 100);
     }
