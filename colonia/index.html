@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Brotitos — hacé crecer tu colonia</title>
-<meta name="description" content="Empezás con un solo Brotito. Juntan comida, cavan túneles, construyen torres, se reproducen y tu colonia crece sin fin.">
+<meta name="description" content="Empezás con un solo Brotito. Juntan comida, cavan la mina, construyen torres, se reproducen y tu colonia crece sin fin. En 3D.">
 <meta name="theme-color" content="#9FE3F5">
 <link rel="icon" href="/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,15 +12,18 @@
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: #9FE3F5; font-family: "Fredoka", system-ui, sans-serif; color: #2E2440; user-select: none; -webkit-user-select: none; }
-  canvas#mundo { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+  #lienzo { position: fixed; inset: 0; touch-action: none; }
+  #lienzo canvas { display: block; touch-action: none; }
+  #globos { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .globo { position: absolute; left: 0; top: 0; background: #fff; border-radius: 12px; padding: 3px 9px; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px #0002; }
+  .globo::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-top-color: #fff; border-bottom: 0; }
   .hud { position: fixed; left: 0; right: 0; top: 0; padding: max(10px, env(safe-area-inset-top)) 10px 0; pointer-events: none; }
   .fila { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
   .pill { background: #ffffffd9; border-radius: 999px; padding: 5px 10px; font-size: 15px; font-weight: 600; box-shadow: 0 2px 8px #0001; white-space: nowrap; }
   .pill.animo { display: flex; align-items: center; gap: 6px; }
   .pill.animo i { display: block; width: 54px; height: 8px; border-radius: 9px; background: #0001; overflow: hidden; }
   .pill.animo i span { display: block; height: 100%; background: #5BBF7A; border-radius: 9px; transition: width .5s, background .5s; }
-  #mini { display: block; margin: 7px auto 0; width: min(420px, 92vw); height: 22px; border-radius: 11px; background: #ffffffb0; pointer-events: auto; cursor: pointer; }
-  .meta { margin: 6px auto 0; width: min(420px, 92vw); background: #ffffffe6; border-radius: 14px; padding: 5px 12px 6px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px #0001; }
+  .meta { margin: 7px auto 0; width: min(420px, 92vw); background: #ffffffe6; border-radius: 14px; padding: 5px 12px 6px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px #0001; }
   .meta small { display: block; font-weight: 500; color: #7A7090; font-size: 12px; }
   .meta i { display: block; height: 6px; border-radius: 9px; background: #0001; overflow: hidden; margin-top: 4px; }
   .meta i span { display: block; height: 100%; background: linear-gradient(90deg, #FFB74D, #FF6F91); border-radius: 9px; transition: width .6s; }
@@ -40,7 +43,7 @@
   .energia i span { display: block; height: 100%; background: #FFC23D; }
   .esquina { position: fixed; right: 10px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px); display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
   .esquina button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: #ffffffd9; font-size: 17px; cursor: pointer; box-shadow: 0 2px 8px #0001; }
-  .aviso { position: fixed; left: 50%; top: 172px; transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
+  .aviso { position: fixed; left: 50%; top: 150px; transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
   .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
   .logro { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%) scale(.8); opacity: 0; background: #fff; border-radius: 24px; padding: 18px 22px; text-align: center; box-shadow: 0 10px 40px #0004; transition: .35s; pointer-events: none; z-index: 6; min-width: 260px; }
   .logro.ver { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -55,11 +58,15 @@
   .caja .btn { display: block; width: 100%; margin-top: 14px; border: 0; border-radius: 16px; padding: 13px; font: inherit; font-size: 17px; font-weight: 600; background: #4FB477; color: #fff; cursor: pointer; }
   .caja .btn.gris { background: #F1EDF5; color: #6E6480; }
   .caja ul { text-align: left; padding-left: 20px; color: #6E6480; margin: 8px 0; }
+  #cargando { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; background: #9FE3F5; z-index: 20; }
   @media (max-width: 480px) { .pill { font-size: 13px; padding: 4px 8px; } .pill.animo i { width: 40px; } }
 </style>
+<script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
 </head>
 <body>
-<canvas id="mundo"></canvas>
+<div id="cargando">🌱 Cargando la colonia…</div>
+<div id="lienzo"></div>
+<div id="globos"></div>
 
 <div class="hud">
   <div class="fila">
@@ -70,7 +77,6 @@
     <span class="pill" id="h-gemas" hidden>💎 0</span>
     <span class="pill animo"><span id="h-hora">☀️</span><i><span id="h-animo"></span></i></span>
   </div>
-  <canvas id="mini" width="840" height="44"></canvas>
   <div class="meta" id="meta"><span id="meta-txt"></span><small id="meta-sub"></small><i><span id="meta-bar"></span></i></div>
 </div>
 
@@ -98,7 +104,7 @@
     <h2>🌱 Tus Brotitos</h2>
     <p>Empezás con <b>uno solo</b>. Juntan comida, madera y piedra, construyen casitas y, cuando hay lugar y comida, <b>nacen más</b>.</p>
     <ul>
-      <li>Deslizá para recorrer la colonia (también para arriba y abajo: ¡cavan túneles!). Con dos dedos o la ruedita acercás y alejás.</li>
+      <li>Un dedo: mover la vista. Dos dedos: girar y acercar. En la compu: arrastrá, clic derecho para girar y la ruedita para el zoom.</li>
       <li>Cada Brotito tiene su oficio: 🪓 leñador, 🌾 granjero, ⛏️ minero, 🔨 constructor.</li>
       <li>Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.</li>
       <li>De noche se van a dormir a sus casas.</li>
@@ -119,13 +125,16 @@
   </div>
 </div>
 
-<script>
-"use strict";
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "./lib/OrbitControls.js";
+
 // ======================= Utilidades =======================
 const $ = (id) => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
 const elegir = (arr) => arr[Math.random() * arr.length | 0];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const dist = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const SILABAS = ["bu", "ri", "to", "mo", "pi", "la", "ku", "ne", "zi", "po", "ta", "mi", "lu", "fa", "do", "be"];
 const nombre = () => { const s = elegir(SILABAS) + elegir(SILABAS); return s[0].toUpperCase() + s.slice(1); };
 const balbuceo = (n = 2) => Array.from({ length: n }, () => elegir(SILABAS) + (Math.random() < .3 ? elegir(SILABAS) : "")).join(" ");
@@ -133,21 +142,19 @@ const ICONO = { comida: "🍎", madera: "🪵", piedra: "🪨", gemas: "💎" };
 const TIPO_RECURSO = { arbol: "madera", roca: "piedra", arbusto: "comida", huerta: "comida" };
 const OFICIO = { madera: "lenador", comida: "granjero", piedra: "minero", gemas: "minero" };
 
-// Día y noche
-const DIA = 240, NOCHE = 172; // segundos por día completo / desde cuándo es de noche
+const DIA = 240, NOCHE = 172;
 const esNoche = () => (E.tiempo % DIA) > NOCHE;
-function luz() { // 1 = pleno día, 0 = noche cerrada
+function luz() {
   const t = E.tiempo % DIA;
-  if (t < 12) return .25 + t / 12 * .75;           // amanecer
+  if (t < 12) return .25 + t / 12 * .75;
   if (t < NOCHE - 14) return 1;
-  if (t < NOCHE) return 1 - (t - (NOCHE - 14)) / 14 * .75; // atardecer
+  if (t < NOCHE) return 1 - (t - (NOCHE - 14)) / 14 * .75;
   return .25;
 }
 
-// Metas: cada una desbloquea algo
 const METAS = [
   { pob: 5, tipo: "huerta", g: "🌱", t: "Huerta", s: "Comida sin tener que buscar arbustos" },
-  { pob: 10, tipo: "mina", g: "⛏️", t: "Mina", s: "Cavan túneles: piedra y gemas 💎" },
+  { pob: 10, tipo: "mina", g: "⛏️", t: "Mina", s: "Cavan hondo: piedra y gemas 💎" },
   { pob: 16, nivel: 3, g: "🏢", t: "Casas de 3 pisos", s: "Entran más Brotitos en cada casa" },
   { pob: 25, tipo: "escuela", g: "🏫", t: "Escuela", s: "Los bebés crecen el doble de rápido" },
   { pob: 40, tipo: "torre", g: "🗼", t: "Torre", s: "Desde arriba se ve todo y están más contentos" },
@@ -157,35 +164,38 @@ const METAS = [
 ];
 
 // ======================= Estado =======================
-const CLAVE = "brotitos-v1";
+const CLAVE = "brotitos-3d-v1", CELDA = 7;
 let E;
+const LUGARES = (() => {
+  const l = [];
+  for (let i = -14; i <= 14; i++) for (let j = -14; j <= 14; j++) if (i || j) l.push({ i, j, d: Math.hypot(i, j) + Math.random() * .4 });
+  return l.sort((a, b) => a.d - b.d).map((c) => ({ x: Math.round((c.i * CELDA + rnd(-.8, .8)) * 10) / 10, z: Math.round((c.j * CELDA + rnd(-.8, .8)) * 10) / 10 }));
+})();
 function nuevoEstado() {
   return {
     t: Date.now(), tiempo: 30, id: 1,
     comida: 6, madera: 4, piedra: 2, gemas: 0, animo: 80, energia: 10,
-    nacidos: 1, explotados: 0, meta: 0, maxNivel: 2,
-    ext: [-420, 420],
-    bichos: [crearBicho(0, true)],
-    recursos: [], vetas: [], mina: null,
-    edificios: [{ id: 0, tipo: "fogata", x: 0, prog: 1, nivel: 1 }],
+    nacidos: 1, explotados: 0, meta: 0, maxNivel: 2, nLugar: 0, lugares: LUGARES,
+    radio: 20,
+    bichos: [crearBicho(1.5, 1.5, true)],
+    recursos: [], mina: null,
+    edificios: [{ id: 0, tipo: "fogata", x: 0, z: 0, prog: 1, nivel: 1 }],
     pedido: null, proxPedido: 25,
   };
 }
 let sigId = 1;
-function crearBicho(x, adulto) {
-  return { id: sigId++, n: nombre(), x, y: 0, dir: 1, est: "quieto", obj: null, carga: null, edad: adulto ? 999 : 0,
+function crearBicho(x, z, adulto) {
+  return { id: sigId++, n: nombre(), x, z, y: 0, dx: 0, dz: 1, est: "quieto", obj: null, carga: null, edad: adulto ? 999 : 0,
     susto: 0, hue: rnd(140, 200) | 0, fase: Math.random() * 6, trabajo: 0, charla: null, charlaT: 0, quieto: rnd(0.5, 2), oficio: null, adentro: false };
 }
-function guardar() { try { E.t = Date.now(); E.sigId = sigId; localStorage.setItem(CLAVE, JSON.stringify(E)); } catch (e) {} }
+const limpio = (o) => { const c = {}; for (const k in o) if (k[0] !== "_") c[k] = o[k]; return c; };
+function guardar() { try { E.t = Date.now(); E.sigId = sigId; const copia = { ...E, bichos: E.bichos.map(limpio), recursos: E.recursos.map(limpio), edificios: E.edificios.map(limpio) }; localStorage.setItem(CLAVE, JSON.stringify(copia)); } catch (e) {} }
 function cargar() {
   try {
     const s = JSON.parse(localStorage.getItem(CLAVE));
     if (!s || !s.bichos) return null;
     sigId = s.sigId || 1000;
-    // partidas viejas
-    s.gemas = s.gemas || 0; s.meta = s.meta || 0; s.maxNivel = s.maxNivel || 2; s.vetas = s.vetas || []; s.mina = s.mina || null;
-    for (const e of s.edificios) e.nivel = e.nivel || 1;
-    for (const b of s.bichos) { b.y = b.y || 0; if (b.y) { b.y = 0; b.est = "quieto"; } b.adentro = false; }
+    for (const b of s.bichos) { if (b.y < 0) { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
 }
@@ -198,50 +208,34 @@ const casas = () => E.edificios.filter((e) => e.tipo === "casa" && pisosListos(e
 const almacenes = () => E.edificios.filter((e) => (e.tipo === "casa" && pisosListos(e) > 0) || e.tipo === "fogata");
 const hay = (tipo) => E.edificios.some((e) => e.tipo === tipo && listo(e));
 const obras = () => E.edificios.filter((e) => !listo(e));
-function cercano(lista, x) { let m = null, d = 1e9; for (const o of lista) { const dd = Math.abs(o.x - x); if (dd < d) { d = dd; m = o; } } return m; }
-const ANCHO = { casa: 24, fogata: 16, huerta: 34, mina: 22, escuela: 30, torre: 18, cohete: 20 };
+function cercano(lista, p) { let m = null, d = 1e9; for (const o of lista) { const dd = Math.hypot(o.x - p.x, o.z - p.z); if (dd < d) { d = dd; m = o; } } return m; }
+const libreDeEdificios = (x, z, margen) => E.edificios.every((e) => Math.hypot(e.x - x, e.z - z) > margen);
 
-function sembrar(desde, hasta) {
-  for (let x = desde; x < hasta; x += rnd(55, 90)) {
-    if (E.edificios.some((b) => Math.abs(b.x - x) < (ANCHO[b.tipo] || 24) + 18)) continue;
-    const r = Math.random(), tipo = r < .4 ? "arbol" : r < .72 ? "arbusto" : "roca";
+function sembrar(r0, r1) {
+  const area = Math.PI * (r1 * r1 - r0 * r0), n = Math.round(area / 22);
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, r = Math.sqrt(rnd(r0 * r0, r1 * r1)) - 1.5;
+    const x = Math.cos(a) * r, z = Math.sin(a) * r;
+    if (!libreDeEdificios(x, z, 4.2) || Math.hypot(x, z) < 4) continue;
+    const q = Math.random(), tipo = q < .42 ? "arbol" : q < .74 ? "arbusto" : "roca";
     const max = tipo === "arbol" ? 6 : 5;
-    E.recursos.push({ id: E.id++, tipo, x: x + rnd(-15, 15), cant: max, max, crece: 0 });
+    E.recursos.push({ id: E.id++, tipo, x, z, cant: max, max, crece: 0 });
   }
 }
-function ampliar(nuevoMin, nuevoMax) {
-  if (nuevoMin < E.ext[0]) { sembrar(nuevoMin, E.ext[0]); E.ext[0] = nuevoMin; }
-  if (nuevoMax > E.ext[1]) { sembrar(E.ext[1], nuevoMax); E.ext[1] = nuevoMax; }
-}
-function lugarNuevo(ancho) {
-  const izq = E.edificios.filter((b) => b.x < 0).length, der = E.edificios.filter((b) => b.x > 0).length;
-  const lado = izq < der ? -1 : der < izq ? 1 : (Math.random() < .5 ? -1 : 1);
-  const extremo = lado < 0 ? E.edificios.reduce((m, b) => Math.min(m, b.x - (ANCHO[b.tipo] || 24)), 0) : E.edificios.reduce((m, b) => Math.max(m, b.x + (ANCHO[b.tipo] || 24)), 0);
-  return extremo + lado * (ancho + rnd(30, 50));
-}
+let islaCambio = true;
+function ampliar(r) { if (r > E.radio) { sembrar(E.radio, r); E.radio = r; islaCambio = true; } }
 function nuevoEdificio(tipo) {
-  const x = lugarNuevo(ANCHO[tipo] || 24);
-  const e = { id: E.id++, tipo, x, prog: 0, nivel: 1 };
-  E.edificios.push(e);
-  E.recursos = E.recursos.filter((r) => Math.abs(r.x - x) > (ANCHO[tipo] || 24) + 12);
-  ampliar(Math.min(E.ext[0], x - 420), Math.max(E.ext[1], x + 420));
+  const p = E.lugares[E.nLugar++] || { x: rnd(-90, 90), z: rnd(-90, 90) };
+  const e = { id: E.id++, tipo, x: p.x, z: p.z, prog: 0, nivel: 1 };
   if (tipo === "huerta") { e.cant = 4; e.max = 8; e.crece = 0; }
+  E.edificios.push(e);
+  E.recursos = E.recursos.filter((r) => Math.hypot(r.x - e.x, r.z - e.z) > 4.2);
+  ampliar(Math.hypot(e.x, e.z) + 13);
   return e;
 }
-// Mina: túneles hacia abajo, con vetas de piedra y gemas
-const PROF0 = 85, ENTRE_NIVELES = 70;
-function abrirMina(e) {
-  E.mina = { x: e.x, niveles: [{ prof: PROF0, x0: e.x - 30, x1: e.x + 30 }] };
-  for (let i = 0; i < 3; i++) nuevaVeta(0, e.x + (i - 1) * 26 + rnd(-6, 6));
-}
-function nuevaVeta(niv, x) {
-  const gema = Math.random() < .12 + niv * .06;
-  E.vetas.push({ id: E.id++, niv, x, tipo: gema ? "gemas" : "piedra", cant: gema ? 2 : 4 });
-}
-const profundidad = () => E.mina ? E.mina.niveles[E.mina.niveles.length - 1].prof : 0;
 
 // ======================= Simulación =======================
-const VEL = 38, VEL_BEBE = 26, GRANDE = 45;
+const VEL = 2.3, VEL_BEBE = 1.6, GRANDE = 45;
 let eventos = [];
 function paso(dt, offline) {
   E.tiempo += dt;
@@ -249,27 +243,24 @@ function paso(dt, offline) {
   for (const r of E.recursos) if (r.cant < r.max) { r.crece += dt; if (r.crece > (r.tipo === "arbusto" ? 14 : 24)) { r.crece = 0; r.cant++; } }
   for (const h of E.edificios) if (h.tipo === "huerta" && listo(h) && h.cant < h.max) { h.crece += dt; if (h.crece > 4) { h.crece = 0; h.cant++; } }
   E.energia = Math.min(10, E.energia + dt / 6);
-  const torre = hay("torre") ? .15 : 0;
-  E.animo = clamp(E.animo + ((E.comida > 0 ? 0.25 : -0.6) + torre) * dt, 0, 100);
+  E.animo = clamp(E.animo + ((E.comida > 0 ? 0.25 : -0.6) + (hay("torre") ? .15 : 0)) * dt, 0, 100);
   E.comerT = (E.comerT || 0) + dt;
   if (E.comerT > 40) { E.comerT = 0; E.comida = Math.max(0, E.comida - Math.ceil(E.bichos.length / 3)); }
 
   for (const b of E.bichos) actualizarBicho(b, dt, offline, noche);
 
-  // nacimientos (de día)
   E.nacerT = (E.nacerT || 0) + dt;
   if (!noche && E.nacerT > 6 * (E.animo < 30 ? 2 : 1)) {
     E.nacerT = 0;
     if (E.bichos.length < capacidad() && E.comida >= 4 && E.bichos.some((b) => b.edad > GRANDE)) {
       E.comida -= 4;
       const casa = elegir(almacenes());
-      const bebe = crearBicho(casa.x + rnd(-12, 12), false);
+      const bebe = crearBicho(casa.x + rnd(-2, 2), casa.z + rnd(2, 3), false);
       E.bichos.push(bebe); E.nacidos++;
       eventos.push({ tipo: "nace", b: bebe });
-      if (!offline) { corazones(bebe.x, -20); hablar(bebe, "¡" + elegir(SILABAS) + "!", true); }
+      if (!offline) { corazones(bebe); hablar(bebe, "¡" + elegir(SILABAS) + "!", true); }
     }
   }
-  // metas
   const m = METAS[E.meta];
   if (m && E.bichos.length >= m.pob) {
     E.meta++;
@@ -277,14 +268,12 @@ function paso(dt, offline) {
     if (m.nivel) E.maxNivel = m.nivel;
     eventos.push({ tipo: "meta", m });
   }
-  // más lugar: subir un piso o una casa nueva
   const obraCasa = E.edificios.some((e) => e.tipo === "casa" && !listo(e));
   if (!obraCasa && E.bichos.length >= capacidad() - 1) {
     const subible = casas().filter((c) => c.nivel < E.maxNivel);
-    const costoPiso = (n) => ({ madera: 6 + n * 3, piedra: 4 + n * 3, gemas: n >= 3 ? 2 : 0 });
-    const c = subible.length && Math.random() < .65 ? cercano(subible, 0) : null;
+    const c = subible.length && Math.random() < .65 ? cercano(subible, { x: 0, z: 0 }) : null;
     if (c) {
-      const k = costoPiso(c.nivel);
+      const k = { madera: 6 + c.nivel * 3, piedra: 4 + c.nivel * 3, gemas: c.nivel >= 3 ? 2 : 0 };
       if (E.madera >= k.madera && E.piedra >= k.piedra && E.gemas >= k.gemas) {
         E.madera -= k.madera; E.piedra -= k.piedra; E.gemas -= k.gemas;
         c.nivel++; c.prog = 0; eventos.push({ tipo: "piso" });
@@ -298,150 +287,71 @@ function paso(dt, offline) {
     else if (!noche) { E.proxPedido -= dt; if (E.proxPedido <= 0 && E.bichos.length) nuevoPedido(); }
   }
 }
-
-function buscar(id) { return E.recursos.find((r) => r.id === id) || E.edificios.find((e) => e.id === id) || E.vetas.find((v) => v.id === id); }
+function buscar(id) { return E.recursos.find((r) => r.id === id) || E.edificios.find((e) => e.id === id); }
 
 function actualizarBicho(b, dt, offline, noche) {
-  const escuela = hay("escuela") && b.edad < GRANDE ? 2 : 1;
-  b.edad += dt * escuela; b.fase += dt * 10;
+  b.edad += dt * (hay("escuela") && b.edad < GRANDE ? 2 : 1); b.fase += dt * 10;
   if (b.charlaT > 0) b.charlaT -= dt;
   const adulto = b.edad > GRANDE, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1);
   if (b.susto > 0 && b.y === 0) {
     b.susto -= dt; b.adentro = false;
-    b.x += b.dir * vel * 1.8 * dt; b.x = clamp(b.x, E.ext[0] + 10, E.ext[1] - 10);
+    b.x += b.dx * vel * 1.8 * dt; b.z += b.dz * vel * 1.8 * dt;
+    const r = Math.hypot(b.x, b.z); if (r > E.radio - 1.5) { b.x *= (E.radio - 1.5) / r; b.z *= (E.radio - 1.5) / r; }
     return;
   }
-  if (b.susto > 0) b.susto -= dt;
-  const mover = (x) => { const d = x - b.x; if (Math.abs(d) < 4) return true; b.dir = Math.sign(d); b.x += b.dir * Math.min(Math.abs(d), vel * dt); return false; };
-  const nivelMina = () => E.mina && E.mina.niveles[b.niv || 0];
-
+  const mover = (p, sep = 0) => {
+    const dx = p.x - b.x, dz = p.z - b.z, d = Math.hypot(dx, dz);
+    if (d <= sep + .25) return true;
+    b.dx = dx / d; b.dz = dz / d; const paso = Math.min(d - sep, vel * dt);
+    b.x += b.dx * paso; b.z += b.dz * paso; return false;
+  };
   switch (b.est) {
-    case "quieto":
-      b.quieto -= dt;
-      if (b.quieto <= 0) decidir(b, adulto, noche);
-      break;
-    case "pasear":
-      if (mover(b.obj)) { b.est = "quieto"; b.quieto = rnd(1, 3); if (!offline && Math.random() < .25) hablar(b, balbuceo(rnd(1, 3) | 0)); }
-      break;
-    case "a_dormir": {
-      const c = buscar(b.obj);
-      if (!c) { b.est = "quieto"; b.quieto = .5; break; }
-      if (mover(c.x)) { b.adentro = true; b.est = "durmiendo"; }
-      break;
-    }
-    case "durmiendo":
-      if (!noche) { b.adentro = false; b.est = "quieto"; b.quieto = rnd(.1, 2.5); }
-      break;
-    case "ir_recurso": {
-      const r = buscar(b.obj);
-      if (!r || r.cant <= 0) { b.est = "quieto"; b.quieto = .3; break; }
-      if (mover(r.x + (r.tipo === "huerta" ? rnd(-20, 20) * 0 : 0))) { b.est = "juntar"; b.trabajo = r.tipo === "huerta" ? 1.2 : 1.6; }
-      break;
-    }
+    case "quieto": b.quieto -= dt; if (b.quieto <= 0) decidir(b, adulto, noche); break;
+    case "pasear": if (mover(b.obj)) { b.est = "quieto"; b.quieto = rnd(1, 3); if (!offline && Math.random() < .25) hablar(b, balbuceo(rnd(1, 3) | 0)); } break;
+    case "a_dormir": { const c = buscar(b.obj); if (!c) { b.est = "quieto"; b.quieto = .5; break; } if (mover(c, 1.6)) { b.adentro = true; b.est = "durmiendo"; } break; }
+    case "durmiendo": if (!noche) { b.adentro = false; b.est = "quieto"; b.quieto = rnd(.1, 2.5); } break;
+    case "ir_recurso": { const r = buscar(b.obj); if (!r || r.cant <= 0) { b.est = "quieto"; b.quieto = .3; break; } if (mover(r, r.tipo === "huerta" ? 2.6 : 1.1)) { b.est = "juntar"; b.trabajo = r.tipo === "huerta" ? 1.2 : 1.6; b.dx = r.x - b.x; b.dz = r.z - b.z; } break; }
     case "juntar": {
       b.trabajo -= dt;
-      if (b.trabajo <= 0) {
-        const r = buscar(b.obj);
-        if (r && r.cant > 0) { r.cant--; b.carga = TIPO_RECURSO[r.tipo]; b.est = "llevar"; b.obj = (cercano(almacenes(), b.x) || {}).id; }
-        else { b.est = "quieto"; b.quieto = .3; }
-      }
+      if (b.trabajo <= 0) { const r = buscar(b.obj); if (r && r.cant > 0) { r.cant--; b.carga = TIPO_RECURSO[r.tipo]; b.est = "llevar"; b.obj = (cercano(almacenes(), b) || {}).id; } else { b.est = "quieto"; b.quieto = .3; } }
       break;
     }
-    case "llevar": {
-      const a = buscar(b.obj) || cercano(almacenes(), b.x);
-      if (!a) { b.est = "quieto"; break; }
-      if (mover(a.x)) { E[b.carga]++; b.carga = null; b.est = "quieto"; b.quieto = rnd(.2, .8); }
-      break;
-    }
+    case "llevar": { const a = buscar(b.obj) || cercano(almacenes(), b); if (!a) { b.est = "quieto"; break; } if (mover(a, 1.8)) { E[b.carga]++; b.carga = null; b.est = "quieto"; b.quieto = rnd(.2, .8); } break; }
     case "construir": {
-      const o = buscar(b.obj);
-      if (!o || listo(o)) { b.est = "quieto"; b.quieto = .5; break; }
-      if (mover(o.x + b.lado * (ANCHO[o.tipo] || 24) * .6)) {
+      const o = buscar(b.obj); if (!o || listo(o)) { b.est = "quieto"; b.quieto = .5; break; }
+      if (mover({ x: o.x + Math.cos(b.ang) * 2.7, z: o.z + Math.sin(b.ang) * 2.7 })) {
+        b.dx = o.x - b.x; b.dz = o.z - b.z;
         const lento = { torre: .4, cohete: .25, escuela: .6, mina: .7 }[o.tipo] || 1;
         o.prog = Math.min(1, o.prog + dt * 0.05 * lento);
-        if (listo(o)) {
-          if (o.tipo === "mina" && !E.mina) abrirMina(o);
-          eventos.push({ tipo: "listo", e: o });
-          if (!offline) { festejo(o.x); hablar(b, "¡" + balbuceo(1) + "!", true); }
-        }
+        if (listo(o)) { if (o.tipo === "mina" && !E.mina) E.mina = { x: o.x, z: o.z, prof: 1, cavado: 0, id: o.id }; eventos.push({ tipo: "listo", e: o }); if (!offline) { festejo(o); hablar(b, "¡" + balbuceo(1) + "!", true); } }
       }
       break;
     }
-    // ---- mina ----
-    case "ir_mina":
-      if (mover(E.mina.x)) b.est = "bajar";
-      break;
-    case "bajar": {
-      const n = nivelMina(); if (!n) { b.est = "subir"; break; }
-      b.y = Math.min(n.prof, b.y + vel * dt);
-      if (b.y >= n.prof) b.est = b.cavar ? "ir_cavar" : "ir_veta";
-      break;
-    }
-    case "ir_veta": {
-      const v = buscar(b.obj);
-      if (!v || v.cant <= 0) { b.est = "volver_pozo"; break; }
-      if (mover(v.x)) { b.est = "picar"; b.trabajo = 2.2; }
-      break;
-    }
-    case "picar": {
+    case "ir_mina": if (!E.mina) { b.est = "quieto"; break; } if (mover(E.mina)) b.est = "bajar"; break;
+    case "bajar": b.y -= vel * .8 * dt; if (b.y <= -2.4) { b.y = -3; b.est = "abajo"; b.trabajo = rnd(5, 8); } break;
+    case "abajo": {
       b.trabajo -= dt;
       if (b.trabajo <= 0) {
-        const v = buscar(b.obj);
-        if (v && v.cant > 0) { v.cant--; b.carga = v.tipo; if (v.cant <= 0) E.vetas = E.vetas.filter((o) => o !== v); }
-        b.est = "volver_pozo";
+        const m = E.mina; m.cavado++;
+        b.carga = Math.random() < .1 + m.prof * .05 ? "gemas" : "piedra";
+        if (m.cavado >= 8 + m.prof * 6) { m.cavado = 0; m.prof++; eventos.push({ tipo: "nivelMina" }); }
+        b.est = "subir"; b.y = -2.4;
       }
       break;
     }
-    case "ir_cavar": {
-      const n = nivelMina(); if (!n) { b.est = "volver_pozo"; break; }
-      const meta = b.lado < 0 ? n.x0 : n.x1;
-      if (mover(meta)) { b.est = "cavando"; b.trabajo = 3; }
-      break;
-    }
-    case "cavando": {
-      b.trabajo -= dt;
-      if (b.trabajo <= 0) {
-        const n = nivelMina(), avance = 34;
-        if (n) {
-          if (b.lado < 0) { n.x0 = Math.max(E.ext[0] + 40, n.x0 - avance); if (Math.random() < .75) nuevaVeta(b.niv || 0, n.x0 + 12); }
-          else { n.x1 = Math.min(E.ext[1] - 40, n.x1 + avance); if (Math.random() < .75) nuevaVeta(b.niv || 0, n.x1 - 12); }
-          const ultimo = E.mina.niveles[E.mina.niveles.length - 1];
-          if (n === ultimo && n.x1 - n.x0 > 260 + E.mina.niveles.length * 60 && E.mina.niveles.length < 6) {
-            E.mina.niveles.push({ prof: n.prof + ENTRE_NIVELES, x0: E.mina.x - 30, x1: E.mina.x + 30 });
-            nuevaVeta(E.mina.niveles.length - 1, E.mina.x + 18); nuevaVeta(E.mina.niveles.length - 1, E.mina.x - 18);
-            eventos.push({ tipo: "nivelMina" });
-          }
-        }
-        b.cavar = false; b.est = "volver_pozo";
-      }
-      break;
-    }
-    case "volver_pozo":
-      if (!E.mina) { b.y = 0; b.est = "quieto"; break; }
-      if (mover(E.mina.x)) b.est = "subir";
-      break;
-    case "subir":
-      b.y = Math.max(0, b.y - vel * dt);
-      if (b.y <= 0) { if (b.carga) { b.est = "llevar"; b.obj = (cercano(almacenes(), b.x) || {}).id; } else { b.est = "quieto"; b.quieto = .3; } }
-      break;
+    case "subir": b.y += vel * .8 * dt; if (b.y >= 0) { b.y = 0; b.est = "llevar"; b.obj = (cercano(almacenes(), b) || {}).id; } break;
   }
 }
-
+function dentro(p) { const r = Math.hypot(p.x, p.z), max = E.radio - 2; if (r > max) { p.x *= max / r; p.z *= max / r; } return p; }
 function decidir(b, adulto, noche) {
-  b.cavar = false;
-  if (noche) {
-    const c = cercano(almacenes(), b.x);
-    if (c) { b.est = "a_dormir"; b.obj = c.id; b.oficio = null; return; }
-  }
+  if (noche) { const c = cercano(almacenes(), b); if (c) { b.est = "a_dormir"; b.obj = c.id; b.oficio = null; return; } }
   if (!adulto) {
     const esc = E.edificios.find((e) => e.tipo === "escuela" && listo(e));
-    b.est = "pasear"; b.obj = esc && Math.random() < .5 ? esc.x + rnd(-25, 25) : clamp(b.x + rnd(-60, 60), E.ext[0] + 20, E.ext[1] - 20);
-    return;
+    const base = esc && Math.random() < .5 ? esc : b;
+    b.est = "pasear"; b.obj = dentro({ x: base.x + rnd(-4, 4), z: base.z + rnd(-4, 4) }); return;
   }
-  // obras
-  const obra = obras().find((o) => E.bichos.filter((x) => x.est === "construir" && x.obj === o.id).length < (o.tipo === "casa" ? 3 : 5));
-  if (obra && Math.random() < .7) { b.est = "construir"; b.obj = obra.id; b.lado = Math.random() < .5 ? -1 : 1; b.oficio = "constructor"; return; }
-  // juntar lo que falta
+  const obra = obras().find((o) => E.bichos.filter((x) => x.est === "construir" && x.obj === o.id).length < (o.tipo === "casa" ? 4 : 6));
+  if (obra && Math.random() < .7) { b.est = "construir"; b.obj = obra.id; b.ang = Math.random() * Math.PI * 2; b.oficio = "constructor"; return; }
   const pob = E.bichos.length;
   const falta = {
     comida: 6 + pob * .6 - E.comida + (E.pedido && E.pedido.tipo === "comida" ? 5 : 0),
@@ -451,24 +361,22 @@ function decidir(b, adulto, noche) {
   };
   const tipos = Object.keys(falta).sort((a, c) => falta[c] - falta[a]);
   const utiles = tipos.filter((t) => falta[t] > -50);
+  if (!utiles.length) { // no falta nada: descansan y pasean cerca de su casa
+    const c = cercano(almacenes(), b) || b; b.oficio = null; b.est = "pasear"; b.obj = dentro({ x: c.x + rnd(-6, 6), z: c.z + rnd(-6, 6) });
+    if (Math.random() < .3) b.quieto = rnd(2, 5); return;
+  }
   const tipo = Math.random() < .7 || utiles.length < 2 ? tipos[0] : elegir(utiles);
   b.oficio = OFICIO[tipo];
-  // minería (piedra con mina abierta, o gemas)
   if (E.mina && (tipo === "gemas" || (tipo === "piedra" && Math.random() < .6))) {
-    const mineros = (v) => E.bichos.filter((o) => o.obj === v.id).length;
-    const vetas = E.vetas.filter((v) => (tipo === "gemas" ? v.tipo === "gemas" : true) && v.cant > 0 && mineros(v) < 2);
-    const v = vetas.length ? vetas.sort((p, q) => (p.niv - q.niv) || Math.abs(p.x - E.mina.x) - Math.abs(q.x - E.mina.x))[Math.random() * Math.min(3, vetas.length) | 0] : null;
-    b.est = "ir_mina";
-    if (v) { b.obj = v.id; b.niv = v.niv; }
-    else { b.cavar = true; b.niv = Math.random() < .6 ? E.mina.niveles.length - 1 : Math.random() * E.mina.niveles.length | 0; b.lado = Math.random() < .5 ? -1 : 1; b.obj = null; }
-    return;
+    const abajo = E.bichos.filter((o) => ["ir_mina", "bajar", "abajo", "subir"].includes(o.est)).length;
+    if (abajo < 4 + E.mina.prof * 2) { b.est = "ir_mina"; return; }
   }
   const objetivos = tipo === "comida" ? ["arbusto", "huerta"] : tipo === "madera" ? ["arbol"] : ["roca"];
   const cands = E.recursos.filter((r) => objetivos.includes(r.tipo)).concat(E.edificios.filter((e) => objetivos.includes(e.tipo) && listo(e)));
   const libres = cands.filter((r) => r.cant > 0 && E.bichos.filter((o) => o.obj === r.id && o.est === "ir_recurso").length < (r.tipo === "huerta" ? 4 : 2));
-  const r = cercano(libres, b.x + rnd(-80, 80));
-  if (r && Math.abs(r.x - b.x) < 900) { b.est = "ir_recurso"; b.obj = r.id; return; }
-  b.oficio = null; b.est = "pasear"; b.obj = clamp(b.x + rnd(-120, 120), E.ext[0] + 20, E.ext[1] - 20);
+  const r = cercano(libres, { x: b.x + rnd(-6, 6), z: b.z + rnd(-6, 6) });
+  if (r && dist(r, b) < 60) { b.est = "ir_recurso"; b.obj = r.id; return; }
+  b.oficio = null; b.est = "pasear"; b.obj = dentro({ x: b.x + rnd(-8, 8), z: b.z + rnd(-8, 8) });
 }
 
 // ======================= Jugador =======================
@@ -481,15 +389,15 @@ function nuevoPedido() {
 function dar(tipo) {
   if (E.energia < 1) { aviso("Sin energía ⚡ esperá un poquito"); return; }
   E.energia -= 1; E[tipo]++;
-  const cerca = cercano(E.bichos.filter((b) => !b.adentro && b.y === 0), cam.x);
-  if (cerca) { corazones(cerca.x, -24); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
+  const cerca = cercano(E.bichos.filter((b) => !b.adentro && b.y === 0), controles.target);
+  if (cerca) { corazones(cerca); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
   sonido("dar");
   if (E.pedido && E.pedido.tipo === tipo) {
     E.pedido.dado++;
     if (E.pedido.dado >= E.pedido.cant) {
       E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
       for (const b of E.bichos) if (!b.adentro && Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false);
-      festejo(cam.x); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
+      festejo(controles.target); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
     }
   }
   pintarHUD();
@@ -501,18 +409,21 @@ $("d-piedra").onclick = () => dar("piedra");
 function explotar(b) {
   E.bichos = E.bichos.filter((o) => o !== b); E.explotados++;
   E.animo = clamp(E.animo - 15, 0, 100);
-  for (let i = 0; i < 26; i++) particulas.push({ x: b.x, y: b.y - 14, piso: b.y, vx: rnd(-140, 140), vy: rnd(-260, -60), t: rnd(.6, 1.2), c: `hsl(${b.hue},60%,${rnd(45, 70)}%)`, s: rnd(3, 7) });
-  particulas.push({ x: b.x, y: b.y - 14, vx: 0, vy: 0, t: .35, anillo: true });
+  quitarMallaBicho(b);
+  const color = new THREE.Color(`hsl(${b.hue},60%,60%)`);
+  for (let i = 0; i < 28; i++) particula({ x: b.x, y: .9, z: b.z }, { x: rnd(-6, 6), y: rnd(3, 9), z: rnd(-6, 6) }, color, rnd(.8, 1.4), rnd(.12, .26));
+  onda(b);
   for (const o of E.bichos) {
-    if (o.adentro || Math.abs(o.y - b.y) > 40) continue;
-    if (Math.abs(o.x - b.x) < 220) { o.susto = rnd(6, 10); o.dir = Math.sign(o.x - b.x) || 1; if (o.y === 0) { o.carga = null; o.est = "quieto"; o.quieto = 1; } if (Math.random() < .5) hablar(o, elegir(["¡aaa!", "¡iii!", "😱", "¡no no!"]), true); }
+    if (o.adentro || o.y !== 0) continue;
+    const d = dist(o, b);
+    if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .5) hablar(o, elegir(["¡aaa!", "¡iii!", "😱", "¡no no!"]), true); }
   }
   sonido("puf");
   if (navigator.vibrate) navigator.vibrate(40);
-  if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); E.bichos.push(crearBicho(0, true)); }, 1500);
+  if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); E.bichos.push(crearBicho(1.5, 1.5, true)); }, 1500);
 }
 
-// ======================= Charla y sonido =======================
+// ======================= Sonido =======================
 let AC = null, sonidoOn = true;
 try { sonidoOn = localStorage.getItem("brotitos-sonido") !== "0"; } catch (e) {}
 function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); } if (AC.state === "suspended") AC.resume(); return AC; }
@@ -539,351 +450,334 @@ function sonido(tipo, b) {
 let ultimaVoz = 0;
 function hablar(b, txt, fuerte) {
   b.charla = txt; b.charlaT = 2.6;
-  const visible = Math.abs((b.x - cam.x) * cam.z) < W / 2 + 40;
-  if (visible && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido("habla", b); }
+  if (enPantalla(b) && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido("habla", b); }
 }
 $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈";
 $("b-sonido").onclick = () => { sonidoOn = !sonidoOn; $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈"; try { localStorage.setItem("brotitos-sonido", sonidoOn ? "1" : "0"); } catch (e) {} };
 
-// ======================= Efectos y avisos =======================
-let particulas = [];
-function corazones(x, y) { for (let i = 0; i < 3; i++) particulas.push({ x: x + rnd(-8, 8), y, vx: rnd(-15, 15), vy: rnd(-50, -30), t: 1.2, emoji: "💚", s: 14 }); }
-function festejo(x) { for (let i = 0; i < 14; i++) particulas.push({ x: x + rnd(-30, 30), y: -40, piso: 0, vx: rnd(-80, 80), vy: rnd(-180, -60), t: rnd(.8, 1.4), c: elegir(["#FFC23D", "#FF6F91", "#6EC6FF", "#7ED957"]), s: rnd(3, 5), conf: true }); }
 let avisoT, logroT;
 function aviso(t) { const a = $("aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(avisoT); avisoT = setTimeout(() => a.classList.remove("ver"), 2600); }
-function logro(g, t, s) { $("logro-g").textContent = g; $("logro-t").textContent = t; $("logro-s").textContent = s; $("logro").classList.add("ver"); clearTimeout(logroT); logroT = setTimeout(() => $("logro").classList.remove("ver"), 3800); sonido("logro"); }
+function logro(gl, t, s) { $("logro-g").textContent = gl; $("logro-t").textContent = t; $("logro-s").textContent = s; $("logro").classList.add("ver"); clearTimeout(logroT); logroT = setTimeout(() => $("logro").classList.remove("ver"), 3800); sonido("logro"); }
 
-// ======================= Cámara =======================
-const cv = $("mundo"), g = cv.getContext("2d");
-let W = 0, H = 0, DPR = 1, PISO = 0;
-const cam = { x: 0, y: 0, z: 1.6 };
-function medir() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; PISO = H * (W < 600 ? 0.6 : 0.66); }
-addEventListener("resize", medir); medir();
-const sx = (x) => (x - cam.x) * cam.z + W / 2;
-const sy = (y) => PISO + (y - cam.y) * cam.z;
-function limitarCam() {
-  cam.z = clamp(cam.z, .2, 3);
-  const medio = W / 2 / cam.z, ancho = E.ext[1] - E.ext[0];
-  cam.x = clamp(cam.x, E.ext[0] + Math.min(medio, ancho / 2), E.ext[1] - Math.min(medio, ancho / 2));
-  const abajo = Math.max(0, profundidad() + 40 - (H - PISO) / cam.z * .7);
-  cam.y = clamp(cam.y, -260, abajo);
+// ======================= 3D: escena =======================
+const render = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: false });
+render.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+render.setSize(innerWidth, innerHeight);
+render.shadowMap.enabled = true; render.shadowMap.type = THREE.PCFSoftShadowMap;
+$("lienzo").appendChild(render.domElement);
+const escena = new THREE.Scene();
+const CIELO_DIA = new THREE.Color("#9FE3F5"), CIELO_NOCHE = new THREE.Color("#1B1C48");
+escena.background = CIELO_DIA.clone();
+escena.fog = new THREE.Fog(CIELO_DIA.clone(), 150, 380);
+const camara = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .5, 900);
+camara.position.set(0, 17, 22);
+const controles = new OrbitControls(camara, render.domElement);
+controles.target.set(0, 0, 0);
+controles.enableDamping = true; controles.dampingFactor = .12;
+controles.minDistance = 7; controles.maxDistance = 230; controles.maxPolarAngle = 1.32; controles.minPolarAngle = .25;
+controles.screenSpacePanning = false;
+controles.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+controles.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+addEventListener("resize", () => { camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix(); render.setSize(innerWidth, innerHeight); });
+
+const hemi = new THREE.HemisphereLight("#ffffff", "#7a6a50", .9); escena.add(hemi);
+const sol = new THREE.DirectionalLight("#fff4dd", 1.7);
+sol.castShadow = true; sol.shadow.mapSize.set(2048, 2048); sol.shadow.bias = -.0006; sol.shadow.normalBias = .03;
+escena.add(sol, sol.target);
+const estrellas = (() => {
+  const g = new THREE.BufferGeometry(), p = [];
+  for (let i = 0; i < 600; i++) { const a = Math.random() * Math.PI * 2, e = rnd(.15, 1.4), r = 420; p.push(Math.cos(a) * Math.cos(e) * r, Math.sin(e) * r, Math.sin(a) * Math.cos(e) * r); }
+  g.setAttribute("position", new THREE.Float32BufferAttribute(p, 3));
+  const m = new THREE.PointsMaterial({ color: "#ffffff", size: 1.6, sizeAttenuation: false, transparent: true, opacity: 0, fog: false });
+  const pts = new THREE.Points(g, m); escena.add(pts); return pts;
+})();
+
+const MAT = {};
+const mat = (c) => MAT[c] || (MAT[c] = new THREE.MeshLambertMaterial({ color: c }));
+const VENTANA = new THREE.MeshLambertMaterial({ color: "#FFF3B0", emissive: "#FFC75A", emissiveIntensity: .1 });
+const LLAMA = new THREE.MeshBasicMaterial({ color: "#FF9A3D" }), LLAMA2 = new THREE.MeshBasicMaterial({ color: "#FFE07A" });
+const G = {
+  esfera: new THREE.SphereGeometry(.5, 20, 14), caja: new THREE.BoxGeometry(1, 1, 1),
+  cil: new THREE.CylinderGeometry(.5, .5, 1, 16), cono: new THREE.ConeGeometry(.5, 1, 16), piramide: new THREE.ConeGeometry(.5, 1, 4),
+  ojo: new THREE.SphereGeometry(.09, 10, 8), media: new THREE.SphereGeometry(.5, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2),
+  roca: new THREE.DodecahedronGeometry(.5, 0), hoja: new THREE.SphereGeometry(.5, 10, 8),
+};
+const malla = (geo, material, sx = 1, sy = 1, sz = 1, x = 0, y = 0, z = 0, sombra = true) => { const m = new THREE.Mesh(geo, material); m.scale.set(sx, sy, sz); m.position.set(x, y, z); m.castShadow = sombra; m.receiveShadow = true; return m; };
+
+let isla = null;
+function armarIsla() {
+  if (isla) { escena.remove(isla); isla.traverse((o) => { if (o.geometry && !Object.values(G).includes(o.geometry)) o.geometry.dispose(); }); }
+  const r = E.radio, seg = Math.max(48, r * 3 | 0);
+  isla = new THREE.Group();
+  const pasto = new THREE.Mesh(new THREE.CylinderGeometry(r, r, .6, seg), mat("#7ACB6B")); pasto.position.y = -.3; pasto.receiveShadow = true;
+  const borde = new THREE.Mesh(new THREE.CylinderGeometry(r * 1.002, r * .97, .9, seg), mat("#63B257")); borde.position.y = -.9;
+  const alto = r * .45 + 4;
+  const tierra = new THREE.Mesh(new THREE.CylinderGeometry(r * .97, r * .55, alto, seg), mat("#B9875A")); tierra.position.y = -1.35 - alto / 2;
+  const punta = new THREE.Mesh(new THREE.ConeGeometry(r * .55, r * .5, seg), mat("#9C6E45")); punta.rotation.x = Math.PI; punta.position.y = tierra.position.y - alto / 2 - r * .25;
+  isla.add(pasto, borde, tierra, punta);
+  for (let i = 0; i < r * 6; i++) { const a = Math.random() * 6.3, d = Math.sqrt(Math.random()) * (r - 1); isla.add(malla(G.cono, mat(Math.random() < .5 ? "#5DB85A" : "#8FD67A"), .25, .5, .25, Math.cos(a) * d, .2, Math.sin(a) * d, false)); }
+  escena.add(isla);
+  const s = sol.shadow.camera; s.left = -r - 8; s.right = r + 8; s.top = r + 8; s.bottom = -r - 8; s.near = 1; s.far = 400; s.updateProjectionMatrix();
+  islaCambio = false;
 }
 
-// ======================= Dibujo =======================
-const mezclar = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
-const ESTRELLAS = Array.from({ length: 70 }, () => [Math.random(), Math.random() * .55, rnd(.6, 1.8)]);
-
-function dibujar(ahora) {
-  g.setTransform(DPR, 0, 0, DPR, 0, 0);
-  const L = luz(), P = sy(0), z = cam.z;
-  // cielo
-  const cielo = g.createLinearGradient(0, 0, 0, P);
-  cielo.addColorStop(0, rgb(mezclar([22, 24, 70], [142, 216, 242], L)));
-  cielo.addColorStop(1, rgb(mezclar([70, 60, 120], [221, 246, 255], L)));
-  g.fillStyle = cielo; g.fillRect(0, 0, W, P + 2);
-  if (L < .9) { g.fillStyle = `rgba(255,255,255,${(1 - L) * 1.1})`; for (const [ex, ey, es] of ESTRELLAS) { g.beginPath(); g.arc(ex * W, ey * P, es, 0, 7); g.fill(); } }
-  // sol / luna
-  const tt = (E.tiempo % DIA) / DIA, arco = Math.sin(tt * Math.PI * 2 / (NOCHE / DIA) * .5);
-  if (!esNoche()) { g.fillStyle = "#FFE27A"; g.beginPath(); g.arc(W * (.1 + tt / (NOCHE / DIA) * .8), P * (.55 - arco * .4), 26, 0, 7); g.fill(); }
-  else { g.fillStyle = "#F4F1D0"; g.beginPath(); g.arc(W * .78, P * .2, 20, 0, 7); g.fill(); g.fillStyle = rgb(mezclar([22, 24, 70], [142, 216, 242], L)); g.beginPath(); g.arc(W * .78 + 8, P * .2 - 5, 17, 0, 7); g.fill(); }
-  // nubes y cerros
-  g.fillStyle = `rgba(255,255,255,${.35 + L * .5})`;
-  for (let i = -2; i < 8; i++) { const x = ((i * 260 - cam.x * .15 * z) % (W + 400) + W + 400) % (W + 400) - 200, y = (P - 300 * Math.min(z, 1.4)) * .3 + 60 + (i % 3) * 38; nube(x, y, 1 + (i % 2) * .4); }
-  g.fillStyle = rgb(mezclar([50, 80, 90], [168, 221, 176], L));
-  g.beginPath(); g.moveTo(0, P);
-  for (let x = 0; x <= W; x += 8) { const wx = (x - W / 2) / z * .4 + cam.x * .4; g.lineTo(x, P - 40 * Math.min(1.4, z) - Math.sin(wx / 90) * 18 - Math.sin(wx / 37) * 8); }
-  g.lineTo(W, P); g.fill();
-  // subsuelo
-  g.fillStyle = rgb(mezclar([95, 70, 50], [185, 135, 90], Math.max(.55, L))); g.fillRect(0, P, W, H - P);
-  for (let k = 1; k < 8; k++) { g.fillStyle = `rgba(60,35,20,${k * .05})`; g.fillRect(0, sy(k * 70), W, 70 * z); }
-  g.fillStyle = "#A9774C55"; for (let i = 0; i < 40; i++) { const wx = Math.floor(cam.x / 70) * 70 + (i - 20) * 70; g.beginPath(); g.arc(sx(wx + (i * 37 % 50)), sy(30 + (i * 13 % 300)), 3 * z, 0, 7); g.fill(); }
-  if (E.mina) dibujarMina(ahora);
-  // pasto
-  g.fillStyle = rgb(mezclar([60, 110, 70], [122, 203, 107], L)); g.fillRect(0, P, W, 10 * z + 3);
-
-  for (const r of E.recursos) { const x = sx(r.x); if (x < -60 || x > W + 60) continue; dibujarRecurso(r, x, P); }
-  for (const e of E.edificios) { const x = sx(e.x); if (x < -120 || x > W + 120) continue; dibujarEdificio(e, x, P, ahora); }
-  const orden = E.bichos.filter((b) => !b.adentro).sort((a, b) => b.edad - a.edad);
-  for (const b of orden) { const x = sx(b.x); if (x < -40 || x > W + 40) continue; dibujarBicho(b, x, ahora); }
-  // oscurecer de noche (sin tapar las ventanas encendidas: se dibujan después)
-  if (L < 1) { g.fillStyle = `rgba(10,12,40,${(1 - L) * .45})`; g.fillRect(0, 0, W, H); dibujarLuces(P, ahora); }
-  // niebla en los bordes
-  for (const lado of [0, 1]) {
-    const bx = sx(E.ext[lado]); const gr = g.createLinearGradient(bx, 0, bx + (lado ? 1 : -1) * 160 * z, 0);
-    const c = L > .6 ? "255,255,255" : "30,30,60";
-    gr.addColorStop(0, `rgba(${c},0)`); gr.addColorStop(1, `rgba(${c},.93)`); g.fillStyle = gr;
-    if (lado) g.fillRect(bx, 0, W - bx + 10, H); else g.fillRect(-10, 0, bx + 10, H);
-  }
-  for (const p of particulas) {
-    const x = sx(p.x), y = sy(p.y);
-    if (p.anillo) { g.strokeStyle = `rgba(255,255,255,${p.t / .35})`; g.lineWidth = 4; g.beginPath(); g.arc(x, y, (1 - p.t / .35) * 50 * z + 5, 0, 7); g.stroke(); continue; }
-    if (p.emoji) { g.globalAlpha = Math.min(1, p.t); g.font = `${p.s * z}px serif`; g.textAlign = "center"; g.fillText(p.emoji, x, y); g.globalAlpha = 1; continue; }
-    g.fillStyle = p.c; g.globalAlpha = Math.min(1, p.t * 1.5);
-    if (p.conf) g.fillRect(x, y, p.s * z, p.s * z * .6); else { g.beginPath(); g.arc(x, y, p.s * z * .5, 0, 7); g.fill(); }
-    g.globalAlpha = 1;
-  }
-}
-function nube(x, y, s) { g.beginPath(); g.arc(x, y, 22 * s, 0, 7); g.arc(x + 24 * s, y - 10 * s, 26 * s, 0, 7); g.arc(x + 52 * s, y, 20 * s, 0, 7); g.fill(); }
-
-function dibujarMina(ahora) {
-  const z = cam.z, m = E.mina, fondo = profundidad();
-  // pozo con escalera
-  g.fillStyle = "#3A2618"; g.fillRect(sx(m.x - 11), sy(0), 22 * z, (fondo + 4) * z);
-  g.strokeStyle = "#8A5A36"; g.lineWidth = Math.max(1, 2 * z);
-  g.beginPath(); g.moveTo(sx(m.x - 6), sy(0)); g.lineTo(sx(m.x - 6), sy(fondo)); g.moveTo(sx(m.x + 6), sy(0)); g.lineTo(sx(m.x + 6), sy(fondo));
-  for (let y = 8; y < fondo; y += 10) { g.moveTo(sx(m.x - 6), sy(y)); g.lineTo(sx(m.x + 6), sy(y)); }
-  g.stroke();
-  for (const n of m.niveles) {
-    // túnel
-    g.fillStyle = "#4A3020"; redondeado(sx(n.x0 - 8), sy(n.prof - 30), (n.x1 - n.x0 + 16) * z, 32 * z, 10 * z); g.fill();
-    g.fillStyle = "#5A3A26"; g.fillRect(sx(n.x0 - 8), sy(n.prof - 3), (n.x1 - n.x0 + 16) * z, 3 * z);
-    // vigas
-    g.fillStyle = "#8A5A36";
-    for (let x = n.x0 + 10; x < n.x1 - 5; x += 60) { g.fillRect(sx(x) - 2 * z, sy(n.prof - 30), 4 * z, 30 * z); g.fillRect(sx(x) - 9 * z, sy(n.prof - 31), 18 * z, 4 * z); }
-    // farolitos
-    for (let x = n.x0 + 40; x < n.x1 - 20; x += 120) { const f = .7 + Math.sin(ahora / 200 + x) * .15; g.fillStyle = `rgba(255,200,90,${.25 * f})`; g.beginPath(); g.arc(sx(x), sy(n.prof - 22), 18 * z, 0, 7); g.fill(); g.fillStyle = "#FFD86B"; g.beginPath(); g.arc(sx(x), sy(n.prof - 22), 2.5 * z, 0, 7); g.fill(); }
-  }
-  for (const v of E.vetas) {
-    const n = m.niveles[v.niv]; if (!n) continue;
-    const x = sx(v.x), y = sy(n.prof);
-    if (v.tipo === "gemas") {
-      g.fillStyle = "#6B5A70"; g.beginPath(); g.ellipse(x, y - 6 * z, 11 * z, 8 * z, 0, Math.PI, 0); g.lineTo(x + 11 * z, y); g.lineTo(x - 11 * z, y); g.fill();
-      for (let i = 0; i < v.cant; i++) { const gx = x + (i ? 4 : -4) * z, gy = y - 10 * z; g.fillStyle = "#B57CFF"; g.beginPath(); g.moveTo(gx, gy - 6 * z); g.lineTo(gx + 4 * z, gy); g.lineTo(gx, gy + 5 * z); g.lineTo(gx - 4 * z, gy); g.fill(); }
-      if ((ahora / 300 + v.x) % 6 < .5) { g.fillStyle = "#fff"; g.fillRect(x + 6 * z, y - 16 * z, 2 * z, 2 * z); }
-    } else {
-      g.fillStyle = "#8C939C"; g.beginPath(); g.ellipse(x, y - 7 * z, (8 + v.cant * 1.5) * z, (5 + v.cant) * z, 0, Math.PI, 0); g.lineTo(x + (8 + v.cant * 1.5) * z, y); g.lineTo(x - (8 + v.cant * 1.5) * z, y); g.fill();
-      g.fillStyle = "#AEB5BE"; g.beginPath(); g.arc(x - 3 * z, y - 9 * z, 2.5 * z, 0, 7); g.fill();
-    }
-  }
-}
-
-function dibujarRecurso(r, x, P) {
-  const z = cam.z, y0 = P, k = .55 + .45 * (r.cant / r.max);
+// ======================= 3D: recursos y edificios =======================
+function mallaRecurso(r) {
+  const g = new THREE.Group(), k = .5 + .5 * (r.cant / r.max);
   if (r.tipo === "arbol") {
-    g.fillStyle = "#8A5A36"; g.fillRect(x - 4 * z, y0 - 34 * z, 8 * z, 34 * z);
-    if (r.cant > 0) { g.fillStyle = "#3FA35B"; for (const [dx, dy, rr] of [[0, -48, 20], [-13, -38, 14], [13, -38, 14]]) { g.beginPath(); g.arc(x + dx * z * k, y0 + dy * z * (k * .4 + .6), rr * z * k, 0, 7); g.fill(); } }
+    g.add(malla(G.cil, mat("#8A5A36"), .45, 1.8, .45, 0, .9, 0));
+    if (r.cant > 0) { g.add(malla(G.cono, mat("#3FA35B"), 2.4 * k, 2.4 * k, 2.4 * k, 0, 2.2 + 1.2 * k, 0)); g.add(malla(G.cono, mat("#4DB866"), 1.8 * k, 2 * k, 1.8 * k, 0, 3 + 1.6 * k, 0)); }
   } else if (r.tipo === "roca") {
-    if (r.cant <= 0) return;
-    g.fillStyle = "#9AA3AE"; g.beginPath(); g.ellipse(x, y0 - 9 * z * k, 17 * z * k, 11 * z * k, 0, Math.PI, 0); g.lineTo(x + 17 * z * k, y0); g.lineTo(x - 17 * z * k, y0); g.fill();
-    g.fillStyle = "#B8C0C9"; g.beginPath(); g.ellipse(x - 5 * z * k, y0 - 13 * z * k, 6 * z * k, 3 * z * k, -.3, 0, 7); g.fill();
+    if (r.cant > 0) { g.add(malla(G.roca, mat("#9AA3AE"), 1.8 * k, 1.3 * k, 1.6 * k, 0, .5 * k, 0)); g.add(malla(G.roca, mat("#B8C0C9"), .9 * k, .7 * k, .8 * k, .7 * k, .3, .4 * k)); }
   } else {
-    g.fillStyle = "#4CB863"; g.beginPath(); g.arc(x, y0 - 11 * z, 14 * z, Math.PI, 0); g.arc(x + 9 * z, y0 - 6 * z, 9 * z, -Math.PI / 2, Math.PI / 2); g.lineTo(x - 14 * z, y0); g.fill();
-    g.fillStyle = "#E8424F"; for (let i = 0; i < r.cant; i++) { g.beginPath(); g.arc(x + (-8 + i * 4.5) * z, y0 - (8 + (i % 2) * 7) * z, 2.6 * z, 0, 7); g.fill(); }
+    g.add(malla(G.esfera, mat("#4CB863"), 1.8, 1.3, 1.8, 0, .6, 0));
+    for (let i = 0; i < r.cant; i++) { const a = i / 5 * Math.PI * 2; g.add(malla(G.esfera, mat("#E8424F"), .22, .22, .22, Math.cos(a) * .75, .75 + (i % 2) * .3, Math.sin(a) * .75, false)); }
   }
+  g.rotation.y = (r.id * 1.7) % 6.28;
+  return g;
 }
-
-const PISO_ALTO = 30;
-function andamio(x, y, w, h, prog) {
-  const z = cam.z;
-  g.strokeStyle = "#A0703F"; g.lineWidth = 3 * z;
-  g.strokeRect(x - w / 2, y - h, w, h);
-  g.beginPath(); g.moveTo(x - w / 2, y); g.lineTo(x + w / 2, y - h); g.moveTo(x - w / 2, y - h); g.lineTo(x + w / 2, y); g.stroke();
-  g.fillStyle = "#E8C79A"; g.fillRect(x - w / 2, y - h * prog, w, h * prog);
-  g.fillStyle = "#0002"; g.fillRect(x - w / 2 - 2 * z, y - h - 14 * z, w + 4 * z, 6 * z); g.fillStyle = "#FFB74D"; g.fillRect(x - w / 2 - 2 * z, y - h - 14 * z, (w + 4 * z) * prog, 6 * z);
+const LINEA_ANDAMIO = new THREE.LineBasicMaterial({ color: "#A0703F" });
+function andamio(g, w, h, d, prog, y0 = 0) {
+  const lineas = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)), LINEA_ANDAMIO);
+  lineas.position.y = y0 + h / 2; g.add(lineas);
+  for (const [a, c] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) g.add(malla(G.cil, mat("#A0703F"), .12, h, .12, a * w / 2, y0 + h / 2, c * d / 2));
+  if (prog > 0) g.add(malla(G.caja, mat("#E8C79A"), w * .96, h * prog, d * .96, 0, y0 + h * prog / 2, 0));
 }
-function dibujarEdificio(e, x, P, ahora) {
-  const z = cam.z, y0 = P;
+const PISO = 2;
+function mallaEdificio(e) {
+  const g = new THREE.Group();
   if (e.tipo === "fogata") {
-    g.fillStyle = "#7A4B2A"; g.save(); g.translate(x, y0 - 3 * z); g.rotate(.35); g.fillRect(-14 * z, -3 * z, 28 * z, 6 * z); g.rotate(-.7); g.fillRect(-14 * z, -3 * z, 28 * z, 6 * z); g.restore();
-    const f = 1 + Math.sin(ahora / 120) * .12;
-    g.fillStyle = "#FF8A3D"; g.beginPath(); g.ellipse(x, y0 - 14 * z * f, 8 * z, 13 * z * f, 0, 0, 7); g.fill();
-    g.fillStyle = "#FFD23D"; g.beginPath(); g.ellipse(x, y0 - 10 * z * f, 4.5 * z, 8 * z * f, 0, 0, 7); g.fill();
-    return;
+    for (let i = 0; i < 3; i++) { const l = malla(G.cil, mat("#7A4B2A"), .25, 1.6, .25, 0, .2, 0); l.rotation.z = Math.PI / 2; l.rotation.y = i * 1.05; g.add(l); }
+    const ll = malla(G.cono, LLAMA, .8, 1.4, .8, 0, .9, 0, false), ll2 = malla(G.cono, LLAMA2, .45, .8, .45, 0, .7, 0, false);
+    g.add(ll, ll2); g.userData.llama = ll;
+    const luzF = new THREE.PointLight("#FF9A4D", 0, 18, 1.6); luzF.position.y = 1.4; g.add(luzF); g.userData.luz = luzF;
+    for (let i = 0; i < 8; i++) { const a = i / 8 * 6.28; g.add(malla(G.roca, mat("#8C939C"), .4, .3, .4, Math.cos(a) * .9, .1, Math.sin(a) * .9)); }
+    return g;
   }
   if (e.tipo === "casa") {
-    const hechos = pisosListos(e), w = 48 * z, tono = 20 + (e.id * 37) % 40, techo = `hsl(${(e.id * 61) % 360},55%,58%)`;
+    const hechos = pisosListos(e), tono = (20 + (e.id * 37) % 40);
+    const pared = mat(`hsl(${tono},55%,78%)`), techo = mat(`hsl(${(e.id * 61) % 360},55%,58%)`);
     for (let i = 0; i < hechos; i++) {
-      const yb = y0 - i * PISO_ALTO * z;
-      g.fillStyle = `hsl(${tono},55%,${78 - i * 3}%)`; g.fillRect(x - w / 2, yb - PISO_ALTO * z, w, PISO_ALTO * z);
-      g.fillStyle = "#00000014"; g.fillRect(x - w / 2, yb - PISO_ALTO * z, w, 3 * z);
-      g.fillStyle = "#FFF3B0"; if (i > 0 || true) { g.fillRect(x + 11 * z, yb - 22 * z, 8 * z, 8 * z); g.fillRect(x - 19 * z, yb - 22 * z, 8 * z, 8 * z); }
-      if (i > 0) { g.fillStyle = "#6B4A33"; g.fillRect(x - 24 * z, yb - 2 * z, 48 * z, 2 * z); }
+      g.add(malla(G.caja, pared, 3.2, PISO, 3.2, 0, i * PISO + PISO / 2, 0));
+      g.add(malla(G.caja, mat("#6B4A33"), 3.3, .14, 3.3, 0, i * PISO + .07, 0, false));
+      for (const [vx, vz, ry] of [[-.75, 1.61, 0], [.75, 1.61, 0], [1.61, 0, Math.PI / 2], [-1.61, 0, Math.PI / 2], [-.75, -1.61, 0], [.75, -1.61, 0]]) {
+        if (i === 0 && vz > 1.6 && vx < 0) continue;
+        const v = malla(G.caja, VENTANA, .55, .55, .06, vx, i * PISO + 1.1, vz, false); v.rotation.y = ry; g.add(v);
+      }
     }
-    if (hechos > 0) { g.fillStyle = "#6B4A33"; g.beginPath(); g.moveTo(x - 7 * z, y0); g.lineTo(x - 7 * z, y0 - 13 * z); g.arc(x, y0 - 13 * z, 7 * z, Math.PI, 0); g.lineTo(x + 7 * z, y0); g.fill(); }
-    const ytecho = y0 - hechos * PISO_ALTO * z;
-    if (!listo(e)) andamio(x, ytecho, w, PISO_ALTO * z, e.prog);
-    const yt = listo(e) ? ytecho : ytecho - PISO_ALTO * z;
-    if (hechos > 0 || listo(e)) { g.fillStyle = techo; g.beginPath(); g.moveTo(x - 31 * z, yt + 2 * z); g.lineTo(x, yt - 24 * z); g.lineTo(x + 31 * z, yt + 2 * z); g.fill(); }
-    return;
+    if (hechos > 0) g.add(malla(G.caja, mat("#6B4A33"), .7, 1.15, .1, -.75, .58, 1.62, false));
+    const ytecho = hechos * PISO;
+    if (!listo(e)) andamio(g, 3.2, PISO, 3.2, e.prog, ytecho);
+    const yt = listo(e) ? ytecho : ytecho + PISO;
+    if (hechos > 0 || listo(e)) { const t = malla(G.piramide, techo, 4.8, 1.8, 4.8, 0, yt + .9, 0); t.rotation.y = Math.PI / 4; g.add(t); }
+    return g;
   }
-  if (!listo(e)) { const alto = { torre: 150, cohete: 110, escuela: 60, huerta: 18, mina: 36 }[e.tipo] || 40; andamio(x, y0, (ANCHO[e.tipo] || 24) * 2 * z, alto * z, e.prog); return; }
+  if (!listo(e)) { const [w, h, d] = { torre: [3, 9, 3], cohete: [3, 7, 3], escuela: [5, 3.5, 4], huerta: [5.5, .8, 4.5], mina: [3.5, 2.5, 3.5] }[e.tipo] || [3, 3, 3]; andamio(g, w, h, d, e.prog); return g; }
   if (e.tipo === "huerta") {
-    g.fillStyle = "#7A5230"; g.fillRect(x - 34 * z, y0 - 6 * z, 68 * z, 6 * z);
-    for (let i = 0; i < 6; i++) { const px = x + (-28 + i * 11.2) * z; g.fillStyle = "#3F9F4F"; g.beginPath(); g.ellipse(px, y0 - 12 * z, 4 * z, 8 * z, 0, 0, 7); g.fill(); if (i < e.cant) { g.fillStyle = i % 2 ? "#FF9F1C" : "#E8424F"; g.beginPath(); g.arc(px + 2 * z, y0 - 14 * z, 2.8 * z, 0, 7); g.fill(); } }
-    g.strokeStyle = "#C9A36B"; g.lineWidth = 2 * z; g.beginPath();
-    for (let i = 0; i <= 8; i++) { g.moveTo(x + (-36 + i * 9) * z, y0); g.lineTo(x + (-36 + i * 9) * z, y0 - 14 * z); }
-    g.moveTo(x - 36 * z, y0 - 9 * z); g.lineTo(x + 36 * z, y0 - 9 * z); g.stroke();
-    return;
+    g.add(malla(G.caja, mat("#7A5230"), 5.5, .3, 4.5, 0, .15, 0));
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) {
+      const x = -1.95 + i * 1.3, z = -1.3 + j * 1.3;
+      g.add(malla(G.cono, mat("#3F9F4F"), .5, .9, .5, x, .75, z));
+      if (i * 3 + j < (e.cant || 0) * 1.5) g.add(malla(G.esfera, mat((i + j) % 2 ? "#FF9F1C" : "#E8424F"), .3, .3, .3, x + .2, .85, z + .15, false));
+    }
+    for (let i = 0; i <= 10; i++) { const t = i / 10; for (const [x, z] of [[-2.9 + t * 5.8, 2.4], [-2.9 + t * 5.8, -2.4]]) g.add(malla(G.cil, mat("#C9A36B"), .1, .7, .1, x, .35, z, false)); }
+    return g;
   }
   if (e.tipo === "mina") {
-    g.fillStyle = "#8A5A36"; g.fillRect(x - 20 * z, y0 - 36 * z, 5 * z, 36 * z); g.fillRect(x + 15 * z, y0 - 36 * z, 5 * z, 36 * z); g.fillRect(x - 24 * z, y0 - 40 * z, 48 * z, 6 * z);
-    g.fillStyle = "#2B1A10"; g.fillRect(x - 15 * z, y0 - 34 * z, 30 * z, 34 * z);
-    g.fillStyle = "#555"; g.font = `${12 * z}px serif`; g.textAlign = "center"; g.fillText("⛏️", x, y0 - 44 * z);
-    return;
+    const prof = E.mina ? E.mina.prof : 1, alto = 2.5 + prof * .9;
+    g.add(malla(G.cil, mat("#2B1A10"), 2.2, .1, 2.2, 0, .05, 0, false));
+    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) g.add(malla(G.cil, mat("#8A5A36"), .22, alto, .22, x * 1.05, alto / 2, z * 1.05));
+    for (let y = 1; y < alto; y += 1.2) { g.add(malla(G.caja, mat("#8A5A36"), 2.3, .15, .15, 0, y, 1.05)); g.add(malla(G.caja, mat("#8A5A36"), 2.3, .15, .15, 0, y, -1.05)); }
+    const rueda = new THREE.Mesh(new THREE.TorusGeometry(.7, .1, 8, 20), mat("#555")); rueda.position.set(0, alto + .4, 0); g.add(rueda); g.userData.rueda = rueda;
+    g.add(malla(G.caja, mat("#7A4B2A"), 2.6, .3, 2.6, 0, alto, 0));
+    cartel(`⛏️ ${prof}`, 0, alto + 1.8, g);
+    return g;
   }
   if (e.tipo === "escuela") {
-    g.fillStyle = "#F2C57C"; g.fillRect(x - 30 * z, y0 - 50 * z, 60 * z, 50 * z);
-    g.fillStyle = "#D9534F"; g.beginPath(); g.moveTo(x - 36 * z, y0 - 48 * z); g.lineTo(x, y0 - 74 * z); g.lineTo(x + 36 * z, y0 - 48 * z); g.fill();
-    g.fillStyle = "#FFF3B0"; for (const dx of [-20, 12]) g.fillRect(x + dx * z, y0 - 40 * z, 9 * z, 9 * z);
-    g.fillStyle = "#6B4A33"; g.fillRect(x - 6 * z, y0 - 18 * z, 12 * z, 18 * z);
-    g.fillStyle = "#fff"; g.font = `700 ${8 * z}px Fredoka, sans-serif`; g.textAlign = "center"; g.fillText("ABC", x, y0 - 22 * z);
-    g.fillStyle = "#555"; g.fillRect(x - .8 * z, y0 - 92 * z, 1.6 * z, 20 * z); g.fillStyle = "#4FB477"; g.fillRect(x, y0 - 92 * z, 12 * z, 8 * z);
-    return;
+    g.add(malla(G.caja, mat("#F2C57C"), 5, 3.2, 4, 0, 1.6, 0));
+    const t = malla(G.piramide, mat("#D9534F"), 6.6, 1.8, 6.6, 0, 4.1, 0); t.rotation.y = Math.PI / 4; g.add(t);
+    for (const x of [-1.6, 1.6]) g.add(malla(G.caja, VENTANA, .8, .8, .06, x, 2, 2.01, false));
+    g.add(malla(G.caja, mat("#6B4A33"), .9, 1.5, .1, 0, .75, 2.02, false));
+    g.add(malla(G.cil, mat("#666"), .08, 3, .08, 2, 6, 0)); g.add(malla(G.caja, mat("#4FB477"), 1, .6, .05, 2.5, 7.1, 0));
+    return g;
   }
   if (e.tipo === "torre") {
-    const h = 150 * z;
-    g.fillStyle = "#A7ADB8"; g.fillRect(x - 16 * z, y0 - h, 32 * z, h);
-    g.fillStyle = "#8D94A0"; for (let yy = 0; yy < 150; yy += 14) for (let xx = -16 + ((yy / 14) % 2) * 8; xx < 16; xx += 16) g.fillRect(x + xx * z, y0 - (yy + 14) * z, 15 * z, 1.5 * z);
-    g.fillStyle = "#A7ADB8"; for (let i = -2; i <= 2; i++) g.fillRect(x + (i * 8 - 3) * z, y0 - h - 8 * z, 6 * z, 8 * z);
-    g.fillStyle = "#FFF3B0"; g.fillRect(x - 4 * z, y0 - 60 * z, 8 * z, 12 * z); g.fillRect(x - 4 * z, y0 - 110 * z, 8 * z, 12 * z);
-    g.fillStyle = "#555"; g.fillRect(x - .8 * z, y0 - h - 34 * z, 1.6 * z, 26 * z);
-    g.fillStyle = "#FF6F91"; g.beginPath(); g.moveTo(x, y0 - h - 34 * z); g.lineTo(x + (16 + Math.sin(ahora / 200) * 2) * z, y0 - h - 29 * z); g.lineTo(x, y0 - h - 24 * z); g.fill();
-    return;
+    g.add(malla(G.cil, mat("#A7ADB8"), 2.6, 9, 2.6, 0, 4.5, 0));
+    for (let i = 0; i < 8; i++) { const a = i / 8 * 6.28; g.add(malla(G.caja, mat("#A7ADB8"), .5, .6, .5, Math.cos(a) * 1.25, 9.3, Math.sin(a) * 1.25)); }
+    for (const y of [3, 6]) g.add(malla(G.caja, VENTANA, .5, .8, .06, 0, y, 1.31, false));
+    g.add(malla(G.cil, mat("#666"), .07, 2.4, .07, 0, 10.4, 0));
+    const b = malla(G.caja, mat("#FF6F91"), 1.1, .6, .05, .55, 11.2, 0, false); g.add(b); g.userData.bandera = b;
+    return g;
   }
   if (e.tipo === "cohete") {
-    g.fillStyle = "#777"; g.fillRect(x - 26 * z, y0 - 6 * z, 52 * z, 6 * z);
-    g.fillStyle = "#E8424F"; g.beginPath(); g.moveTo(x - 20 * z, y0 - 6 * z); g.lineTo(x - 11 * z, y0 - 34 * z); g.lineTo(x - 11 * z, y0 - 6 * z); g.fill(); g.beginPath(); g.moveTo(x + 20 * z, y0 - 6 * z); g.lineTo(x + 11 * z, y0 - 34 * z); g.lineTo(x + 11 * z, y0 - 6 * z); g.fill();
-    g.fillStyle = "#F4F4F8"; g.beginPath(); g.moveTo(x - 12 * z, y0 - 8 * z); g.lineTo(x - 12 * z, y0 - 80 * z); g.quadraticCurveTo(x, y0 - 112 * z, x + 12 * z, y0 - 80 * z); g.lineTo(x + 12 * z, y0 - 8 * z); g.fill();
-    g.fillStyle = "#6EC6FF"; g.beginPath(); g.arc(x, y0 - 70 * z, 6 * z, 0, 7); g.fill();
-    g.fillStyle = "#E8424F"; g.beginPath(); g.moveTo(x - 12 * z, y0 - 88 * z); g.quadraticCurveTo(x, y0 - 112 * z, x + 12 * z, y0 - 88 * z); g.fill();
-    return;
+    g.add(malla(G.cil, mat("#888888"), 3.4, .3, 3.4, 0, .15, 0));
+    g.add(malla(G.cil, mat("#F4F4F8"), 1.6, 5, 1.6, 0, 3, 0));
+    g.add(malla(G.cono, mat("#E8424F"), 1.6, 1.8, 1.6, 0, 6.4, 0));
+    for (let i = 0; i < 3; i++) { const a = i / 3 * 6.28; const f = malla(G.caja, mat("#E8424F"), .1, 1.6, 1, Math.cos(a) * .85, 1.3, Math.sin(a) * .85); f.rotation.y = -a; g.add(f); }
+    g.add(malla(G.esfera, mat("#6EC6FF"), .6, .6, .3, 0, 4.2, .78, false));
+    return g;
   }
+  return g;
 }
-function dibujarLuces(P, ahora) {
-  const z = cam.z, noche = 1 - luz();
-  for (const e of E.edificios) {
-    const x = sx(e.x); if (x < -80 || x > W + 80 || !listo(e) && e.tipo !== "casa") continue;
-    if (e.tipo === "casa") {
-      const dentro = E.bichos.filter((b) => b.adentro && b.obj === e.id).length;
-      for (let i = 0; i < pisosListos(e); i++) { const yb = P - i * PISO_ALTO * z; g.fillStyle = `rgba(255,214,110,${.55 + noche * .4})`; g.fillRect(x + 11 * z, yb - 22 * z, 8 * z, 8 * z); g.fillRect(x - 19 * z, yb - 22 * z, 8 * z, 8 * z); }
-      if (dentro && esNoche()) { g.fillStyle = "#fff"; g.font = `600 ${10 * z}px Fredoka, sans-serif`; g.textAlign = "center"; const k = (ahora / 900) % 1; g.globalAlpha = 1 - k; g.fillText("z", x + 18 * z + k * 8 * z, P - pisosListos(e) * PISO_ALTO * z - 26 * z - k * 16 * z); g.globalAlpha = 1; }
+const TEXTURAS = {};
+function texturaTexto(t, tam = 64) {
+  if (TEXTURAS[t]) return TEXTURAS[t];
+  const c = document.createElement("canvas"); c.width = tam * 4; c.height = tam * 1.4; const x = c.getContext("2d");
+  x.font = `600 ${tam}px Fredoka, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(t, c.width / 2, c.height / 2);
+  const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return (TEXTURAS[t] = tx);
+}
+function cartel(t, x, y, padre, escala = 1) {
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaTexto(t), transparent: true, depthWrite: false }));
+  s.scale.set(2.8 * escala, 1 * escala, 1); s.position.set(x, y, 0); padre.add(s); return s;
+}
+
+const mallas = new Map();
+function claveDe(o) {
+  if (o.tipo === "casa") return `c${o.nivel}-${listo(o) ? "L" : (o.prog * 10 | 0)}`;
+  if (!E.edificios.includes(o)) return `${o.tipo}${o.cant}`;
+  if (!listo(o)) return `${o.tipo}x${o.prog * 10 | 0}`;
+  if (o.tipo === "huerta") return `h${o.cant}`;
+  if (o.tipo === "mina") return `m${E.mina ? E.mina.prof : 1}`;
+  return o.tipo;
+}
+function sincronizar() {
+  const vivos = new Set();
+  for (const o of E.recursos.concat(E.edificios)) {
+    vivos.add(o.id);
+    const k = claveDe(o); let m = mallas.get(o.id);
+    if (!m || m.clave !== k) {
+      if (m) escena.remove(m.g);
+      const esEdificio = E.edificios.includes(o);
+      const g = esEdificio ? mallaEdificio(o) : mallaRecurso(o);
+      g.position.set(o.x, 0, o.z);
+      if (esEdificio && o.tipo !== "fogata") g.rotation.y = Math.round(Math.atan2(-o.x, -o.z) / (Math.PI / 2)) * Math.PI / 2;
+      escena.add(g); m = { g, clave: k }; mallas.set(o.id, m);
     }
-    if (e.tipo === "fogata") { g.fillStyle = `rgba(255,150,60,${.18 * noche + .05})`; g.beginPath(); g.arc(x, P - 10 * z, 60 * z, 0, 7); g.fill(); }
-    if (e.tipo === "escuela" || e.tipo === "torre") { g.fillStyle = `rgba(255,214,110,.8)`; if (e.tipo === "torre") { g.fillRect(x - 4 * z, P - 60 * z, 8 * z, 12 * z); g.fillRect(x - 4 * z, P - 110 * z, 8 * z, 12 * z); } }
   }
+  for (const [id, m] of mallas) if (!vivos.has(id)) { escena.remove(m.g); mallas.delete(id); }
 }
 
-const GORRO = {
-  lenador: (cx, cy, s) => { g.fillStyle = "#D84B4B"; g.beginPath(); g.ellipse(cx, cy - s * .82, s * .62, s * .38, 0, Math.PI, 0); g.fill(); g.fillStyle = "#fff"; g.beginPath(); g.arc(cx, cy - s * 1.2, s * .14, 0, 7); g.fill(); g.fillStyle = "#B83A3A"; g.fillRect(cx - s * .64, cy - s * .86, s * 1.28, s * .14); },
-  granjero: (cx, cy, s) => { g.fillStyle = "#E9C46A"; g.beginPath(); g.ellipse(cx, cy - s * .8, s * .95, s * .16, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(cx, cy - s * .92, s * .48, s * .3, 0, Math.PI, 0); g.fill(); g.fillStyle = "#C0392B"; g.fillRect(cx - s * .48, cy - s * .94, s * .96, s * .1); },
-  minero: (cx, cy, s) => { g.fillStyle = "#F4C430"; g.beginPath(); g.ellipse(cx, cy - s * .78, s * .66, s * .45, 0, Math.PI, 0); g.fill(); g.fillRect(cx - s * .78, cy - s * .82, s * 1.56, s * .12); g.fillStyle = "#FFF7C2"; g.beginPath(); g.arc(cx, cy - s * 1.0, s * .14, 0, 7); g.fill(); },
-  constructor: (cx, cy, s) => { g.fillStyle = "#FF8A3D"; g.beginPath(); g.ellipse(cx, cy - s * .8, s * .64, s * .44, 0, Math.PI, 0); g.fill(); g.fillRect(cx - s * .78, cy - s * .84, s * 1.56, s * .13); g.fillStyle = "#E06A20"; g.fillRect(cx - s * .06, cy - s * 1.22, s * .12, s * .4); },
+// ======================= 3D: Brotitos =======================
+const MAT_HUE = {};
+const matHue = (h, triste) => { const q = Math.round(h / 8) * 8, k = q + (triste ? "t" : ""); return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},${triste ? 22 : 58}%,${triste ? 58 : 62}%)`) })); };
+const matPie = (h) => { const q = Math.round(h / 8) * 8, k = "p" + q; return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},45%,45%)`) })); };
+const NEGRO = new THREE.MeshBasicMaterial({ color: "#2E2440" }), BLANCO = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+const GORROS = {
+  lenador: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#D84B4B"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.esfera, mat("#ffffff"), .28, .28, .28, 0, .48, 0, false)); return g; },
+  granjero: () => { const g = new THREE.Group(); g.add(malla(G.cil, mat("#E9C46A"), 1.9, .06, 1.9, 0, .02, 0, false)); g.add(malla(G.media, mat("#E9C46A"), .95, .7, .95, 0, 0, 0, false)); g.add(malla(G.cil, mat("#C0392B"), .97, .1, .97, 0, .08, 0, false)); return g; },
+  minero: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#F4C430"), 1.15, .95, 1.15, 0, 0, 0, false)); g.add(malla(G.cil, mat("#F4C430"), 1.35, .06, 1.35, 0, .02, 0, false)); g.add(malla(G.esfera, new THREE.MeshBasicMaterial({ color: "#FFF7C2" }), .22, .22, .12, 0, .25, .52, false)); return g; },
+  constructor: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#FF8A3D"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.cil, mat("#FF8A3D"), 1.4, .06, 1.4, 0, .02, .1, false)); g.add(malla(G.caja, mat("#E06A20"), .1, .5, .9, 0, .3, 0, false)); return g; },
 };
-function dibujarBicho(b, x, ahora) {
-  const z = cam.z, bebe = b.edad < GRANDE, s = (bebe ? 8 + b.edad / GRANDE * 4 : 13) * z;
-  const trabaja = ["juntar", "construir", "picar", "cavando"].includes(b.est);
-  const camina = !trabaja && b.est !== "quieto" && b.est !== "bajar" && b.est !== "subir";
-  const salto = camina ? Math.abs(Math.sin(b.fase)) * 5 * z : trabaja ? Math.abs(Math.sin(b.fase * 1.5)) * 2 * z : 0;
-  const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * 1.6 * z : 0;
-  const base = sy(b.y), cx = x + tiembla, cy = base - s * 1.05 - salto;
-  g.fillStyle = "#00000018"; g.beginPath(); g.ellipse(x, base - 1, s * .9, s * .25, 0, 0, 7); g.fill();
-  // brote
-  g.strokeStyle = "#3E9A4E"; g.lineWidth = Math.max(1, 1.6 * z); g.beginPath(); g.moveTo(cx, cy - s * .95); g.quadraticCurveTo(cx + b.dir * 2 * z, cy - s * 1.35, cx, cy - s * 1.55); g.stroke();
-  g.fillStyle = "#5CC86B"; g.beginPath(); g.ellipse(cx + 4 * z * (bebe ? .7 : 1), cy - s * 1.55, 5 * z * (bebe ? .7 : 1), 2.6 * z * (bebe ? .7 : 1), -.5, 0, 7); g.fill();
-  if (!bebe) { g.beginPath(); g.ellipse(cx - 4 * z, cy - s * 1.45, 4 * z, 2.2 * z, .5, 0, 7); g.fill(); }
-  // cuerpo
+const cuerpos = [];
+function crearMallaBicho(b) {
+  const g = new THREE.Group();
+  const cuerpo = malla(G.esfera, matHue(b.hue), 1.6, 1.85, 1.5, 0, .95, 0); cuerpo.userData.b = b;
+  const o1 = malla(G.ojo, NEGRO, 1, 1.4, 1, -.25, 1.15, .7, false), o2 = malla(G.ojo, NEGRO, 1, 1.4, 1, .25, 1.15, .7, false);
+  const b1 = malla(G.ojo, BLANCO, 1.9, 1.9, 1, -.25, 1.15, .66, false), b2 = malla(G.ojo, BLANCO, 1.9, 1.9, 1, .25, 1.15, .66, false); b1.visible = b2.visible = false;
+  const boca = malla(G.ojo, NEGRO, 1.4, .5, .5, 0, .86, .74, false);
+  const tallo = malla(G.cil, mat("#3E9A4E"), .07, .5, .07, 0, 2, 0, false);
+  const hoja1 = malla(G.hoja, mat("#5CC86B"), .55, .14, .28, .22, 2.25, 0, false); hoja1.rotation.z = -.4;
+  const hoja2 = malla(G.hoja, mat("#5CC86B"), .45, .12, .24, -.2, 2.15, 0, false); hoja2.rotation.z = .4;
+  const pies = [malla(G.esfera, matPie(b.hue), .55, .3, .65, -.35, .1, .1, false), malla(G.esfera, matPie(b.hue), .55, .3, .65, .35, .1, .1, false)];
+  g.add(cuerpo, o1, o2, b1, b2, boca, tallo, hoja1, hoja2, ...pies);
+  const gorros = {}; for (const k in GORROS) { const h = GORROS[k](); h.position.y = 1.62; h.visible = false; g.add(h); gorros[k] = h; }
+  const carga = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); carga.scale.set(2.4, .85, 1); carga.position.y = 3; carga.visible = false; g.add(carga);
+  escena.add(g); cuerpos.push(cuerpo);
+  b._m = { g, cuerpo, o1, o2, b1, b2, boca, gorros, carga, pies, hoja2, cargaTxt: null, triste: null, lejos: false };
+}
+function quitarMallaBicho(b) { if (!b._m) return; escena.remove(b._m.g); const i = cuerpos.indexOf(b._m.cuerpo); if (i >= 0) cuerpos.splice(i, 1); b._m = null; }
+function actualizarMallaBicho(b, ahora) {
+  if (!b._m) crearMallaBicho(b);
+  const m = b._m, g = m.g, bebe = b.edad < GRANDE;
+  g.visible = !b.adentro && b.y > -2.3;
+  if (!g.visible) return;
+  const trabaja = ["juntar", "construir"].includes(b.est) && (b.est !== "construir" || (b.dx || b.dz));
+  const camina = !trabaja && !["quieto", "bajar", "subir", "durmiendo"].includes(b.est);
+  const salto = camina ? Math.abs(Math.sin(b.fase)) * .3 : trabaja ? Math.abs(Math.sin(b.fase * 1.5)) * .15 : 0;
+  const esc = bebe ? .55 + b.edad / GRANDE * .3 : 1;
+  const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * .08 : 0;
+  g.position.set(b.x + tiembla, Math.min(0, b.y) + salto, b.z);
+  g.scale.setScalar(esc);
+  g.rotation.y = Math.atan2(b.dx, b.dz);
+  g.rotation.x = trabaja ? Math.sin(b.fase * 1.5) * .15 : 0;
+  const lejos = camara.position.distanceToSquared(g.position) > 70 * 70;
+  if (m.lejos !== lejos) { m.lejos = lejos; for (const o of [m.o1, m.o2, m.boca, m.pies[0], m.pies[1], m.hoja2]) o.visible = !lejos; }
   const triste = E.animo < 30 && b.susto <= 0;
-  g.fillStyle = `hsl(${b.hue},${triste ? 25 : 55}%,${triste ? 58 : 62}%)`;
-  g.beginPath(); g.ellipse(cx, cy, s * .92, s * 1.05, 0, 0, 7); g.fill();
-  g.fillStyle = "#ffffff40"; g.beginPath(); g.ellipse(cx - s * .3, cy - s * .45, s * .3, s * .18, -.4, 0, 7); g.fill();
-  g.fillStyle = `hsl(${b.hue},45%,45%)`;
-  const p = camina ? Math.sin(b.fase) * 3 * z : 0;
-  g.beginPath(); g.ellipse(cx - s * .4 + p, cy + s * .95, s * .28, s * .16, 0, 0, 7); g.ellipse(cx + s * .4 - p, cy + s * .95, s * .28, s * .16, 0, 0, 7); g.fill();
-  // gorro del oficio
-  if (!bebe && b.oficio && GORRO[b.oficio]) GORRO[b.oficio](cx, cy, s);
-  if (b.oficio === "minero" && b.y > 0) { g.fillStyle = "rgba(255,240,170,.18)"; g.beginPath(); g.moveTo(cx, cy - s); g.lineTo(cx + b.dir * s * 4, cy - s * 1.6); g.lineTo(cx + b.dir * s * 4, cy + s * .6); g.fill(); }
-  // cara
-  const ox = b.dir * s * .18, parpadeo = (ahora / 1000 + b.hue) % 4 < .12;
-  g.fillStyle = "#2E2440";
-  if (b.susto > 0) {
-    for (const d of [-1, 1]) { g.fillStyle = "#fff"; g.beginPath(); g.arc(cx + ox + d * s * .3, cy - s * .2, s * .2, 0, 7); g.fill(); g.fillStyle = "#2E2440"; g.beginPath(); g.arc(cx + ox + d * s * .3, cy - s * .2, s * .09, 0, 7); g.fill(); }
-    g.beginPath(); g.ellipse(cx + ox, cy + s * .25, s * .13, s * .18, 0, 0, 7); g.fill();
-    g.fillStyle = "#8ED8F2"; g.beginPath(); g.ellipse(cx + ox + s * .65, cy - s * .5, s * .09, s * .15, 0, 0, 7); g.fill();
-  } else {
-    for (const d of [-1, 1]) { g.beginPath(); g.ellipse(cx + ox + d * s * .28, cy - s * .2, s * .1, parpadeo ? s * .02 : s * .14, 0, 0, 7); g.fill(); }
-    g.strokeStyle = "#2E2440"; g.lineWidth = Math.max(1, 1.4 * z); g.beginPath();
-    if (triste) g.arc(cx + ox, cy + s * .35, s * .16, Math.PI * 1.15, Math.PI * 1.85);
-    else g.arc(cx + ox, cy + s * .08, s * .16, Math.PI * .15, Math.PI * .85);
-    g.stroke();
-    g.fillStyle = "#FF8FA340"; g.beginPath(); g.ellipse(cx + ox - s * .5, cy + s * .08, s * .14, s * .08, 0, 0, 7); g.ellipse(cx + ox + s * .5, cy + s * .08, s * .14, s * .08, 0, 0, 7); g.fill();
-  }
-  // herramienta mientras trabaja
-  if (trabaja && !bebe) { const ang = Math.sin(b.fase * 1.5) * .8; g.save(); g.translate(cx + b.dir * s * .9, cy); g.rotate(b.dir * (ang - .4)); g.font = `${10 * z}px serif`; g.textAlign = "center"; g.fillText(b.est === "construir" ? "🔨" : b.est === "juntar" ? (b.oficio === "lenador" ? "🪓" : "🧺") : "⛏️", 0, 0); g.restore(); }
-  if (b.carga) { g.font = `${11 * z}px serif`; g.textAlign = "center"; g.fillText(ICONO[b.carga], cx, cy - s * 1.85); }
-  if (b.charlaT > 0 && b.charla && z > .45) {
-    const k = Math.max(1, z * .9);
-    g.font = `600 ${Math.max(10, 11 * z)}px Fredoka, sans-serif`; const tw = g.measureText(b.charla).width;
-    const bx = cx, by = cy - s * 2.4 - (b.carga ? 10 * z : 0);
-    g.globalAlpha = Math.min(1, b.charlaT * 2);
-    g.fillStyle = "#fff"; redondeado(bx - tw / 2 - 8, by - 13 * k, tw + 16, 22 * k, 10); g.fill();
-    g.beginPath(); g.moveTo(bx - 4, by + 8 * k); g.lineTo(bx + 4, by + 8 * k); g.lineTo(bx, by + 14 * k); g.fill();
-    g.fillStyle = "#2E2440"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(b.charla, bx, by - 2 * k + 2); g.textBaseline = "alphabetic";
-    g.globalAlpha = 1;
-  }
+  if (m.triste !== triste) { m.cuerpo.material = matHue(b.hue, triste); m.triste = triste; }
+  const susto = b.susto > 0, parpadeo = (ahora / 1000 + b.hue) % 4 < .12;
+  m.b1.visible = m.b2.visible = susto && !lejos;
+  m.o1.scale.y = m.o2.scale.y = parpadeo ? .2 : 1.4;
+  m.o1.position.z = m.o2.position.z = susto ? .78 : .7;
+  m.boca.scale.set(susto ? 1.2 : 1.4, susto ? 1.4 : (triste ? .3 : .5), .5);
+  for (const k in m.gorros) m.gorros[k].visible = !bebe && b.oficio === k && !lejos;
+  m.pies[0].position.z = .1 + (camina ? Math.sin(b.fase) * .2 : 0); m.pies[1].position.z = .1 - (camina ? Math.sin(b.fase) * .2 : 0);
+  if (b.carga !== m.cargaTxt) { m.cargaTxt = b.carga; m.carga.visible = !!b.carga; if (b.carga) { m.carga.material.map = texturaTexto(ICONO[b.carga]); m.carga.material.needsUpdate = true; } }
 }
-function redondeado(x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
 
-// ======================= Mini mapa =======================
-const mini = $("mini"), mg = mini.getContext("2d");
-function dibujarMini() {
-  const w = mini.width, h = mini.height, a = E.ext[0], ancho = E.ext[1] - E.ext[0];
-  const mx = (x) => (x - a) / ancho * (w - 20) + 10;
-  mg.clearRect(0, 0, w, h);
-  mg.fillStyle = "#7ACB6B"; mg.fillRect(10, h - 12, w - 20, 6);
-  if (E.mina) { mg.fillStyle = "#4A3020"; for (const n of E.mina.niveles) mg.fillRect(mx(n.x0), h - 6, Math.max(2, mx(n.x1) - mx(n.x0)), 4); }
-  for (const e of E.edificios) { mg.fillStyle = e.tipo === "fogata" ? "#FF8A3D" : !listo(e) ? "#E8C79A" : e.tipo === "casa" ? "#C96B4E" : "#6C5CE7"; const alto = e.tipo === "casa" ? 4 + e.nivel * 3 : e.tipo === "torre" || e.tipo === "cohete" ? 20 : 10; mg.fillRect(mx(e.x) - 4, h - 12 - alto, 8, alto); }
-  mg.fillStyle = "#2E8B57"; for (const b of E.bichos) mg.fillRect(mx(b.x) - 1, h - 9, 2, 3);
-  const v0 = cam.x - W / 2 / cam.z, v1 = cam.x + W / 2 / cam.z;
-  mg.strokeStyle = "#2E2440"; mg.lineWidth = 3; mg.strokeRect(mx(v0), 3, Math.max(8, mx(v1) - mx(v0)), h - 6);
+const particulas = [];
+const GEO_P = new THREE.SphereGeometry(1, 8, 6);
+function particula(p, v, color, t, s, emoji) {
+  let m;
+  if (emoji) { m = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaTexto(emoji), transparent: true, depthWrite: false })); m.scale.set(2, .7, 1); }
+  else { m = new THREE.Mesh(GEO_P, new THREE.MeshLambertMaterial({ color })); m.scale.setScalar(s); }
+  m.position.set(p.x, p.y, p.z); escena.add(m);
+  particulas.push({ m, v, t, t0: t, emoji });
 }
-mini.addEventListener("pointerdown", (e) => {
-  const r = mini.getBoundingClientRect(), f = (e.clientX - r.left) / r.width;
-  cam.x = E.ext[0] + (f * mini.width - 10) / (mini.width - 20) * (E.ext[1] - E.ext[0]); limitarCam(); e.stopPropagation();
-});
+function corazones(b) { for (let i = 0; i < 3; i++) particula({ x: b.x + rnd(-.4, .4), y: 2.4, z: b.z }, { x: rnd(-.6, .6), y: rnd(1.5, 2.4), z: 0 }, null, 1.2, 0, "💚"); }
+function festejo(p) { for (let i = 0; i < 26; i++) particula({ x: p.x + rnd(-1, 1), y: 3, z: p.z + rnd(-1, 1) }, { x: rnd(-5, 5), y: rnd(4, 10), z: rnd(-5, 5) }, new THREE.Color(elegir(["#FFC23D", "#FF6F91", "#6EC6FF", "#7ED957"])), rnd(1, 1.6), rnd(.1, .18)); }
+function onda(p) { const m = new THREE.Mesh(new THREE.RingGeometry(.8, 1.1, 32), new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, side: THREE.DoubleSide })); m.rotation.x = -Math.PI / 2; m.position.set(p.x, .1, p.z); escena.add(m); particulas.push({ m, onda: true, t: .45, t0: .45 }); }
+function actualizarParticulas(dt) {
+  for (const p of particulas) {
+    p.t -= dt;
+    if (p.onda) { const k = 1 - p.t / p.t0; p.m.scale.setScalar(1 + k * 7); p.m.material.opacity = 1 - k; continue; }
+    p.m.position.x += p.v.x * dt; p.m.position.y += p.v.y * dt; p.m.position.z += p.v.z * dt;
+    if (!p.emoji) { p.v.y -= 18 * dt; if (p.m.position.y < .1) { p.m.position.y = .1; p.v.y *= -.3; p.v.x *= .6; p.v.z *= .6; } }
+    else p.m.material.opacity = Math.min(1, p.t);
+  }
+  for (let i = particulas.length - 1; i >= 0; i--) if (particulas[i].t <= 0) { const p = particulas[i]; escena.remove(p.m); p.m.material.dispose(); if (p.onda) p.m.geometry.dispose(); particulas.splice(i, 1); }
+}
 
-// ======================= Toques =======================
-const dedos = new Map(); let pellizco = null, arrastro = false;
-cv.addEventListener("pointerdown", (e) => {
-  audio(); cv.setPointerCapture(e.pointerId);
-  dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY });
-  if (dedos.size === 1) arrastro = false;
-  if (dedos.size === 2) {
-    const [p1, p2] = [...dedos.values()];
-    pellizco = { d: Math.hypot(p1.x - p2.x, p1.y - p2.y), z: cam.z, mx: (p1.x + p2.x) / 2 }; pellizco.wx = (pellizco.mx - W / 2) / cam.z + cam.x; arrastro = true;
-  }
-});
-cv.addEventListener("pointermove", (e) => {
-  const d = dedos.get(e.pointerId); if (!d) return;
-  const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
-  if (Math.hypot(d.x - d.x0, d.y - d.y0) > 8) arrastro = true;
-  if (dedos.size === 1 && !pellizco) { cam.x -= dx / cam.z; cam.y -= dy / cam.z; limitarCam(); }
-  else if (dedos.size === 2 && pellizco) {
-    const [p1, p2] = [...dedos.values()];
-    cam.z = clamp(pellizco.z * Math.hypot(p1.x - p2.x, p1.y - p2.y) / pellizco.d, .2, 3);
-    const mx = (p1.x + p2.x) / 2; cam.x = pellizco.wx - (mx - W / 2) / cam.z; limitarCam();
-  }
-});
-function soltar(e) {
-  const d = dedos.get(e.pointerId); dedos.delete(e.pointerId);
-  if (dedos.size < 2) pellizco = null;
-  if (d && !arrastro && dedos.size === 0) tocar(e.clientX, e.clientY);
-}
-cv.addEventListener("pointerup", soltar); cv.addEventListener("pointercancel", (e) => { dedos.delete(e.pointerId); pellizco = null; });
-cv.addEventListener("wheel", (e) => {
-  e.preventDefault(); const wx = (e.clientX - W / 2) / cam.z + cam.x;
-  cam.z = clamp(cam.z * Math.exp(-e.deltaY * .0015), .2, 3); cam.x = wx - (e.clientX - W / 2) / cam.z; limitarCam();
-}, { passive: false });
-function tocar(px, py) {
-  let mejor = null, md = 1e9;
+const capaGlobos = $("globos"), poolGlobos = [];
+const vtmp = new THREE.Vector3(), vtmp2 = new THREE.Vector3();
+function enPantalla(b) { vtmp.set(b.x, 1, b.z).project(camara); return vtmp.z < 1 && Math.abs(vtmp.x) < 1.1 && Math.abs(vtmp.y) < 1.1; }
+function actualizarGlobos() {
+  let n = 0;
   for (const b of E.bichos) {
-    if (b.adentro) continue;
-    const s = (b.edad < GRANDE ? 10 : 13) * cam.z, bx = sx(b.x), by = sy(b.y) - s;
-    const d = Math.hypot(px - bx, py - by); if (d < Math.max(22, s * 1.6) && d < md) { md = d; mejor = b; }
+    if (b.charlaT <= 0 || b.adentro || b.y < -1 || n >= 14) continue;
+    const esc = b.edad < GRANDE ? .7 : 1;
+    vtmp2.set(b.x, 0, b.z); if (camara.position.distanceTo(vtmp2) > 95) continue;
+    vtmp.set(b.x, (b.carga ? 3.7 : 2.9) * esc, b.z).project(camara);
+    if (vtmp.z > 1 || Math.abs(vtmp.x) > 1.05 || Math.abs(vtmp.y) > 1.05) continue;
+    let d = poolGlobos[n]; if (!d) { d = document.createElement("div"); d.className = "globo"; capaGlobos.appendChild(d); poolGlobos.push(d); }
+    d.style.display = "block"; if (d.textContent !== b.charla) d.textContent = b.charla;
+    d.style.opacity = Math.min(1, b.charlaT * 2);
+    d.style.transform = `translate(${(vtmp.x + 1) / 2 * innerWidth}px, ${(1 - vtmp.y) / 2 * innerHeight}px) translate(-50%, -100%)`;
+    n++;
   }
-  if (mejor) explotar(mejor);
+  for (let i = n; i < poolGlobos.length; i++) poolGlobos[i].style.display = "none";
 }
-$("b-ver").onclick = () => { const ancho = E.ext[1] - E.ext[0]; cam.z = clamp(W / ancho * .95, .2, 3); cam.x = (E.ext[0] + E.ext[1]) / 2; cam.y = 0; limitarCam(); };
+
+// ======================= Tocar =======================
+const ray = new THREE.Raycaster(), puntero = new THREE.Vector2();
+const toques = new Map(); let multitoque = false;
+render.domElement.addEventListener("pointerdown", (e) => { audio(); toques.set(e.pointerId, { x: e.clientX, y: e.clientY, t: performance.now() }); if (toques.size > 1) multitoque = true; });
+render.domElement.addEventListener("pointerup", (e) => {
+  const t0 = toques.get(e.pointerId); toques.delete(e.pointerId);
+  const fueMulti = multitoque; if (toques.size === 0) multitoque = false;
+  if (!t0 || fueMulti) return;
+  if (Math.hypot(e.clientX - t0.x, e.clientY - t0.y) > 8 || performance.now() - t0.t > 450) return;
+  puntero.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(puntero, camara);
+  const hit = ray.intersectObjects(cuerpos.filter((c) => c.parent && c.parent.visible), false)[0];
+  if (hit && hit.object.userData.b && E.bichos.includes(hit.object.userData.b)) explotar(hit.object.userData.b);
+});
+render.domElement.addEventListener("pointercancel", (e) => { toques.delete(e.pointerId); if (!toques.size) multitoque = false; });
+function verTodo() {
+  controles.target.set(0, 0, 0);
+  const dir = camara.position.clone().normalize();
+  camara.position.copy(dir.multiplyScalar(clamp(E.radio * 2.4, 22, 220)));
+}
+$("b-ver").onclick = verTodo;
 $("b-info").onclick = () => $("c-info").classList.add("ver");
 $("info-ok").onclick = () => { $("c-info").classList.remove("ver"); audio(); };
 $("reiniciar").onclick = () => {
@@ -904,14 +798,9 @@ function pintarHUD() {
   const m = METAS[E.meta];
   if (m) {
     const antes = E.meta ? METAS[E.meta - 1].pob : 1;
-    $("meta-txt").textContent = `🎯 ${m.pob} Brotitos → ${m.g} ${m.t}`;
-    $("meta-sub").textContent = m.s;
+    $("meta-txt").textContent = `🎯 ${m.pob} Brotitos → ${m.g} ${m.t}`; $("meta-sub").textContent = m.s;
     $("meta-bar").style.width = clamp((E.bichos.length - antes) / (m.pob - antes), 0, 1) * 100 + "%";
-  } else {
-    $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`;
-    $("meta-sub").textContent = "Seguí agrandándola hasta donde quieras";
-    $("meta-bar").style.width = "100%";
-  }
+  } else { $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = "Seguí agrandándola hasta donde quieras"; $("meta-bar").style.width = "100%"; }
   const p = $("pedido");
   if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
   else p.classList.remove("ver");
@@ -920,11 +809,11 @@ let eraNoche = null;
 function mostrarEventos() {
   for (const ev of eventos) {
     if (ev.tipo === "nace") aviso(`🌱 ¡Nació ${ev.b.n}! (${E.bichos.length} en la colonia)`);
-    if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(cam.x); }
+    if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(controles.target); }
     if (ev.tipo === "listo") { const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", cohete: "¡EL COHETE! 🚀" }[ev.e.tipo]; aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo"); }
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
-    if (ev.tipo === "nivelMina") aviso("⛏️ ¡Cavaron más hondo! Nuevo nivel de túneles");
+    if (ev.tipo === "nivelMina") aviso(`⛏️ ¡La mina ya tiene ${E.mina.prof} niveles! Más hondo, más gemas`);
   }
   eventos = [];
   const n = esNoche();
@@ -935,17 +824,14 @@ function mostrarEventos() {
 // ======================= Arranque =======================
 E = cargar();
 const primeraVez = !E;
-if (!E) { E = nuevoEstado(); sembrar(E.ext[0], E.ext[1]); }
-cam.x = 0; cam.y = 0; cam.z = W < 600 ? 1.9 : 1.6; limitarCam();
+if (!E) { E = nuevoEstado(); sembrar(3, E.radio); }
 if (!primeraVez) {
-  const fuera = (Date.now() - E.t) / 1000;
-  const sim = Math.min(fuera / 4, 1800);
+  const fuera = (Date.now() - E.t) / 1000, sim = Math.min(fuera / 4, 1800);
   if (sim > 20) {
     const antes = { n: E.bichos.length, c: capacidad(), m: E.meta };
     for (let t = 0; t < sim; t += .5) paso(.5, true);
     eventos = [];
-    const nacieron = E.bichos.length - antes.n, lugar = capacidad() - antes.c, metas = E.meta - antes.m;
-    const partes = [];
+    const nacieron = E.bichos.length - antes.n, lugar = capacidad() - antes.c, metas = E.meta - antes.m, partes = [];
     if (nacieron > 0) partes.push(`nacieron <b>${nacieron}</b> Brotitos`);
     if (lugar > 0) partes.push(`hicieron lugar para <b>${lugar}</b> más`);
     if (metas > 0) partes.push(`desbloquearon <b>${METAS.slice(antes.m, E.meta).map((m) => m.g + " " + m.t).join(", ")}</b>`);
@@ -955,20 +841,44 @@ if (!primeraVez) {
 }
 $("vuelta-ok").onclick = () => { $("c-vuelta").classList.remove("ver"); audio(); };
 if (primeraVez) $("c-info").classList.add("ver");
+$("cargando").remove();
 
-let ultimo = performance.now(), guardarT = 0, hudT = 0;
+let ultimo = performance.now(), guardarT = 0, hudT = 0, syncT = 1;
 function bucle(ahora) {
   const dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora;
   paso(dt, false);
-  for (const p of particulas) { p.t -= dt; p.x += p.vx * dt; p.y += p.vy * dt; if (!p.emoji && !p.anillo) p.vy += 500 * dt; const piso = p.piso || 0; if (p.y > piso && !p.emoji && !p.anillo) { p.y = piso; p.vx *= .5; p.vy *= -.3; } }
-  particulas = particulas.filter((p) => p.t > 0);
-  dibujar(ahora);
-  hudT += dt; if (hudT > .2) { hudT = 0; pintarHUD(); dibujarMini(); mostrarEventos(); }
+  dibujarTodo(ahora, dt);
+  hudT += dt; if (hudT > .2) { hudT = 0; pintarHUD(); mostrarEventos(); }
   guardarT += dt; if (guardarT > 5) { guardarT = 0; guardar(); }
   requestAnimationFrame(bucle);
 }
+function dibujarTodo(ahora, dt) {
+  if (islaCambio) armarIsla();
+  syncT += dt; if (syncT > .25) { syncT = 0; sincronizar(); }
+  const L = luz();
+  escena.background.copy(CIELO_NOCHE).lerp(CIELO_DIA, (L - .25) / .75); escena.fog.color.copy(escena.background);
+  hemi.intensity = .3 + .65 * L; sol.intensity = .15 + 1.6 * L;
+  const t = (E.tiempo % DIA) / DIA * Math.PI * 2;
+  sol.position.set(Math.cos(t) * 60, 70, Math.sin(t) * 40 + 30); sol.target.position.set(0, 0, 0);
+  estrellas.material.opacity = clamp((1 - L) * 1.3, 0, 1);
+  VENTANA.emissiveIntensity = .05 + (1 - L) * 1.6;
+  for (const [, m] of mallas) {
+    const u = m.g.userData;
+    if (u.llama) { const f = 1 + Math.sin(ahora / 110) * .12; u.llama.scale.set(.8, 1.4 * f, .8); u.luz.intensity = (1 - L) * 60; }
+    if (u.rueda) u.rueda.rotation.z += dt * 2;
+    if (u.bandera) u.bandera.rotation.y = Math.sin(ahora / 400) * .3;
+  }
+  for (const b of E.bichos) actualizarMallaBicho(b, ahora);
+  actualizarParticulas(dt);
+  const tr = Math.hypot(controles.target.x, controles.target.z); if (tr > E.radio) { controles.target.x *= E.radio / tr; controles.target.z *= E.radio / tr; }
+  controles.target.y = 0;
+  controles.update();
+  render.render(escena, camara);
+  actualizarGlobos();
+}
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
+window.__col = { get E() { return E; }, paso, camara, controles, verTodo, dibujarTodo, limpiarEventos: () => { eventos = []; }, capacidad, casas };
 requestAnimationFrame(bucle);
 </script>
 </body>
