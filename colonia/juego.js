@@ -717,6 +717,7 @@ function elegirIslas() {
   islasVisibles = new Set(orden.filter((o) => o.d < 260 + camD * 1.1).slice(0, 60).map((o) => o.i.id));
   const det = camD < 170 ? orden.filter((o) => o.d < 60 + camD * .5).slice(0, camD < 80 ? 4 : 3) : [];
   islasDetalle = new Set(det.map((o) => o.i.id));
+  if (dentroMundo && yo.isla) { islasDetalle.add(yo.isla); islasVisibles.add(yo.isla); }
   activas = new Set(islasDetalle);
 }
 function claveDe(o, simple) {
@@ -897,7 +898,7 @@ const vtmp = new THREE.Vector3(), vtmp2 = new THREE.Vector3();
 function enPantalla(b) { vtmp.set(b.x, 1, b.z).project(camara); return vtmp.z < 1 && Math.abs(vtmp.x) < 1.1 && Math.abs(vtmp.y) < 1.1; }
 function actualizarGlobos() {
   let n = 0;
-  for (const b of E.bichos) {
+  for (const b of dentroMundo ? [yo, ...E.bichos] : E.bichos) {
     if (b.charlaT <= 0 || b.adentro || b.y < -1 || n >= 14 || !islasDetalle.has(b.isla)) continue;
     const esc = b.edad < GRANDE ? .7 : 1;
     vtmp2.set(b.x, 0, b.z); if (camara.position.distanceTo(vtmp2) > 95) continue;
@@ -989,6 +990,185 @@ function mostrarEventos() {
   eraNoche = n;
 }
 
+// ======================= Entrar al mundo: vos como un Brotito más =======================
+const yo = { id: -1, n: "Vos", x: 0, z: 0, y: 0, dx: 0, dz: 1, edad: 999, hue: 48, fase: 0, est: "quieto", susto: 0, carga: null, cant: 0, oficio: null, adentro: false, isla: null, alto: 0, vy: 0, golpe: 0 };
+let dentroMundo = false, accion = null, accionT = 0, avisoCarga = 0;
+const joy = { x: 0, y: 0, id: null }, teclas = {};
+const ORBITA_AFUERA = { touches: controles.touches, mouse: controles.mouseButtons, min: controles.minDistance, max: controles.maxDistance };
+function tierraEn(x, z) {
+  for (const i of E.islas) if (i.colonizada && Math.abs(i.x - x) < RH + 1 && Math.abs(i.z - z) < RH + 1 && enHex(x - i.x, z - i.z, 1.2)) return i;
+  return null;
+}
+function entrar() {
+  audio();
+  const t = controles.target, cap = E.islas.find((i) => i.capital);
+  const isla = tierraEn(t.x, t.z);
+  if (isla) { yo.x = t.x; yo.z = t.z; } else { yo.x = cap.x + 3; yo.z = cap.z + 3; }
+  yo.isla = (tierraEn(yo.x, yo.z) || cap).id; yo.alto = 0; yo.vy = 0; yo.carga = null; yo.cant = 0;
+  if (!yo._m) {
+    crearMallaBicho(yo);
+    const i = cuerpos.indexOf(yo._m.cuerpo); if (i >= 0) cuerpos.splice(i, 1); // a vos no te podés aplastar
+    const oro = mat("#FFD43B"), c = new THREE.Group();
+    c.add(malla(G.cil, oro, .95, .28, .95, 0, 0, 0, false));
+    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2; c.add(malla(G.cono, oro, .2, .35, .2, Math.sin(a) * .42, .3, Math.cos(a) * .42, false)); }
+    c.add(malla(G.esfera, mat("#FF4F79"), .18, .18, .18, 0, .05, .48, false));
+    c.position.y = 1.78; yo._m.g.add(c);
+  }
+  yo._m.g.visible = true;
+  dentroMundo = true; document.body.classList.add("dentro");
+  controles.enablePan = false;
+  controles.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_ROTATE };
+  controles.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+  controles.minDistance = 5; controles.maxDistance = 34;
+  controles.maxPolarAngle = 1.05; controles.target.set(yo.x, 0, yo.z); { const k = camara.aspect < 1 ? 1.6 : 1; camara.position.set(yo.x, 11 * k, yo.z + 8 * k); }
+  syncT = 1;
+  aviso("👑 ¡Entraste! Sos el Brotito dorado");
+  for (const b of E.bichos) if (b._m && !b.adentro && dist(b, yo) < 8 && b.susto <= 0 && Math.random() < .6) hablar(b, elegir(["¿¿" + balbuceo(1) + "??", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]));
+}
+function salir() {
+  dentroMundo = false; document.body.classList.remove("dentro");
+  if (yo._m) yo._m.g.visible = false;
+  if (yo.carga) { E[yo.carga] += yo.cant; yo.carga = null; yo.cant = 0; }
+  controles.enablePan = true; controles.touches = ORBITA_AFUERA.touches; controles.mouseButtons = ORBITA_AFUERA.mouse;
+  controles.minDistance = ORBITA_AFUERA.min; controles.maxDistance = ORBITA_AFUERA.max; controles.maxPolarAngle = 1.32;
+  const dir = camara.position.clone().sub(controles.target).normalize();
+  camara.position.copy(controles.target).add(dir.multiplyScalar(32));
+}
+function sumarPedido(tipo, k) {
+  if (!E.pedido || E.pedido.tipo !== tipo) return;
+  E.pedido.dado += k;
+  if (E.pedido.dado >= E.pedido.cant) {
+    E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
+    for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false);
+    festejo(yo); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
+  }
+}
+const cercaDeMi = (lista, max) => { let m = null, d = max; for (const o of lista) { const dd = Math.hypot(o.x - yo.x, o.z - yo.z); if (dd < d) { d = dd; m = o; } } return m; };
+function elegirAccion() {
+  // ¿hay una obra cerca? ayudar
+  const obra = cercaDeMi(E.edificios.concat(E.puentes).filter((o) => !listo(o)), 5.5);
+  if (obra) return { tipo: "ayudar", o: obra, txt: "🔨 Ayudar" };
+  const objs = E.recursos.filter((r) => r.cant > 0).concat(E.edificios.filter((e) => e.tipo === "huerta" && listo(e) && e.cant > 0));
+  const r = cercaDeMi(objs, 3.6);
+  if (r) {
+    const tipo = TIPO_RECURSO[r.tipo];
+    if (!yo.carga || (yo.carga === tipo && yo.cant < 6)) return { tipo: "juntar", o: r, txt: "✋ Juntar " + ICONO[tipo] };
+    return { tipo: "lleno", txt: yo.carga === tipo ? "🎒 Lleno: llevalo a una casa" : "🎒 Primero llevá lo que tenés" };
+  }
+  if (yo.carga) return { tipo: "lleno", txt: `🏠 Llevá ${yo.cant} ${ICONO[yo.carga]} a una casa` };
+  return null;
+}
+function hacer() {
+  audio();
+  const a = accion; if (!a || yo.golpe > 0) return;
+  if (a.tipo === "ayudar") {
+    yo.golpe = .28; avanzarObra(a.o, .035, false); sonido("dar");
+    yo.dx = a.o.x - yo.x; yo.dz = a.o.z - yo.z;
+    if (Math.random() < .25) { const b = cercaDeMi(E.bichos.filter((x) => x.est === "construir" && x.obj === a.o.id), 8); if (b) hablar(b, elegir(["¡bu bu!", "¡" + balbuceo(1) + "!", "💪"])); }
+  } else if (a.tipo === "juntar") {
+    yo.golpe = .28; a.o.cant--; yo.carga = TIPO_RECURSO[a.o.tipo]; yo.cant++; sonido("dar");
+    yo.dx = a.o.x - yo.x; yo.dz = a.o.z - yo.z;
+    if (yo.cant === 1 && avisoCarga++ < 2) aviso("Juntá varios y llevalos a una casa 🏠");
+  }
+  accionT = 0;
+}
+function saludar() {
+  audio();
+  const cerca = E.bichos.filter((b) => b._m && !b.adentro && b.y === 0 && dist(b, yo) < 6).slice(0, 5);
+  hablar(yo, "¡" + balbuceo(1) + "!", true);
+  if (!cerca.length) { aviso("No hay nadie cerca para saludar"); return; }
+  for (const b of cerca) {
+    if (b.susto > 0) { hablar(b, elegir(["😨", "¡no no!"])); continue; }
+    b.dx = yo.x - b.x; b.dz = yo.z - b.z; b.est = "quieto"; b.quieto = rnd(1.5, 3);
+    setTimeout(() => { hablar(b, elegir(["¡" + balbuceo(1) + "!", "¡" + balbuceo(2) + "!", "💚", "¡bu!"])); corazones(b); }, rnd(100, 600));
+  }
+  E.animo = clamp(E.animo + 1, 0, 100);
+}
+function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; sonido("dar"); }
+function actualizarYo(dt, ahora) {
+  if (!dentroMundo) return;
+  // mover
+  let jx = joy.x, jy = joy.y;
+  if (teclas.KeyA || teclas.ArrowLeft) jx -= 1; if (teclas.KeyD || teclas.ArrowRight) jx += 1;
+  if (teclas.KeyW || teclas.ArrowUp) jy += 1; if (teclas.KeyS || teclas.ArrowDown) jy -= 1;
+  const largo = Math.hypot(jx, jy); if (largo > 1) { jx /= largo; jy /= largo; }
+  const fx = controles.target.x - camara.position.x, fz = controles.target.z - camara.position.z, fl = Math.hypot(fx, fz) || 1;
+  const ux = fx / fl, uz = fz / fl;
+  const mx = ux * jy - uz * jx, mz = uz * jy + ux * jx;
+  const moviendo = Math.hypot(mx, mz) > .1, vel = 6.5 * Math.min(1, Math.hypot(mx, mz));
+  if (moviendo) {
+    const nx = yo.x + mx / Math.hypot(mx, mz) * vel * dt, nz = yo.z + mz / Math.hypot(mx, mz) * vel * dt;
+    if (tierraEn(nx, nz)) { yo.x = nx; yo.z = nz; } else if (tierraEn(nx, yo.z)) yo.x = nx; else if (tierraEn(yo.x, nz)) yo.z = nz;
+    yo.dx += (mx - yo.dx) * Math.min(1, dt * 12); yo.dz += (mz - yo.dz) * Math.min(1, dt * 12);
+    yo.fase += dt * 12;
+  }
+  const t = tierraEn(yo.x, yo.z); if (t) yo.isla = t.id;
+  // saltar y caer encima de alguno
+  if (yo.vy !== 0 || yo.alto > 0) {
+    yo.vy -= 28 * dt; yo.alto += yo.vy * dt;
+    if (yo.alto <= 0) {
+      yo.alto = 0; yo.vy = 0;
+      const abajo = E.bichos.filter((b) => !b.adentro && b.y === 0 && dist(b, yo) < 1.4);
+      for (const b of abajo) explotar(b);
+      if (!abajo.length) onda(yo);
+    }
+  }
+  if (yo.golpe > 0) { yo.golpe -= dt; yo.fase += dt * 10; }
+  yo.est = yo.golpe > 0 ? "juntar" : moviendo ? "pasear" : "quieto";
+  if (yo.charlaT > 0) yo.charlaT -= dt;
+  // dejar lo que llevo si paso por una casa
+  if (yo.carga) {
+    const casa = cercaDeMi(todosAlmacenes(), 3.8);
+    if (casa) {
+      E[yo.carga] += yo.cant; aviso(`+${yo.cant} ${ICONO[yo.carga]} ¡Gracias! 💚`); sonido("dar");
+      sumarPedido(yo.carga, yo.cant);
+      const b = cercaDeMi(E.bichos.filter((x) => !x.adentro && x.y === 0), 7); if (b) { hablar(b, "¡" + ICONO[yo.carga] + "!"); corazones(b); }
+      E.animo = clamp(E.animo + 1, 0, 100); yo.carga = null; yo.cant = 0; accionT = 1;
+    }
+  }
+  // botón que cambia según lo que tenés cerca
+  accionT += dt;
+  if (accionT > .15) {
+    accionT = 0; accion = elegirAccion();
+    const bt = $("a-hacer");
+    bt.style.visibility = accion ? "visible" : "hidden";
+    if (accion) { if (bt.textContent !== accion.txt) bt.textContent = accion.txt; bt.disabled = accion.tipo === "lleno"; }
+  }
+  // dibujo
+  actualizarMallaBicho(yo, ahora);
+  yo._m.g.position.y += yo.alto;
+  // la cámara te sigue
+  const ddx = yo.x - controles.target.x, ddz = yo.z - controles.target.z;
+  controles.target.x += ddx; controles.target.z += ddz; camara.position.x += ddx; camara.position.z += ddz;
+}
+$("d-entrar").onclick = entrar;
+$("b-salir").onclick = salir;
+$("a-hacer").onclick = hacer;
+$("a-saludar").onclick = saludar;
+$("a-saltar").onclick = saltar;
+{
+  const pad = $("joy"), palo = pad.querySelector("i");
+  const mover = (e) => {
+    const r = pad.getBoundingClientRect(), R = r.width / 2;
+    let x = (e.clientX - r.left - R) / (R * .7), y = -(e.clientY - r.top - R) / (R * .7);
+    const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; }
+    joy.x = x; joy.y = y; palo.style.transform = `translate(${x * R * .55}px, ${-y * R * .55}px)`;
+  };
+  const soltar = (e) => { if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; palo.style.transform = ""; };
+  pad.addEventListener("pointerdown", (e) => { audio(); joy.id = e.pointerId; pad.setPointerCapture(e.pointerId); mover(e); e.preventDefault(); });
+  pad.addEventListener("pointermove", (e) => { if (e.pointerId === joy.id) mover(e); });
+  pad.addEventListener("pointerup", soltar); pad.addEventListener("pointercancel", soltar);
+}
+addEventListener("keydown", (e) => {
+  if (!dentroMundo) return;
+  teclas[e.code] = true;
+  if (e.code === "Space") { saltar(); e.preventDefault(); }
+  if (e.code === "KeyE") hacer();
+  if (e.code === "KeyQ") saludar();
+  if (e.code === "Escape") salir();
+});
+addEventListener("keyup", (e) => { teclas[e.code] = false; });
+
 // ======================= Arranque =======================
 E = cargar();
 const primeraVez = !E;
@@ -1036,6 +1216,7 @@ function dibujarTodo(ahora, dt) {
     if (u.humo && tocaHumo && Math.random() < .5) { const hs = Array.isArray(u.humo) ? u.humo : [u.humo]; for (const h of hs) { vtmp.set(h.x, h.y, h.z).applyMatrix4(m.g.matrixWorld); if (vtmp.distanceTo(camara.position) < 120) humo(vtmp.x, vtmp.y, vtmp.z); } }
   }
   for (const b of E.bichos) actualizarMallaBicho(b, ahora);
+  actualizarYo(dt, ahora);
   actualizarParticulas(dt); actualizarRestos(dt); actualizarVuelo(dt);
   controles.target.y = 0;
   controles.update();
@@ -1052,5 +1233,5 @@ function bucle(ahora) {
 }
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
-window.__col = { get E() { return E; }, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
+window.__col = { get E() { return E; }, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
 requestAnimationFrame(bucle);

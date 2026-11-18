@@ -59,6 +59,21 @@
   .caja .btn { display: block; width: 100%; margin-top: 14px; border: 0; border-radius: 16px; padding: 13px; font: inherit; font-size: 17px; font-weight: 600; background: #4FB477; color: #fff; cursor: pointer; }
   .caja .btn.gris { background: #F1EDF5; color: #6E6480; }
   .caja ul { text-align: left; padding-left: 20px; color: #6E6480; margin: 8px 0; }
+  .botones button.entrar { background: #FFC23D; }
+  #b-salir { display: none; }
+  #joy { position: fixed; left: 18px; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 8px); width: 136px; height: 136px; border-radius: 50%; background: #ffffff4d; border: 3px solid #ffffffb0; display: none; touch-action: none; z-index: 4; }
+  #joy i { position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px; border-radius: 50%; background: #fffffff0; box-shadow: 0 3px 10px #0003; pointer-events: none; }
+  #acciones { position: fixed; right: 12px; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 8px); display: none; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 4; }
+  #acciones .fila2 { display: flex; gap: 8px; }
+  #acciones button { font: inherit; border: 0; border-radius: 999px; background: #fff; box-shadow: 0 3px 10px #0003; padding: 11px 14px; font-size: 15px; font-weight: 600; color: #2E2440; cursor: pointer; touch-action: manipulation; }
+  #acciones button:active { transform: scale(.93); }
+  #a-hacer { background: #FFC23D !important; font-size: 18px !important; padding: 16px 22px !important; max-width: 64vw; }
+  #a-hacer:disabled { background: #ffffffe0 !important; font-size: 14px !important; padding: 12px 16px !important; }
+  body.dentro .botones, body.dentro .energia, body.dentro #b-ver { display: none; }
+  body.dentro #joy, body.dentro #b-salir { display: block; }
+  body.dentro #acciones { display: flex; }
+  body.dentro .esquina { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 140px); }
+  body.dentro .pedido { margin-bottom: 150px; }
   #cargando { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; background: #9FE3F5; z-index: 20; }
   @media (max-width: 480px) { .pill { font-size: 13px; padding: 4px 8px; } .pill.animo i { width: 40px; } }
 </style>
@@ -85,6 +100,7 @@
 <div class="esquina">
   <button id="b-sonido" title="Sonido">🔊</button>
   <button id="b-ver" title="Ver toda la colonia">🔭</button>
+  <button id="b-salir" title="Salir">🚪</button>
   <button id="b-info" title="Cómo se juega">❔</button>
 </div>
 
@@ -95,9 +111,15 @@
     <button id="d-comida"><b>🍎</b>Comida</button>
     <button id="d-madera"><b>🪵</b>Madera</button>
     <button id="d-piedra"><b>🪨</b>Piedra</button>
+    <button id="d-entrar" class="entrar"><b>🚪</b>Entrar</button>
   </div>
 </div>
 
+<div id="joy"><i></i></div>
+<div id="acciones">
+  <button id="a-hacer">✋ Juntar</button>
+  <div class="fila2"><button id="a-saludar">👋 Saludar</button><button id="a-saltar">⬆️ Saltar</button></div>
+</div>
 <div class="aviso" id="aviso"></div>
 <div class="logro" id="logro"><div class="g" id="logro-g"></div><b id="logro-t"></b><span id="logro-s"></span></div>
 
@@ -113,6 +135,7 @@
       <li>Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.</li>
       <li>De noche se van a dormir a sus casas.</li>
       <li>Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.</li>
+      <li>🚪 <b>Entrar</b>: sos un Brotito más (el dorado 👑). Caminá con el joystick, juntá cosas y llevalas a una casa, ayudá en las obras y saludalos. Si saltás encima de uno… 😵. Con 🔭 salís.</li>
       <li>Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.</li>
       <li>La colonia sigue creciendo aunque cierres la página.</li>
     </ul>
@@ -129,6 +152,6 @@
   </div>
 </div>
 
-<script type="module" src="juego.js?v=5"></script>
+<script type="module" src="juego.js?v=6"></script>
 </body>
 </html>
