@@ -242,7 +242,7 @@ let E;
 let sigId = 1;
 function crearBicho(x, z, adulto, isla) {
   return { id: sigId++, n: nombre(), isla, x, z, y: 0, dx: 0, dz: 1, est: "quieto", obj: null, carga: null, cant: 0, edad: adulto ? 999 : 0,
-    susto: 0, hue: rnd(140, 200) | 0, fase: Math.random() * 6, trabajo: 0, charla: null, charlaT: 0, quieto: rnd(0.5, 2), oficio: null, adentro: false };
+    susto: 0, hue: Math.random() * 360 | 0, hc: 1, fase: Math.random() * 6, trabajo: 0, charla: null, charlaT: 0, quieto: rnd(0.5, 2), oficio: null, adentro: false };
 }
 function nuevoEstado() {
   E = { t: Date.now(), tiempo: 30, id: 1, comida: 6, madera: 4, piedra: 2, gemas: 0, animo: 80, energia: 10,
@@ -268,6 +268,7 @@ function cargar() {
     if (!s || !s.bichos) return null;
     sigId = s.sigId || 1000;
     s.hechos = s.hechos || {};
+    for (const b of s.bichos) if (!b.hc) { b.hue = semilla(b.id * 7 + 3)() * 360 | 0; b.hc = 1; }
     for (const b of s.bichos) { if (b.y < 0 || b.est === "cruzar") { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
@@ -454,6 +455,12 @@ function actualizarBicho(b, dt, offline, noche) {
   b.edad += dt * (hay("escuela") && b.edad < GRANDE ? 2 : 1); b.fase += dt * 10;
   if (b.charlaT > 0) b.charlaT -= dt;
   const isla = islaDe(b.isla); if (!isla) return;
+  if (b.caida > 0) { // lo chocó el rey: se cae para atrás, se levanta asustado y se va
+    b.caida -= dt; const k = Math.max(0, b.caida - 1.1) * 4;
+    b.x += b.kx * k * dt; b.z += b.kz * k * dt; dentro(b, isla);
+    if (b.caida <= 0) { b.caida = 0; b.susto = rnd(3, 5); b.dx = b.kx; b.dz = b.kz; b.est = "quieto"; b.quieto = 1; hablar(b, elegir(["¡no no!", "😨", "¡ayyy!", "¡" + balbuceo(1) + "!"]), true); }
+    return;
+  }
   const adulto = b.edad > GRANDE, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1) * (E.era >= 2 ? 1.3 : 1) * bono("vel");
   if (b.susto > 0 && b.y === 0 && b.est !== "cruzar") {
     b.susto -= dt; b.adentro = false;
@@ -609,10 +616,11 @@ function ruido(ctx, t, dur, vol, f0, f1) {
   const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur * .8);
   s.buffer = buf; g.gain.value = vol; s.connect(f); f.connect(g); g.connect(ctx.destination); s.start(t);
 }
+const tono = (b) => b ? ((b.hue * 7) % 60 - 30) * 4 : 0;
 function sonido(tipo, b) {
   if (!sonidoOn) return; const ctx = audio(); if (!ctx) return; const t = ctx.currentTime + .01;
-  if (tipo === "habla") { const base = (b && b.edad < GRANDE ? 1100 : 820) + ((b ? b.hue : 170) - 170) * 3; for (let i = 0; i < 3 + (Math.random() * 3 | 0); i++) blip(ctx, t + i * .09, base * rnd(.85, 1.15), .07, "sine", .12); }
-  if (tipo === "susto") { const base = 1250 + ((b ? b.hue : 170) - 170) * 3; for (let i = 0; i < 2; i++) blip(ctx, t + i * .16, base * (1 - i * .15), .13, "triangle", .14); }
+  if (tipo === "habla") { const base = (b && b.edad < GRANDE ? 1100 : 820) + tono(b); for (let i = 0; i < 3 + (Math.random() * 3 | 0); i++) blip(ctx, t + i * .09, base * rnd(.85, 1.15), .07, "sine", .12); }
+  if (tipo === "susto") { const base = 1250 + tono(b); for (let i = 0; i < 2; i++) blip(ctx, t + i * .16, base * (1 - i * .15), .13, "triangle", .14); }
   if (tipo === "dar") blip(ctx, t, 660, .1, "sine", .15);
   if (tipo === "festejo") [660, 880, 990, 1320].forEach((f, i) => blip(ctx, t + i * .08, f, .12, "triangle", .14));
   if (tipo === "logro") [523, 659, 784, 1047, 1319].forEach((f, i) => blip(ctx, t + i * .11, f, .2, "triangle", .16));
@@ -1083,18 +1091,62 @@ const GORROS = {
   constructor: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#FF8A3D"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.cil, mat("#FF8A3D"), 1.4, .06, 1.4, 0, .02, .1, false)); g.add(malla(G.caja, mat("#E06A20"), .1, .5, .9, 0, .3, 0, false)); return g; },
 };
 const cuerpos = [];
+const FORMAS = [[1.6, 1.85, 1.5], [1.9, 1.6, 1.75], [1.42, 2.15, 1.38], [1.7, 1.75, 1.6]];
+function estiloDe(b) {
+  if (b.id < 0) return { a: 0, f: 0, m: false };
+  const rd = semilla(b.id * 13 + 1);
+  return { a: rd() * 7 | 0, f: rd() * FORMAS.length | 0, m: rd() < .3, o: rd() < .25 };
+}
+function adorno(g, est, b) {
+  const h = b.hue, comp = (h + 180) % 360, alto = FORMAS[est.f][1] * .5 + .95;
+  const add = (...o) => { g.add(...o); return o[0]; };
+  switch (est.a) {
+    case 1: { // flor
+      add(malla(G.cil, mat("#3E9A4E"), .07, .45, .07, 0, alto + .15, 0, false));
+      const c = mat(elegirDe(b, ["#FF8FB1", "#FFFFFF", "#FFD43B", "#B39DFF", "#FF7A59"]));
+      for (let i = 0; i < 5; i++) { const a = i / 5 * 6.28; g.add(malla(G.esfera, c, .26, .14, .26, Math.cos(a) * .22, alto + .42, Math.sin(a) * .22, false)); }
+      return add(malla(G.esfera, mat("#FFC23D"), .22, .16, .22, 0, alto + .45, 0, false));
+    }
+    case 2: { // antenitas
+      for (const s of [-1, 1]) { const a = malla(G.cil, mat("#3B3350"), .05, .7, .05, s * .25, alto + .2, 0, false); a.rotation.z = -s * .35; g.add(a); g.add(malla(G.esfera, matHue(comp), .2, .2, .2, s * .38, alto + .55, 0, false)); }
+      return g.children[g.children.length - 1];
+    }
+    case 3: { // copete
+      for (let i = -1; i <= 1; i++) { const c = malla(G.cono, matPie(h), .22, .55, .22, i * .18, alto + .1, -.05 * Math.abs(i), false); c.rotation.z = -i * .4; g.add(c); }
+      return g.children[g.children.length - 1];
+    }
+    case 4: // orejitas
+      for (const s of [-1, 1]) g.add(malla(G.esfera, matHue(h), .42, .55, .3, s * .55, alto - .15, 0, false), malla(G.esfera, mat("#FFB3C7"), .22, .32, .1, s * .55, alto - .15, .12, false));
+      return g.children[g.children.length - 1];
+    case 5: { // honguito
+      add(malla(G.media, mat("#E8424F"), .9, .6, .9, 0, alto - .05, 0, false));
+      for (let i = 0; i < 4; i++) { const a = i / 4 * 6.28 + .5; g.add(malla(G.esfera, BLANCO, .14, .1, .14, Math.cos(a) * .26, alto + .17, Math.sin(a) * .26, false)); }
+      return g.children[g.children.length - 1];
+    }
+    case 6: // rulito
+      { const r = new THREE.Mesh(new THREE.TorusGeometry(.18, .05, 6, 14, 5), matPie(h)); r.position.set(0, alto + .2, 0); r.rotation.y = Math.PI / 2; g.add(r); return r; }
+    default: { // hojitas (las de siempre)
+      g.add(malla(G.cil, mat("#3E9A4E"), .07, .5, .07, 0, alto + .05, 0, false));
+      const hoja1 = malla(G.hoja, mat("#5CC86B"), .55, .14, .28, .22, alto + .3, 0, false); hoja1.rotation.z = -.4;
+      const hoja2 = malla(G.hoja, mat("#5CC86B"), .45, .12, .24, -.2, alto + .2, 0, false); hoja2.rotation.z = .4;
+      g.add(hoja1, hoja2); return hoja2;
+    }
+  }
+}
+const elegirDe = (b, arr) => arr[Math.abs(b.id * 31 + 7) % arr.length];
 function crearMallaBicho(b) {
-  const g = new THREE.Group();
-  const cuerpo = malla(G.esfera, matHue(b.hue), 1.6, 1.85, 1.5, 0, .95, 0); cuerpo.userData.b = b;
+  const g = new THREE.Group(); g.rotation.order = "YXZ";
+  const est = estiloDe(b), [fx, fy, fz] = FORMAS[est.f];
+  const cuerpo = malla(G.esfera, matHue(b.hue), fx, fy, fz, 0, .95, 0); cuerpo.userData.b = b;
   const o1 = malla(G.ojo, NEGRO, 1, 1.4, 1, -.25, 1.15, .7, false), o2 = malla(G.ojo, NEGRO, 1, 1.4, 1, .25, 1.15, .7, false);
   const b1 = malla(G.ojo, BLANCO, 1.9, 1.9, 1, -.25, 1.15, .66, false), b2 = malla(G.ojo, BLANCO, 1.9, 1.9, 1, .25, 1.15, .66, false); b1.visible = b2.visible = false;
   const boca = malla(G.ojo, NEGRO, 1.4, .5, .5, 0, .86, .74, false);
-  const tallo = malla(G.cil, mat("#3E9A4E"), .07, .5, .07, 0, 2, 0, false);
-  const hoja1 = malla(G.hoja, mat("#5CC86B"), .55, .14, .28, .22, 2.25, 0, false); hoja1.rotation.z = -.4;
-  const hoja2 = malla(G.hoja, mat("#5CC86B"), .45, .12, .24, -.2, 2.15, 0, false); hoja2.rotation.z = .4;
   const pies = [malla(G.esfera, matPie(b.hue), .55, .3, .65, -.35, .1, .1, false), malla(G.esfera, matPie(b.hue), .55, .3, .65, .35, .1, .1, false)];
-  g.add(cuerpo, o1, o2, b1, b2, boca, tallo, hoja1, hoja2, ...pies);
-  const gorros = {}; for (const k in GORROS) { const h = GORROS[k](); h.position.y = 1.62; h.visible = false; g.add(h); gorros[k] = h; }
+  g.add(cuerpo, o1, o2, b1, b2, boca, ...pies);
+  const hoja2 = adorno(g, est, b);
+  if (est.m) for (const [x, y, z] of [[.5, 1.2, -.45], [-.45, .75, -.55], [.1, 1.45, -.6], [-.62, 1.15, .1]]) g.add(malla(G.esfera, matPie(b.hue), .32, .26, .2, x * fx / 1.6, y, z * fz / 1.5, false));
+  if (est.o) for (const s of [-1, 1]) g.add(malla(G.esfera, mat("#FF9AB0"), .25, .14, .08, s * .48, .95, .68, false));
+  const gorros = {}; for (const k in GORROS) { const h = GORROS[k](); h.position.y = fy * .5 + .72; h.visible = false; g.add(h); gorros[k] = h; }
   const carga = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); carga.scale.set(2.4, .85, 1); carga.position.y = 3; carga.visible = false; g.add(carga);
   escena.add(g); cuerpos.push(cuerpo);
   b._m = { g, cuerpo, o1, o2, b1, b2, boca, gorros, carga, pies, hoja2, cargaTxt: null, triste: null, lejos: false };
@@ -1107,7 +1159,7 @@ function actualizarMallaBicho(b, ahora) {
   g.visible = !b.adentro && b.y > -2.3;
   if (!g.visible) return;
   const trabaja = b.est === "juntar" || b.est === "construir";
-  const camina = !trabaja && !["quieto", "bajar", "subir", "durmiendo"].includes(b.est);
+  const camina = !trabaja && !b.caida && !["quieto", "bajar", "subir", "durmiendo"].includes(b.est);
   const salto = camina ? Math.abs(Math.sin(b.fase)) * .3 : trabaja ? Math.abs(Math.sin(b.fase * 1.5)) * .15 : 0;
   const esc = bebe ? .55 + b.edad / GRANDE * .3 : 1;
   const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * .08 : 0;
@@ -1115,6 +1167,7 @@ function actualizarMallaBicho(b, ahora) {
   g.scale.setScalar(esc);
   g.rotation.y = Math.atan2(b.dx, b.dz);
   g.rotation.x = trabaja ? Math.sin(b.fase * 1.5) * .15 : 0;
+  if (b.caida > 0) { const t = 1.8 - b.caida, k = t < .3 ? t / .3 : b.caida < .45 ? b.caida / .45 : 1; g.rotation.x = -1.35 * k; g.position.y = .25 * k; }
   const lejos = camara.position.distanceToSquared(g.position) > 70 * 70;
   if (m.lejos !== lejos) { m.lejos = lejos; for (const o of [m.o1, m.o2, m.boca, m.pies[0], m.pies[1], m.hoja2]) o.visible = !lejos; }
   const triste = E.animo < 30 && b.susto <= 0;
@@ -1409,6 +1462,37 @@ function saludar() {
   E.animo = clamp(E.animo + 1, 0, 100);
 }
 function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; sonido("dar"); }
+// ---- choques: el rey no atraviesa nada ----
+const RADIO_EDIF = { casa: 1.9, fogata: 1, huerta: 2.6, mina: 1.5, escuela: 2.6, biblioteca: 2.8, torre: 1.5, molino: 1.6, fabrica: 2.6, central: 2.7, base: 2.8, cohete: 1.5 };
+const RADIO_TECHO = { pozo: 1.3, fuente: 3.3, cantera: 2.3, totem: .8, mercado: 3.3, puerto: 3.4, estadio: 3.7, parque: 2, aeropuerto: 3.8, antenota: 1, portal: 2.2, domo: 3.5, ascensor: 1.9 };
+function radioDe(o) {
+  if (o.tipo === "cat" || o.tipo === "inv") { const r = o.tipo === "cat" ? CAT[o.cat].r : o.inv.r; return RADIO_TECHO[r.techo] || Math.max(r.w || 4, r.d || r.w || 4) / 2 + .1; }
+  if (o.tipo === "arbol") return .7; if (o.tipo === "roca") return .8; if (o.tipo === "arbusto") return .6;
+  return RADIO_EDIF[o.tipo] || 1.6;
+}
+let obstaculos = [], obsT = 1;
+function choca(x, z) {
+  for (const o of obstaculos) { const r = o.r + .55; if ((o.x - x) ** 2 + (o.z - z) ** 2 < r * r) return true; }
+  return false;
+}
+function chocarBichos(mx, mz) {
+  for (const b of E.bichos) {
+    if (b.adentro || b.y !== 0) continue;
+    const dx = b.x - yo.x, dz = b.z - yo.z, d2 = dx * dx + dz * dz;
+    if (d2 > 1.7 * 1.7) continue;
+    const d = Math.sqrt(d2) || .01;
+    // lo empujás solo si vas hacia él
+    if (!(b.caida > 0) && (dx * mx + dz * mz) / d > .3) {
+      b.caida = 1.8; b.kx = dx / d; b.kz = dz / d; b.dx = -b.kx; b.dz = -b.kz; b.carga = null; b.adentro = false;
+      if (Math.random() < .7) setTimeout(() => hablar(b, elegir(["¡ay!", "¡ayyy!", "¡uy!", "😵"]), true), 80);
+      sonido("ay", b);
+      for (const o of E.bichos) if (o !== b && !o.adentro && o.y === 0 && !o.caida && dist(o, b) < 6) { o.susto = rnd(2, 4); const dd = dist(o, yo) || 1; o.dx = (o.x - yo.x) / dd; o.dz = (o.z - yo.z) / dd; }
+      E.animo = clamp(E.animo - .5, 0, 100);
+    }
+    // y no lo atravesás
+    const empuje = 1.7 - d; yo.x -= dx / d * empuje; yo.z -= dz / d * empuje;
+  }
+}
 function actualizarYo(dt, ahora) {
   if (!dentroMundo) return;
   // mover
@@ -1420,9 +1504,19 @@ function actualizarYo(dt, ahora) {
   const ux = fx / fl, uz = fz / fl;
   const mx = ux * jy - uz * jx, mz = uz * jy + ux * jx;
   const moviendo = Math.hypot(mx, mz) > .1, vel = 6.5 * Math.min(1, Math.hypot(mx, mz));
+  obsT += dt;
+  if (obsT > .25) { // lo que está cerca y no se puede atravesar
+    obsT = 0;
+    obstaculos = [];
+    for (const o of E.edificios) { const r = radioDe(o); if (Math.abs(o.x - yo.x) < r + 10 && Math.abs(o.z - yo.z) < r + 10) obstaculos.push({ x: o.x, z: o.z, r }); }
+    for (const o of E.recursos) if (Math.abs(o.x - yo.x) < 8 && Math.abs(o.z - yo.z) < 8) obstaculos.push({ x: o.x, z: o.z, r: radioDe(o) });
+  }
   if (moviendo) {
     const nx = yo.x + mx / Math.hypot(mx, mz) * vel * dt, nz = yo.z + mz / Math.hypot(mx, mz) * vel * dt;
-    if (tierraEn(nx, nz)) { yo.x = nx; yo.z = nz; } else if (tierraEn(nx, yo.z)) yo.x = nx; else if (tierraEn(yo.x, nz)) yo.z = nz;
+    const libre = (x, z) => tierraEn(x, z) && (yo.alto > 2.5 || !choca(x, z));
+    if (choca(yo.x, yo.z)) { yo.x = nx; yo.z = nz; } // si quedaste encima de algo, dejarte salir
+    else if (libre(nx, nz)) { yo.x = nx; yo.z = nz; } else if (libre(nx, yo.z)) yo.x = nx; else if (libre(yo.x, nz)) yo.z = nz;
+    if (yo.alto < 1) chocarBichos(mx, mz);
     yo.dx += (mx - yo.dx) * Math.min(1, dt * 12); yo.dz += (mz - yo.dz) * Math.min(1, dt * 12);
     yo.fase += dt * 12;
   }
