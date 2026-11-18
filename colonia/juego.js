@@ -50,13 +50,76 @@ const ERAS = [
   { g: "🚀", n: "Espacial", sab: 90000, edif: "base", s: "Base espacial: cohetes que traen gemas del cielo" },
 ];
 
+// ======================= Catálogo: cada vez más cosas, como una ciudad de verdad =======================
+// ef: mejoras (.1 = +10%); animo suma ánimo por segundo. r: cómo se arma con piezas.
+const CATALOGO = [
+  { id: "pozo", g: "💧", n: "Pozo de agua", era: 0, pob: 6, ef: { animo: .05 }, s: "Agua fresca: están más contentos", r: { techo: "pozo", ct: "#8E5B3A" } },
+  { id: "granero", g: "🌾", n: "Granero", era: 0, pob: 14, ef: { comida: .1 }, s: "+10% comida", r: { w: 4, d: 3.4, pisos: 1, h: 2.6, color: "#B5442F", techo: "dos", ct: "#6B3A2A", partes: ["cruz"] } },
+  { id: "lenera", g: "🪓", n: "Leñera", era: 0, pob: 18, ef: { madera: .1 }, s: "+10% madera", r: { w: 3.6, d: 2.6, pisos: 1, color: "#9C6E45", techo: "dos", ct: "#D9B45A", partes: ["troncos"] } },
+  { id: "cantera", g: "🪨", n: "Cantera", era: 0, pob: 24, ef: { piedra: .1 }, s: "+10% piedra", r: { techo: "cantera" } },
+  { id: "totem", g: "🗿", n: "Tótem de la colonia", era: 0, pob: 30, ef: { animo: .05, sab: .05 }, s: "Los une: más ánimo y sabiduría", r: { techo: "totem" } },
+  { id: "cocina", g: "🍲", n: "Cocina comunal", era: 0, pob: 40, ef: { nacer: .1 }, s: "Comen juntos: nacen más rápido", r: { w: 4.2, d: 3.6, pisos: 1, color: "#D8B27A", techo: "dos", ct: "#D9B45A", partes: ["chimenea", "toldo"] } },
+  { id: "plaza", g: "⛲", n: "Plaza con fuente", era: 1, pob: 50, ef: { animo: .1 }, s: "El centro del pueblo: mucho más ánimo", r: { techo: "fuente" } },
+  { id: "mercado", g: "🛒", n: "Mercado", era: 1, pob: 60, ef: { comida: .05, madera: .05, piedra: .05 }, s: "+5% de todo", r: { techo: "mercado" } },
+  { id: "panaderia", g: "🍞", n: "Panadería", era: 1, pob: 70, ef: { comida: .15 }, s: "+15% comida", r: { w: 3.6, d: 3.4, pisos: 2, color: "#F1D3A5", techo: "dos", ct: "#B5442F", partes: ["toldo", "chimenea"] } },
+  { id: "herreria", g: "⚒️", n: "Herrería", era: 1, pob: 80, ef: { obra: .15 }, s: "Mejores herramientas: construyen +15% rápido", r: { w: 4, d: 3.4, pisos: 1, h: 2.6, color: "#6E6E6E", techo: "dos", ct: "#3E3E3E", partes: ["chimenea", "chimenea2"] } },
+  { id: "carpinteria", g: "🪚", n: "Carpintería", era: 1, pob: 90, ef: { madera: .15 }, s: "+15% madera", r: { w: 4.2, d: 3.6, pisos: 1, h: 2.6, color: "#C08552", techo: "dos", ct: "#7A4B2A", partes: ["troncos"] } },
+  { id: "correo", g: "✉️", n: "Correo", era: 1, pob: 100, ef: { vel: .05 }, s: "Se organizan mejor: caminan +5% rápido", r: { w: 3.6, d: 3.4, pisos: 2, color: "#F2C14E", techo: "dos", ct: "#2E5AAC", partes: ["bandera"] } },
+  { id: "teatro", g: "🎭", n: "Teatro", era: 1, pob: 115, ef: { animo: .1 }, s: "Funciones todas las noches: más ánimo", r: { w: 5, d: 4.4, pisos: 2, h: 2.4, color: "#8E2C48", techo: "cupula", ct: "#E0B84F", partes: ["columnas"] } },
+  { id: "estacion", g: "🚂", n: "Estación de tren", era: 2, pob: 130, ef: { vel: .1 }, s: "Viajan más rápido: +10% velocidad", r: { w: 5.4, d: 3.6, pisos: 1, h: 3, color: "#B5442F", techo: "dos", ct: "#3E3E3E", partes: ["reloj", "vias"] } },
+  { id: "aserradero", g: "🏭", n: "Aserradero", era: 2, pob: 140, ef: { madera: .2 }, s: "+20% madera", r: { w: 5, d: 4, pisos: 1, h: 3.2, color: "#8C6A4F", techo: "plano", ct: "#5E4A3A", partes: ["chimenea", "rueda", "troncos"] } },
+  { id: "hospital", g: "🏥", n: "Hospital", era: 2, pob: 155, ef: { nacer: .15 }, s: "Bebés sanos: nacen +15% rápido", r: { w: 5.2, d: 4.2, pisos: 3, color: "#F4F4F4", techo: "plano", ct: "#D9534F", partes: ["cruzroja"] } },
+  { id: "banco", g: "🏦", n: "Banco", era: 2, pob: 170, ef: { gemas: .15 }, s: "Guardan bien las gemas: +15%", r: { w: 4.8, d: 4, pisos: 2, h: 2.4, color: "#E9E1CF", techo: "dos", ct: "#A08C6A", partes: ["columnas"] } },
+  { id: "museo", g: "🏛️", n: "Museo", era: 2, pob: 185, ef: { sab: .15 }, s: "Aprenden del pasado: +15% sabiduría", r: { w: 5.4, d: 4.4, pisos: 2, h: 2.4, color: "#EDE6D6", techo: "cupula", ct: "#8EA6C8", partes: ["columnas"] } },
+  { id: "puerto", g: "⚓", n: "Puerto", era: 2, pob: 200, ef: { comida: .2 }, s: "Pescado fresco: +20% comida", r: { techo: "puerto" } },
+  { id: "reloj", g: "🕰️", n: "Torre del reloj", era: 2, pob: 215, ef: { obra: .1 }, s: "Llegan puntuales: construyen +10% rápido", r: { w: 2.6, d: 2.6, pisos: 5, h: 2.2, color: "#A8946E", techo: "cono", ct: "#3E5A7A", partes: ["reloj"] } },
+  { id: "estadio", g: "🏟️", n: "Estadio", era: 3, pob: 240, ef: { animo: .15 }, s: "¡Partidos! Mucho más ánimo", r: { techo: "estadio" } },
+  { id: "parque", g: "🎡", n: "Parque de diversiones", era: 3, pob: 260, ef: { animo: .1, nacer: .1 }, s: "Más ánimo y más bebés", r: { techo: "parque" } },
+  { id: "cine", g: "🎬", n: "Cine", era: 3, pob: 280, ef: { animo: .1 }, s: "Pochoclo y películas: más ánimo", r: { w: 5, d: 4, pisos: 2, h: 2.4, color: "#2E2440", techo: "plano", ct: "#E8424F", partes: ["neon", "toldo"] } },
+  { id: "laboratorio", g: "🔬", n: "Laboratorio", era: 3, pob: 300, ef: { sab: .2 }, s: "Experimentos: +20% sabiduría", r: { w: 4.6, d: 4, pisos: 3, color: "#DDE6EE", techo: "cupula", ct: "#9FD8F0", partes: ["antena", "neon"] } },
+  { id: "rascacielos", g: "🏙️", n: "Rascacielos", era: 3, pob: 330, ef: { nacer: .1, alto: 2 }, s: "Casas de 2 pisos más", r: { w: 3.6, d: 3.6, pisos: 12, h: 1.8, color: "#9DB4C8", techo: "plano", ct: "#5D6D7E", partes: ["vidrio", "antena"] } },
+  { id: "aeropuerto", g: "✈️", n: "Aeropuerto", era: 3, pob: 360, ef: { vel: .1 }, s: "Vuelan de un lado al otro: +10% velocidad", r: { techo: "aeropuerto" } },
+  { id: "radio", g: "📡", n: "Antena de radio", era: 3, pob: 390, ef: { sab: .1 }, s: "Se enteran de todo: +10% sabiduría", r: { techo: "antenota" } },
+  { id: "observatorio", g: "🔭", n: "Observatorio", era: 4, pob: 420, ef: { sab: .2 }, s: "Miran las estrellas: +20% sabiduría", r: { w: 4, d: 4, pisos: 2, color: "#F4F7FB", techo: "cupula", ct: "#B8C4D6", partes: ["telescopio"] } },
+  { id: "granjavertical", g: "🥬", n: "Granja vertical", era: 4, pob: 460, ef: { comida: .25 }, s: "Huertas en el aire: +25% comida", r: { w: 3.8, d: 3.8, pisos: 7, h: 1.9, color: "#BFF0C8", techo: "plano", ct: "#4FB477", partes: ["vidrio", "plantas"] } },
+  { id: "robots", g: "🤖", n: "Taller de robots", era: 4, pob: 500, ef: { obra: .25 }, s: "Robots que ayudan: +25% construcción", r: { w: 5, d: 4.2, pisos: 2, h: 2.6, color: "#C9D1DA", techo: "cupula", ct: "#7FE7F2", partes: ["neon", "antena"] } },
+  { id: "teletransporte", g: "🌀", n: "Teletransportador", era: 4, pob: 550, ef: { vel: .15 }, s: "Aparecen donde quieren: +15% velocidad", r: { techo: "portal" } },
+  { id: "domo", g: "🔮", n: "Domo de cristal", era: 4, pob: 600, ef: { animo: .15 }, s: "Jardín bajo el vidrio: mucho ánimo", r: { techo: "domo" } },
+  { id: "ascensor", g: "🛰️", n: "Ascensor espacial", era: 4, pob: 700, ef: { gemas: .3 }, s: "Suben al espacio: +30% gemas", r: { techo: "ascensor" } },
+];
+const CAT = Object.fromEntries(CATALOGO.map((c) => [c.id, c]));
+// mejoras acumuladas de todo lo construido
+let BONOS = {};
+const bono = (k) => 1 + (BONOS[k] || 0);
+function calcularBonos() {
+  const b = {};
+  const sumarEf = (ef) => { for (const k in ef) b[k] = (b[k] || 0) + ef[k]; };
+  for (const e of E.edificios) if (listo(e)) { if (e.tipo === "cat" && CAT[e.cat]) sumarEf(CAT[e.cat].ef); else if (e.tipo === "inv" && e.inv) sumarEf(e.inv.ef || {}); }
+  if (typeof bonosPoder === "function") sumarEf(bonosPoder());
+  BONOS = b;
+}
+function sumar(k, v) { E["_r" + k] = (E["_r" + k] || 0) + v; if (E["_r" + k] >= 1) { const n = E["_r" + k] | 0; E[k] += n; E["_r" + k] -= n; } }
+const costoCat = (c) => ({ madera: Math.round(10 + c.pob * .12), piedra: Math.round(6 + c.pob * .08), gemas: c.era >= 2 ? Math.min(6, 1 + c.era) : 0 });
+const proximoCat = () => CATALOGO.find((c) => !E.hechos[c.id] && E.era >= c.era && E.bichos.length >= c.pob);
+const siguienteCat = () => CATALOGO.find((c) => !E.hechos[c.id]);
+function construirCatalogo() {
+  if (E.edificios.some((e) => (e.tipo === "cat" || e.tipo === "inv") && !listo(e))) return;
+  const c = proximoCat(); if (!c) return;
+  const k = costoCat(c);
+  if (E.madera < k.madera || E.piedra < k.piedra || E.gemas < k.gemas) return;
+  const e = nuevoEdificio("cat", c.era <= 1); if (!e) return;
+  E.madera -= k.madera; E.piedra -= k.piedra; E.gemas -= k.gemas;
+  e.cat = c.id; E.hechos[c.id] = 1;
+  eventos.push({ tipo: "obraCat", g: c.g, n: c.n });
+}
+
 // ======================= Islas (mundo infinito) =======================
 const SEP = 74, DIRS = [[1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]];
 const centroHex = (q, r) => ({ x: SEP * (q + r / 2), z: SEP * (r * Math.sqrt(3) / 2) });
 const BIOMAS = { pradera: { arbol: .42, arbusto: .74 }, bosque: { arbol: .7, arbusto: .85 }, rocosa: { arbol: .25, arbusto: .45 }, frutal: { arbol: .3, arbusto: .8 } };
 const PASTO = "#7ACB6B";
 // un solo mundo hecho de pedazos hexagonales pegados (sin agua en el medio)
-const RI = SEP / 2, RH = SEP / Math.sqrt(3);
+const RI = SEP / 2, RH = SEP / Math.sqrt(3), CELDA = 8.6;
 const EJES = [[1, 0], [.5, Math.sqrt(3) / 2], [-.5, Math.sqrt(3) / 2]];
 const hexK = (dx, dz, m) => Math.max(...EJES.map(([ux, uz]) => Math.abs(dx * ux + dz * uz))) / (RI - m);
 const enHex = (dx, dz, m) => hexK(dx, dz, m) <= 1;
@@ -72,7 +135,7 @@ function lugares(isla) {
   const rd = semilla(isla.id * 31 + 7), l = [];
   for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) {
     if (!i && !j && isla.capital) continue;
-    const x = i * 8.6 + (rd() - .5) * 1.4, z = j * 8.6 + (rd() - .5) * 1.4, d = Math.hypot(x, z);
+    const x = i * CELDA, z = j * CELDA, d = Math.hypot(x, z);
     if (enHex(x, z, 5)) l.push({ x: isla.x + x, z: isla.z + z, d: d + rd() * .5 });
   }
   return (isla._lug = l.sort((a, b) => a.d - b.d));
@@ -99,7 +162,7 @@ function crearBicho(x, z, adulto, isla) {
 function nuevoEstado() {
   E = { t: Date.now(), tiempo: 30, id: 1, comida: 6, madera: 4, piedra: 2, gemas: 0, animo: 80, energia: 10,
     nacidos: 1, explotados: 0, meta: 0, maxNivel: 2, sab: 0, era: 0, islas: [], puentes: [], bichos: [], recursos: [], edificios: [], mina: null,
-    pedido: null, proxPedido: 25, cohete: 150 };
+    pedido: null, proxPedido: 25, cohete: 150, hechos: {} };
   const isla = crearIsla(0, 0); isla.capital = true; colonizar(isla);
   E.edificios.push({ id: E.id++, tipo: "fogata", isla: isla.id, x: isla.x, z: isla.z, prog: 1, nivel: 1, era: 0 });
   E.recursos = E.recursos.filter((r) => Math.hypot(r.x - isla.x, r.z - isla.z) > 4);
@@ -119,6 +182,7 @@ function cargar() {
     const s = JSON.parse(localStorage.getItem(CLAVE));
     if (!s || !s.bichos) return null;
     sigId = s.sigId || 1000;
+    s.hechos = s.hechos || {};
     for (const b of s.bichos) { if (b.y < 0 || b.est === "cruzar") { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
@@ -153,7 +217,7 @@ function nuevoEdificio(tipo, preferirCapital) {
   const e = { id: E.id++, tipo, isla: isla.id, x: p.x, z: p.z, prog: 0, nivel: 1, era: E.era };
   if (tipo === "huerta") { e.cant = 4; e.max = 8; e.crece = 0; }
   E.edificios.push(e);
-  E.recursos = E.recursos.filter((r) => Math.hypot(r.x - e.x, r.z - e.z) > 4.2);
+  E.recursos = E.recursos.filter((r) => Math.hypot(r.x - e.x, r.z - e.z) > 5.6);
   return e;
 }
 function nuevoPuente() {
@@ -182,7 +246,7 @@ function paso(dt, offline) {
   for (const r of E.recursos) if (r.cant < r.max) { r.crece += dt; if (r.crece > (r.tipo === "arbusto" ? 14 : 24)) { r.crece = 0; r.cant++; } }
   for (const h of E.edificios) if (h.tipo === "huerta" && listo(h) && h.cant < h.max) { h.crece += dt; if (h.crece > 4) { h.crece = 0; h.cant++; } }
   E.energia = Math.min(10, E.energia + dt / 6);
-  E.animo = clamp(E.animo + ((E.comida > 0 ? 0.25 : -0.6) + (hay("torre") ? .15 : 0)) * dt, 0, 100);
+  E.animo = clamp(E.animo + ((E.comida > 0 ? 0.25 : -0.6) + (hay("torre") ? .15 : 0) + (BONOS.animo || 0)) * dt, 0, 100);
   E.comerT = (E.comerT || 0) + dt;
   if (E.comerT > 40) { E.comerT = 0; E.comida = Math.max(0, E.comida - Math.ceil(E.bichos.length / 3)); }
   // producción de los edificios especiales
@@ -191,7 +255,7 @@ function paso(dt, offline) {
   if (cuantos("fabrica")) { if (E.madera < 40 + E.bichos.length * .3) prod("madera", .12 * cuantos("fabrica")); if (E.piedra < 30 + E.bichos.length * .3) prod("piedra", .1 * cuantos("fabrica")); }
   // sabiduría
   const adultos = E.bichos.reduce((s, b) => s + (b.edad > GRANDE ? 1 : 0), 0);
-  E.sab += dt * (Math.sqrt(adultos) * .15 + cuantos("escuela") * .2 + cuantos("biblioteca") * .6);
+  E.sab += dt * (Math.sqrt(adultos) * .15 + cuantos("escuela") * .2 + cuantos("biblioteca") * .6) * bono("sab");
   const sig = ERAS[E.era + 1];
   if (sig && E.sab >= sig.sab) {
     E.era++; eventos.push({ tipo: "era" });
@@ -213,7 +277,7 @@ function paso(dt, offline) {
 
   // nacimientos
   E.nacerT = (E.nacerT || 0) + dt;
-  if (!noche && E.nacerT > 6 * (E.animo < 30 ? 2 : 1)) {
+  if (!noche && E.nacerT > 6 * (E.animo < 30 ? 2 : 1) / bono("nacer")) {
     E.nacerT = 0;
     if (E.bichos.length < capacidad() && E.comida >= 4 && adultos > 0) {
       E.comida -= 4;
@@ -235,7 +299,7 @@ function paso(dt, offline) {
   // más lugar: piso nuevo, casa nueva o puente a otra isla
   const obraCasa = E.edificios.some((e) => e.tipo === "casa" && !listo(e));
   if (!obraCasa && E.bichos.length >= capacidad() - 1) {
-    const subible = casas().filter((c) => c.nivel < E.maxNivel);
+    const subible = casas().filter((c) => c.nivel < E.maxNivel + (BONOS.alto || 0));
     const c = subible.length && Math.random() < .65 ? elegir(subible) : null;
     if (c) {
       const k = { madera: 6 + c.nivel * 3, piedra: 4 + c.nivel * 3, gemas: c.nivel >= 3 ? 2 : 0 };
@@ -247,6 +311,8 @@ function paso(dt, offline) {
     }
   }
   // islas con lugar: si todas las casas posibles están hechas, preparar puente antes de llenarse
+  E.catT = (E.catT || 0) + dt;
+  if (E.catT > 5) { E.catT = 0; construirCatalogo(); }
   if (!E.puentes.some((p) => p.prog < 1) && E.islas.filter(lugarLibre).every((i) => lugares(i).length - i.nLugar < 3) && E.madera >= 30 && E.piedra >= 15) {
     E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "tierra" });
   }
@@ -273,16 +339,17 @@ function resumen(dt, offline, noche) {
     const pob = E.bichos.length;
     const falta = { comida: E.comida > 30 + pob ? 0 : Math.max(.5, 6 + pob * .6 - E.comida), madera: E.madera > 20 + pob * .2 ? 0 : Math.max(.3, 12 - E.madera), piedra: E.piedra > 14 + pob * .2 ? 0 : Math.max(.3, 8 - E.piedra) };
     const tot = falta.comida + falta.madera + falta.piedra; if (!tot) continue;
-    for (const k in falta) { E["_r" + k] = (E["_r" + k] || 0) + tasa * falta[k] / tot; if (E["_r" + k] >= 1) { const v = E["_r" + k] | 0; E[k] += v; E["_r" + k] -= v; } }
-    if (E.mina && islaId === E.mina.isla && E.gemas < 12 + E.era * 6) { E._rgemas = (E._rgemas || 0) + tasa * .04 * E.mina.prof; if (E._rgemas >= 1) { E.gemas++; E._rgemas--; } }
+    for (const k in falta) sumar(k, tasa * falta[k] / tot * bono(k));
+    if (E.mina && islaId === E.mina.isla && E.gemas < 12 + E.era * 6) { sumar("gemas", tasa * .04 * E.mina.prof * bono("gemas")); }
   }
 }
 function avanzarObra(o, cuanto, offline) {
-  const lento = { torre: .4, cohete: .25, escuela: .6, mina: .7, biblioteca: .5, molino: .6, fabrica: .45, central: .4, base: .3, tierra: .5 }[o.tipo] || 1;
-  o.prog = Math.min(1, o.prog + cuanto * lento);
+  const lento = { torre: .4, cohete: .25, escuela: .6, mina: .7, biblioteca: .5, molino: .6, fabrica: .45, central: .4, base: .3, tierra: .5, cat: .6, inv: .55 }[o.tipo] || 1;
+  o.prog = Math.min(1, o.prog + cuanto * lento * bono("obra"));
   if (listo(o)) {
     if (o.tipo === "mina" && !E.mina) E.mina = { x: o.x, z: o.z, isla: o.isla, prof: 1, cavado: 0, id: o.id };
     if (o.tipo === "tierra") { colonizar(islaDe(o.b)); vecinasNuevas(); migrar(o); }
+    if (o.tipo === "cat" || o.tipo === "inv") calcularBonos();
     eventos.push({ tipo: "listo", e: o });
     if (!offline && activas.has(o.isla)) festejo(o);
   }
@@ -299,7 +366,7 @@ function actualizarBicho(b, dt, offline, noche) {
   b.edad += dt * (hay("escuela") && b.edad < GRANDE ? 2 : 1); b.fase += dt * 10;
   if (b.charlaT > 0) b.charlaT -= dt;
   const isla = islaDe(b.isla); if (!isla) return;
-  const adulto = b.edad > GRANDE, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1) * (E.era >= 2 ? 1.3 : 1);
+  const adulto = b.edad > GRANDE, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1) * (E.era >= 2 ? 1.3 : 1) * bono("vel");
   if (b.susto > 0 && b.y === 0 && b.est !== "cruzar") {
     b.susto -= dt; b.adentro = false;
     b.x += b.dx * vel * 1.8 * dt; b.z += b.dz * vel * 1.8 * dt; dentro(b, isla);
@@ -323,7 +390,7 @@ function actualizarBicho(b, dt, offline, noche) {
       if (b.trabajo <= 0) { const r = buscar(b.obj); if (r && r.cant > 0) { const k = Math.min(r.cant, E.era >= 1 ? 2 : 1); r.cant -= k; b.carga = TIPO_RECURSO[r.tipo]; b.cant = k; b.est = "llevar"; b.obj = (almacenCercano() || {}).id; } else { b.est = "quieto"; b.quieto = .3; } }
       break;
     }
-    case "llevar": { const a = buscar(b.obj) || almacenCercano(); if (!a) { b.est = "quieto"; break; } if (mover(a, 1.8)) { E[b.carga] += b.cant || 1; b.carga = null; b.cant = 0; b.est = "quieto"; b.quieto = rnd(.2, .8); } break; }
+    case "llevar": { const a = buscar(b.obj) || almacenCercano(); if (!a) { b.est = "quieto"; break; } if (mover(a, 1.8)) { sumar(b.carga, (b.cant || 1) * bono(b.carga)); b.carga = null; b.cant = 0; b.est = "quieto"; b.quieto = rnd(.2, .8); } break; }
     case "construir": {
       const o = buscar(b.obj); if (!o || listo(o)) { b.est = "quieto"; b.quieto = .5; break; }
       const meta = o.tipo === "tierra" ? { x: o.x + Math.cos(b.ang) * 1.2, z: o.z + Math.sin(b.ang) * 1.2 } : { x: o.x + Math.cos(b.ang) * 2.7, z: o.z + Math.sin(b.ang) * 2.7 };
@@ -546,6 +613,7 @@ function mallaIsla(isla, detalle, prog = 1) {
   const rd0 = semilla(isla.id * 13 + 5);
   const punta = new THREE.Mesh(new THREE.ConeGeometry(r * .6, 10 + rd0() * 14, 6), mat("#8A5E3A")); punta.rotation.x = Math.PI; punta.position.y = -17.6 - punta.geometry.parameters.height / 2;
   g.add(pasto, tierra, roca, punta);
+  if (prog >= 1 && isla.colonizada) calles(g, isla);
   if (detalle && prog >= 1) { const rd = semilla(isla.id); for (let i = 0; i < 180; i++) { const dx = (rd() - .5) * 2 * r, dz = (rd() - .5) * 2 * r; if (!enHex(dx, dz, 1)) continue; g.add(malla(G.cono, mat(rd() < .5 ? "#5DB85A" : "#8FD67A"), .25, .5, .25, dx, .2, dz, false)); } }
   g.position.set(isla.x, -(1 - prog) * 26, isla.z);
   if (prog < 1) { const k = .55 + .45 * prog; g.scale.set(k, 1, k); }
@@ -588,6 +656,148 @@ function techo(g, est, y, w) {
   if (est.tipoTecho === "cupula") { g.add(malla(G.media, new THREE.MeshLambertMaterial({ color: est.techo, transparent: true, opacity: .85 }), w * 1.1, w * .8, w * 1.1, 0, y, 0)); g.add(malla(G.cil, NEON, w + .1, .12, w + .1, 0, y, 0, false)); return; }
   const t = malla(G.piramide, mat(est.techo), w * 1.5, est.tipoTecho === "paja" ? 2 : 1.6, w * 1.5, 0, y + (est.tipoTecho === "paja" ? 1 : .8), 0); t.rotation.y = Math.PI / 4; g.add(t);
 }
+// ---- edificios armados con piezas (catálogo, combinados e inventos) ----
+const VIDRIO = new THREE.MeshLambertMaterial({ color: "#BFE6FF", emissive: "#5FA8D8", emissiveIntensity: .15, transparent: true, opacity: .75 });
+const altoReceta = (r) => ({ pozo: 3, fuente: 2, cantera: 2, totem: 4.5, mercado: 3, puerto: 2.5, estadio: 3, parque: 7, aeropuerto: 3, antenota: 14, portal: 5, domo: 4, ascensor: 22 }[r.techo] || (r.pisos ?? 1) * (r.h || 2.2) + 1.5);
+function armar(r, simple, sem = 1) {
+  const g = new THREE.Group(), rd = semilla(sem), H = r.h || 2.2, n = r.pisos ?? 1, alto = n * H, W = r.w || 4, D = r.d || W;
+  const pared = mat(r.color || "#E0C9A6"), ct = mat(r.ct || "#8E3B2E");
+  const partes = new Set(r.partes || []);
+  const listoCon = (y) => { if (!simple && r.icono) cartel(r.icono, 0, y, g, .9); return g; };
+  switch (r.techo) {
+    case "pozo":
+      g.add(malla(G.cil, mat("#8C939C"), 2.2, 1, 2.2, 0, .5, 0), malla(G.cil, mat("#3A7BD5"), 1.8, .05, 1.8, 0, 1.02, 0, false));
+      for (const s of [-1, 1]) g.add(malla(G.cil, mat("#7A4B2A"), .15, 2.2, .15, s * .95, 1.6, 0));
+      { const t = malla(G.piramide, ct, 2.6, .9, 1.8, 0, 3.1, 0); t.rotation.y = Math.PI / 4; g.add(t); }
+      return listoCon(4.6);
+    case "fuente":
+      g.add(malla(G.cil, mat("#D8D2C4"), 7, .12, 7, 0, .06, 0, false), malla(G.cil, mat("#B9B2A3"), 3.2, .6, 3.2, 0, .3, 0), malla(G.cil, mat("#5EC8F2"), 2.8, .05, 2.8, 0, .62, 0, false));
+      g.add(malla(G.cil, mat("#B9B2A3"), .4, 1.6, .4, 0, 1, 0), malla(G.cil, mat("#B9B2A3"), 1.3, .2, 1.3, 0, 1.8, 0), malla(G.esfera, mat("#9FE3F5"), .6, .5, .6, 0, 2.1, 0, false));
+      if (!simple) for (let i = 0; i < 4; i++) { const a = i / 4 * 6.28 + .78; g.add(malla(G.cil, mat("#7A4B2A"), .15, 1, .15, Math.cos(a) * 2.9, .5, Math.sin(a) * 2.9), malla(G.esfera, mat("#4FAE5A"), 1.2, 1.2, 1.2, Math.cos(a) * 2.9, 1.4, Math.sin(a) * 2.9)); }
+      return listoCon(3.8);
+    case "cantera":
+      for (let i = 0; i < 7; i++) g.add(malla(G.roca, mat(i % 2 ? "#8C939C" : "#A7ADB8"), 1.2 + rd() * 1.3, .8 + rd() * 1.4, 1.2 + rd() * 1.3, rd() * 4 - 2, .5, rd() * 4 - 2));
+      g.add(malla(G.caja, mat("#7A4B2A"), 1.6, .5, 1, 1.8, .25, 1.6));
+      return listoCon(3.4);
+    case "totem":
+      for (let i = 0; i < 3; i++) { g.add(malla(G.cil, mat(["#B5442F", "#2E8B57", "#E0B84F"][i], ), 1.2, 1.3, 1.2, 0, .65 + i * 1.3, 0)); g.add(malla(G.ojo, NEGRO, 1.6, 1.6, 1, -.25, .85 + i * 1.3, .6, false), malla(G.ojo, NEGRO, 1.6, 1.6, 1, .25, .85 + i * 1.3, .6, false)); }
+      g.add(malla(G.caja, mat("#E0B84F"), 3, .25, .5, 0, 3.6, 0));
+      return listoCon(5.2);
+    case "mercado":
+      for (let i = 0; i < 3; i++) { const x = -2.2 + i * 2.2, c = ["#E8424F", "#4FB477", "#3A7BD5"][i]; g.add(malla(G.caja, mat("#9C6E45"), 1.8, .9, 1.2, x, .45, 0)); for (const [a, b] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) g.add(malla(G.cil, mat("#7A4B2A"), .08, 2.2, .08, x + a * .85, 1.1, b * .55, false)); const t = malla(G.caja, mat(c), 2, .12, 1.6, x, 2.25, 0); t.rotation.x = .2; g.add(t); if (!simple) for (let k = 0; k < 3; k++) g.add(malla(G.esfera, mat(["#FF9F1C", "#E8424F", "#7ED957"][k]), .3, .3, .3, x - .5 + k * .5, 1, .1, false)); }
+      return listoCon(3.6);
+    case "puerto":
+      g.add(malla(G.caja, mat("#2E86C1"), 7, .1, 4, 0, .05, 1, false), malla(G.caja, mat("#9C6E45"), 7, .3, 1.4, 0, .3, -1.6));
+      for (let i = 0; i < 5; i++) g.add(malla(G.cil, mat("#6B4A33"), .2, 1, .2, -3 + i * 1.5, .2, -.9, false));
+      { const bote = new THREE.Group(); bote.add(malla(G.caja, mat("#F4F4F4"), 2.4, .6, 1, 0, .4, 0), malla(G.cil, mat("#7A4B2A"), .08, 2, .08, 0, 1.6, 0), malla(G.piramide, mat("#ffffff"), 1, 1.6, .1, .4, 1.7, 0, false)); bote.position.set(1, 0, 1.5); g.add(bote); }
+      return listoCon(3.6);
+    case "estadio": {
+      const anillo = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.6, 2.4, 28, 1, true), new THREE.MeshLambertMaterial({ color: "#D9DEE5", side: THREE.DoubleSide })); anillo.position.y = 1.2; anillo.castShadow = true; g.add(anillo);
+      g.add(malla(G.cil, mat("#4FAE5A"), 6, .1, 6, 0, .1, 0, false), malla(G.cil, mat("#E8424F"), 7.3, .3, 7.3, 0, 2.5, 0, false));
+      if (!simple) for (const s of [-1, 1]) g.add(malla(G.cil, mat("#555"), .1, 4.5, .1, s * 3.4, 2.2, 0), malla(G.caja, NEON, .8, .4, .3, s * 3.4, 4.5, 0, false));
+      return listoCon(5.8);
+    }
+    case "parque": {
+      const rueda = new THREE.Group(); rueda.position.set(0, 3.6, 0);
+      rueda.add(new THREE.Mesh(new THREE.TorusGeometry(3, .12, 8, 32), mat("#E8424F")));
+      for (let i = 0; i < 8; i++) { const a = i / 8 * 6.28, rayo = malla(G.cil, mat("#F4F4F4"), .06, 3, .06, Math.cos(a) * 1.5, Math.sin(a) * 1.5, 0, false); rayo.rotation.z = a - Math.PI / 2; rueda.add(rayo); rueda.add(malla(G.caja, mat(["#F2C14E", "#4FB477", "#3A7BD5", "#FF6F91"][i % 4]), .7, .6, .7, Math.cos(a) * 3, Math.sin(a) * 3 - .4, 0, false)); }
+      g.add(rueda); g.userData.rueda = rueda;
+      for (const s of [-1, 1]) { const p = malla(G.cil, mat("#9AA3AD"), .2, 4, .2, s * 1.3, 1.8, 0); p.rotation.z = s * .35; g.add(p); }
+      if (!simple) g.add(malla(G.cono, mat("#FF6F91"), 1.6, 1.4, 1.6, 3.6, .7, 2.4), malla(G.cil, mat("#F4F4F4"), 1.5, 1, 1.5, 3.6, .2, 2.4));
+      return listoCon(7.8);
+    }
+    case "aeropuerto":
+      g.add(malla(G.caja, mat("#4E4E58"), 8, .1, 2, 0, .06, 1.5, false), malla(G.caja, mat("#DDE3EA"), 4, 2, 2.4, 0, 1, -1.5));
+      for (let i = 0; i < 6; i++) g.add(malla(G.caja, mat("#ffffff"), .7, .02, .15, -3.2 + i * 1.3, .12, 1.5, false));
+      g.add(malla(G.cil, mat("#DDE3EA"), .6, 3, .6, 2.6, 2.5, -1.8), malla(G.cil, VIDRIO, 1.2, .8, 1.2, 2.6, 4.2, -1.8, false));
+      { const av = new THREE.Group(); av.add(malla(G.cil, mat("#F4F4F4"), .5, 3.2, .5, 0, 0, 0), malla(G.caja, mat("#F4F4F4"), 3.4, .1, .7, 0, 0, 0), malla(G.caja, mat("#3A7BD5"), .1, .8, .5, 0, .4, -1.4)); av.children[0].rotation.x = Math.PI / 2; av.position.set(-2, .5, 1.5); av.rotation.y = Math.PI / 2; g.add(av); }
+      return listoCon(5.6);
+    case "antenota":
+      for (let i = 0; i < 4; i++) { const t = malla(G.caja, mat("#C0392B"), .2, 12, .2, (i % 2 ? 1 : -1) * .5, 6, (i < 2 ? 1 : -1) * .5); g.add(t); }
+      for (let y = 1; y < 12; y += 1.5) g.add(malla(G.caja, mat("#F4F4F4"), 1.2, .1, 1.2, 0, y, 0, false));
+      g.add(malla(G.esfera, NEON, .5, .5, .5, 0, 12.4, 0, false));
+      { const plato = malla(G.media, mat("#F4F4F4"), 2.2, .8, 2.2, 1.6, 2.2, 0); plato.rotation.z = 1.2; g.add(plato); }
+      return listoCon(14);
+    case "portal": {
+      const aro = new THREE.Mesh(new THREE.TorusGeometry(2, .35, 12, 32), mat("#8E7CFF")); aro.position.y = 2.6; aro.castShadow = true; g.add(aro);
+      g.add(malla(G.cil, NEON, 3.3, .05, 3.3, 0, 2.6, 0, false)); g.children[g.children.length - 1].rotation.x = Math.PI / 2;
+      g.add(malla(G.cil, mat("#5D6D7E"), 3.6, .4, 2, 0, .2, 0));
+      g.userData.rueda = aro;
+      return listoCon(6);
+    }
+    case "domo":
+      g.add(malla(G.cil, mat("#DDE3EA"), 7, .3, 7, 0, .15, 0), malla(G.media, VIDRIO, 6.8, 4, 6.8, 0, .3, 0, false));
+      if (!simple) for (let i = 0; i < 6; i++) { const a = i / 6 * 6.28; g.add(malla(G.esfera, mat("#4FAE5A"), 1, 1.3, 1, Math.cos(a) * 1.8, 1, Math.sin(a) * 1.8, false)); }
+      return listoCon(5);
+    case "ascensor":
+      g.add(malla(G.cil, mat("#5D6D7E"), 3.6, 1, 3.6, 0, .5, 0), malla(G.cil, mat("#C9D1DA"), .5, 22, .5, 0, 11, 0), malla(G.cil, NEON, .7, 22, .7, 0, 11, 0, false));
+      g.children[g.children.length - 1].material = new THREE.MeshLambertMaterial({ color: "#B8F3FF", emissive: "#5FE3FF", emissiveIntensity: .4, transparent: true, opacity: .25 });
+      { const cab = malla(G.caja, VIDRIO, 1.4, 1.4, 1.4, 0, 6, 0, false); g.add(cab); g.userData.cabina = cab; }
+      return listoCon(23.5);
+  }
+  // edificio común: cuerpo + ventanas + techo + piezas
+  if (n > 0) g.add(malla(G.caja, partes.has("vidrio") ? VIDRIO : pared, W, alto, D, 0, alto / 2, 0));
+  if (partes.has("vidrio") && n > 0) for (let i = 1; i <= n; i++) g.add(malla(G.caja, pared, W + .12, .12, D + .12, 0, i * H, 0, false));
+  if (!simple && n > 0 && !partes.has("vidrio")) {
+    const cols = Math.max(1, Math.round(W / 1.3));
+    for (let i = 0; i < n; i++) {
+      const y = i * H + H * .55;
+      for (let c = 0; c < cols; c++) { const x = -W / 2 + (c + .5) * W / cols; if (i === 0 && Math.abs(x) < .7) continue; g.add(malla(G.caja, VENTANA, W / cols * .45, H * .35, .06, x, y, D / 2 + .01, false)); }
+      for (const s of [-1, 1]) g.add(malla(G.caja, VENTANA, .06, H * .35, D * .35, s * (W / 2 + .01), y, 0, false));
+    }
+  }
+  if (!simple && n > 0) g.add(malla(G.caja, mat("#6B4A33"), .9, Math.min(1.5, H * .7), .1, 0, Math.min(1.5, H * .7) / 2, D / 2 + .03, false));
+  let top = alto;
+  switch (r.techo) {
+    case "plano": g.add(malla(G.caja, ct, W + .3, .3, D + .3, 0, alto + .15, 0)); top += .3; break;
+    case "cupula": g.add(malla(G.media, ct, Math.min(W, D) * 1.02, Math.min(W, D) * .7, Math.min(W, D) * 1.02, 0, alto, 0)); top += Math.min(W, D) * .35; break;
+    case "cono": g.add(malla(G.cono, ct, W * 1.2, 2.6, D * 1.2, 0, alto + 1.3, 0)); top += 2.6; break;
+    default: { const t = malla(G.piramide, ct, W * 1.45, 1.7, D * 1.45, 0, alto + .85, 0); t.rotation.y = Math.PI / 4; g.add(t); top += 1.7; }
+  }
+  if (!simple) {
+    if (partes.has("columnas")) { for (let i = 0; i < 4; i++) g.add(malla(G.cil, mat("#F4F0E6"), .32, Math.min(alto, H * 2), .32, -W / 2 + .5 + i * (W - 1) / 3, Math.min(alto, H * 2) / 2, D / 2 + .5)); g.add(malla(G.caja, mat("#F4F0E6"), W + .2, .3, 1.2, 0, Math.min(alto, H * 2) + .15, D / 2 + .3)); }
+    if (partes.has("chimenea")) { g.add(malla(G.caja, mat("#6E6E6E"), .5, 1.8, .5, W * .3, top + .2, -D * .25)); g.userData.humo = [{ x: W * .3, y: top + 1.2, z: -D * .25 }]; }
+    if (partes.has("chimenea2")) { g.add(malla(G.caja, mat("#6E6E6E"), .5, 2.2, .5, -W * .3, top + .4, -D * .25)); (g.userData.humo = g.userData.humo || []).push({ x: -W * .3, y: top + 1.6, z: -D * .25 }); }
+    if (partes.has("toldo")) for (let i = 0; i < 5; i++) { const t = malla(G.caja, mat(i % 2 ? "#ffffff" : (r.ct || "#E8424F")), W / 5, .1, 1.1, -W / 2 + (i + .5) * W / 5, H * .9, D / 2 + .5, false); t.rotation.x = .35; g.add(t); }
+    if (partes.has("antena")) g.add(malla(G.cil, mat("#888"), .06, 2.6, .06, W * .25, top + 1.3, D * .25), malla(G.esfera, NEON, .25, .25, .25, W * .25, top + 2.7, D * .25, false));
+    if (partes.has("bandera")) { g.add(malla(G.cil, mat("#666"), .06, 2.4, .06, -W * .3, top + 1.2, 0)); const b = malla(G.caja, mat(r.ct || "#FF6F91"), 1, .55, .05, -W * .3 + .5, top + 2.1, 0, false); g.add(b); g.userData.bandera = b; }
+    if (partes.has("neon")) g.add(malla(G.caja, NEON, W + .05, .18, D + .05, 0, Math.min(alto - .3, H * 1.05), 0, false));
+    if (partes.has("reloj")) g.add(malla(G.cil, mat("#F4F4F4"), 1.3, .08, 1.3, 0, alto - H * .5, D / 2 + .05, false)), g.children[g.children.length - 1].rotation.x = Math.PI / 2;
+    if (partes.has("cruz")) { g.add(malla(G.caja, mat("#F4F4F4"), .15, 1.6, .06, 0, H * .55, D / 2 + .03, false)); const c2 = malla(G.caja, mat("#F4F4F4"), .15, 1.6, .06, 0, H * .55, D / 2 + .03, false); c2.rotation.z = Math.PI / 2; g.add(c2); }
+    if (partes.has("cruzroja")) { g.add(malla(G.caja, mat("#E8424F"), .4, 1.4, .06, 0, alto - 1, D / 2 + .03, false), malla(G.caja, mat("#E8424F"), 1.4, .4, .06, 0, alto - 1, D / 2 + .03, false)); }
+    if (partes.has("troncos")) for (let i = 0; i < 3; i++) { const t = malla(G.cil, mat("#8A5A36"), .4, 1.8, .4, W / 2 + .7, .25 + i * .4, -.5 + (i % 2) * .5); t.rotation.x = Math.PI / 2; g.add(t); }
+    if (partes.has("rueda")) { const ru = new THREE.Mesh(new THREE.TorusGeometry(1.1, .14, 8, 20), mat("#7A4B2A")); ru.position.set(W / 2 + .2, 1.2, 0); ru.rotation.y = Math.PI / 2; g.add(ru); g.userData.rueda = ru; }
+    if (partes.has("vias")) for (const s of [-.5, .5]) g.add(malla(G.caja, mat("#555"), W + 3, .08, .1, 0, .08, D / 2 + 1.3 + s, false));
+    if (partes.has("telescopio")) { const t = malla(G.cil, mat("#3E5A7A"), .5, 2.6, .5, .3, top + .6, 0); t.rotation.z = -.7; g.add(t); }
+    if (partes.has("plantas")) for (let i = 0; i < n; i++) g.add(malla(G.caja, mat("#4FAE5A"), W * .8, H * .4, D * .8, 0, i * H + H * .3, 0, false));
+    if (partes.has("torre")) { g.add(malla(G.cil, pared, 1.4, alto + 3, 1.4, W / 2, (alto + 3) / 2, -D / 2), malla(G.cono, ct, 1.9, 1.8, 1.9, W / 2, alto + 3.9, -D / 2)); top = Math.max(top, alto + 4.8); }
+    if (partes.has("arboles")) for (const [a, b] of [[-1, 1], [1, 1]]) g.add(malla(G.cil, mat("#7A4B2A"), .15, 1, .15, a * (W / 2 + .9), .5, b * (D / 2 + .5)), malla(G.esfera, mat("#4FAE5A"), 1.1, 1.1, 1.1, a * (W / 2 + .9), 1.4, b * (D / 2 + .5)));
+    if (partes.has("esfera")) g.add(malla(G.esfera, NEON, 1, 1, 1, 0, top + .8, 0, false)), top += 1.3;
+  }
+  return listoCon(top + 1.6);
+}
+// ---- calles: crecen alrededor de lo construido y mejoran con la era ----
+const COLOR_CALLE = ["#C8A46E", "#B9B1A6", "#9A9A9A", "#55555F", "#454B5A"];
+function calles(g, isla) {
+  const L = lugares(isla), usados = L.slice(0, isla.nLugar).map((p) => ({ x: p.x - isla.x, z: p.z - isla.z }));
+  if (isla.capital) usados.push({ x: 0, z: 0 });
+  if (!usados.length) return;
+  const h = CELDA / 2, segs = new Map(), esquinas = new Map();
+  const k = (v) => Math.round(v * 2) / 2;
+  for (const p of usados) {
+    for (const [ax, az, hor] of [[0, -h, 1], [0, h, 1], [-h, 0, 0], [h, 0, 0]]) { const x = k(p.x + ax), z = k(p.z + az); segs.set(x + "," + z, { x, z, hor }); }
+    for (const [ax, az] of [[-h, -h], [h, -h], [-h, h], [h, h]]) { const x = k(p.x + ax), z = k(p.z + az); esquinas.set(x + "," + z, { x, z }); }
+  }
+  const im = new THREE.InstancedMesh(G.caja, mat(COLOR_CALLE[Math.min(E.era, 4)]), segs.size), m4 = new THREE.Matrix4(); let i = 0;
+  for (const s of segs.values()) { m4.makeScale(s.hor ? CELDA + 2 : 2.1, .08, s.hor ? 2.1 : CELDA + 2); m4.setPosition(s.x, .04, s.z); im.setMatrixAt(i++, m4); }
+  im.receiveShadow = true; g.add(im);
+  if (E.era >= 3) {
+    const lista = [...esquinas.values()].filter((_, j) => j % 2 === 0);
+    const postes = new THREE.InstancedMesh(G.cil, mat("#555"), lista.length), luces = new THREE.InstancedMesh(G.esfera, NEON, lista.length);
+    lista.forEach((c, j) => { m4.makeScale(.1, 2.6, .1); m4.setPosition(c.x + 1.2, 1.3, c.z + 1.2); postes.setMatrixAt(j, m4); m4.makeScale(.4, .4, .4); m4.setPosition(c.x + 1.2, 2.7, c.z + 1.2); luces.setMatrixAt(j, m4); });
+    g.add(postes, luces);
+  }
+}
 function mallaEdificio(e, simple) {
   const g = new THREE.Group();
   if (e.tipo === "fogata") {
@@ -613,6 +823,11 @@ function mallaEdificio(e, simple) {
     if (!listo(e)) andamio(g, w, PISO, w, e.prog, yt);
     if (hechos > 0 || listo(e)) techo(g, est, listo(e) ? yt : yt + PISO, w);
     return g;
+  }
+  if (e.tipo === "cat" || e.tipo === "inv") {
+    const r = e.tipo === "cat" ? { ...CAT[e.cat].r, icono: CAT[e.cat].g } : e.inv.r;
+    if (!listo(e)) { andamio(g, r.w || 4.4, Math.min(8, altoReceta(r) - 1), r.d || r.w || 4.4, e.prog); return g; }
+    return armar(r, simple, e.id);
   }
   if (!listo(e)) { const [w, h, d] = { torre: [3, 9, 3], cohete: [3, 7, 3], escuela: [5, 3.5, 4], biblioteca: [5.5, 4, 4.5], huerta: [5.5, .8, 4.5], mina: [3.5, 2.5, 3.5], molino: [3, 6, 3], fabrica: [5, 4, 4], central: [5, 5, 5], base: [5, 1.5, 5] }[e.tipo] || [3, 3, 3]; andamio(g, w, h, d, e.prog); return g; }
   if (e.tipo === "huerta") {
@@ -724,6 +939,7 @@ function elegirIslas() {
   activas = new Set(islasDetalle);
 }
 function claveDe(o, simple) {
+  if (o.tipo === "cat" || o.tipo === "inv") return `${o.tipo}${o.id}${listo(o) ? "L" : (o.prog * 10 | 0)}${simple ? "s" : ""}`;
   if (o.tipo === "casa") return `c${o.nivel}-${o.era || 0}-${listo(o) ? "L" : (o.prog * 10 | 0)}${simple ? "s" : ""}`;
   if (!E.edificios.includes(o)) return `${o.tipo}${o.cant}`;
   if (!listo(o)) return `${o.tipo}x${o.prog * 10 | 0}`;
@@ -738,7 +954,7 @@ function sincronizar() {
   for (const isla of E.islas) {
     const crece = creciendo.get(isla.id);
     const ver = (isla.colonizada && islasVisibles.has(isla.id)) || crece !== undefined, det = islasDetalle.has(isla.id);
-    const clave = crece !== undefined ? "c" + Math.round(crece * 30) : `${det}`;
+    const clave = crece !== undefined ? "c" + Math.round(crece * 30) : `${det}-${isla.nLugar}-${E.era}`;
     let m = mallasIsla.get(isla.id);
     if (!ver) { if (m) { liberar(m.g); mallasIsla.delete(isla.id); } continue; }
     if (!m || m.clave !== clave) { if (m) liberar(m.g); const g = mallaIsla(isla, det, crece === undefined ? 1 : crece); escena.add(g); mallasIsla.set(isla.id, { g, clave }); }
@@ -973,6 +1189,9 @@ function pintarHUD() {
   } else { $("anillo").style.setProperty("--p", "100%"); $("anillo-g").textContent = "🌟"; $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
   if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; $("anillo").style.setProperty("--s", $("era-bar").style.width); }
   else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; $("anillo").style.setProperty("--s", "100%"); }
+  { const c = siguienteCat(), t = $("cat-txt");
+    const txt = c ? `🏗️ Próxima construcción: ${c.g} ${c.n} (${E.era < c.era ? "Era de " + ERAS[c.era].n : c.pob + " Brotitos"})` : `🏗️ ¡Construyeron todo el catálogo! (${Object.keys(E.hechos).length})`;
+    if (t.textContent !== txt) t.textContent = txt; }
   { const k = "+" + porToque(); for (const t of ["comida", "madera", "piedra"]) { const sp = $("d-" + t).querySelector("small"); if (sp && sp.textContent !== k) sp.textContent = k; } }
   const p = $("pedido");
   if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
@@ -984,11 +1203,14 @@ function mostrarEventos() {
     if (ev.tipo === "nace") aviso(`🌱 ¡Nació ${ev.b.n}! (${E.bichos.length} en la colonia)`);
     if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(controles.target); }
     if (ev.tipo === "era") { const e = ERAS[E.era]; logro(e.g, `¡Era de ${e.n}!`, e.s || ""); festejo(controles.target); }
+    if (ev.tipo === "listo" && ev.e.tipo === "cat") { const c = CAT[ev.e.cat]; logro(c.g, `¡Construyeron ${c.n}!`, c.s); festejo(ev.e); continue; }
+    if (ev.tipo === "listo" && ev.e.tipo === "inv") { const v = ev.e.inv; logro(v.g, `¡Terminaron ${v.n}!`, v.s); festejo(ev.e); continue; }
     if (ev.tipo === "listo") {
       const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", tierra: "tierra nueva 🌱 ¡El mundo creció!" }[ev.e.tipo] || ev.e.tipo;
       aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo");
     }
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
+    if (ev.tipo === "obraCat") aviso(`🏗️ Empezaron a construir: ${ev.g} ${ev.n}`);
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
     if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
     if (ev.tipo === "nivelMina") aviso(`⛏️ ¡La mina ya tiene ${E.mina.prof} niveles! Más hondo, más gemas`);
@@ -1130,7 +1352,7 @@ function actualizarYo(dt, ahora) {
   if (yo.carga) {
     const casa = cercaDeMi(todosAlmacenes(), 3.8);
     if (casa) {
-      E[yo.carga] += yo.cant; aviso(`+${yo.cant} ${ICONO[yo.carga]} ¡Gracias! 💚`); sonido("dar");
+      sumar(yo.carga, yo.cant * bono(yo.carga)); aviso(`+${yo.cant} ${ICONO[yo.carga]} ¡Gracias! 💚`); sonido("dar");
       sumarPedido(yo.carga, yo.cant);
       const b = cercaDeMi(E.bichos.filter((x) => !x.adentro && x.y === 0), 7); if (b) { hablar(b, "¡" + ICONO[yo.carga] + "!"); corazones(b); }
       E.animo = clamp(E.animo + 1, 0, 100); yo.carga = null; yo.cant = 0; accionT = 1;
@@ -1183,6 +1405,7 @@ addEventListener("keyup", (e) => { teclas[e.code] = false; });
 E = cargar();
 const primeraVez = !E;
 if (!E) nuevoEstado();
+calcularBonos();
 { const c = E.islas.find((i) => i.capital) || E.islas[0]; controles.target.set(c.x, 0, c.z); camara.position.set(c.x, 17, c.z + 22); }
 if (!primeraVez) {
   const fuera = (Date.now() - E.t) / 1000, sim = Math.min(fuera / 4, 3600);
@@ -1222,6 +1445,7 @@ function dibujarTodo(ahora, dt) {
     if (u.llama) { const f = 1 + Math.sin(ahora / 110) * .12; u.llama.scale.set(.8, 1.4 * f, .8); if (u.luz) u.luz.intensity = (1 - L) * 60; }
     if (u.rueda) u.rueda.rotation.z += dt * 2;
     if (u.aspas) u.aspas.rotation.z += dt * 1.2;
+    if (u.cabina) u.cabina.position.y = 2 + (Math.sin(ahora / 2500) + 1) * 9.5;
     if (u.bandera) u.bandera.rotation.y = Math.sin(ahora / 400) * .3;
     if (u.humo && tocaHumo && Math.random() < .5) { const hs = Array.isArray(u.humo) ? u.humo : [u.humo]; for (const h of hs) { vtmp.set(h.x, h.y, h.z).applyMatrix4(m.g.matrixWorld); if (vtmp.distanceTo(camara.position) < 120) humo(vtmp.x, vtmp.y, vtmp.z); } }
   }
