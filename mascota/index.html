@@ -107,7 +107,7 @@
   <div class="top">
     <h1 id="nombre">Bebé</h1>
     <span class="chip" id="etapa">👶 Bebé</span>
-    <button class="ico" id="voz" title="Voz">🔊</button>
+    <button class="ico" id="voz" title="Cambiar voz">🍼</button>
   </div>
   <div class="barras">
     <div class="barra"><b>🍼 Panza</b><i><span id="b-hambre"></span></i></div>
@@ -281,9 +281,19 @@ function pintar() {
 }
 
 // ===================== Globo, charla y voz =====================
-let vozOn = true; try { vozOn = localStorage.getItem("bebe-ia-voz") !== "0"; } catch (e) {}
-$("voz").textContent = vozOn ? "🔊" : "🔈";
-$("voz").onclick = () => { vozOn = !vozOn; $("voz").textContent = vozOn ? "🔊" : "🔈"; try { localStorage.setItem("bebe-ia-voz", vozOn ? "1" : "0"); } catch (e) {} if (!vozOn) speechSynthesis.cancel(); };
+// Modo de voz: idioma bebé → ardilla (voz del celular) → silencio
+const MODOS = { bebe: ["🍼", "Voz: idioma bebé"], ardilla: ["🐿️", "Voz: ardilla (voz del celular)"], no: ["🔈", "Sin sonido"] };
+let modoVoz = "bebe"; try { modoVoz = localStorage.getItem("bebe-ia-modo") || (localStorage.getItem("bebe-ia-voz") === "0" ? "no" : "bebe"); } catch (e) {}
+if (!MODOS[modoVoz]) modoVoz = "bebe";
+let vozOn = modoVoz !== "no";
+$("voz").textContent = MODOS[modoVoz][0];
+$("voz").onclick = () => {
+  const lista = Object.keys(MODOS); modoVoz = lista[(lista.indexOf(modoVoz) + 1) % lista.length]; vozOn = modoVoz !== "no";
+  $("voz").textContent = MODOS[modoVoz][0]; aviso(MODOS[modoVoz][1]);
+  try { localStorage.setItem("bebe-ia-modo", modoVoz); } catch (e) {}
+  try { speechSynthesis.cancel(); } catch (e) {}
+  if (vozOn && M && M.nombre) setTimeout(() => decir(etapa().id === "bebe" ? "¡agú! ¡hola!" : "¡Hola! ¿Te gusta mi voz?", "feliz"), 400);
+};
 let vozLista = false;
 function desbloquearVoz() {
   audio();
@@ -333,13 +343,14 @@ function balbucear(t, emo) {
 }
 function hablar(t, emo) {
   if (!vozOn) return;
-  if (etapa().id !== "grande") { try { speechSynthesis && speechSynthesis.cancel(); } catch (e) {} balbucear(t, emo); return; }
+  const ardilla = modoVoz === "ardilla";
+  if (!ardilla && etapa().id !== "grande") { try { speechSynthesis && speechSynthesis.cancel(); } catch (e) {} balbucear(t, emo); return; }
   if (!("speechSynthesis" in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ""));
     const vs = speechSynthesis.getVoices(), v = vs.find((x) => /es[-_](AR|419|US|MX)/i.test(x.lang)) || vs.find((x) => /^es/i.test(x.lang));
-    if (v) u.voice = v; u.lang = v ? v.lang : "es-AR"; u.pitch = Math.min(2, etapa().tono); u.rate = 1.05;
+    if (v) u.voice = v; u.lang = v ? v.lang : "es-AR"; u.pitch = ardilla ? 2 : Math.min(2, etapa().tono); u.rate = ardilla ? { bebe: 1.45, nene: 1.38, chico: 1.3, grande: 1.2 }[etapa().id] : 1.05;
     speechSynthesis.speak(u);
   } catch (e) {}
 }
