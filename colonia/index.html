@@ -109,7 +109,7 @@
       <li>Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.</li>
       <li>De noche se van a dormir a sus casas.</li>
       <li>Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.</li>
-      <li>Tocá un Brotito y… 💥 explota. Los demás se asustan. Vos decidís.</li>
+      <li>Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.</li>
       <li>La colonia sigue creciendo aunque cierres la página.</li>
     </ul>
     <button class="btn" id="info-ok">¡A jugar!</button>
@@ -409,18 +409,56 @@ $("d-piedra").onclick = () => dar("piedra");
 function explotar(b) {
   E.bichos = E.bichos.filter((o) => o !== b); E.explotados++;
   E.animo = clamp(E.animo - 15, 0, 100);
+  const esc = b.edad < GRANDE ? .55 + b.edad / GRANDE * .3 : 1;
   quitarMallaBicho(b);
-  const color = new THREE.Color(`hsl(${b.hue},60%,60%)`);
-  for (let i = 0; i < 28; i++) particula({ x: b.x, y: .9, z: b.z }, { x: rnd(-6, 6), y: rnd(3, 9), z: rnd(-6, 6) }, color, rnd(.8, 1.4), rnd(.12, .26));
+  aplastado(b, esc);
+  const rojo = new THREE.Color("#C8102E");
+  for (let i = 0; i < 22; i++) particula({ x: b.x, y: .6, z: b.z }, { x: rnd(-4.5, 4.5), y: rnd(2.5, 7), z: rnd(-4.5, 4.5) }, rojo, rnd(.6, 1.1), rnd(.07, .16), null, true);
   onda(b);
   for (const o of E.bichos) {
     if (o.adentro || o.y !== 0) continue;
     const d = dist(o, b);
-    if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .5) hablar(o, elegir(["¡aaa!", "¡iii!", "😱", "¡no no!"]), true); }
+    if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", "¡ayyy!", "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
   }
-  sonido("puf");
-  if (navigator.vibrate) navigator.vibrate(40);
+  sonido("aplastar"); sonido("ay", b);
+  if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
   if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); E.bichos.push(crearBicho(1.5, 1.5, true)); }, 1500);
+}
+// restos: queda aplastado en el piso con mancha, y se borra solo con el tiempo
+const restos = [];
+const MANCHA = new THREE.MeshLambertMaterial({ color: "#B3122A", transparent: true });
+const GEO_DISCO = new THREE.CircleGeometry(1, 20);
+function aplastado(b, esc) {
+  const g = new THREE.Group(), mats = [];
+  const m = (geo, color, sx, sy, sz, x, y, z) => { const mt = new THREE.MeshLambertMaterial({ color, transparent: true }); mats.push(mt); const me = new THREE.Mesh(geo, mt); me.scale.set(sx, sy, sz); me.position.set(x, y, z); me.receiveShadow = true; g.add(me); return me; };
+  // mancha (varios charquitos)
+  for (let i = 0; i < 6; i++) { const r = i ? rnd(.25, .6) : rnd(1.3, 1.7); const d = m(GEO_DISCO, "#B3122A", r, r * rnd(.7, 1), 1, i ? rnd(-1.9, 1.9) : 0, .03 + i * .002, i ? rnd(-1.9, 1.9) : 0); d.rotation.x = -Math.PI / 2; }
+  // cuerpo panqueque
+  m(G.esfera, new THREE.Color(`hsl(${Math.round(b.hue / 8) * 8},50%,58%)`), 2.1, .32, 1.9, 0, .14, 0);
+  // ojitos en X
+  for (const ox of [-.32, .32]) for (const r of [.8, -.8]) { const x = m(G.caja, "#2E2440", .3, .05, .06, ox, .3, .35); x.rotation.y = r; }
+  // boquita abierta
+  m(G.ojo, "#2E2440", 1.6, .3, 1.2, 0, .3, .62);
+  // el brote tirado al lado
+  const hoja = m(G.hoja, "#5CC86B", .6, .14, .3, 1.15, .1, -.3); hoja.rotation.y = .6;
+  m(G.cil, "#3E9A4E", .07, .7, .07, .85, .08, -.2).rotation.z = Math.PI / 2;
+  g.position.set(b.x, 0, b.z); g.rotation.y = Math.random() * 6.28; g.scale.setScalar(esc);
+  escena.add(g);
+  // "¡aaay!" arriba del aplastado
+  const grito = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaGrito(elegir(["¡aaay!", "¡ayyy!", "¡ay no!"])), transparent: true, depthWrite: false }));
+  grito.scale.set(2.2, .78, 1); grito.position.set(0, 2.4, 0); g.add(grito); mats.push(grito.material);
+  restos.push({ g, mats, grito, t: 0 });
+  // animación: se achata de golpe
+  g.scale.set(esc, esc * 3, esc); restos[restos.length - 1].esc = esc;
+}
+function actualizarRestos(dt) {
+  for (const r of restos) {
+    r.t += dt;
+    if (r.t < .12) r.g.scale.y = r.esc * (3 - r.t / .12 * 2); else r.g.scale.y = r.esc;
+    r.grito.position.y = 2.4 + r.t * .6; r.grito.material.opacity = clamp(1.6 - r.t, 0, 1);
+    if (r.t > 75) { const a = clamp(1 - (r.t - 75) / 15, 0, 1); for (const mt of r.mats) mt.opacity = a; }
+  }
+  for (let i = restos.length - 1; i >= 0; i--) if (restos[i].t > 90 || restos.length - i > 40) { escena.remove(restos[i].g); for (const mt of restos[i].mats) mt.dispose(); restos.splice(i, 1); }
 }
 
 // ======================= Sonido =======================
@@ -439,6 +477,23 @@ function sonido(tipo, b) {
   if (tipo === "dar") blip(ctx, t, 660, .1, "sine", .15);
   if (tipo === "festejo") [660, 880, 990, 1320].forEach((f, i) => blip(ctx, t + i * .08, f, .12, "triangle", .14));
   if (tipo === "logro") [523, 659, 784, 1047, 1319].forEach((f, i) => blip(ctx, t + i * .11, f, .2, "triangle", .16));
+  if (tipo === "aplastar") {
+    const n = ctx.sampleRate * .25, buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3);
+    const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.setValueAtTime(2200, t); f.frequency.exponentialRampToValueAtTime(300, t + .2);
+    s.buffer = buf; g.gain.value = .7; s.connect(f); f.connect(g); g.connect(ctx.destination); s.start(t);
+    const o = ctx.createOscillator(), go = ctx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(70, t + .18);
+    go.gain.setValueAtTime(.35, t); go.gain.exponentialRampToValueAtTime(.001, t + .2); o.connect(go); go.connect(ctx.destination); o.start(t); o.stop(t + .22);
+  }
+  if (tipo === "ay") { // grito finito que se va apagando: "¡aaay!"
+    const base = (b && b.edad < GRANDE ? 1300 : 1000);
+    const o = ctx.createOscillator(), g = ctx.createGain(), vib = ctx.createOscillator(), vg = ctx.createGain();
+    o.type = "triangle"; o.frequency.setValueAtTime(base * 1.25, t); o.frequency.exponentialRampToValueAtTime(base * .45, t + .55);
+    vib.frequency.value = 22; vg.gain.value = 40; vib.connect(vg); vg.connect(o.frequency);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .03); g.gain.setValueAtTime(.22, t + .3); g.gain.exponentialRampToValueAtTime(.001, t + .6);
+    o.connect(g); g.connect(ctx.destination); o.start(t); vib.start(t); o.stop(t + .62); vib.stop(t + .62);
+  }
+  if (tipo === "susto") { const base = 1250 + ((b ? b.hue : 170) - 170) * 3; for (let i = 0; i < 2; i++) blip(ctx, t + i * .16, base * (1 - i * .15), .13, "triangle", .14); }
   if (tipo === "puf") {
     const n = ctx.sampleRate * .35, buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
     for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
@@ -450,7 +505,7 @@ function sonido(tipo, b) {
 let ultimaVoz = 0;
 function hablar(b, txt, fuerte) {
   b.charla = txt; b.charlaT = 2.6;
-  if (enPantalla(b) && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido("habla", b); }
+  if (enPantalla(b) && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido(b.susto > 0 ? "susto" : "habla", b); }
 }
 $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈";
 $("b-sonido").onclick = () => { sonidoOn = !sonidoOn; $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈"; try { localStorage.setItem("brotitos-sonido", sonidoOn ? "1" : "0"); } catch (e) {} };
@@ -626,6 +681,13 @@ function texturaTexto(t, tam = 64) {
   x.font = `600 ${tam}px Fredoka, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(t, c.width / 2, c.height / 2);
   const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return (TEXTURAS[t] = tx);
 }
+function texturaGrito(t) {
+  const k = "grito:" + t; if (TEXTURAS[k]) return TEXTURAS[k];
+  const c = document.createElement("canvas"); c.width = 256; c.height = 90; const x = c.getContext("2d");
+  x.font = "700 54px Fredoka, sans-serif"; x.textAlign = "center"; x.textBaseline = "middle"; x.lineJoin = "round";
+  x.lineWidth = 10; x.strokeStyle = "#2E2440"; x.strokeText(t, 128, 46); x.fillStyle = "#ffffff"; x.fillText(t, 128, 46);
+  const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return (TEXTURAS[k] = tx);
+}
 function cartel(t, x, y, padre, escala = 1) {
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaTexto(t), transparent: true, depthWrite: false }));
   s.scale.set(2.8 * escala, 1 * escala, 1); s.position.set(x, y, 0); padre.add(s); return s;
@@ -716,12 +778,12 @@ function actualizarMallaBicho(b, ahora) {
 
 const particulas = [];
 const GEO_P = new THREE.SphereGeometry(1, 8, 6);
-function particula(p, v, color, t, s, emoji) {
+function particula(p, v, color, t, s, emoji, gota) {
   let m;
   if (emoji) { m = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaTexto(emoji), transparent: true, depthWrite: false })); m.scale.set(2, .7, 1); }
   else { m = new THREE.Mesh(GEO_P, new THREE.MeshLambertMaterial({ color })); m.scale.setScalar(s); }
   m.position.set(p.x, p.y, p.z); escena.add(m);
-  particulas.push({ m, v, t, t0: t, emoji });
+  particulas.push({ m, v, t, t0: t, emoji, gota });
 }
 function corazones(b) { for (let i = 0; i < 3; i++) particula({ x: b.x + rnd(-.4, .4), y: 2.4, z: b.z }, { x: rnd(-.6, .6), y: rnd(1.5, 2.4), z: 0 }, null, 1.2, 0, "💚"); }
 function festejo(p) { for (let i = 0; i < 26; i++) particula({ x: p.x + rnd(-1, 1), y: 3, z: p.z + rnd(-1, 1) }, { x: rnd(-5, 5), y: rnd(4, 10), z: rnd(-5, 5) }, new THREE.Color(elegir(["#FFC23D", "#FF6F91", "#6EC6FF", "#7ED957"])), rnd(1, 1.6), rnd(.1, .18)); }
@@ -731,7 +793,7 @@ function actualizarParticulas(dt) {
     p.t -= dt;
     if (p.onda) { const k = 1 - p.t / p.t0; p.m.scale.setScalar(1 + k * 7); p.m.material.opacity = 1 - k; continue; }
     p.m.position.x += p.v.x * dt; p.m.position.y += p.v.y * dt; p.m.position.z += p.v.z * dt;
-    if (!p.emoji) { p.v.y -= 18 * dt; if (p.m.position.y < .1) { p.m.position.y = .1; p.v.y *= -.3; p.v.x *= .6; p.v.z *= .6; } }
+    if (!p.emoji) { p.v.y -= 18 * dt; if (p.m.position.y < .1) { if (p.gota) { p.m.position.y = .04; p.v.x = p.v.y = p.v.z = 0; p.m.scale.set(p.m.scale.x * 1.6, .02, p.m.scale.z * 1.6); p.gota = false; p.t = 60; } else { p.m.position.y = .1; p.v.y *= -.3; p.v.x *= .6; p.v.z *= .6; } } }
     else p.m.material.opacity = Math.min(1, p.t);
   }
   for (let i = particulas.length - 1; i >= 0; i--) if (particulas[i].t <= 0) { const p = particulas[i]; escena.remove(p.m); p.m.material.dispose(); if (p.onda) p.m.geometry.dispose(); particulas.splice(i, 1); }
@@ -869,7 +931,7 @@ function dibujarTodo(ahora, dt) {
     if (u.bandera) u.bandera.rotation.y = Math.sin(ahora / 400) * .3;
   }
   for (const b of E.bichos) actualizarMallaBicho(b, ahora);
-  actualizarParticulas(dt);
+  actualizarParticulas(dt); actualizarRestos(dt);
   const tr = Math.hypot(controles.target.x, controles.target.z); if (tr > E.radio) { controles.target.x *= E.radio / tr; controles.target.z *= E.radio / tr; }
   controles.target.y = 0;
   controles.update();
@@ -878,7 +940,7 @@ function dibujarTodo(ahora, dt) {
 }
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
-window.__col = { get E() { return E; }, paso, camara, controles, verTodo, dibujarTodo, limpiarEventos: () => { eventos = []; }, capacidad, casas };
+window.__col = { get E() { return E; }, paso, explotar, camara, controles, verTodo, dibujarTodo, limpiarEventos: () => { eventos = []; }, capacidad, casas };
 requestAnimationFrame(bucle);
 </script>
 </body>
