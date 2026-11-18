@@ -55,13 +55,14 @@
   .energia i span { display: block; height: 100%; background: #FFC23D; }
   .esquina { position: fixed; right: 10px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px); display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
   .esquina button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: #ffffffd9; font-size: 17px; cursor: pointer; box-shadow: 0 2px 8px #0001; }
-  .aviso { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 96px); transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
+  .aviso { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 38px); transform: translate(-50%, -12px); opacity: 0; background: #2E2440c8; color: #fff; padding: 5px 12px; border-radius: 12px; font-size: 13px; transition: .35s; pointer-events: none; max-width: 68vw; text-align: center; z-index: 5; }
   .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
-  .logro { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%) scale(.8); opacity: 0; background: #fff; border-radius: 24px; padding: 18px 22px; text-align: center; box-shadow: 0 10px 40px #0004; transition: .35s; pointer-events: none; z-index: 6; min-width: 260px; }
-  .logro.ver { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  .logro .g { font-size: 52px; line-height: 1.1; }
-  .logro b { display: block; font-size: 21px; margin-top: 4px; }
-  .logro span { color: #7A7090; font-size: 15px; }
+  .logro { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 84px); transform: translate(-50%, -10px) scale(.92); opacity: 0; background: #2E2440d0; color: #fff; border-radius: 16px; padding: 7px 14px; text-align: center; transition: .35s; pointer-events: none; z-index: 6; max-width: 66vw; display: flex; align-items: center; gap: 10px; }
+  .logro.ver { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .logro .g { font-size: 28px; line-height: 1; }
+  .logro .tx { text-align: left; }
+  .logro b { display: block; font-size: 14px; }
+  .logro span { color: #D9D3E6; font-size: 12px; }
   .capa { position: fixed; inset: 0; background: #2E244088; display: none; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
   .capa.ver { display: flex; }
   .caja { background: #fff; border-radius: 24px; padding: 22px; max-width: 380px; width: 100%; text-align: center; max-height: 88vh; overflow-y: auto; }
@@ -133,7 +134,7 @@
   <div class="fila2"><button id="a-saludar">👋 Saludar</button><button id="a-saltar">⬆️ Saltar</button></div>
 </div>
 <div class="aviso" id="aviso"></div>
-<div class="logro" id="logro"><div class="g" id="logro-g"></div><b id="logro-t"></b><span id="logro-s"></span></div>
+<div class="logro" id="logro"><div class="g" id="logro-g"></div><div class="tx"><b id="logro-t"></b><span id="logro-s"></span></div></div>
 
 <div class="capa" id="c-info">
   <div class="caja">
@@ -167,6 +168,6 @@
   </div>
 </div>
 
-<script type="module" src="juego.js?v=13"></script>
+<script type="module" src="juego.js?v=14"></script>
 </body>
 </html>

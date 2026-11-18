@@ -566,7 +566,6 @@ function dar(tipo) {
   const k = porToque(); E.energia -= 1; E[tipo] += k;
   const cerca = cercano(E.bichos.filter((b) => !b.adentro && b.y === 0 && activas.has(b.isla)), controles.target);
   if (cerca) { corazones(cerca); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
-  sonido("dar");
   if (E.pedido && E.pedido.tipo === tipo) {
     E.pedido.dado = Math.min(E.pedido.cant, E.pedido.dado + k);
     if (E.pedido.dado >= E.pedido.cant) {
@@ -595,7 +594,7 @@ function explotar(b) {
     const d = dist(o, b);
     if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", "¡ayyy!", "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
   }
-  sonido("aplastar"); sonido("ay", b);
+  if (!muestra("aplastar", .9, rnd(.95, 1.08))) { sonido("aplastar"); sonido("ay", b); }
   if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
   if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); const i = E.islas.find((x) => x.capital); E.bichos.push(crearBicho(i.x + 1.5, i.z + 1.5, true, i.id)); }, 1500);
 }
@@ -603,7 +602,23 @@ function explotar(b) {
 // ======================= Sonido =======================
 let AC = null, sonidoOn = true;
 try { sonidoOn = localStorage.getItem("brotitos-sonido") !== "0"; } catch (e) {}
-function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); } if (AC.state === "suspended") AC.resume(); return AC; }
+function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); cargarSonidos(); } if (AC.state === "suspended") AC.resume(); return AC; }
+// ---- sonidos grabados (colonia/sonidos) ----
+const MUESTRAS = { aplastar: ["aplastar1", "aplastar2", "aplastar3"], rebotar: ["rebotar1", "rebotar2", "rebotar3"], pasos: ["pasos"], desbloqueo: ["desbloqueo"], boton: ["boton"] };
+const BUF = {};
+function cargarSonidos() {
+  for (const k in MUESTRAS) for (const n of MUESTRAS[k]) {
+    fetch(`sonidos/${n}.mp3`).then((r) => r.arrayBuffer()).then((a) => new Promise((ok, mal) => AC.decodeAudioData(a, ok, mal))).then((b) => { BUF[n] = b; }).catch(() => {});
+  }
+}
+function muestra(k, vol = 1, vel = 1) {
+  if (!sonidoOn || !AC) return null;
+  const lista = MUESTRAS[k].filter((n) => BUF[n]); if (!lista.length) return null;
+  const src = AC.createBufferSource(), g = AC.createGain();
+  src.buffer = BUF[elegir(lista)]; src.playbackRate.value = vel; g.gain.value = vol;
+  src.connect(g).connect(AC.destination); src.start(); return { src, g };
+}
+document.addEventListener("pointerdown", (e) => { if (e.target.closest && e.target.closest("button, #anillo")) { audio(); muestra("boton", .6); } }, true);
 function blip(ctx, t0, f, dur, tipo = "triangle", vol = .18) {
   const o = ctx.createOscillator(), g = ctx.createGain(); o.type = tipo;
   o.frequency.setValueAtTime(f, t0); o.frequency.exponentialRampToValueAtTime(f * rnd(.85, 1.25), t0 + dur);
@@ -649,7 +664,7 @@ $("b-sonido").onclick = () => { sonidoOn = !sonidoOn; $("b-sonido").textContent 
 
 let avisoT, logroT;
 function aviso(t) { const a = $("aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(avisoT); avisoT = setTimeout(() => a.classList.remove("ver"), 2600); }
-function logro(gl, t, s) { $("logro-g").textContent = gl; $("logro-t").textContent = t; $("logro-s").textContent = s; $("logro").classList.add("ver"); clearTimeout(logroT); logroT = setTimeout(() => $("logro").classList.remove("ver"), 3800); sonido("logro"); }
+function logro(gl, t, s) { $("logro-g").textContent = gl; $("logro-t").textContent = t; $("logro-s").textContent = s; $("logro").classList.add("ver"); clearTimeout(logroT); logroT = setTimeout(() => $("logro").classList.remove("ver"), 3800); if (!muestra("desbloqueo", .8)) sonido("logro"); }
 
 // ======================= 3D: escena =======================
 const render = new THREE.WebGLRenderer({ antialias: true });
@@ -1355,6 +1370,7 @@ function mostrarEventos() {
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
     if (ev.tipo === "poder") { logro("⚡", `¡Poder nivel ${ev.n}!`, ev.m.t); continue; }
     if (ev.tipo === "obraInv") aviso(ev.ia ? `💡 ¡Inventaron algo nuevo! ${ev.g} ${ev.n}` : `🏗️ Construyen algo nunca visto: ${ev.g} ${ev.n}`);
+    if (ev.tipo === "obraCat" || ev.tipo === "obraInv") muestra("desbloqueo", .45);
     if (ev.tipo === "obraCat") aviso(`🏗️ Empezaron a construir: ${ev.g} ${ev.n}`);
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
     if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
@@ -1402,7 +1418,19 @@ function entrar() {
   aviso("👑 ¡Entraste! Sos el Brotito dorado");
   for (const b of E.bichos) if (b._m && !b.adentro && dist(b, yo) < 8 && b.susto <= 0 && Math.random() < .6) hablar(b, elegir(["¿¿" + balbuceo(1) + "??", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]));
 }
+let pasosSrc = null;
+function pasos(on, vel) {
+  if (on && !pasosSrc && sonidoOn && AC && BUF.pasos) {
+    const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = BUF.pasos; src.loop = true; src.loopEnd = BUF.pasos.duration;
+    g.gain.value = .55; src.connect(g).connect(AC.destination); src.start(); pasosSrc = { src, g };
+  }
+  if (pasosSrc) {
+    if (!on || !sonidoOn) { try { pasosSrc.src.stop(); } catch (e) {} pasosSrc = null; }
+    else pasosSrc.src.playbackRate.value = clamp(.75 + vel / 13, .8, 1.3);
+  }
+}
 function salir() {
+  pasos(false);
   dentroMundo = false; document.body.classList.remove("dentro");
   if (yo._m) yo._m.g.visible = false;
   if (yo.carga) { E[yo.carga] += yo.cant; yo.carga = null; yo.cant = 0; }
@@ -1461,7 +1489,7 @@ function saludar() {
   }
   E.animo = clamp(E.animo + 1, 0, 100);
 }
-function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; sonido("dar"); }
+function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; }
 // ---- choques: el rey no atraviesa nada ----
 const RADIO_EDIF = { casa: 1.9, fogata: 1, huerta: 2.6, mina: 1.5, escuela: 2.6, biblioteca: 2.8, torre: 1.5, molino: 1.6, fabrica: 2.6, central: 2.7, base: 2.8, cohete: 1.5 };
 const RADIO_TECHO = { pozo: 1.3, fuente: 3.3, cantera: 2.3, totem: .8, mercado: 3.3, puerto: 3.4, estadio: 3.7, parque: 2, aeropuerto: 3.8, antenota: 1, portal: 2.2, domo: 3.5, ascensor: 1.9 };
@@ -1485,7 +1513,7 @@ function chocarBichos(mx, mz) {
     if (!(b.caida > 0) && (dx * mx + dz * mz) / d > .3) {
       b.caida = 1.8; b.kx = dx / d; b.kz = dz / d; b.dx = -b.kx; b.dz = -b.kz; b.carga = null; b.adentro = false;
       if (Math.random() < .7) setTimeout(() => hablar(b, elegir(["¡ay!", "¡ayyy!", "¡uy!", "😵"]), true), 80);
-      sonido("ay", b);
+      if (!muestra("rebotar", .9, rnd(.95, 1.1))) sonido("ay", b);
       for (const o of E.bichos) if (o !== b && !o.adentro && o.y === 0 && !o.caida && dist(o, b) < 6) { o.susto = rnd(2, 4); const dd = dist(o, yo) || 1; o.dx = (o.x - yo.x) / dd; o.dz = (o.z - yo.z) / dd; }
       E.animo = clamp(E.animo - .5, 0, 100);
     }
@@ -1521,6 +1549,7 @@ function actualizarYo(dt, ahora) {
     yo.fase += dt * 12;
   }
   const t = tierraEn(yo.x, yo.z); if (t) yo.isla = t.id;
+  pasos(moviendo && yo.alto === 0, vel);
   // saltar y caer encima de alguno
   if (yo.vy !== 0 || yo.alto > 0) {
     yo.vy -= 28 * dt; yo.alto += yo.vy * dt;
