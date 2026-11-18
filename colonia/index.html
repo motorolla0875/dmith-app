@@ -23,6 +23,16 @@
   .pill.animo { display: flex; align-items: center; gap: 6px; }
   .pill.animo i { display: block; width: 54px; height: 8px; border-radius: 9px; background: #0001; overflow: hidden; }
   .pill.animo i span { display: block; height: 100%; background: #5BBF7A; border-radius: 9px; transition: width .5s, background .5s; }
+  .hud .fila { gap: 4px; }
+  .hud .pill { font-size: 13px; padding: 3px 8px; background: #ffffffc4; box-shadow: none; }
+  .pill.animo i { width: 34px; height: 6px; }
+  #anillo { position: absolute; left: 10px; top: calc(max(10px, env(safe-area-inset-top)) + 34px); width: 50px; height: 50px; border-radius: 50%; pointer-events: auto; cursor: pointer; background: conic-gradient(#FF8A3D var(--p, 0%), #ffffff99 0); box-shadow: 0 2px 8px #0002; padding: 4px; }
+  #anillo .in { width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(#8E7CFF var(--s, 0%), #ffffff99 0); padding: 3px; }
+  #anillo .nucleo { width: 100%; height: 100%; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+  #anillo #h-era { position: absolute; right: -6px; bottom: -4px; font-size: 15px; background: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px #0003; }
+  #anillo:active { transform: scale(.94); }
+  .meta { display: none; pointer-events: auto; }
+  .meta.ver { display: block; animation: aparece .25s; margin-top: 64px !important; }
   .meta { margin: 7px auto 0; width: min(420px, 92vw); background: #ffffffe6; border-radius: 14px; padding: 5px 12px 6px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px #0001; }
   .meta small { display: block; font-weight: 500; color: #7A7090; font-size: 12px; }
   .meta i { display: block; height: 6px; border-radius: 9px; background: #0001; overflow: hidden; margin-top: 4px; }
@@ -45,7 +55,7 @@
   .energia i span { display: block; height: 100%; background: #FFC23D; }
   .esquina { position: fixed; right: 10px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px); display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
   .esquina button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: #ffffffd9; font-size: 17px; cursor: pointer; box-shadow: 0 2px 8px #0001; }
-  .aviso { position: fixed; left: 50%; top: 150px; transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
+  .aviso { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 96px); transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
   .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
   .logro { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%) scale(.8); opacity: 0; background: #fff; border-radius: 24px; padding: 18px 22px; text-align: center; box-shadow: 0 10px 40px #0004; transition: .35s; pointer-events: none; z-index: 6; min-width: 260px; }
   .logro.ver { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -73,10 +83,10 @@
   body.dentro .botones, body.dentro .energia, body.dentro #b-ver { display: none; }
   body.dentro #joy, body.dentro #b-salir { display: block; }
   body.dentro #acciones { display: flex; }
-  body.dentro .esquina { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 140px); }
+  body.dentro .esquina { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 40px); }
   body.dentro .pedido { margin-bottom: 150px; }
   #cargando { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; background: #9FE3F5; z-index: 20; }
-  @media (max-width: 480px) { .pill { font-size: 13px; padding: 4px 8px; } .pill.animo i { width: 40px; } }
+  @media (max-width: 480px) { .hud .pill { font-size: 12px; padding: 3px 7px; } }
 </style>
 <script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
 </head>
@@ -87,7 +97,6 @@
 
 <div class="hud">
   <div class="fila">
-    <span class="pill" id="h-era">🪵 Era 1</span>
     <span class="pill" id="h-pob">👥 1</span>
     <span class="pill" id="h-comida">🍎 0</span>
     <span class="pill" id="h-madera">🪵 0</span>
@@ -95,6 +104,7 @@
     <span class="pill" id="h-gemas" hidden>💎 0</span>
     <span class="pill animo"><span id="h-hora">☀️</span><i><span id="h-animo"></span></i></span>
   </div>
+  <div id="anillo" title="Próxima meta"><div class="in"><div class="nucleo" id="anillo-g">🏠</div></div><span id="h-era">🪵</span></div>
   <div class="meta" id="meta"><span id="meta-txt"></span><small id="meta-sub"></small><i><span id="meta-bar"></span></i><small id="era-txt" style="margin-top:4px"></small><i class="sab"><span id="era-bar"></span></i></div>
 </div>
 
@@ -153,6 +163,6 @@
   </div>
 </div>
 
-<script type="module" src="juego.js?v=7"></script>
+<script type="module" src="juego.js?v=8"></script>
 </body>
 </html>

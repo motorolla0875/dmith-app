@@ -949,12 +949,17 @@ $("reiniciar").onclick = () => {
 };
 
 // ======================= HUD =======================
+const num = (n) => n >= 1e6 ? (n / 1e6).toFixed(1).replace(".0", "") + "M" : n >= 1e4 ? (n / 1e3 | 0) + "k" : n >= 1e3 ? (n / 1e3).toFixed(1).replace(".0", "") + "k" : String(n);
+let metaT;
+function verMeta() { $("meta").classList.add("ver"); clearTimeout(metaT); metaT = setTimeout(() => $("meta").classList.remove("ver"), 5000); }
+$("anillo").onclick = () => { audio(); if ($("meta").classList.contains("ver")) { $("meta").classList.remove("ver"); clearTimeout(metaT); } else verMeta(); };
+$("meta").onclick = () => { $("meta").classList.remove("ver"); clearTimeout(metaT); };
 function pintarHUD() {
   const era = ERAS[E.era], sig = ERAS[E.era + 1];
-  $("h-era").textContent = `${era.g} Era ${E.era + 1}`;
-  $("h-pob").textContent = "👥 " + E.bichos.length + "/" + capacidad();
-  $("h-comida").textContent = "🍎 " + E.comida; $("h-madera").textContent = "🪵 " + E.madera; $("h-piedra").textContent = "🪨 " + E.piedra;
-  $("h-gemas").hidden = !E.mina && !E.gemas; $("h-gemas").textContent = "💎 " + E.gemas;
+  $("h-era").textContent = era.g;
+  $("h-pob").textContent = "👥 " + num(E.bichos.length);
+  $("h-comida").textContent = "🍎 " + num(E.comida); $("h-madera").textContent = "🪵 " + num(E.madera); $("h-piedra").textContent = "🪨 " + num(E.piedra);
+  $("h-gemas").hidden = !E.mina && !E.gemas; $("h-gemas").textContent = "💎 " + num(E.gemas);
   $("h-hora").textContent = esNoche() ? "🌙" : "☀️";
   const a = $("h-animo"); a.style.width = E.animo + "%"; a.style.background = E.animo < 30 ? "#FF6F61" : E.animo < 60 ? "#FFB74D" : "#5BBF7A";
   $("h-energia").style.width = E.energia * 10 + "%";
@@ -962,11 +967,12 @@ function pintarHUD() {
   const m = METAS[E.meta];
   if (m) {
     const antes = E.meta ? METAS[E.meta - 1].pob : 1;
-    $("meta-txt").textContent = `🎯 ${m.pob} Brotitos → ${m.g} ${m.t}`; $("meta-sub").textContent = m.s;
+    $("meta-txt").textContent = `🎯 ${E.bichos.length}/${m.pob} Brotitos → ${m.g} ${m.t}`; $("meta-sub").textContent = m.s;
     $("meta-bar").style.width = clamp((E.bichos.length - antes) / (m.pob - antes), 0, 1) * 100 + "%";
-  } else { $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
-  if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; }
-  else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; }
+    $("anillo").style.setProperty("--p", $("meta-bar").style.width); $("anillo-g").textContent = m.g;
+  } else { $("anillo").style.setProperty("--p", "100%"); $("anillo-g").textContent = "🌟"; $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
+  if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; $("anillo").style.setProperty("--s", $("era-bar").style.width); }
+  else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; $("anillo").style.setProperty("--s", "100%"); }
   { const k = "+" + porToque(); for (const t of ["comida", "madera", "piedra"]) { const sp = $("d-" + t).querySelector("small"); if (sp && sp.textContent !== k) sp.textContent = k; } }
   const p = $("pedido");
   if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
