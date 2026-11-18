@@ -90,7 +90,8 @@ const CATALOGO = [
 const CAT = Object.fromEntries(CATALOGO.map((c) => [c.id, c]));
 // mejoras acumuladas de todo lo construido
 let BONOS = {};
-const bono = (k) => 1 + (BONOS[k] || 0);
+const TOPE = { vel: 1, nacer: 3, obra: 3 };
+const bono = (k) => 1 + Math.min(BONOS[k] || 0, TOPE[k] ?? 1e9);
 function calcularBonos() {
   const b = {};
   const sumarEf = (ef) => { for (const k in ef) b[k] = (b[k] || 0) + ef[k]; };
@@ -124,9 +125,55 @@ function sumar(k, v) { E["_r" + k] = (E["_r" + k] || 0) + v; if (E["_r" + k] >= 
 const costoCat = (c) => ({ madera: Math.round(10 + c.pob * .12), piedra: Math.round(6 + c.pob * .08), gemas: c.era >= 2 ? Math.min(6, 1 + c.era) : 0 });
 const proximoCat = () => CATALOGO.find((c) => !E.hechos[c.id] && E.era >= c.era && E.bichos.length >= c.pob);
 const siguienteCat = () => CATALOGO.find((c) => !E.hechos[c.id]);
+// ---- edificios combinados: piezas al azar → algo que nunca se vio ----
+const TIPOS_INV = [
+  { n: "Torre", g: ["🗼", "🏰"], techo: ["cono", "cupula"], p: [3, 7], w: [2.4, 3.2] },
+  { n: "Salón", g: ["🎪", "🏛️"], techo: ["dos", "cupula"], p: [1, 2], w: [4.5, 5.5] },
+  { n: "Taller", g: ["🛠️", "⚙️"], techo: ["dos", "plano"], p: [1, 2], w: [3.6, 4.6] },
+  { n: "Palacio", g: ["👑", "🏯"], techo: ["cupula", "dos"], p: [2, 4], w: [5, 5.6] },
+  { n: "Templo", g: ["⛩️", "🕍"], techo: ["dos", "cupula"], p: [1, 3], w: [4, 5] },
+  { n: "Club", g: ["🎳", "🎲"], techo: ["plano", "dos"], p: [1, 3], w: [4, 5] },
+  { n: "Fábrica", g: ["🏭", "🧪"], techo: ["plano"], p: [1, 3], w: [4.6, 5.4] },
+  { n: "Faro", g: ["🗼", "💡"], techo: ["cono"], p: [4, 8], w: [2.2, 2.8] },
+  { n: "Academia", g: ["🎓", "📐"], techo: ["dos", "cupula"], p: [2, 4], w: [4.4, 5.2] },
+  { n: "Mirador", g: ["🔭", "🌄"], techo: ["cupula", "plano"], p: [3, 6], w: [2.8, 3.6] },
+  { n: "Galería", g: ["🖼️", "🎨"], techo: ["plano", "dos"], p: [1, 2], w: [4.8, 5.6] },
+  { n: "Casa de juegos", g: ["🧸", "🎠"], techo: ["cupula", "cono"], p: [1, 3], w: [3.6, 4.6] },
+  { n: "Invernadero", g: ["🌱", "🌻"], techo: ["cupula"], p: [1, 2], w: [4.4, 5.4] },
+  { n: "Laboratorio", g: ["🧬", "⚗️"], techo: ["cupula", "plano"], p: [2, 5], w: [3.6, 4.4] },
+];
+const EF_INV = [["comida", "comida"], ["madera", "madera"], ["piedra", "piedra"], ["sab", "sabiduría"], ["obra", "construcción"], ["vel", "velocidad"], ["nacer", "nacimientos"], ["gemas", "gemas"], ["animo", "ánimo"]];
+const PARTES_INV = ["columnas", "chimenea", "toldo", "antena", "bandera", "reloj", "torre", "arboles", "esfera", "neon", "vidrio"];
+function inventar(sem) {
+  const rd = semilla(sem), en = (a) => a[rd() * a.length | 0], entre = (a, b) => a + rd() * (b - a);
+  const t = en(TIPOS_INV), sil = () => en(SILABAS);
+  const nom = (sil() + sil()); 
+  const [k, txt] = en(EF_INV), v = k === "animo" ? .03 : Math.round(entre(3, 7)) / 100;
+  const extra = Math.min(8, (E.poder || 0) / 6 | 0);
+  const partes = []; const np = 1 + (rd() * 3 | 0);
+  for (let i = 0; i < np; i++) { const p = en(PARTES_INV); if ((p === "neon" || p === "vidrio") && E.era < 3) continue; if (!partes.includes(p)) partes.push(p); }
+  const w = entre(...t.w);
+  return {
+    g: en(t.g), n: `${t.n} ${nom[0].toUpperCase() + nom.slice(1)}`, s: k === "animo" ? "Están más contentos" : `+${Math.round(v * 100)}% ${txt}`, ef: { [k]: v },
+    r: { w, d: w * entre(.8, 1.1), pisos: Math.round(entre(t.p[0], t.p[1] + extra)), h: entre(1.9, 2.5), color: `hsl(${rd() * 360 | 0},${35 + rd() * 30 | 0}%,${62 + rd() * 22 | 0}%)`, ct: `hsl(${rd() * 360 | 0},${40 + rd() * 30 | 0}%,${38 + rd() * 20 | 0}%)`, techo: en(t.techo), partes },
+  };
+}
+function construirInvento() {
+  E.invT = (E.invT || 0);
+  if (E.invT < 180 || E.bichos.length < 40) return;
+  const inv = (E.colaInv && E.colaInv.length) ? E.colaInv[0] : inventar(E.id * 7 + (E.inventos || 0) * 131);
+  const k = { madera: Math.min(160, 20 + E.bichos.length * .05 | 0), piedra: Math.min(120, 12 + E.bichos.length * .04 | 0), gemas: E.era >= 2 && E.mina ? 2 : 0 };
+  if (E.madera < k.madera || E.piedra < k.piedra || E.gemas < k.gemas) return;
+  inv.r.icono = inv.g;
+  const e = nuevoEdificio("inv"); if (!e) return;
+  if (E.colaInv && E.colaInv.length) E.colaInv.shift();
+  E.madera -= k.madera; E.piedra -= k.piedra; E.gemas -= k.gemas;
+  e.inv = inv; E.invT = 0; E.inventos = (E.inventos || 0) + 1;
+  eventos.push({ tipo: "obraInv", g: inv.g, n: inv.n, ia: !!inv.ia });
+}
 function construirCatalogo() {
   if (E.edificios.some((e) => (e.tipo === "cat" || e.tipo === "inv") && !listo(e))) return;
-  const c = proximoCat(); if (!c) return;
+  const c = proximoCat(); if (!c) { construirInvento(); return; }
   const k = costoCat(c);
   if (E.madera < k.madera || E.piedra < k.piedra || E.gemas < k.gemas) return;
   const e = nuevoEdificio("cat", c.era <= 1); if (!e) return;
@@ -336,7 +383,7 @@ function paso(dt, offline) {
   // ¿subieron de poder?
   const np = nivelPoder(E.bichos.length);
   if (np > (E.poder || 0)) { E.poder = np; calcularBonos(); eventos.push({ tipo: "poder", n: np, m: mejoraDe(np) }); }
-  E.catT = (E.catT || 0) + dt;
+  E.catT = (E.catT || 0) + dt; E.invT = (E.invT || 0) + dt;
   if (E.catT > 5) { E.catT = 0; construirCatalogo(); }
   if (!E.puentes.some((p) => p.prog < 1) && E.islas.filter(lugarLibre).every((i) => lugares(i).length - i.nLugar < 3) && E.madera >= 30 && E.piedra >= 15) {
     E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "tierra" });
@@ -1217,7 +1264,7 @@ function pintarHUD() {
   if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; $("anillo").style.setProperty("--s", $("era-bar").style.width); }
   else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; $("anillo").style.setProperty("--s", "100%"); }
   { const c = siguienteCat(), t = $("cat-txt");
-    const txt = c ? `🏗️ Próxima construcción: ${c.g} ${c.n} (${E.era < c.era ? "Era de " + ERAS[c.era].n : c.pob + " Brotitos"})` : `🏗️ ¡Construyeron todo el catálogo! (${Object.keys(E.hechos).length})`;
+    const txt = (c ? `🏗️ Próxima construcción: ${c.g} ${c.n} (${E.era < c.era ? "Era de " + ERAS[c.era].n : c.pob + " Brotitos"})` : `🏗️ ¡Catálogo completo! Ahora inventan cosas nuevas`) + (E.inventos ? ` · 💡 ${E.inventos} creaciones propias` : "");
     if (t.textContent !== txt) t.textContent = txt; }
   { const k = "+" + porToque(); for (const t of ["comida", "madera", "piedra"]) { const sp = $("d-" + t).querySelector("small"); if (sp && sp.textContent !== k) sp.textContent = k; } }
   const p = $("pedido");
@@ -1238,6 +1285,7 @@ function mostrarEventos() {
     }
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
     if (ev.tipo === "poder") { logro("⚡", `¡Poder nivel ${ev.n}!`, ev.m.t); continue; }
+    if (ev.tipo === "obraInv") aviso(ev.ia ? `💡 ¡Inventaron algo nuevo! ${ev.g} ${ev.n}` : `🏗️ Construyen algo nunca visto: ${ev.g} ${ev.n}`);
     if (ev.tipo === "obraCat") aviso(`🏗️ Empezaron a construir: ${ev.g} ${ev.n}`);
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
     if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
@@ -1495,5 +1543,5 @@ function bucle(ahora) {
 }
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
-window.__col = { get E() { return E; }, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
+window.__col = { get E() { return E; }, inventar, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
 requestAnimationFrame(bucle);
