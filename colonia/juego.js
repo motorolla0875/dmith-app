@@ -389,21 +389,24 @@ function decidir(b, adulto, noche, isla) {
 }
 
 // ======================= Jugador =======================
+// cuánto das por toque: crece con la población y la era
+const porToque = () => 1 + E.era + (E.bichos.length / 12 | 0);
 function nuevoPedido() {
   const tipo = elegir(["comida", "madera", "piedra"]);
   const vis = E.bichos.filter((b) => b.edad > GRANDE && !b.adentro && b.y === 0 && activas.has(b.isla));
   const pide = elegir(vis) || E.bichos[0];
-  E.pedido = { tipo, cant: 3 + Math.min(20, E.bichos.length / 8 | 0), dado: 0, t: 25, total: 25 };
+  // el pedido se mide en toques (3 a 6): siempre alcanza la energía, aunque la colonia sea enorme
+  E.pedido = { tipo, cant: (3 + (Math.random() * 4 | 0)) * porToque(), dado: 0, t: 25, total: 25 };
   hablar(pide, ICONO[tipo] + "? " + balbuceo(1), true);
 }
 function dar(tipo) {
   if (E.energia < 1) { aviso("Sin energía ⚡ esperá un poquito"); return; }
-  E.energia -= 1; E[tipo] += 1 + E.era;
+  const k = porToque(); E.energia -= 1; E[tipo] += k;
   const cerca = cercano(E.bichos.filter((b) => !b.adentro && b.y === 0 && activas.has(b.isla)), controles.target);
   if (cerca) { corazones(cerca); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
   sonido("dar");
   if (E.pedido && E.pedido.tipo === tipo) {
-    E.pedido.dado++;
+    E.pedido.dado = Math.min(E.pedido.cant, E.pedido.dado + k);
     if (E.pedido.dado >= E.pedido.cant) {
       E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
       for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false);
@@ -964,6 +967,7 @@ function pintarHUD() {
   } else { $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
   if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; }
   else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; }
+  { const k = "+" + porToque(); for (const t of ["comida", "madera", "piedra"]) { const sp = $("d-" + t).querySelector("small"); if (sp && sp.textContent !== k) sp.textContent = k; } }
   const p = $("pedido");
   if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
   else p.classList.remove("ver");

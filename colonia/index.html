@@ -37,6 +37,7 @@
   .botones { display: flex; gap: 8px; pointer-events: auto; align-items: center; }
   .botones button { font: inherit; border: 0; background: #fff; border-radius: 18px; padding: 8px 12px 6px; font-size: 13px; font-weight: 600; color: #2E2440; box-shadow: 0 3px 10px #0002; display: flex; flex-direction: column; align-items: center; min-width: 64px; cursor: pointer; transition: transform .1s; }
   .botones button b { font-size: 24px; line-height: 1.1; }
+  .botones button small { font-size: 11px; color: #4FB477; font-weight: 700; }
   .botones button:active { transform: scale(.92); }
   .botones button:disabled { opacity: .45; }
   .energia { pointer-events: none; font-size: 13px; font-weight: 600; background: #ffffffd9; border-radius: 999px; padding: 3px 10px; display: flex; align-items: center; gap: 6px; }
@@ -108,9 +109,9 @@
   <div class="pedido" id="pedido"><span id="pedido-txt"></span><i><span id="pedido-t"></span></i></div>
   <div class="energia">⚡<i><span id="h-energia"></span></i></div>
   <div class="botones">
-    <button id="d-comida"><b>🍎</b>Comida</button>
-    <button id="d-madera"><b>🪵</b>Madera</button>
-    <button id="d-piedra"><b>🪨</b>Piedra</button>
+    <button id="d-comida"><b>🍎</b>Comida <small>+1</small></button>
+    <button id="d-madera"><b>🪵</b>Madera <small>+1</small></button>
+    <button id="d-piedra"><b>🪨</b>Piedra <small>+1</small></button>
     <button id="d-entrar" class="entrar"><b>🚪</b>Entrar</button>
   </div>
 </div>
@@ -152,6 +153,6 @@
   </div>
 </div>
 
-<script type="module" src="juego.js?v=6"></script>
+<script type="module" src="juego.js?v=7"></script>
 </body>
 </html>
