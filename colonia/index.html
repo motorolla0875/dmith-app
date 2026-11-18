@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Brotitos — hacé crecer tu colonia</title>
+<meta name="description" content="Empezás con un solo Brotito. Juntan comida, construyen casas, se reproducen y tu colonia crece sin fin.">
+<meta name="theme-color" content="#9FE3F5">
+<link rel="icon" href="/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #9FE3F5; font-family: "Fredoka", system-ui, sans-serif; color: #2E2440; user-select: none; -webkit-user-select: none; }
+  canvas#mundo { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+  .hud { position: fixed; left: 0; right: 0; top: 0; padding: max(10px, env(safe-area-inset-top)) 10px 0; pointer-events: none; }
+  .fila { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .pill { background: #ffffffd9; border-radius: 999px; padding: 5px 10px; font-size: 15px; font-weight: 600; box-shadow: 0 2px 8px #0001; white-space: nowrap; }
+  .pill.animo { display: flex; align-items: center; gap: 6px; }
+  .pill.animo i { display: block; width: 54px; height: 8px; border-radius: 9px; background: #0001; overflow: hidden; }
+  .pill.animo i span { display: block; height: 100%; background: #5BBF7A; border-radius: 9px; transition: width .5s, background .5s; }
+  #mini { display: block; margin: 8px auto 0; width: min(420px, 92vw); height: 22px; border-radius: 11px; background: #ffffffb0; pointer-events: auto; cursor: pointer; }
+  .abajo { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 10px max(12px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+  .pedido { pointer-events: auto; background: #fff; border-radius: 18px; padding: 8px 14px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px #0002; display: none; align-items: center; gap: 10px; }
+  .pedido.ver { display: flex; animation: aparece .3s; }
+  .pedido i { width: 60px; height: 7px; background: #0001; border-radius: 9px; overflow: hidden; display: block; }
+  .pedido i span { display: block; height: 100%; background: #FF8A3D; }
+  @keyframes aparece { from { transform: translateY(10px); opacity: 0 } }
+  .botones { display: flex; gap: 8px; pointer-events: auto; align-items: center; }
+  .botones button { font: inherit; border: 0; background: #fff; border-radius: 18px; padding: 8px 12px 6px; font-size: 13px; font-weight: 600; color: #2E2440; box-shadow: 0 3px 10px #0002; display: flex; flex-direction: column; align-items: center; min-width: 64px; cursor: pointer; transition: transform .1s; }
+  .botones button b { font-size: 24px; line-height: 1.1; }
+  .botones button:active { transform: scale(.92); }
+  .botones button:disabled { opacity: .45; }
+  .energia { pointer-events: none; font-size: 13px; font-weight: 600; background: #ffffffd9; border-radius: 999px; padding: 3px 10px; display: flex; align-items: center; gap: 6px; }
+  .energia i { width: 70px; height: 7px; background: #0001; border-radius: 9px; overflow: hidden; display: block; }
+  .energia i span { display: block; height: 100%; background: #FFC23D; }
+  .esquina { position: fixed; right: 10px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px); display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
+  @media (max-width: 480px) { .pill { font-size: 13px; padding: 4px 8px; } .pill.animo i { width: 40px; } }
+  .esquina button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: #ffffffd9; font-size: 17px; cursor: pointer; box-shadow: 0 2px 8px #0001; }
+  .aviso { position: fixed; left: 50%; top: 96px; transform: translate(-50%, -20px); opacity: 0; background: #2E2440; color: #fff; padding: 8px 14px; border-radius: 14px; font-size: 15px; transition: .35s; pointer-events: none; max-width: 90vw; text-align: center; z-index: 5; }
+  .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
+  .capa { position: fixed; inset: 0; background: #2E244088; display: none; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+  .capa.ver { display: flex; }
+  .caja { background: #fff; border-radius: 24px; padding: 22px; max-width: 380px; width: 100%; text-align: center; }
+  .caja h2 { margin: 0 0 8px; font-size: 25px; }
+  .caja p { margin: 6px 0; color: #6E6480; line-height: 1.35; }
+  .caja .btn { display: block; width: 100%; margin-top: 14px; border: 0; border-radius: 16px; padding: 13px; font: inherit; font-size: 17px; font-weight: 600; background: #4FB477; color: #fff; cursor: pointer; }
+  .caja .btn.gris { background: #F1EDF5; color: #6E6480; }
+  .caja ul { text-align: left; padding-left: 20px; color: #6E6480; margin: 8px 0; }
+</style>
+</head>
+<body>
+<canvas id="mundo"></canvas>
+
+<div class="hud">
+  <div class="fila">
+    <span class="pill" id="h-pob">👥 1</span>
+    <span class="pill" id="h-casas">🏠 0</span>
+    <span class="pill" id="h-comida">🍎 0</span>
+    <span class="pill" id="h-madera">🪵 0</span>
+    <span class="pill" id="h-piedra">🪨 0</span>
+    <span class="pill animo">😊<i><span id="h-animo"></span></i></span>
+  </div>
+  <canvas id="mini" width="840" height="44"></canvas>
+</div>
+
+<div class="esquina">
+  <button id="b-sonido" title="Sonido">🔊</button>
+  <button id="b-ver" title="Ver toda la colonia">🔭</button>
+  <button id="b-info" title="Cómo se juega">❔</button>
+</div>
+
+<div class="abajo">
+  <div class="pedido" id="pedido"><span id="pedido-txt"></span><i><span id="pedido-t"></span></i></div>
+  <div class="energia">⚡<i><span id="h-energia"></span></i></div>
+  <div class="botones">
+    <button id="d-comida"><b>🍎</b>Comida</button>
+    <button id="d-madera"><b>🪵</b>Madera</button>
+    <button id="d-piedra"><b>🪨</b>Piedra</button>
+  </div>
+</div>
+
+<div class="aviso" id="aviso"></div>
+
+<div class="capa" id="c-info">
+  <div class="caja">
+    <h2>🌱 Tus Brotitos</h2>
+    <p>Empezás con <b>uno solo</b>. Juntan comida, madera y piedra, construyen casitas y, cuando hay lugar y comida, <b>nacen más</b>.</p>
+    <ul>
+      <li>Deslizá para recorrer la colonia; con dos dedos (o la ruedita) acercás y alejás.</li>
+      <li>Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo: si llegás a tiempo, se ponen felices.</li>
+      <li>Tocá un Brotito y… 💥 explota. Los demás se asustan y se ponen tristes. Vos decidís.</li>
+      <li>La colonia sigue creciendo aunque cierres la página.</li>
+    </ul>
+    <button class="btn" id="info-ok">¡A jugar!</button>
+    <button class="btn gris" id="reiniciar">Empezar una colonia nueva</button>
+  </div>
+</div>
+
+<div class="capa" id="c-vuelta">
+  <div class="caja">
+    <h2>¡Volviste! 🌱</h2>
+    <p id="vuelta-txt"></p>
+    <button class="btn" id="vuelta-ok">Ver la colonia</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+// ======================= Utilidades =======================
+const $ = (id) => document.getElementById(id);
+const rnd = (a, b) => a + Math.random() * (b - a);
+const elegir = (arr) => arr[Math.random() * arr.length | 0];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const SILABAS = ["bu", "ri", "to", "mo", "pi", "la", "ku", "ne", "zi", "po", "ta", "mi", "lu", "fa", "do", "be"];
+const nombre = () => { const s = elegir(SILABAS) + elegir(SILABAS); return s[0].toUpperCase() + s.slice(1); };
+const balbuceo = (n = 2) => Array.from({ length: n }, () => elegir(SILABAS) + (Math.random() < .3 ? elegir(SILABAS) : "")).join(" ");
+const ICONO = { comida: "🍎", madera: "🪵", piedra: "🪨" };
+const TIPO_RECURSO = { arbol: "madera", roca: "piedra", arbusto: "comida" };
+
+// ======================= Estado =======================
+const CLAVE = "brotitos-v1";
+let E; // estado del juego
+function nuevoEstado() {
+  return {
+    t: Date.now(), tiempo: 0, id: 1,
+    comida: 6, madera: 4, piedra: 2, animo: 80, energia: 10,
+    nacidos: 1, explotados: 0,
+    ext: [-420, 420],
+    bichos: [crearBicho(0, true)],
+    recursos: [],
+    edificios: [{ id: 0, tipo: "fogata", x: 0, prog: 1 }],
+    pedido: null, proxPedido: 25,
+  };
+}
+let sigId = 1;
+function crearBicho(x, adulto) {
+  return { id: sigId++, n: nombre(), x, y: 0, dir: 1, est: "quieto", obj: null, carga: null, edad: adulto ? 999 : 0,
+    susto: 0, hue: rnd(140, 200) | 0, fase: Math.random() * 6, trabajo: 0, charla: null, charlaT: 0, quieto: rnd(0.5, 2) };
+}
+function guardar() { try { E.t = Date.now(); E.sigId = sigId; localStorage.setItem(CLAVE, JSON.stringify(E)); } catch (e) {} }
+function cargar() { try { const s = JSON.parse(localStorage.getItem(CLAVE)); if (s && s.bichos) { sigId = s.sigId || 1000; return s; } } catch (e) {} return null; }
+
+// ======================= Mundo =======================
+const capacidad = () => E.edificios.reduce((s, b) => s + (b.prog >= 1 ? (b.tipo === "casa" ? 3 : 2) : 0), 0);
+const casas = () => E.edificios.filter((b) => b.tipo === "casa" && b.prog >= 1).length;
+const almacenes = () => E.edificios.filter((b) => b.prog >= 1);
+function cercano(lista, x) { let m = null, d = 1e9; for (const o of lista) { const dd = Math.abs(o.x - x); if (dd < d) { d = dd; m = o; } } return m; }
+
+function sembrar(desde, hasta) {
+  // recursos repartidos por el terreno nuevo
+  for (let x = desde; x < hasta; x += rnd(55, 90)) {
+    if (E.edificios.some((b) => Math.abs(b.x - x) < 40)) continue;
+    const r = Math.random(), tipo = r < .4 ? "arbol" : r < .7 ? "arbusto" : "roca";
+    const max = tipo === "arbol" ? 6 : tipo === "roca" ? 5 : 5;
+    E.recursos.push({ id: E.id++, tipo, x: x + rnd(-15, 15), cant: max, max, crece: 0 });
+  }
+}
+function ampliar(nuevoMin, nuevoMax) {
+  if (nuevoMin < E.ext[0]) { sembrar(nuevoMin, E.ext[0]); E.ext[0] = nuevoMin; }
+  if (nuevoMax > E.ext[1]) { sembrar(E.ext[1], nuevoMax); E.ext[1] = nuevoMax; }
+}
+
+// ======================= Simulación =======================
+const VEL = 38, VEL_BEBE = 26;
+let eventos = []; // para mostrar avisos sin repetir durante la simulación offline
+function paso(dt, offline) {
+  E.tiempo += dt;
+  // recursos que vuelven a crecer
+  for (const r of E.recursos) if (r.cant < r.max) { r.crece += dt; if (r.crece > (r.tipo === "arbusto" ? 14 : 24)) { r.crece = 0; r.cant++; } }
+  // energía del jugador
+  E.energia = Math.min(10, E.energia + dt / 6);
+  // ánimo vuelve de a poco a lo normal
+  E.animo = clamp(E.animo + (E.comida > 0 ? 0.25 : -0.6) * dt, 0, 100);
+  // comen
+  E.comerT = (E.comerT || 0) + dt;
+  if (E.comerT > 40) { E.comerT = 0; E.comida = Math.max(0, E.comida - Math.ceil(E.bichos.length / 3)); }
+
+  for (const b of E.bichos) actualizarBicho(b, dt, offline);
+
+  // nacimientos
+  E.nacerT = (E.nacerT || 0) + dt;
+  const lento = E.animo < 30 ? 2 : 1;
+  if (E.nacerT > 6 * lento) {
+    E.nacerT = 0;
+    if (E.bichos.length < capacidad() && E.comida >= 4 && E.bichos.some((b) => b.edad > 45)) {
+      E.comida -= 4;
+      const casa = elegir(almacenes());
+      const bebe = crearBicho(casa.x + rnd(-12, 12), false);
+      E.bichos.push(bebe); E.nacidos++;
+      eventos.push({ tipo: "nace", b: bebe });
+      if (!offline) { corazones(bebe.x, -20); hablar(bebe, "¡" + elegir(SILABAS) + "!", true); }
+    }
+  }
+  // construir casas nuevas cuando se llenan
+  const obra = E.edificios.find((b) => b.prog < 1);
+  if (!obra && E.bichos.length >= capacidad() - 1 && E.madera >= 8 && E.piedra >= 4) {
+    E.madera -= 8; E.piedra -= 4;
+    const izq = E.edificios.filter((b) => b.x < 0).length, der = E.edificios.filter((b) => b.x > 0).length;
+    const lado = izq < der ? -1 : der < izq ? 1 : (Math.random() < .5 ? -1 : 1);
+    const borde = lado < 0 ? Math.min(...E.edificios.map((b) => b.x)) : Math.max(...E.edificios.map((b) => b.x));
+    const x = borde + lado * rnd(80, 110);
+    E.edificios.push({ id: E.id++, tipo: "casa", x, prog: 0 });
+    E.recursos = E.recursos.filter((r) => Math.abs(r.x - x) > 36);
+    ampliar(Math.min(E.ext[0], x - 420), Math.max(E.ext[1], x + 420));
+    eventos.push({ tipo: "obra" });
+  }
+  // pedidos
+  if (!offline) {
+    if (E.pedido) { E.pedido.t -= dt; if (E.pedido.t <= 0) { E.pedido = null; E.animo = clamp(E.animo - 8, 0, 100); aviso("No llegaste a tiempo… 😕"); E.proxPedido = rnd(30, 60); } }
+    else { E.proxPedido -= dt; if (E.proxPedido <= 0 && E.bichos.length) nuevoPedido(); }
+  }
+}
+
+function actualizarBicho(b, dt, offline) {
+  b.edad += dt; b.fase += dt * 10;
+  if (b.charlaT > 0) b.charlaT -= dt;
+  const adulto = b.edad > 45, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1);
+  if (b.susto > 0) {
+    b.susto -= dt;
+    b.x += b.dir * vel * 1.8 * dt;
+    b.x = clamp(b.x, E.ext[0] + 10, E.ext[1] - 10);
+    return;
+  }
+  const mover = (x) => { const d = x - b.x; if (Math.abs(d) < 4) return true; b.dir = Math.sign(d); b.x += b.dir * Math.min(Math.abs(d), vel * dt); return false; };
+
+  switch (b.est) {
+    case "quieto":
+      b.quieto -= dt;
+      if (b.quieto <= 0) decidir(b, adulto);
+      break;
+    case "pasear":
+      if (mover(b.obj)) { b.est = "quieto"; b.quieto = rnd(1, 3); if (!offline && Math.random() < .25) hablar(b, balbuceo(rnd(1, 3) | 0)); }
+      break;
+    case "ir_recurso": {
+      const r = E.recursos.find((r) => r.id === b.obj);
+      if (!r || r.cant <= 0) { b.est = "quieto"; b.quieto = .3; break; }
+      if (mover(r.x)) { b.est = "juntar"; b.trabajo = 1.6; }
+      break;
+    }
+    case "juntar": {
+      b.trabajo -= dt;
+      if (b.trabajo <= 0) {
+        const r = E.recursos.find((r) => r.id === b.obj);
+        if (r && r.cant > 0) { r.cant--; b.carga = TIPO_RECURSO[r.tipo]; const a = cercano(almacenes(), b.x); b.obj = a ? a.id : 0; b.est = "llevar"; }
+        else { b.est = "quieto"; b.quieto = .3; }
+      }
+      break;
+    }
+    case "llevar": {
+      const a = E.edificios.find((e) => e.id === b.obj) || cercano(almacenes(), b.x);
+      if (!a) { b.est = "quieto"; break; }
+      if (mover(a.x)) { E[b.carga]++; b.carga = null; b.est = "quieto"; b.quieto = rnd(.2, .8); }
+      break;
+    }
+    case "construir": {
+      const o = E.edificios.find((e) => e.id === b.obj);
+      if (!o || o.prog >= 1) { b.est = "quieto"; b.quieto = .5; break; }
+      if (mover(o.x + b.lado * 14)) {
+        o.prog = Math.min(1, o.prog + dt * 0.045);
+        if (o.prog >= 1) { eventos.push({ tipo: "casa" }); if (!offline) { festejo(o.x); hablar(b, "¡" + balbuceo(1) + "!", true); } }
+      }
+      break;
+    }
+  }
+}
+
+function decidir(b, adulto) {
+  if (!adulto) { b.est = "pasear"; b.obj = clamp(b.x + rnd(-60, 60), E.ext[0] + 20, E.ext[1] - 20); return; }
+  // ayudar en una obra
+  const obra = E.edificios.find((e) => e.prog < 1);
+  if (obra && E.bichos.filter((o) => o.est === "construir").length < 3 && Math.random() < .7) {
+    b.est = "construir"; b.obj = obra.id; b.lado = Math.random() < .5 ? -1 : 1; return;
+  }
+  // juntar lo que más falta
+  const pob = E.bichos.length;
+  const falta = { comida: 6 + pob * .6 - E.comida + (E.pedido && E.pedido.tipo === "comida" ? 5 : 0), madera: E.madera > 20 ? -99 : 12 - E.madera, piedra: E.piedra > 12 ? -99 : 7 - E.piedra };
+  const tipos = Object.keys(falta).sort((a, c) => falta[c] - falta[a]);
+  const utiles = tipos.filter((t) => falta[t] > -50);
+  const tipo = Math.random() < .7 || utiles.length < 2 ? tipos[0] : elegir(utiles);
+  const objetivo = Object.keys(TIPO_RECURSO).find((k) => TIPO_RECURSO[k] === tipo);
+  const libres = E.recursos.filter((r) => r.tipo === objetivo && r.cant > 0 && E.bichos.filter((o) => o.obj === r.id && o.est.startsWith("ir")).length < 2);
+  const r = cercano(libres, b.x + rnd(-80, 80));
+  if (r && Math.abs(r.x - b.x) < 900) { b.est = "ir_recurso"; b.obj = r.id; return; }
+  b.est = "pasear"; b.obj = clamp(b.x + rnd(-120, 120), E.ext[0] + 20, E.ext[1] - 20);
+}
+
+// ======================= Jugador =======================
+function nuevoPedido() {
+  const tipo = elegir(["comida", "madera", "piedra"]);
+  const pide = elegir(E.bichos.filter((b) => b.edad > 45)) || E.bichos[0];
+  E.pedido = { tipo, cant: 3 + (E.bichos.length / 8 | 0), dado: 0, t: 25, total: 25, quien: pide.id };
+  hablar(pide, ICONO[tipo] + "? " + balbuceo(1), true);
+}
+function dar(tipo) {
+  if (E.energia < 1) { aviso("Sin energía ⚡ esperá un poquito"); return; }
+  E.energia -= 1; E[tipo]++;
+  const cerca = cercano(E.bichos, cam.x);
+  if (cerca) { corazones(cerca.x, -24); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
+  sonido("dar");
+  if (E.pedido && E.pedido.tipo === tipo) {
+    E.pedido.dado++;
+    if (E.pedido.dado >= E.pedido.cant) {
+      E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
+      for (const b of E.bichos) { if (Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false); }
+      festejo(cam.x); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
+    }
+  }
+  pintarHUD();
+}
+$("d-comida").onclick = () => dar("comida");
+$("d-madera").onclick = () => dar("madera");
+$("d-piedra").onclick = () => dar("piedra");
+
+function explotar(b) {
+  E.bichos = E.bichos.filter((o) => o !== b); E.explotados++;
+  E.animo = clamp(E.animo - 15, 0, 100);
+  for (let i = 0; i < 26; i++) particulas.push({ x: b.x, y: -14, vx: rnd(-140, 140), vy: rnd(-260, -60), t: rnd(.6, 1.2), c: `hsl(${b.hue},60%,${rnd(45, 70)}%)`, s: rnd(3, 7) });
+  particulas.push({ x: b.x, y: -14, vx: 0, vy: 0, t: .35, anillo: true });
+  for (const o of E.bichos) {
+    const d = Math.abs(o.x - b.x);
+    if (d < 220) { o.susto = rnd(6, 10); o.dir = Math.sign(o.x - b.x) || 1; o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .5) hablar(o, elegir(["¡aaa!", "¡iii!", "😱", "¡no no!"]), true); }
+  }
+  sonido("puf");
+  if (navigator.vibrate) navigator.vibrate(40);
+  if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); E.bichos.push(crearBicho(0, true)); }, 1500);
+}
+
+// ======================= Charla y sonido =======================
+let AC = null, sonidoOn = true;
+try { sonidoOn = localStorage.getItem("brotitos-sonido") !== "0"; } catch (e) {}
+function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); } if (AC.state === "suspended") AC.resume(); return AC; }
+function blip(ctx, t0, f, dur, tipo = "triangle", vol = .18) {
+  const o = ctx.createOscillator(), g = ctx.createGain(); o.type = tipo;
+  o.frequency.setValueAtTime(f, t0); o.frequency.exponentialRampToValueAtTime(f * rnd(.85, 1.25), t0 + dur);
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .01); g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+  o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0 + dur + .02);
+}
+function sonido(tipo, b) {
+  if (!sonidoOn) return; const ctx = audio(); if (!ctx) return; const t = ctx.currentTime + .01;
+  if (tipo === "habla") { const base = (b && b.edad < 45 ? 1100 : 820) + ((b ? b.hue : 170) - 170) * 3; for (let i = 0; i < 3 + (Math.random() * 3 | 0); i++) blip(ctx, t + i * .09, base * rnd(.85, 1.15), .07, "sine", .12); }
+  if (tipo === "dar") blip(ctx, t, 660, .1, "sine", .15);
+  if (tipo === "festejo") [660, 880, 990, 1320].forEach((f, i) => blip(ctx, t + i * .08, f, .12, "triangle", .14));
+  if (tipo === "puf") {
+    const n = ctx.sampleRate * .35, buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+    const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900;
+    s.buffer = buf; g.gain.value = .5; s.connect(f); f.connect(g); g.connect(ctx.destination); s.start(t);
+    blip(ctx, t, 180, .25, "sine", .3);
+  }
+}
+let ultimaVoz = 0;
+function hablar(b, txt, fuerte) {
+  b.charla = txt; b.charlaT = 2.6;
+  const visible = Math.abs((b.x - cam.x) * cam.z) < W / 2 + 40;
+  if (visible && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido("habla", b); }
+}
+$("b-sonido").textContent = sonidoOn ? "🔊" : "🔈";
+$("b-sonido").onclick = () => { sonidoOn = !sonidoOn; $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈"; try { localStorage.setItem("brotitos-sonido", sonidoOn ? "1" : "0"); } catch (e) {} };
+
+// ======================= Efectos =======================
+let particulas = [];
+function corazones(x, y) { for (let i = 0; i < 3; i++) particulas.push({ x: x + rnd(-8, 8), y, vx: rnd(-15, 15), vy: rnd(-50, -30), t: 1.2, emoji: "💚", s: 14 }); }
+function festejo(x) { for (let i = 0; i < 14; i++) particulas.push({ x: x + rnd(-30, 30), y: -40, vx: rnd(-80, 80), vy: rnd(-180, -60), t: rnd(.8, 1.4), c: elegir(["#FFC23D", "#FF6F91", "#6EC6FF", "#7ED957"]), s: rnd(3, 5), conf: true }); }
+let avisoT;
+function aviso(t) { const a = $("aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(avisoT); avisoT = setTimeout(() => a.classList.remove("ver"), 2600); }
+
+// ======================= Cámara y dibujo =======================
+const cv = $("mundo"), g = cv.getContext("2d");
+let W = 0, H = 0, DPR = 1, PISO = 0;
+const cam = { x: 0, z: 1.6 };
+function medir() { DPR = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; PISO = H * (W < 600 ? 0.62 : 0.68); }
+addEventListener("resize", medir); medir();
+const sx = (x) => (x - cam.x) * cam.z + W / 2;
+const sy = (y) => PISO + y * cam.z;
+function limitarCam() { cam.z = clamp(cam.z, .2, 3); const medio = W / 2 / cam.z; cam.x = clamp(cam.x, E.ext[0] + Math.min(medio, (E.ext[1] - E.ext[0]) / 2), E.ext[1] - Math.min(medio, (E.ext[1] - E.ext[0]) / 2)); }
+
+function dibujar(ahora) {
+  g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  // cielo
+  const cielo = g.createLinearGradient(0, 0, 0, PISO);
+  cielo.addColorStop(0, "#8ED8F2"); cielo.addColorStop(1, "#DDF6FF");
+  g.fillStyle = cielo; g.fillRect(0, 0, W, PISO + 2);
+  // nubes y cerros lejanos (paralaje)
+  g.fillStyle = "#ffffffcc";
+  for (let i = -2; i < 8; i++) { const x = ((i * 260 - cam.x * .15 * cam.z) % (W + 400) + W + 400) % (W + 400) - 200, y = 70 + (i % 3) * 38; nube(x, y, 1 + (i % 2) * .4); }
+  g.fillStyle = "#A8DDB0";
+  g.beginPath(); g.moveTo(0, PISO);
+  for (let x = 0; x <= W; x += 8) { const wx = (x - W / 2) / cam.z * .4 + cam.x * .4; g.lineTo(x, PISO - 40 * Math.min(1.4, cam.z) - Math.sin(wx / 90) * 18 - Math.sin(wx / 37) * 8); }
+  g.lineTo(W, PISO); g.fill();
+  // suelo
+  g.fillStyle = "#7ACB6B"; g.fillRect(0, PISO, W, 14 * cam.z + 4);
+  g.fillStyle = "#B9875A"; g.fillRect(0, PISO + 14 * cam.z + 4, W, H);
+  g.fillStyle = "#A9774C"; for (let i = 0; i < 40; i++) { const wx = Math.floor(cam.x / 70) * 70 + (i - 20) * 70; const x = sx(wx + (i * 37 % 50)); g.beginPath(); g.arc(x, PISO + (30 + (i * 13 % 60)) * cam.z, 3 * cam.z, 0, 7); g.fill(); }
+
+  // recursos
+  for (const r of E.recursos) { const x = sx(r.x); if (x < -60 || x > W + 60) continue; dibujarRecurso(r, x); }
+  // edificios
+  for (const e of E.edificios) { const x = sx(e.x); if (x < -80 || x > W + 80) continue; dibujarEdificio(e, x, ahora); }
+  // bichos (los bebés adelante)
+  const orden = E.bichos.slice().sort((a, b) => b.edad - a.edad);
+  for (const b of orden) { const x = sx(b.x); if (x < -40 || x > W + 40) continue; dibujarBicho(b, x, ahora); }
+  // niebla en los bordes del mundo
+  for (const lado of [0, 1]) {
+    const bx = sx(E.ext[lado]); const gr = g.createLinearGradient(bx, 0, bx + (lado ? 1 : -1) * 160 * cam.z, 0);
+    gr.addColorStop(0, "#ffffff00"); gr.addColorStop(1, "#ffffffee"); g.fillStyle = gr;
+    if (lado) g.fillRect(bx, 0, W - bx + 10, H); else g.fillRect(-10, 0, bx + 10, H);
+  }
+  // partículas
+  for (const p of particulas) {
+    const x = sx(p.x), y = sy(p.y);
+    if (p.anillo) { g.strokeStyle = `rgba(255,255,255,${p.t / .35})`; g.lineWidth = 4; g.beginPath(); g.arc(x, y, (1 - p.t / .35) * 50 * cam.z + 5, 0, 7); g.stroke(); continue; }
+    if (p.emoji) { g.globalAlpha = Math.min(1, p.t); g.font = `${p.s * cam.z}px serif`; g.textAlign = "center"; g.fillText(p.emoji, x, y); g.globalAlpha = 1; continue; }
+    g.fillStyle = p.c; g.globalAlpha = Math.min(1, p.t * 1.5);
+    if (p.conf) g.fillRect(x, y, p.s * cam.z, p.s * cam.z * .6); else { g.beginPath(); g.arc(x, y, p.s * cam.z * .5, 0, 7); g.fill(); }
+    g.globalAlpha = 1;
+  }
+}
+function nube(x, y, s) { g.beginPath(); g.arc(x, y, 22 * s, 0, 7); g.arc(x + 24 * s, y - 10 * s, 26 * s, 0, 7); g.arc(x + 52 * s, y, 20 * s, 0, 7); g.fill(); }
+
+function dibujarRecurso(r, x) {
+  const z = cam.z, y0 = PISO, k = .55 + .45 * (r.cant / r.max);
+  if (r.tipo === "arbol") {
+    g.fillStyle = "#8A5A36"; g.fillRect(x - 4 * z, y0 - 34 * z, 8 * z, 34 * z);
+    if (r.cant > 0) { g.fillStyle = "#3FA35B"; for (const [dx, dy, rr] of [[0, -48, 20], [-13, -38, 14], [13, -38, 14]]) { g.beginPath(); g.arc(x + dx * z * k, y0 + dy * z * (k * .4 + .6), rr * z * k, 0, 7); g.fill(); } }
+  } else if (r.tipo === "roca") {
+    if (r.cant <= 0) return;
+    g.fillStyle = "#9AA3AE"; g.beginPath(); g.ellipse(x, y0 - 9 * z * k, 17 * z * k, 11 * z * k, 0, Math.PI, 0); g.lineTo(x + 17 * z * k, y0); g.lineTo(x - 17 * z * k, y0); g.fill();
+    g.fillStyle = "#B8C0C9"; g.beginPath(); g.ellipse(x - 5 * z * k, y0 - 13 * z * k, 6 * z * k, 3 * z * k, -.3, 0, 7); g.fill();
+  } else {
+    g.fillStyle = "#4CB863"; g.beginPath(); g.arc(x, y0 - 11 * z, 14 * z, Math.PI, 0); g.arc(x + 9 * z, y0 - 6 * z, 9 * z, -Math.PI / 2, Math.PI / 2); g.lineTo(x - 14 * z, y0); g.fill();
+    g.fillStyle = "#E8424F"; for (let i = 0; i < r.cant; i++) { g.beginPath(); g.arc(x + (-8 + i * 4.5) * z, y0 - (8 + (i % 2) * 7) * z, 2.6 * z, 0, 7); g.fill(); }
+  }
+}
+function dibujarEdificio(e, x, ahora) {
+  const z = cam.z, y0 = PISO;
+  if (e.tipo === "fogata") {
+    g.fillStyle = "#7A4B2A"; g.save(); g.translate(x, y0 - 3 * z); g.rotate(.35); g.fillRect(-14 * z, -3 * z, 28 * z, 6 * z); g.rotate(-.7); g.fillRect(-14 * z, -3 * z, 28 * z, 6 * z); g.restore();
+    const f = 1 + Math.sin(ahora / 120) * .12;
+    g.fillStyle = "#FF8A3D"; g.beginPath(); g.ellipse(x, y0 - 14 * z * f, 8 * z, 13 * z * f, 0, 0, 7); g.fill();
+    g.fillStyle = "#FFD23D"; g.beginPath(); g.ellipse(x, y0 - 10 * z * f, 4.5 * z, 8 * z * f, 0, 0, 7); g.fill();
+    return;
+  }
+  if (e.prog < 1) {
+    g.strokeStyle = "#A0703F"; g.lineWidth = 3 * z;
+    g.strokeRect(x - 24 * z, y0 - 34 * z, 48 * z, 34 * z);
+    g.beginPath(); g.moveTo(x - 24 * z, y0); g.lineTo(x + 24 * z, y0 - 34 * z); g.moveTo(x - 24 * z, y0 - 34 * z); g.lineTo(x + 24 * z, y0); g.stroke();
+    g.fillStyle = "#E8C79A"; g.fillRect(x - 24 * z, y0 - 34 * z * e.prog, 48 * z, 34 * z * e.prog);
+    g.fillStyle = "#0002"; g.fillRect(x - 26 * z, y0 - 52 * z, 52 * z, 6 * z); g.fillStyle = "#FFB74D"; g.fillRect(x - 26 * z, y0 - 52 * z, 52 * z * e.prog, 6 * z);
+    return;
+  }
+  const tono = 20 + (e.id * 37) % 40;
+  g.fillStyle = `hsl(${tono},55%,78%)`; g.fillRect(x - 24 * z, y0 - 34 * z, 48 * z, 34 * z);
+  g.fillStyle = `hsl(${(e.id * 61) % 360},55%,58%)`; g.beginPath(); g.moveTo(x - 31 * z, y0 - 32 * z); g.lineTo(x, y0 - 58 * z); g.lineTo(x + 31 * z, y0 - 32 * z); g.fill();
+  g.fillStyle = "#6B4A33"; g.beginPath(); g.moveTo(x - 7 * z, y0); g.lineTo(x - 7 * z, y0 - 14 * z); g.arc(x, y0 - 14 * z, 7 * z, Math.PI, 0); g.lineTo(x + 7 * z, y0); g.fill();
+  g.fillStyle = "#FFF3B0"; g.fillRect(x + 11 * z, y0 - 27 * z, 8 * z, 8 * z); g.fillRect(x - 19 * z, y0 - 27 * z, 8 * z, 8 * z);
+}
+
+function dibujarBicho(b, x, ahora) {
+  const z = cam.z, bebe = b.edad < 45, s = (bebe ? 8 + b.edad / 45 * 4 : 13) * z;
+  const camina = b.est !== "quieto" && b.est !== "juntar" && !(b.est === "construir");
+  const salto = camina ? Math.abs(Math.sin(b.fase)) * 5 * z : (b.est === "juntar" || b.est === "construir") ? Math.abs(Math.sin(b.fase * 1.5)) * 2 * z : 0;
+  const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * 1.6 * z : 0;
+  const cx = x + tiembla, cy = PISO - s * 1.05 - salto;
+  // sombra
+  g.fillStyle = "#00000018"; g.beginPath(); g.ellipse(x, PISO - 1, s * .9, s * .25, 0, 0, 7); g.fill();
+  // brote en la cabeza
+  g.strokeStyle = "#3E9A4E"; g.lineWidth = Math.max(1, 1.6 * z); g.beginPath(); g.moveTo(cx, cy - s * .95); g.quadraticCurveTo(cx + b.dir * 2 * z, cy - s * 1.35, cx, cy - s * 1.55); g.stroke();
+  g.fillStyle = "#5CC86B"; g.beginPath(); g.ellipse(cx + 4 * z * (bebe ? .7 : 1), cy - s * 1.55, 5 * z * (bebe ? .7 : 1), 2.6 * z * (bebe ? .7 : 1), -.5, 0, 7); g.fill();
+  if (!bebe) { g.beginPath(); g.ellipse(cx - 4 * z, cy - s * 1.45, 4 * z, 2.2 * z, .5, 0, 7); g.fill(); }
+  // cuerpo (porotito)
+  const triste = E.animo < 30 && b.susto <= 0;
+  g.fillStyle = `hsl(${b.hue},${triste ? 25 : 55}%,${triste ? 58 : 62}%)`;
+  g.beginPath(); g.ellipse(cx, cy, s * .92, s * 1.05, 0, 0, 7); g.fill();
+  g.fillStyle = "#ffffff40"; g.beginPath(); g.ellipse(cx - s * .3, cy - s * .45, s * .3, s * .18, -.4, 0, 7); g.fill();
+  // pies
+  g.fillStyle = `hsl(${b.hue},45%,45%)`;
+  const p = camina ? Math.sin(b.fase) * 3 * z : 0;
+  g.beginPath(); g.ellipse(cx - s * .4 + p, cy + s * .95, s * .28, s * .16, 0, 0, 7); g.ellipse(cx + s * .4 - p, cy + s * .95, s * .28, s * .16, 0, 0, 7); g.fill();
+  // cara
+  const ox = b.dir * s * .18, parpadeo = (ahora / 1000 + b.hue) % 4 < .12;
+  g.fillStyle = "#2E2440";
+  if (b.susto > 0) {
+    for (const d of [-1, 1]) { g.fillStyle = "#fff"; g.beginPath(); g.arc(cx + ox + d * s * .3, cy - s * .2, s * .2, 0, 7); g.fill(); g.fillStyle = "#2E2440"; g.beginPath(); g.arc(cx + ox + d * s * .3, cy - s * .2, s * .09, 0, 7); g.fill(); }
+    g.beginPath(); g.ellipse(cx + ox, cy + s * .25, s * .13, s * .18, 0, 0, 7); g.fill();
+    g.fillStyle = "#8ED8F2"; g.beginPath(); g.ellipse(cx + ox + s * .65, cy - s * .5, s * .09, s * .15, 0, 0, 7); g.fill();
+  } else {
+    for (const d of [-1, 1]) { g.beginPath(); g.ellipse(cx + ox + d * s * .28, cy - s * .2, s * .1, parpadeo ? s * .02 : s * .14, 0, 0, 7); g.fill(); }
+    g.strokeStyle = "#2E2440"; g.lineWidth = Math.max(1, 1.4 * z); g.beginPath();
+    if (triste) g.arc(cx + ox, cy + s * .35, s * .16, Math.PI * 1.15, Math.PI * 1.85);
+    else g.arc(cx + ox, cy + s * .08, s * .16, Math.PI * .15, Math.PI * .85);
+    g.stroke();
+    g.fillStyle = "#FF8FA340"; g.beginPath(); g.ellipse(cx + ox - s * .5, cy + s * .08, s * .14, s * .08, 0, 0, 7); g.ellipse(cx + ox + s * .5, cy + s * .08, s * .14, s * .08, 0, 0, 7); g.fill();
+  }
+  // lo que lleva
+  if (b.carga) { g.font = `${11 * z}px serif`; g.textAlign = "center"; g.fillText(ICONO[b.carga], cx, cy - s * 1.8); }
+  // globito de charla
+  if (b.charlaT > 0 && b.charla && z > .45) {
+    g.font = `600 ${Math.max(10, 11 * z)}px Fredoka, sans-serif`; const tw = g.measureText(b.charla).width;
+    const bx = cx, by = cy - s * 2.4 - (b.carga ? 10 * z : 0);
+    g.globalAlpha = Math.min(1, b.charlaT * 2);
+    g.fillStyle = "#fff"; redondeado(bx - tw / 2 - 8, by - 13 * Math.max(1, z * .9), tw + 16, 22 * Math.max(1, z * .9), 10); g.fill();
+    g.beginPath(); g.moveTo(bx - 4, by + 8 * Math.max(1, z * .9)); g.lineTo(bx + 4, by + 8 * Math.max(1, z * .9)); g.lineTo(bx, by + 14 * Math.max(1, z * .9)); g.fill();
+    g.fillStyle = "#2E2440"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(b.charla, bx, by - 2 * Math.max(1, z * .9) + 2); g.textBaseline = "alphabetic";
+    g.globalAlpha = 1;
+  }
+}
+function redondeado(x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+// ======================= Mini mapa =======================
+const mini = $("mini"), mg = mini.getContext("2d");
+function dibujarMini() {
+  const w = mini.width, h = mini.height, a = E.ext[0], ancho = E.ext[1] - E.ext[0];
+  const mx = (x) => (x - a) / ancho * (w - 20) + 10;
+  mg.clearRect(0, 0, w, h);
+  mg.fillStyle = "#7ACB6B"; mg.fillRect(10, h - 12, w - 20, 6);
+  for (const e of E.edificios) { mg.fillStyle = e.tipo === "fogata" ? "#FF8A3D" : e.prog < 1 ? "#E8C79A" : "#C96B4E"; mg.fillRect(mx(e.x) - 4, h - 22, 8, 10); }
+  mg.fillStyle = "#2E8B57"; for (const b of E.bichos) mg.fillRect(mx(b.x) - 1, h - 9, 2, 3);
+  const v0 = cam.x - W / 2 / cam.z, v1 = cam.x + W / 2 / cam.z;
+  mg.strokeStyle = "#2E2440"; mg.lineWidth = 3; mg.strokeRect(mx(v0), 3, Math.max(8, mx(v1) - mx(v0)), h - 6);
+}
+mini.addEventListener("pointerdown", (e) => {
+  const r = mini.getBoundingClientRect(), f = (e.clientX - r.left) / r.width;
+  cam.x = E.ext[0] + (f * mini.width - 10) / (mini.width - 20) * (E.ext[1] - E.ext[0]); limitarCam(); e.stopPropagation();
+});
+
+// ======================= Toques: arrastrar, pellizcar, explotar =======================
+const dedos = new Map(); let pellizco = null, arrastro = false;
+cv.addEventListener("pointerdown", (e) => {
+  audio(); cv.setPointerCapture(e.pointerId);
+  dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY });
+  if (dedos.size === 1) arrastro = false;
+  if (dedos.size === 2) {
+    const [p1, p2] = [...dedos.values()];
+    pellizco = { d: Math.hypot(p1.x - p2.x, p1.y - p2.y), z: cam.z, mx: (p1.x + p2.x) / 2 }; pellizco.wx = (pellizco.mx - W / 2) / cam.z + cam.x; arrastro = true;
+  }
+});
+cv.addEventListener("pointermove", (e) => {
+  const d = dedos.get(e.pointerId); if (!d) return;
+  const dx = e.clientX - d.x; d.x = e.clientX; d.y = e.clientY;
+  if (Math.hypot(d.x - d.x0, d.y - d.y0) > 8) arrastro = true;
+  if (dedos.size === 1 && !pellizco) { cam.x -= dx / cam.z; limitarCam(); }
+  else if (dedos.size === 2 && pellizco) {
+    const [p1, p2] = [...dedos.values()];
+    cam.z = clamp(pellizco.z * Math.hypot(p1.x - p2.x, p1.y - p2.y) / pellizco.d, .2, 3);
+    const mx = (p1.x + p2.x) / 2; cam.x = pellizco.wx - (mx - W / 2) / cam.z; limitarCam();
+  }
+});
+function soltar(e) {
+  const d = dedos.get(e.pointerId); dedos.delete(e.pointerId);
+  if (dedos.size < 2) pellizco = null;
+  if (d && !arrastro && dedos.size === 0) tocar(e.clientX, e.clientY);
+}
+cv.addEventListener("pointerup", soltar); cv.addEventListener("pointercancel", (e) => { dedos.delete(e.pointerId); pellizco = null; });
+cv.addEventListener("wheel", (e) => {
+  e.preventDefault(); const wx = (e.clientX - W / 2) / cam.z + cam.x;
+  cam.z = clamp(cam.z * Math.exp(-e.deltaY * .0015), .2, 3); cam.x = wx - (e.clientX - W / 2) / cam.z; limitarCam();
+}, { passive: false });
+function tocar(px, py) {
+  let mejor = null, md = 1e9;
+  for (const b of E.bichos) {
+    const s = (b.edad < 45 ? 10 : 13) * cam.z, bx = sx(b.x), by = PISO - s;
+    const d = Math.hypot(px - bx, py - by); if (d < Math.max(22, s * 1.6) && d < md) { md = d; mejor = b; }
+  }
+  if (mejor) explotar(mejor);
+}
+$("b-ver").onclick = () => { const ancho = E.ext[1] - E.ext[0]; cam.z = clamp(W / ancho * .95, .2, 3); cam.x = (E.ext[0] + E.ext[1]) / 2; limitarCam(); };
+$("b-info").onclick = () => $("c-info").classList.add("ver");
+$("info-ok").onclick = () => { $("c-info").classList.remove("ver"); audio(); };
+$("reiniciar").onclick = () => {
+  const b = $("reiniciar");
+  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = "¿Seguro? Se pierde esta colonia"; return; }
+  try { localStorage.removeItem(CLAVE); } catch (e) {} location.reload();
+};
+
+// ======================= HUD =======================
+function pintarHUD() {
+  $("h-pob").textContent = "👥 " + E.bichos.length + "/" + capacidad();
+  $("h-casas").textContent = "🏠 " + casas();
+  $("h-comida").textContent = "🍎 " + E.comida; $("h-madera").textContent = "🪵 " + E.madera; $("h-piedra").textContent = "🪨 " + E.piedra;
+  const a = $("h-animo"); a.style.width = E.animo + "%"; a.style.background = E.animo < 30 ? "#FF6F61" : E.animo < 60 ? "#FFB74D" : "#5BBF7A";
+  $("h-energia").style.width = E.energia * 10 + "%";
+  for (const id of ["d-comida", "d-madera", "d-piedra"]) $(id).disabled = E.energia < 1;
+  const p = $("pedido");
+  if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
+  else p.classList.remove("ver");
+}
+function mostrarEventos() {
+  for (const ev of eventos) {
+    if (ev.tipo === "nace") aviso(`🌱 ¡Nació ${ev.b.n}! (${E.bichos.length} en la colonia)`);
+    if (ev.tipo === "casa") { aviso(`🏠 ¡Terminaron una casa! Ya son ${casas()}`); sonido("festejo"); }
+    if (ev.tipo === "obra") aviso("🔨 Empezaron a construir una casa nueva");
+  }
+  eventos = [];
+}
+
+// ======================= Arranque =======================
+E = cargar();
+const primeraVez = !E;
+if (!E) { E = nuevoEstado(); sembrar(E.ext[0], E.ext[1]); }
+cam.x = 0; cam.z = W < 600 ? 1.9 : 1.6; limitarCam();
+// lo que pasó mientras no estabas (más lento que en vivo)
+if (!primeraVez) {
+  const fuera = (Date.now() - E.t) / 1000;
+  const sim = Math.min(fuera / 4, 1800);
+  if (sim > 20) {
+    const antes = { n: E.bichos.length, c: casas() };
+    for (let t = 0; t < sim; t += .5) paso(.5, true);
+    eventos = [];
+    const nacieron = E.bichos.length - antes.n, nuevas = casas() - antes.c;
+    const partes = [];
+    if (nacieron > 0) partes.push(`nacieron <b>${nacieron}</b> Brotitos`);
+    if (nuevas > 0) partes.push(`construyeron <b>${nuevas}</b> ${nuevas === 1 ? "casa" : "casas"}`);
+    $("vuelta-txt").innerHTML = partes.length ? "Mientras no estabas " + partes.join(" y ") + ". 🎉" : "Tus Brotitos estuvieron juntando cosas mientras no estabas.";
+    $("c-vuelta").classList.add("ver");
+  }
+}
+$("vuelta-ok").onclick = () => { $("c-vuelta").classList.remove("ver"); audio(); };
+if (primeraVez) $("c-info").classList.add("ver");
+
+let ultimo = performance.now(), guardarT = 0, hudT = 0;
+function bucle(ahora) {
+  const dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora;
+  paso(dt, false);
+  for (const p of particulas) { p.t -= dt; p.x += p.vx * dt; p.y += p.vy * dt; if (!p.emoji && !p.anillo) p.vy += 500 * dt; if (p.y > 0 && !p.emoji) { p.y = 0; p.vx *= .5; p.vy *= -.3; } }
+  particulas = particulas.filter((p) => p.t > 0);
+  dibujar(ahora);
+  hudT += dt; if (hudT > .2) { hudT = 0; pintarHUD(); dibujarMini(); mostrarEventos(); }
+  guardarT += dt; if (guardarT > 5) { guardarT = 0; guardar(); }
+  requestAnimationFrame(bucle);
+}
+document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
+addEventListener("pagehide", guardar);
+requestAnimationFrame(bucle);
+</script>
+</body>
+</html>
