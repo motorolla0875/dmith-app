@@ -67,6 +67,11 @@
   .acciones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
   .acciones button { background: var(--card); border-radius: 16px; padding: 8px 0 6px; font-size: 13px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 1px; transition: transform .1s; }
   .acciones button span { font-size: 24px; }
+  .acciones button em { font-style: normal; }
+  .idi { font-size: 13px; font-weight: 700; }
+  .idiomas { display: flex; gap: 6px; justify-content: center; margin-bottom: 8px; }
+  .idiomas button { padding: 6px 10px; border-radius: 999px; background: #F3EEF8; color: #6C5CE7; font-size: 14px; font-weight: 600; }
+  .idiomas button.si { background: #6C5CE7; color: #fff; }
   .acciones button:active, .enviar:active { transform: scale(.93); }
   .acciones button:disabled { opacity: .45; }
   form.charla { display: flex; gap: 8px; margin-top: 8px; }
@@ -107,12 +112,13 @@
   <div class="top">
     <h1 id="nombre">Bebé</h1>
     <span class="chip" id="etapa">👶 Bebé</span>
+    <button class="ico idi" id="idioma" title="Idioma">ES</button>
     <button class="ico" id="voz" title="Cambiar voz">🍼</button>
   </div>
   <div class="barras">
-    <div class="barra"><b>🍼 Panza</b><i><span id="b-hambre"></span></i></div>
-    <div class="barra"><b>⚡ Energía</b><i><span id="b-energia"></span></i></div>
-    <div class="barra"><b>😊 Ánimo</b><i><span id="b-animo"></span></i></div>
+    <div class="barra"><b data-t="panza">🍼 Panza</b><i><span id="b-hambre"></span></i></div>
+    <div class="barra"><b data-t="energia">⚡ Energía</b><i><span id="b-energia"></span></i></div>
+    <div class="barra"><b data-t="animo">😊 Ánimo</b><i><span id="b-animo"></span></i></div>
   </div>
   <div class="crece"><span id="crece-txt">Sabe 0 cosas</span><i><span id="b-crece"></span></i><span id="crece-sig">🧒</span></div>
 
@@ -124,10 +130,10 @@
 
   <div class="log" id="log"></div>
   <div class="acciones">
-    <button id="a-comer"><span>🍼</span>Comer</button>
+    <button id="a-comer"><span>🍼</span><em data-t="comer">Comer</em></button>
     <button id="a-dormir"><span>😴</span>Dormir</button>
-    <button id="a-jugar"><span>🎾</span>Jugar</button>
-    <button id="a-sabe"><span>🧠</span>Lo que sabe</button>
+    <button id="a-jugar"><span>🎾</span><em data-t="jugar">Jugar</em></button>
+    <button id="a-sabe"><span>🧠</span><em data-t="loque">Lo que sabe</em></button>
   </div>
   <form class="charla" id="form" autocomplete="off">
     <input id="txt" maxlength="300" placeholder="Hablale o enseñale algo…">
@@ -139,28 +145,29 @@
 <!-- Nacimiento -->
 <div class="capa" id="c-nace">
   <div class="caja" id="nace1">
-    <h2>¡Tenés un huevo!</h2>
-    <p>Adentro hay un bebé con inteligencia artificial que <b>no sabe nada</b>. Todo lo que aprenda se lo vas a enseñar vos.</p>
+    <div class="idiomas" id="idiomas"><button data-l="es">Español</button><button data-l="en">English</button><button data-l="pt">Português</button></div>
+    <h2 data-t="huevo_tit">¡Tenés un huevo!</h2>
+    <p data-th="huevo_txt"></p>
     <div class="huevo" id="huevo">🥚</div>
-    <p id="huevo-txt">Tocalo para que nazca</p>
+    <p id="huevo-txt" data-t="huevo_toca">Tocalo para que nazca</p>
   </div>
   <div class="caja" id="nace2" hidden>
-    <h2>¡Nació! 🎉</h2>
-    <p>¿Cómo se va a llamar?</p>
-    <input id="n-nombre" maxlength="16" placeholder="Nombre del bebé">
+    <h2 data-t="nacio">¡Nació! 🎉</h2>
+    <p data-t="como_llama">¿Cómo se va a llamar?</p>
+    <input id="n-nombre" maxlength="16" data-tp="nombre_ph" placeholder="Nombre del bebé">
     <div class="colores" id="colores"></div>
-    <input id="n-duenio" maxlength="24" placeholder="¿Y vos cómo te llamás? (opcional)">
-    <button class="btn" id="n-listo">Empezar a criarlo</button>
+    <input id="n-duenio" maxlength="24" data-tp="duenio_ph" placeholder="¿Y vos cómo te llamás? (opcional)">
+    <button class="btn" id="n-listo" data-t="empezar">Empezar a criarlo</button>
   </div>
 </div>
 
 <!-- Lo que sabe -->
 <div class="capa" id="c-sabe">
   <div class="caja">
-    <h2>🧠 Lo que sabe</h2>
+    <h2 data-t="sabe_tit">🧠 Lo que sabe</h2>
     <p id="sabe-txt"></p>
     <div class="sabe" id="sabe"></div>
-    <button class="btn suave" id="sabe-cerrar">Cerrar</button>
+    <button class="btn suave" id="sabe-cerrar" data-t="cerrar">Cerrar</button>
     <button class="btn peligro" id="reiniciar">Empezar con otro huevo</button>
   </div>
 </div>
@@ -171,29 +178,122 @@
     <div class="grande" id="f-emoji">🧒</div>
     <h2 id="f-tit">¡Creció!</h2>
     <p id="f-txt"></p>
-    <button class="btn" id="f-ok">¡Vamos!</button>
+    <button class="btn" id="f-ok" data-t="vamos">¡Vamos!</button>
   </div>
 </div>
 
 <div class="aviso" id="aviso"></div>
 
 <script>
+
+const $ = (id) => document.getElementById(id);
+// ===================== Idiomas =====================
+const TX = {
+  es: {
+    titulo: "Bebé IA — criá una mascota que aprende de vos", panza: "🍼 Panza", energia: "⚡ Energía", animo: "😊 Ánimo", comer: "Comer", dormir: "Dormir", despertar: "Despertar", jugar: "Jugar", loque: "Lo que sabe",
+    etapas: ["Bebé", "Nene", "Chico", "Grande"],
+    huevo_tit: "¡Tenés un huevo!", huevo_txt: "Adentro hay un bebé con inteligencia artificial que <b>no sabe nada</b>. Todo lo que aprenda se lo vas a enseñar vos.",
+    huevo_toca: "Tocalo para que nazca", huevo_1: "¡Se movió! Otra vez…", huevo_2: "¡Se está rompiendo!",
+    nacio: "¡Nació! 🎉", como_llama: "¿Cómo se va a llamar?", nombre_ph: "Nombre del bebé", duenio_ph: "¿Y vos cómo te llamás? (opcional)", empezar: "Empezar a criarlo",
+    sabe_tit: "🧠 Lo que sabe", cerrar: "Cerrar", reiniciar: "Empezar con otro huevo", vamos: "¡Vamos!", crecio: "¡Creció!", olvidar: "Que se olvide",
+    sabe_n: (n) => `Sabe ${n} ${n === 1 ? "cosa" : "cosas"}`, pasa_a: (m, e) => `A las ${m} cosas pasa a ${e}`, ya_grande: "Ya es grande",
+    sabe_txt: (b, n) => `${b} sabe ${n} ${n === 1 ? "cosa" : "cosas"}. Todo se lo enseñaste vos.`, sabe_nada: (b) => `${b} todavía no sabe nada. ¡Enseñale algo hablándole!`,
+    seguro: (b) => `¿Seguro? ${b} se va a ir para siempre`,
+    ph: "Hablale o enseñale algo…", ph_primera: "Enseñale su primera palabra…", ph_dormido: (b) => `${b} está durmiendo… shhh`, escucho: "Te escucho… (tocá 🎤 para terminar)",
+    voz_bebe: "Voz: idioma bebé", voz_ardilla: "Voz: ardilla (voz del celular)", voz_no: "Sin sonido", prueba_bebe: "¡agú! ¡hola!", prueba: "¡Hola! ¿Te gusta mi voz?",
+    dormido_aviso: (b) => `${b} está durmiendo. Despertalo primero ☀️`, aprendio: "✨ Aprendió: ", no_escuche: "¿eh? No te escuché bien… decímelo otra vez 🥺", error: "⚠️ Error: ", sin_conexion: "sin conexión",
+    cansado: "Estoy cansadito de tanto hablar… volvé en un rato 😴",
+    crecio_nene: (b) => `${b} ya no es un bebé: ahora es un nene. Habla con frases cortas y pregunta "¿por qué?" todo el tiempo.`,
+    crecio_chico: (b) => `${b} ya es un chico. Habla bien, cuenta lo que aprendió y te hace preguntas.`,
+    crecio_grande: (b) => `${b} ya es grande. Conversa, tiene humor y se acuerda de todo lo que le enseñaste.`,
+    lleno_bebe: "¡nooo! 🙅", lleno: "¡Ya estoy llenito!", buen_dia: "¡Buen día! ☀️", suenito: "mmm… sueñito todavía…", muy_cansado: "estoy muy cansadito… 😴",
+    risas: { bebe: ["¡jijiji!", "¡agú! 😆", "¡otra vé!"], nene: ["¡Jajaja, otra vez!", "¡Me atrapaste!", "¡Yo gano!"], chico: ["¡Jaja, qué divertido!", "¡Una más, dale!", "¡Esta vez te gano!"], grande: ["Jaja, buena esa 😄", "Ok, admito que eso estuvo bueno", "¿Revancha?"] },
+    mic_no: "Tu navegador no deja usar el micrófono acá. Escribile 🙂", mic_permiso: "Tenés que darle permiso al micrófono 🎤", mic_nada: "No escuché nada… probá de nuevo", mic_falla: "No pude abrir el micrófono",
+    agu: "¡agú! 👀", agu_duenio: (d) => `¡${d}…! ¡agú! 💕`, mi_duenio: (d) => "Mi dueño se llama " + d,
+    consejo: "💡 No sabe nada todavía. Enseñale palabras (\"el perro hace guau\"), contale de vos, preguntale cosas… A las 8 cosas aprendidas pasa a ser un nene.",
+    hola_bebe: "¡agú! 😊", hola_duenio: (d) => `¡Hola ${d}! Te extrañé`, hola: "¡Hola! Te extrañé",
+  },
+  en: {
+    titulo: "AI Baby — raise a pet that learns from you", panza: "🍼 Tummy", energia: "⚡ Energy", animo: "😊 Mood", comer: "Feed", dormir: "Sleep", despertar: "Wake up", jugar: "Play", loque: "What it knows",
+    etapas: ["Baby", "Toddler", "Kid", "Teen"],
+    huevo_tit: "You got an egg!", huevo_txt: "Inside there's an AI baby that <b>knows nothing</b>. Everything it learns, you'll teach it.",
+    huevo_toca: "Tap it to hatch", huevo_1: "It moved! Again…", huevo_2: "It's cracking!",
+    nacio: "It hatched! 🎉", como_llama: "What will you name it?", nombre_ph: "Baby's name", duenio_ph: "And what's your name? (optional)", empezar: "Start raising it",
+    sabe_tit: "🧠 What it knows", cerrar: "Close", reiniciar: "Start over with a new egg", vamos: "Let's go!", crecio: "It grew up!", olvidar: "Forget this",
+    sabe_n: (n) => `Knows ${n} ${n === 1 ? "thing" : "things"}`, pasa_a: (m, e) => `At ${m} things it becomes a ${e}`, ya_grande: "All grown up",
+    sabe_txt: (b, n) => `${b} knows ${n} ${n === 1 ? "thing" : "things"}. You taught all of it.`, sabe_nada: (b) => `${b} doesn't know anything yet. Teach it something by talking!`,
+    seguro: (b) => `Sure? ${b} will be gone forever`,
+    ph: "Talk to it or teach it something…", ph_primera: "Teach it its first word…", ph_dormido: (b) => `${b} is sleeping… shhh`, escucho: "Listening… (tap 🎤 to stop)",
+    voz_bebe: "Voice: baby talk", voz_ardilla: "Voice: chipmunk (phone voice)", voz_no: "Sound off", prueba_bebe: "goo! hi!", prueba: "Hi! Do you like my voice?",
+    dormido_aviso: (b) => `${b} is sleeping. Wake it up first ☀️`, aprendio: "✨ Learned: ", no_escuche: "huh? I didn't catch that… say it again 🥺", error: "⚠️ Error: ", sin_conexion: "no connection",
+    cansado: "I'm tired from all this talking… come back in a bit 😴",
+    crecio_nene: (b) => `${b} isn't a baby anymore: now it's a toddler. It talks in short sentences and asks "why?" all the time.`,
+    crecio_chico: (b) => `${b} is a kid now. It talks well, tells you what it learned and asks you questions.`,
+    crecio_grande: (b) => `${b} is all grown up. It chats, has a sense of humor and remembers everything you taught it.`,
+    lleno_bebe: "nooo! 🙅", lleno: "I'm full!", buen_dia: "Good morning! ☀️", suenito: "mmm… still sleepy…", muy_cansado: "I'm so tired… 😴",
+    risas: { bebe: ["hehehe!", "goo! 😆", "again!"], nene: ["Hahaha, again!", "You got me!", "I win!"], chico: ["Haha, so fun!", "One more, come on!", "I'll win this time!"], grande: ["Haha, good one 😄", "Ok, I admit that was fun", "Rematch?"] },
+    mic_no: "Your browser doesn't allow the mic here. Type instead 🙂", mic_permiso: "Please allow microphone access 🎤", mic_nada: "I didn't hear anything… try again", mic_falla: "Couldn't open the microphone",
+    agu: "goo! 👀", agu_duenio: (d) => `${d}…! goo! 💕`, mi_duenio: (d) => "My owner's name is " + d,
+    consejo: "💡 It doesn't know anything yet. Teach it words (\"the dog says woof\"), tell it about yourself, ask it things… At 8 things learned it becomes a toddler.",
+    hola_bebe: "goo! 😊", hola_duenio: (d) => `Hi ${d}! I missed you`, hola: "Hi! I missed you",
+  },
+  pt: {
+    titulo: "Bebê IA — crie um bichinho que aprende com você", panza: "🍼 Barriga", energia: "⚡ Energia", animo: "😊 Humor", comer: "Comer", dormir: "Dormir", despertar: "Acordar", jugar: "Brincar", loque: "O que sabe",
+    etapas: ["Bebê", "Pequeno", "Criança", "Grandão"],
+    huevo_tit: "Você ganhou um ovo!", huevo_txt: "Dentro tem um bebê com inteligência artificial que <b>não sabe nada</b>. Tudo o que ele aprender, você vai ensinar.",
+    huevo_toca: "Toque para ele nascer", huevo_1: "Mexeu! De novo…", huevo_2: "Está rachando!",
+    nacio: "Nasceu! 🎉", como_llama: "Como ele vai se chamar?", nombre_ph: "Nome do bebê", duenio_ph: "E qual é o seu nome? (opcional)", empezar: "Começar a cuidar",
+    sabe_tit: "🧠 O que sabe", cerrar: "Fechar", reiniciar: "Começar com outro ovo", vamos: "Vamos!", crecio: "Cresceu!", olvidar: "Esquecer isso",
+    sabe_n: (n) => `Sabe ${n} ${n === 1 ? "coisa" : "coisas"}`, pasa_a: (m, e) => `Com ${m} coisas vira ${e}`, ya_grande: "Já é grande",
+    sabe_txt: (b, n) => `${b} sabe ${n} ${n === 1 ? "coisa" : "coisas"}. Você ensinou tudo.`, sabe_nada: (b) => `${b} ainda não sabe nada. Ensine algo conversando!`,
+    seguro: (b) => `Certeza? ${b} vai embora para sempre`,
+    ph: "Fale com ele ou ensine algo…", ph_primera: "Ensine a primeira palavra…", ph_dormido: (b) => `${b} está dormindo… shhh`, escucho: "Estou ouvindo… (toque 🎤 para terminar)",
+    voz_bebe: "Voz: língua de bebê", voz_ardilla: "Voz: esquilo (voz do celular)", voz_no: "Sem som", prueba_bebe: "agú! oi!", prueba: "Oi! Gostou da minha voz?",
+    dormido_aviso: (b) => `${b} está dormindo. Acorde ele primeiro ☀️`, aprendio: "✨ Aprendeu: ", no_escuche: "hã? Não entendi direito… fala de novo 🥺", error: "⚠️ Erro: ", sin_conexion: "sem conexão",
+    cansado: "Estou cansadinho de tanto falar… volta daqui a pouco 😴",
+    crecio_nene: (b) => `${b} não é mais um bebê: agora é pequeno. Fala frases curtas e pergunta "por quê?" o tempo todo.`,
+    crecio_chico: (b) => `${b} já é uma criança. Fala bem, conta o que aprendeu e faz perguntas.`,
+    crecio_grande: (b) => `${b} já é grande. Conversa, tem humor e lembra de tudo o que você ensinou.`,
+    lleno_bebe: "nãooo! 🙅", lleno: "Já estou cheinho!", buen_dia: "Bom dia! ☀️", suenito: "hmm… ainda com soninho…", muy_cansado: "estou muito cansadinho… 😴",
+    risas: { bebe: ["hihihi!", "agú! 😆", "di novo!"], nene: ["Hahaha, de novo!", "Você me pegou!", "Eu ganhei!"], chico: ["Haha, que divertido!", "Mais uma, vai!", "Dessa vez eu ganho!"], grande: ["Haha, essa foi boa 😄", "Tá, admito que foi legal", "Revanche?"] },
+    mic_no: "Seu navegador não deixa usar o microfone aqui. Escreva 🙂", mic_permiso: "Você precisa permitir o microfone 🎤", mic_nada: "Não ouvi nada… tente de novo", mic_falla: "Não consegui abrir o microfone",
+    agu: "agú! 👀", agu_duenio: (d) => `${d}…! agú! 💕`, mi_duenio: (d) => "Meu dono se chama " + d,
+    consejo: "💡 Ele ainda não sabe nada. Ensine palavras (\"o cachorro faz au au\"), conte sobre você, pergunte coisas… Com 8 coisas aprendidas ele vira pequeno.",
+    hola_bebe: "agú! 😊", hola_duenio: (d) => `Oi ${d}! Senti saudade`, hola: "Oi! Senti saudade",
+  },
+};
+const VOZ_LANG = { es: { rec: "es-AR", tts: /^es[-_](AR|419|US|MX)/i, tts2: /^es/i }, en: { rec: "en-US", tts: /^en[-_]US/i, tts2: /^en/i }, pt: { rec: "pt-BR", tts: /^pt[-_]BR/i, tts2: /^pt/i } };
+let LANG = "es";
+try { LANG = localStorage.getItem("bebe-ia-idioma") || ""; } catch (e) {}
+if (!TX[LANG]) { const nav = (navigator.language || "es").slice(0, 2).toLowerCase(); LANG = TX[nav] ? nav : "es"; }
+const T = (k, ...a) => { const v = TX[LANG][k] ?? TX.es[k]; return typeof v === "function" ? v(...a) : v; };
+function traducir() {
+  document.documentElement.lang = LANG; document.title = T("titulo");
+  document.querySelectorAll("[data-t]").forEach((el) => el.textContent = T(el.dataset.t));
+  document.querySelectorAll("[data-th]").forEach((el) => el.innerHTML = T(el.dataset.th));
+  document.querySelectorAll("[data-tp]").forEach((el) => el.placeholder = T(el.dataset.tp));
+  $("idioma").textContent = LANG.toUpperCase();
+  document.querySelectorAll("#idiomas button").forEach((b) => b.classList.toggle("si", b.dataset.l === LANG));
+  if (typeof M !== "undefined" && M && M.nombre) pintar();
+}
+function ponerIdioma(l) { LANG = l; try { localStorage.setItem("bebe-ia-idioma", l); } catch (e) {} traducir(); }
+
 // ===================== Datos =====================
 const API = "/api/sitios/mascota";
 const COLORES = ["#7FD4C1", "#FFB4A2", "#B9A6FF", "#FFD36E", "#8CC8FF", "#FF9EC7"];
 const ETAPAS = [
-  { id: "bebe",   min: 0,  nom: "Bebé",  emo: "👶", esc: .66, tono: 1.9 },
-  { id: "nene",   min: 8,  nom: "Nene",  emo: "🧒", esc: .78, tono: 1.65 },
-  { id: "chico",  min: 25, nom: "Chico", emo: "🧑", esc: .9,  tono: 1.4 },
-  { id: "grande", min: 60, nom: "Grande", emo: "😎", esc: 1,  tono: 1.15 },
+  { id: "bebe",   min: 0,  i: 0, emo: "👶", esc: .66, tono: 1.9 },
+  { id: "nene",   min: 8,  i: 1, emo: "🧒", esc: .78, tono: 1.65 },
+  { id: "chico",  min: 25, i: 2, emo: "🧑", esc: .9,  tono: 1.4 },
+  { id: "grande", min: 60, i: 3, emo: "😎", esc: 1,  tono: 1.15 },
 ];
 const CLAVE = "bebe-ia-v1";
 let M = null;
 const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(M)); } catch (e) {} };
 try { M = JSON.parse(localStorage.getItem(CLAVE)); } catch (e) {}
 
-const $ = (id) => document.getElementById(id);
 const clamp = (v) => Math.max(0, Math.min(100, v));
+const nomEtapa = (e) => T("etapas")[e.i];
 const etapaDe = (n) => ETAPAS.filter((e) => n >= e.min).pop();
 const etapa = () => etapaDe(M.recuerdos.length);
 
@@ -265,34 +365,34 @@ function pintar() {
   pasarTiempo();
   const et = etapa(), n = M.recuerdos.length, sig = ETAPAS[ETAPAS.indexOf(et) + 1];
   $("nombre").textContent = M.nombre;
-  $("etapa").textContent = `${et.emo} ${et.nom}`;
+  $("etapa").textContent = `${et.emo} ${nomEtapa(et)}`;
   for (const k of ["hambre", "energia", "animo"]) {
     const v = M[k], s = $("b-" + k);
     s.style.width = v + "%"; s.style.background = v < 25 ? "#FF6F61" : v < 50 ? "#FFB74D" : "#5BBF7A";
   }
-  $("crece-txt").textContent = `Sabe ${n} ${n === 1 ? "cosa" : "cosas"}`;
+  $("crece-txt").textContent = T("sabe_n", n);
   $("b-crece").style.width = sig ? ((n - et.min) / (sig.min - et.min) * 100) + "%" : "100%";
   $("crece-sig").textContent = sig ? sig.emo : "⭐";
-  $("crece-sig").title = sig ? `A las ${sig.min} cosas pasa a ${sig.nom}` : "Ya es grande";
+  $("crece-sig").title = sig ? T("pasa_a", sig.min, nomEtapa(sig)) : T("ya_grande");
   for (const id of ["a-comer", "a-jugar"]) $(id).disabled = !!M.durmiendo;
-  $("a-dormir").innerHTML = M.durmiendo ? "<span>☀️</span>Despertar" : "<span>😴</span>Dormir";
-  $("txt").placeholder = M.durmiendo ? `${M.nombre} está durmiendo… shhh` : n === 0 ? "Enseñale su primera palabra…" : "Hablale o enseñale algo…";
+  $("a-dormir").innerHTML = M.durmiendo ? "<span>☀️</span>" + T("despertar") : "<span>😴</span>" + T("dormir");
+  $("txt").placeholder = M.durmiendo ? T("ph_dormido", M.nombre) : n === 0 ? T("ph_primera") : T("ph");
   dibujar(); guardar();
 }
 
 // ===================== Globo, charla y voz =====================
 // Modo de voz: idioma bebé → ardilla (voz del celular) → silencio
-const MODOS = { bebe: ["🍼", "Voz: idioma bebé"], ardilla: ["🐿️", "Voz: ardilla (voz del celular)"], no: ["🔈", "Sin sonido"] };
+const MODOS = { bebe: ["🍼", "voz_bebe"], ardilla: ["🐿️", "voz_ardilla"], no: ["🔈", "voz_no"] };
 let modoVoz = "bebe"; try { modoVoz = localStorage.getItem("bebe-ia-modo") || (localStorage.getItem("bebe-ia-voz") === "0" ? "no" : "bebe"); } catch (e) {}
 if (!MODOS[modoVoz]) modoVoz = "bebe";
 let vozOn = modoVoz !== "no";
 $("voz").textContent = MODOS[modoVoz][0];
 $("voz").onclick = () => {
   const lista = Object.keys(MODOS); modoVoz = lista[(lista.indexOf(modoVoz) + 1) % lista.length]; vozOn = modoVoz !== "no";
-  $("voz").textContent = MODOS[modoVoz][0]; aviso(MODOS[modoVoz][1]);
+  $("voz").textContent = MODOS[modoVoz][0]; aviso(T(MODOS[modoVoz][1]));
   try { localStorage.setItem("bebe-ia-modo", modoVoz); } catch (e) {}
   try { speechSynthesis.cancel(); } catch (e) {}
-  if (vozOn && M && M.nombre) setTimeout(() => decir(etapa().id === "bebe" ? "¡agú! ¡hola!" : "¡Hola! ¿Te gusta mi voz?", "feliz"), 400);
+  if (vozOn && M && M.nombre) setTimeout(() => decir(etapa().id === "bebe" ? T("prueba_bebe") : T("prueba"), "feliz"), 400);
 };
 let vozLista = false;
 function desbloquearVoz() {
@@ -349,8 +449,8 @@ function hablar(t, emo) {
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ""));
-    const vs = speechSynthesis.getVoices(), v = vs.find((x) => /es[-_](AR|419|US|MX)/i.test(x.lang)) || vs.find((x) => /^es/i.test(x.lang));
-    if (v) u.voice = v; u.lang = v ? v.lang : "es-AR"; u.pitch = ardilla ? 2 : Math.min(2, etapa().tono); u.rate = ardilla ? { bebe: 1.45, nene: 1.38, chico: 1.3, grande: 1.2 }[etapa().id] : 1.05;
+    const VL = VOZ_LANG[LANG], vs = speechSynthesis.getVoices(), v = vs.find((x) => VL.tts.test(x.lang)) || vs.find((x) => VL.tts2.test(x.lang));
+    if (v) u.voice = v; u.lang = v ? v.lang : VL.rec; u.pitch = ardilla ? 2 : Math.min(2, etapa().tono); u.rate = ardilla ? { bebe: 1.45, nene: 1.38, chico: 1.3, grande: 1.2 }[etapa().id] : 1.05;
     speechSynthesis.speak(u);
   } catch (e) {}
 }
@@ -391,7 +491,7 @@ function saltar() { const b = $("bicho"); b.classList.remove("salta"); void b.of
 let pensando = false;
 async function enviar(texto) {
   texto = texto.trim(); if (!texto || pensando) return;
-  if (M.durmiendo) { aviso(`${M.nombre} está durmiendo. Despertalo primero ☀️`); return; }
+  if (M.durmiendo) { aviso(T("dormido_aviso", M.nombre)); return; }
   logMsg(texto, "yo");
   M.historial.push({ t: texto, yo: false });
   pensando = true; emocion = "pensando"; emoHasta = Date.now() + 60000; dibujar();
@@ -399,11 +499,12 @@ async function enviar(texto) {
   const antes = etapa();
   try {
     const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
-      mensaje: texto, nombre: M.nombre, duenio: M.duenio, etapa: antes.id, recuerdos: M.recuerdos.map((x) => x.t),
+      mensaje: texto, idioma: LANG, nombre: M.nombre, duenio: M.duenio, etapa: antes.id, recuerdos: M.recuerdos.map((x) => x.t),
       historial: M.historial.slice(-9, -1), estado: { hambre: M.hambre, energia: M.energia, animo: M.animo },
     }) });
-    const j = await r.json().catch(() => ({ error: "el servidor respondió " + r.status }));
-    if (!r.ok) throw new Error(j.error || "error " + r.status);
+    if (r.status === 429) throw new Error("cansado");
+    const j = await r.json().catch(() => ({ error: "HTTP " + r.status }));
+    if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     M.historial.push({ t: j.respuesta, yo: true }); M.historial = M.historial.slice(-20);
     if (j.duenio && !M.duenio) M.duenio = j.duenio;
     M.animo = clamp(M.animo + 4);
@@ -411,23 +512,20 @@ async function enviar(texto) {
     for (const a of nuevos) M.recuerdos.push({ t: a, f: Date.now() });
     pensando = false;
     decir(j.respuesta, j.emocion); logMsg(j.respuesta, "el");
-    if (nuevos.length) { for (const a of nuevos) logMsg("✨ Aprendió: " + a, "ap"); chispas("✨"); saltar(); }
+    if (nuevos.length) { for (const a of nuevos) logMsg(T("aprendio") + a, "ap"); chispas("✨"); saltar(); }
     pintar();
     const ahora = etapa();
     if (ahora !== antes) setTimeout(() => crecio(ahora), 1800);
   } catch (e) {
     pensando = false; M.historial.pop();
-    decir(/cansad/i.test(e.message) ? e.message : "¿eh? No te escuché bien… decímelo otra vez 🥺", "triste");
-    logMsg("⚠️ Error: " + (e.message || "sin conexión"), "ap");
+    if (e.message === "cansado") { decir(T("cansado"), "sueno"); return; }
+    decir(T("no_escuche"), "triste");
+    logMsg(T("error") + (e.message || T("sin_conexion")), "ap");
   }
 }
 function crecio(et) {
-  const txt = {
-    nene: `${M.nombre} ya no es un bebé: ahora es un nene. Habla con frases cortas y pregunta "¿por qué?" todo el tiempo.`,
-    chico: `${M.nombre} ya es un chico. Habla bien, cuenta lo que aprendió y te hace preguntas.`,
-    grande: `${M.nombre} ya es grande. Conversa, tiene humor y se acuerda de todo lo que le enseñaste.`,
-  }[et.id];
-  $("f-emoji").textContent = et.emo; $("f-tit").textContent = "¡Creció!"; $("f-txt").textContent = txt;
+  const txt = T("crecio_" + et.id, M.nombre);
+  $("f-emoji").textContent = et.emo; $("f-tit").textContent = T("crecio"); $("f-txt").textContent = txt;
   $("c-fiesta").classList.add("ver"); chispas("🎉", 14);
 }
 $("f-ok").onclick = () => { $("c-fiesta").classList.remove("ver"); saltar(); };
@@ -436,7 +534,7 @@ $("form").onsubmit = (ev) => { ev.preventDefault(); const t = $("txt").value; $(
 // ===================== Acciones =====================
 const COMIDAS = ["🍼", "🍌", "🍎", "🍪", "🥕", "🍓"];
 $("a-comer").onclick = () => {
-  if (M.hambre > 92) { decir(etapa().id === "bebe" ? "¡nooo! 🙅" : "¡Ya estoy llenito!", "enojo"); return; }
+  if (M.hambre > 92) { decir(etapa().id === "bebe" ? T("lleno_bebe") : T("lleno"), "enojo"); return; }
   const f = document.createElement("div"); f.className = "vuela"; f.textContent = COMIDAS[Math.random() * (etapa().id === "bebe" ? 1 : COMIDAS.length) | 0];
   const a = $("a-comer").getBoundingClientRect(), b = $("bicho").getBoundingClientRect();
   f.style.left = a.left + a.width / 2 - 20 + "px"; f.style.top = a.top - 10 + "px"; document.body.appendChild(f);
@@ -447,33 +545,33 @@ $("a-comer").onclick = () => {
 $("a-dormir").onclick = () => {
   M.durmiendo = !M.durmiendo;
   if (M.durmiendo) { $("globo").classList.remove("ver"); speechSynthesis && speechSynthesis.cancel(); }
-  else { emocion = "feliz"; emoHasta = Date.now() + 3000; decir(M.energia > 70 ? "¡Buen día! ☀️" : "mmm… sueñito todavía…", M.energia > 70 ? "feliz" : "sueno"); }
+  else { emocion = "feliz"; emoHasta = Date.now() + 3000; decir(M.energia > 70 ? T("buen_dia") : T("suenito"), M.energia > 70 ? "feliz" : "sueno"); }
   pintar();
 };
 $("a-jugar").onclick = () => {
-  if (M.energia < 12) { decir("estoy muy cansadito… 😴", "sueno"); return; }
+  if (M.energia < 12) { decir(T("muy_cansado"), "sueno"); return; }
   M.animo = clamp(M.animo + 25); M.energia = clamp(M.energia - 8); M.hambre = clamp(M.hambre - 4);
   saltar(); chispas(["🎾", "⭐", "🎈"][Math.random() * 3 | 0], 6);
-  const risas = { bebe: ["¡jijiji!", "¡agú! 😆", "¡otra vé!"], nene: ["¡Jajaja, otra vez!", "¡Me atrapaste!", "¡Yo gano!"], chico: ["¡Jaja, qué divertido!", "¡Una más, dale!", "¡Esta vez te gano!"], grande: ["Jaja, buena esa 😄", "Ok, admito que eso estuvo bueno", "¿Revancha?"] }[etapa().id];
+  const risas = T("risas")[etapa().id];
   decir(risas[Math.random() * risas.length | 0], "risa"); pintar();
 };
 function verSabe() {
   const n = M.recuerdos.length, s = $("sabe"); s.innerHTML = "";
-  $("sabe-txt").textContent = n ? `${M.nombre} sabe ${n} ${n === 1 ? "cosa" : "cosas"}. Todo se lo enseñaste vos.` : `${M.nombre} todavía no sabe nada. ¡Enseñale algo hablándole!`;
+  $("sabe-txt").textContent = n ? T("sabe_txt", M.nombre, n) : T("sabe_nada", M.nombre);
   M.recuerdos.slice().reverse().forEach((r) => {
     const d = document.createElement("div"), sp = document.createElement("span"), x = document.createElement("button");
-    sp.textContent = r.t; x.textContent = "✕"; x.title = "Que se olvide";
+    sp.textContent = r.t; x.textContent = "✕"; x.title = T("olvidar");
     x.onclick = () => { M.recuerdos = M.recuerdos.filter((y) => y !== r); pintar(); verSabe(); };
     d.append(sp, x); s.appendChild(d);
   });
-  $("reiniciar").textContent = "Empezar con otro huevo"; $("reiniciar").dataset.ok = "";
+  $("reiniciar").textContent = T("reiniciar"); $("reiniciar").dataset.ok = "";
   $("c-sabe").classList.add("ver");
 }
 $("a-sabe").onclick = verSabe;
 $("sabe-cerrar").onclick = () => $("c-sabe").classList.remove("ver");
 $("reiniciar").onclick = () => {
   const b = $("reiniciar");
-  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = `¿Seguro? ${M.nombre} se va a ir para siempre`; return; }
+  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = T("seguro", M.nombre); return; }
   try { localStorage.removeItem(CLAVE); } catch (e) {}
   location.reload();
 };
@@ -486,17 +584,17 @@ if (SR) {
   $("mic").onclick = () => {
     desbloquearVoz();
     if (rec) { rec.stop(); return; }
-    try { rec = new SR(); } catch (e) { aviso("Tu navegador no deja usar el micrófono acá. Escribile 🙂"); return; }
-    rec.lang = "es-AR"; rec.interimResults = true; rec.continuous = false; dicho = "";
-    $("mic").classList.add("oye"); $("txt").value = ""; $("txt").placeholder = "Te escucho… (tocá 🎤 para terminar)";
+    try { rec = new SR(); } catch (e) { aviso(T("mic_no")); return; }
+    rec.lang = VOZ_LANG[LANG].rec; rec.interimResults = true; rec.continuous = false; dicho = "";
+    $("mic").classList.add("oye"); $("txt").value = ""; $("txt").placeholder = T("escucho");
     rec.onresult = (e) => {
       dicho = Array.from(e.results).map((r) => r[0].transcript).join(" ").trim();
       $("txt").value = dicho;
       clearTimeout(corte); corte = setTimeout(() => rec && rec.stop(), 1800); // en iPhone a veces no corta solo
     };
     rec.onerror = (e) => {
-      if (e.error === "not-allowed" || e.error === "service-not-allowed") aviso("Tenés que darle permiso al micrófono 🎤");
-      else if (e.error === "no-speech") aviso("No escuché nada… probá de nuevo");
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") aviso(T("mic_permiso"));
+      else if (e.error === "no-speech") aviso(T("mic_nada"));
     };
     rec.onend = () => {
       clearTimeout(corte); $("mic").classList.remove("oye"); rec = null; pintar();
@@ -504,7 +602,7 @@ if (SR) {
       if (t) { $("txt").value = ""; enviar(t); }
     };
     try { rec.start(); corte = setTimeout(() => rec && rec.stop(), 9000); }
-    catch (e) { $("mic").classList.remove("oye"); rec = null; aviso("No pude abrir el micrófono"); }
+    catch (e) { $("mic").classList.remove("oye"); rec = null; aviso(T("mic_falla")); }
   };
 }
 
@@ -515,8 +613,8 @@ function nacer() {
   let toques = 0;
   $("huevo").onclick = () => {
     toques++; const h = $("huevo"); h.classList.remove("tiembla"); void h.offsetWidth; h.classList.add("tiembla");
-    if (toques === 1) $("huevo-txt").textContent = "¡Se movió! Otra vez…";
-    if (toques === 2) { h.textContent = "🥚"; $("huevo-txt").textContent = "¡Se está rompiendo!"; }
+    if (toques === 1) $("huevo-txt").textContent = T("huevo_1");
+    if (toques === 2) { h.textContent = "🥚"; $("huevo-txt").textContent = T("huevo_2"); }
     if (toques >= 3) { h.textContent = "🐣"; setTimeout(() => { $("nace1").hidden = true; $("nace2").hidden = false; $("n-nombre").focus(); }, 700); }
   };
   const cs = $("colores");
@@ -529,14 +627,17 @@ function nacer() {
     const nom = $("n-nombre").value.trim();
     if (!nom) { $("n-nombre").focus(); $("n-nombre").style.borderColor = "#FF6F91"; return; }
     M = { nombre: nom, duenio: $("n-duenio").value.trim(), color: colorElegido, recuerdos: [], historial: [], hambre: 70, energia: 90, animo: 80, t: Date.now(), nacio: Date.now(), durmiendo: false };
-    if (M.duenio) M.recuerdos.push({ t: "Mi dueño se llama " + M.duenio, f: Date.now() });
+    if (M.duenio) M.recuerdos.push({ t: T("mi_duenio", M.duenio), f: Date.now() });
     $("c-nace").classList.remove("ver"); pintar(); saltar(); chispas("💖", 10);
-    setTimeout(() => decir(M.duenio ? `¡${M.duenio.split(" ")[0].slice(0, 3)}…! ¡agú! 💕` : "¡agú! 👀", "amor"), 600);
-    setTimeout(() => logMsg("💡 No sabe nada todavía. Enseñale palabras (\"el perro hace guau\"), contale de vos, preguntale cosas… A las 8 cosas aprendidas pasa a ser un nene.", "ap"), 1500);
+    setTimeout(() => decir(M.duenio ? T("agu_duenio", M.duenio.split(" ")[0].slice(0, 3)) : T("agu"), "amor"), 600);
+    setTimeout(() => logMsg(T("consejo"), "ap"), 1500);
   };
 }
 
-if (M && M.nombre) { pintar(); if (!M.durmiendo) setTimeout(() => decir(etapa().id === "bebe" ? "¡agú! 😊" : M.duenio ? `¡Hola ${M.duenio}! Te extrañé` : "¡Hola! Te extrañé", "amor"), 500); M.historial.slice(-6).forEach((h) => logMsg(h.t, h.yo ? "el" : "yo")); }
+$("idioma").onclick = () => { const l = Object.keys(TX); ponerIdioma(l[(l.indexOf(LANG) + 1) % l.length]); aviso({ es: "Español", en: "English", pt: "Português" }[LANG]); };
+document.querySelectorAll("#idiomas button").forEach((b) => b.onclick = () => ponerIdioma(b.dataset.l));
+traducir();
+if (M && M.nombre) { pintar(); if (!M.durmiendo) setTimeout(() => decir(etapa().id === "bebe" ? T("hola_bebe") : M.duenio ? T("hola_duenio", M.duenio) : T("hola"), "amor"), 500); M.historial.slice(-6).forEach((h) => logMsg(h.t, h.yo ? "el" : "yo")); }
 else nacer();
 setInterval(() => { if (M && M.nombre && !pensando) pintar(); }, 30000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden && M && M.nombre) pintar(); });
