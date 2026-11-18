@@ -1388,9 +1388,16 @@ const yo = { id: -1, n: "Vos", x: 0, z: 0, y: 0, dx: 0, dz: 1, edad: 999, hue: 4
 let dentroMundo = false, accion = null, accionT = 0, avisoCarga = 0;
 const joy = { x: 0, y: 0, id: null }, teclas = {};
 const ORBITA_AFUERA = { touches: controles.touches, mouse: controles.mouseButtons, min: controles.minDistance, max: controles.maxDistance };
-function tierraEn(x, z) {
-  for (const i of E.islas) if (i.colonizada && Math.abs(i.x - x) < RH + 1 && Math.abs(i.z - z) < RH + 1 && enHex(x - i.x, z - i.z, 1.2)) return i;
+// en qué pedazo de tierra está un punto (sin margen: los pedazos se tocan, así se pasa de uno a otro)
+function zonaEn(x, z) {
+  for (const i of E.islas) if (i.colonizada && Math.abs(i.x - x) < RH + 1 && Math.abs(i.z - z) < RH + 1 && enHex(x - i.x, z - i.z, -.05)) return i;
   return null;
+}
+// se puede pisar si hay tierra ahí y también un poquito alrededor (para no caerse por el borde del mundo)
+function tierraEn(x, z) {
+  const i = zonaEn(x, z); if (!i) return null;
+  for (const [dx, dz] of [[1.2, 0], [-1.2, 0], [0, 1.2], [0, -1.2]]) if (!zonaEn(x + dx, z + dz)) return null;
+  return i;
 }
 function entrar() {
   audio();
