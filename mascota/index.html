@@ -310,14 +310,14 @@ function audio() {
 }
 // Formantes de cada vocal (subidos para que suene a voz de bebé)
 const VOCALES = { a: [1000, 1700], e: [650, 2600], i: [400, 3100], o: [700, 1250], u: [450, 1100] };
-const VOZ = { bebe: { f: 560, vel: 105, var: 90 }, nene: { f: 450, vel: 90, var: 70 }, chico: { f: 340, vel: 78, var: 55 } };
+const VOZ = { bebe: { f: 780, vel: 100, var: 120 }, nene: { f: 620, vel: 88, var: 95 }, chico: { f: 470, vel: 78, var: 70 } };
 function silaba(ctx, t0, vocal, f0, dur, sube) {
   const [f1, f2] = VOCALES[vocal] || VOCALES.a;
   const o = ctx.createOscillator(), g = ctx.createGain(), b1 = ctx.createBiquadFilter(), b2 = ctx.createBiquadFilter(), mix = ctx.createGain();
   o.type = "sawtooth";
   o.frequency.setValueAtTime(f0 * (sube < 0 ? 1.12 : 1), t0);
   o.frequency.linearRampToValueAtTime(f0 * (sube > 0 ? 1.25 : sube < 0 ? .85 : 1.04), t0 + dur);
-  b1.type = b2.type = "bandpass"; b1.frequency.value = f1 * 1.25; b2.frequency.value = f2 * 1.2; b1.Q.value = 6; b2.Q.value = 9;
+  b1.type = b2.type = "bandpass"; b1.frequency.value = f1 * 1.45; b2.frequency.value = f2 * 1.35; b1.Q.value = 6; b2.Q.value = 9;
   mix.gain.value = 1;
   o.connect(b1); o.connect(b2); b1.connect(g); b2.connect(g); g.connect(ctx.destination);
   g.gain.setValueAtTime(0, t0);
