@@ -53,20 +53,27 @@ const ERAS = [
 // ======================= Islas (mundo infinito) =======================
 const SEP = 74, DIRS = [[1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]];
 const centroHex = (q, r) => ({ x: SEP * (q + r / 2), z: SEP * (r * Math.sqrt(3) / 2) });
-const BIOMAS = { pradera: { pasto: "#7ACB6B", arbol: .42, arbusto: .74 }, bosque: { pasto: "#5DB25A", arbol: .7, arbusto: .85 }, rocosa: { pasto: "#9CC77A", arbol: .25, arbusto: .45 }, frutal: { pasto: "#86D46E", arbol: .3, arbusto: .8 } };
+const BIOMAS = { pradera: { arbol: .42, arbusto: .74 }, bosque: { arbol: .7, arbusto: .85 }, rocosa: { arbol: .25, arbusto: .45 }, frutal: { arbol: .3, arbusto: .8 } };
+const PASTO = "#7ACB6B";
+// un solo mundo hecho de pedazos hexagonales pegados (sin agua en el medio)
+const RI = SEP / 2, RH = SEP / Math.sqrt(3);
+const EJES = [[1, 0], [.5, Math.sqrt(3) / 2], [-.5, Math.sqrt(3) / 2]];
+const hexK = (dx, dz, m) => Math.max(...EJES.map(([ux, uz]) => Math.abs(dx * ux + dz * uz))) / (RI - m);
+const enHex = (dx, dz, m) => hexK(dx, dz, m) <= 1;
 function crearIsla(q, r) {
-  const c = centroHex(q, r), rd = semilla(q * 7919 + r * 104729 + 17);
-  const isla = { id: E.id++, q, r, x: c.x + (rd() - .5) * 10, z: c.z + (rd() - .5) * 10, radio: q === 0 && r === 0 ? 28 : 23 + rd() * 8, bioma: q === 0 && r === 0 ? "pradera" : elegir(Object.keys(BIOMAS)), colonizada: false, nLugar: 0 };
-  E.islas.push(isla); sembrar(isla); return isla;
+  const c = centroHex(q, r);
+  const isla = { id: E.id++, q, r, x: c.x, z: c.z, radio: RI, bioma: q === 0 && r === 0 ? "pradera" : elegir(Object.keys(BIOMAS)), colonizada: false, nLugar: 0 };
+  E.islas.push(isla); return isla;
 }
+function colonizar(isla) { isla.colonizada = true; isla._lug = null; sembrar(isla); }
 const islaDe = (id) => E.islas.find((i) => i.id === id);
 function lugares(isla) {
   if (isla._lug) return isla._lug;
   const rd = semilla(isla.id * 31 + 7), l = [];
-  for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
+  for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) {
     if (!i && !j && isla.capital) continue;
-    const x = i * 7 + (rd() - .5) * 1.4, z = j * 7 + (rd() - .5) * 1.4, d = Math.hypot(x, z);
-    if (d < isla.radio - 5) l.push({ x: isla.x + x, z: isla.z + z, d: d + rd() * .5 });
+    const x = i * 8.6 + (rd() - .5) * 1.4, z = j * 8.6 + (rd() - .5) * 1.4, d = Math.hypot(x, z);
+    if (enHex(x, z, 5)) l.push({ x: isla.x + x, z: isla.z + z, d: d + rd() * .5 });
   }
   return (isla._lug = l.sort((a, b) => a.d - b.d));
 }
@@ -76,17 +83,13 @@ function vecinasNuevas() {
     if (!E.islas.some((o) => o.q === i.q + dq && o.r === i.r + dr)) crearIsla(i.q + dq, i.r + dr);
   }
 }
-function puntosPuente(p) {
-  const a = islaDe(p.a), b = islaDe(p.b), d = Math.hypot(b.x - a.x, b.z - a.z), ux = (b.x - a.x) / d, uz = (b.z - a.z) / d;
-  return { ini: { x: a.x + ux * (a.radio - 1.2), z: a.z + uz * (a.radio - 1.2) }, fin: { x: b.x - ux * (b.radio - 1.2), z: b.z - uz * (b.radio - 1.2) }, ux, uz };
-}
 function dentro(p, isla) {
-  const dx = p.x - isla.x, dz = p.z - isla.z, r = Math.hypot(dx, dz), max = isla.radio - 2;
-  if (r > max) { p.x = isla.x + dx * max / r; p.z = isla.z + dz * max / r; } return p;
+  const dx = p.x - isla.x, dz = p.z - isla.z, k = hexK(dx, dz, 2);
+  if (k > 1) { p.x = isla.x + dx / k; p.z = isla.z + dz / k; } return p;
 }
 
 // ======================= Estado =======================
-const CLAVE = "brotitos-3d-v2";
+const CLAVE = "brotitos-3d-v3";
 let E;
 let sigId = 1;
 function crearBicho(x, z, adulto, isla) {
@@ -97,7 +100,7 @@ function nuevoEstado() {
   E = { t: Date.now(), tiempo: 30, id: 1, comida: 6, madera: 4, piedra: 2, gemas: 0, animo: 80, energia: 10,
     nacidos: 1, explotados: 0, meta: 0, maxNivel: 2, sab: 0, era: 0, islas: [], puentes: [], bichos: [], recursos: [], edificios: [], mina: null,
     pedido: null, proxPedido: 25, cohete: 150 };
-  const isla = crearIsla(0, 0); isla.colonizada = true; isla.capital = true; isla._lug = null;
+  const isla = crearIsla(0, 0); isla.capital = true; colonizar(isla);
   E.edificios.push({ id: E.id++, tipo: "fogata", isla: isla.id, x: isla.x, z: isla.z, prog: 1, nivel: 1, era: 0 });
   E.recursos = E.recursos.filter((r) => Math.hypot(r.x - isla.x, r.z - isla.z) > 4);
   E.bichos.push(crearBicho(isla.x + 1.5, isla.z + 1.5, true, isla.id));
@@ -133,10 +136,10 @@ const cuantos = (tipo) => E.edificios.filter((e) => e.tipo === tipo && listo(e))
 function cercano(lista, p) { let m = null, d = 1e9; for (const o of lista) { const dd = Math.hypot(o.x - p.x, o.z - p.z); if (dd < d) { d = dd; m = o; } } return m; }
 
 function sembrar(isla) {
-  const bio = BIOMAS[isla.bioma], n = Math.round(Math.PI * isla.radio * isla.radio / 22);
+  const bio = BIOMAS[isla.bioma], n = 140;
   for (let i = 0; i < n; i++) {
-    const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * (isla.radio - 2.5);
-    const x = isla.x + Math.cos(a) * r, z = isla.z + Math.sin(a) * r;
+    let dx, dz; do { dx = rnd(-RH, RH); dz = rnd(-RH, RH); } while (!enHex(dx, dz, 2.5));
+    const x = isla.x + dx, z = isla.z + dz;
     const q = Math.random(), tipo = q < bio.arbol ? "arbol" : q < bio.arbusto ? "arbusto" : "roca";
     const max = tipo === "arbol" ? 6 : 5;
     E.recursos.push({ id: E.id++, isla: isla.id, tipo, x, z, cant: max, max, crece: 0 });
@@ -163,8 +166,9 @@ function nuevoPuente() {
     if (!mejor || d < mejor.d) mejor = { a, b, d };
   }
   if (!mejor) return null;
-  const p = { id: E.id++, tipo: "puente", a: mejor.a.id, b: mejor.b.id, isla: mejor.a.id, prog: 0 };
-  const pp = puntosPuente(p); p.x = pp.ini.x; p.z = pp.ini.z;
+  const p = { id: E.id++, tipo: "tierra", a: mejor.a.id, b: mejor.b.id, isla: mejor.a.id, prog: 0 };
+  const ux = (mejor.b.x - mejor.a.x) / SEP, uz = (mejor.b.z - mejor.a.z) / SEP;
+  p.x = mejor.a.x + ux * (RI - 4); p.z = mejor.a.z + uz * (RI - 4);
   E.puentes.push(p); return p;
 }
 
@@ -239,12 +243,12 @@ function paso(dt, offline) {
     } else if (E.islas.some(lugarLibre)) {
       if (E.madera >= 8 && E.piedra >= 4) { E.madera -= 8; E.piedra -= 4; nuevoEdificio("casa"); eventos.push({ tipo: "obra" }); }
     } else if (!E.puentes.some((p) => p.prog < 1) && E.madera >= 20 && E.piedra >= 10) {
-      E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "puente" });
+      E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "tierra" });
     }
   }
   // islas con lugar: si todas las casas posibles están hechas, preparar puente antes de llenarse
   if (!E.puentes.some((p) => p.prog < 1) && E.islas.filter(lugarLibre).every((i) => lugares(i).length - i.nLugar < 3) && E.madera >= 30 && E.piedra >= 15) {
-    E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "puente" });
+    E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "tierra" });
   }
   if (!offline) {
     if (E.pedido) { E.pedido.t -= dt; if (E.pedido.t <= 0) { E.pedido = null; E.animo = clamp(E.animo - 8, 0, 100); aviso("No llegaste a tiempo… 😕"); E.proxPedido = rnd(30, 60); } }
@@ -274,18 +278,18 @@ function resumen(dt, offline, noche) {
   }
 }
 function avanzarObra(o, cuanto, offline) {
-  const lento = { torre: .4, cohete: .25, escuela: .6, mina: .7, biblioteca: .5, molino: .6, fabrica: .45, central: .4, base: .3, puente: .5 }[o.tipo] || 1;
+  const lento = { torre: .4, cohete: .25, escuela: .6, mina: .7, biblioteca: .5, molino: .6, fabrica: .45, central: .4, base: .3, tierra: .5 }[o.tipo] || 1;
   o.prog = Math.min(1, o.prog + cuanto * lento);
   if (listo(o)) {
     if (o.tipo === "mina" && !E.mina) E.mina = { x: o.x, z: o.z, isla: o.isla, prof: 1, cavado: 0, id: o.id };
-    if (o.tipo === "puente") { const b = islaDe(o.b); b.colonizada = true; b._lug = null; vecinasNuevas(); migrar(o); }
+    if (o.tipo === "tierra") { colonizar(islaDe(o.b)); vecinasNuevas(); migrar(o); }
     eventos.push({ tipo: "listo", e: o });
     if (!offline && activas.has(o.isla)) festejo(o);
   }
 }
 function migrar(p) {
   const desde = E.bichos.filter((b) => b.isla === p.a && b.edad > GRANDE && b.y === 0).slice(0, 5);
-  for (const b of desde) { b.est = "cruzar"; b.destino = p.b; b.puente = p.id; b.tramo = 0; b.adentro = false; }
+  for (const b of desde) { b.est = "cruzar"; b.destino = p.b; b.adentro = false; }
   if (!desde.length) { const i = islaDe(p.b); E.bichos.push(crearBicho(i.x, i.z, true, i.id)); }
 }
 function buscar(id) { return E.recursos.find((r) => r.id === id) || E.edificios.find((e) => e.id === id) || E.puentes.find((p) => p.id === id); }
@@ -322,7 +326,7 @@ function actualizarBicho(b, dt, offline, noche) {
     case "llevar": { const a = buscar(b.obj) || almacenCercano(); if (!a) { b.est = "quieto"; break; } if (mover(a, 1.8)) { E[b.carga] += b.cant || 1; b.carga = null; b.cant = 0; b.est = "quieto"; b.quieto = rnd(.2, .8); } break; }
     case "construir": {
       const o = buscar(b.obj); if (!o || listo(o)) { b.est = "quieto"; b.quieto = .5; break; }
-      const meta = o.tipo === "puente" ? { x: o.x + Math.cos(b.ang) * 1.2, z: o.z + Math.sin(b.ang) * 1.2 } : { x: o.x + Math.cos(b.ang) * 2.7, z: o.z + Math.sin(b.ang) * 2.7 };
+      const meta = o.tipo === "tierra" ? { x: o.x + Math.cos(b.ang) * 1.2, z: o.z + Math.sin(b.ang) * 1.2 } : { x: o.x + Math.cos(b.ang) * 2.7, z: o.z + Math.sin(b.ang) * 2.7 };
       if (mover(dentro(meta, isla))) {
         b.dx = o.x - b.x || .01; b.dz = o.z - b.z;
         avanzarObra(o, dt * .05, offline);
@@ -331,10 +335,9 @@ function actualizarBicho(b, dt, offline, noche) {
       break;
     }
     case "cruzar": {
-      const p = E.puentes.find((x) => x.id === b.puente); if (!p) { b.est = "quieto"; break; }
-      const pp = puntosPuente(p), dest = islaDe(b.destino);
-      const metas = [pp.ini, pp.fin, { x: dest.x + rnd(-1, 1) * 0 + (pp.fin.x - dest.x) * .6, z: dest.z + (pp.fin.z - dest.z) * .6 }];
-      if (mover(metas[b.tramo])) { b.tramo++; if (b.tramo === 2) b.isla = b.destino; if (b.tramo > 2) { b.est = "quieto"; b.quieto = 1; hablar(b, "¡" + balbuceo(1) + "!"); } }
+      const dest = islaDe(b.destino); if (!dest) { b.est = "quieto"; break; }
+      if (!b.meta) b.meta = { x: dest.x + rnd(-6, 6), z: dest.z + rnd(-6, 6) };
+      if (mover(b.meta)) { b.isla = b.destino; b.meta = null; b.est = "quieto"; b.quieto = 1; hablar(b, "¡" + balbuceo(1) + "!"); }
       break;
     }
     case "ir_mina": if (!E.mina) { b.est = "quieto"; break; } if (mover(E.mina)) b.est = "bajar"; break;
@@ -532,31 +535,17 @@ function liberar(g) { escena.remove(g); g.traverse((o) => { if (o.geometry && !G
 
 // ---- islas ----
 const mallasIsla = new Map(); // id → { g, detalle }
-function mallaIsla(isla, detalle) {
-  const g = new THREE.Group(), r = isla.radio, seg = detalle ? 56 : 28, bio = BIOMAS[isla.bioma];
-  const tono = isla.colonizada ? bio.pasto : new THREE.Color(bio.pasto).lerp(new THREE.Color("#9FB5A0"), .35).getStyle();
-  const pasto = new THREE.Mesh(new THREE.CylinderGeometry(r, r, .6, seg), mat(tono)); pasto.position.y = -.3; pasto.receiveShadow = true;
-  const borde = new THREE.Mesh(new THREE.CylinderGeometry(r * 1.002, r * .97, .9, seg), mat("#63B257")); borde.position.y = -.9;
-  const alto = r * .45 + 4;
-  const tierra = new THREE.Mesh(new THREE.CylinderGeometry(r * .97, r * .55, alto, seg), mat("#B9875A")); tierra.position.y = -1.35 - alto / 2;
-  const punta = new THREE.Mesh(new THREE.ConeGeometry(r * .55, r * .5, seg), mat("#9C6E45")); punta.rotation.x = Math.PI; punta.position.y = tierra.position.y - alto / 2 - r * .25;
-  g.add(pasto, borde, tierra, punta);
-  if (detalle) { const rd = semilla(isla.id); for (let i = 0; i < r * 5; i++) { const a = rd() * 6.3, d = Math.sqrt(rd()) * (r - 1); g.add(malla(G.cono, mat(rd() < .5 ? "#5DB85A" : "#8FD67A"), .25, .5, .25, Math.cos(a) * d, .2, Math.sin(a) * d, false)); } }
-  // isla salvaje: niebla suave encima para que se note que falta conquistarla
-  if (!isla.colonizada) { const n = new THREE.Mesh(new THREE.CylinderGeometry(r * .9, r * .9, .2, seg), new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: .18, depthWrite: false })); n.position.y = .4; g.add(n); }
-  g.position.set(isla.x, 0, isla.z);
-  return g;
-}
-
-// ---- puentes ----
-const mallasPuente = new Map();
-function mallaPuente(p) {
-  const g = new THREE.Group(), pp = puntosPuente(p), L = Math.hypot(pp.fin.x - pp.ini.x, pp.fin.z - pp.ini.z), ang = Math.atan2(pp.ux, pp.uz);
-  const tablas = Math.max(1, Math.round(L / .9 * p.prog));
-  for (let i = 0; i < tablas; i++) { const d = i * .9 + .45; g.add(malla(G.caja, mat(i % 2 ? "#A97C50" : "#9A6E44"), 2.4, .18, .8, 0, -.05, d)); }
-  for (let i = 0; i <= L * p.prog; i += 3) for (const s of [-1, 1]) g.add(malla(G.cil, mat("#7A4B2A"), .14, 1.2, .14, s * 1.2, .5, i));
-  if (p.prog >= 1) for (const s of [-1, 1]) { const c = malla(G.cil, mat("#C9A36B"), .05, L, .05, s * 1.2, 1, L / 2, false); c.rotation.x = Math.PI / 2; g.add(c); }
-  g.position.set(pp.ini.x, 0, pp.ini.z); g.rotation.y = ang;
+function mallaIsla(isla, detalle, prog = 1) {
+  const g = new THREE.Group(), r = RH * 1.004;
+  const pasto = new THREE.Mesh(new THREE.CylinderGeometry(r, r, .6, 6), mat(PASTO)); pasto.position.y = -.3; pasto.receiveShadow = true;
+  const tierra = new THREE.Mesh(new THREE.CylinderGeometry(r * .999, r * .999, 9, 6), mat("#B9875A")); tierra.position.y = -5.1;
+  const roca = new THREE.Mesh(new THREE.CylinderGeometry(r * .99, r * .6, 8, 6), mat("#9C6E45")); roca.position.y = -13.6;
+  const rd0 = semilla(isla.id * 13 + 5);
+  const punta = new THREE.Mesh(new THREE.ConeGeometry(r * .6, 10 + rd0() * 14, 6), mat("#8A5E3A")); punta.rotation.x = Math.PI; punta.position.y = -17.6 - punta.geometry.parameters.height / 2;
+  g.add(pasto, tierra, roca, punta);
+  if (detalle && prog >= 1) { const rd = semilla(isla.id); for (let i = 0; i < 180; i++) { const dx = (rd() - .5) * 2 * r, dz = (rd() - .5) * 2 * r; if (!enHex(dx, dz, 1)) continue; g.add(malla(G.cono, mat(rd() < .5 ? "#5DB85A" : "#8FD67A"), .25, .5, .25, dx, .2, dz, false)); } }
+  g.position.set(isla.x, -(1 - prog) * 26, isla.z);
+  if (prog < 1) { const k = .55 + .45 * prog; g.scale.set(k, 1, k); }
   return g;
 }
 
@@ -724,7 +713,7 @@ const mallas = new Map(); // id de recurso/edificio → { g, clave }
 let islasDetalle = new Set(), islasVisibles = new Set();
 function elegirIslas() {
   const t = controles.target, camD = camara.position.distanceTo(t);
-  const orden = E.islas.map((i) => ({ i, d: Math.hypot(i.x - t.x, i.z - t.z) })).sort((a, b) => a.d - b.d);
+  const orden = E.islas.filter((i) => i.colonizada).map((i) => ({ i, d: Math.hypot(i.x - t.x, i.z - t.z) })).sort((a, b) => a.d - b.d);
   islasVisibles = new Set(orden.filter((o) => o.d < 260 + camD * 1.1).slice(0, 60).map((o) => o.i.id));
   const det = camD < 170 ? orden.filter((o) => o.d < 60 + camD * .5).slice(0, camD < 80 ? 4 : 3) : [];
   islasDetalle = new Set(det.map((o) => o.i.id));
@@ -741,18 +730,14 @@ function claveDe(o, simple) {
 function sincronizar() {
   elegirIslas();
   // islas
+  const creciendo = new Map(E.puentes.filter((p) => !listo(p) && islasVisibles.has(p.a)).map((p) => [p.b, p.prog]));
   for (const isla of E.islas) {
-    const ver = islasVisibles.has(isla.id), det = islasDetalle.has(isla.id), clave = `${det}${isla.colonizada}`;
+    const crece = creciendo.get(isla.id);
+    const ver = (isla.colonizada && islasVisibles.has(isla.id)) || crece !== undefined, det = islasDetalle.has(isla.id);
+    const clave = crece !== undefined ? "c" + Math.round(crece * 30) : `${det}`;
     let m = mallasIsla.get(isla.id);
     if (!ver) { if (m) { liberar(m.g); mallasIsla.delete(isla.id); } continue; }
-    if (!m || m.clave !== clave) { if (m) liberar(m.g); const g = mallaIsla(isla, det); escena.add(g); mallasIsla.set(isla.id, { g, clave }); }
-  }
-  // puentes
-  for (const p of E.puentes) {
-    const ver = islasVisibles.has(p.a) || islasVisibles.has(p.b), clave = Math.round(p.prog * 20);
-    let m = mallasPuente.get(p.id);
-    if (!ver) { if (m) { liberar(m.g); mallasPuente.delete(p.id); } continue; }
-    if (!m || m.clave !== clave) { if (m) liberar(m.g); const g = mallaPuente(p); escena.add(g); mallasPuente.set(p.id, { g, clave }); }
+    if (!m || m.clave !== clave) { if (m) liberar(m.g); const g = mallaIsla(isla, det, crece === undefined ? 1 : crece); escena.add(g); mallasIsla.set(isla.id, { g, clave }); }
   }
   // recursos (solo de cerca) y edificios (simples de lejos)
   const vivos = new Set();
@@ -975,7 +960,7 @@ function pintarHUD() {
     const antes = E.meta ? METAS[E.meta - 1].pob : 1;
     $("meta-txt").textContent = `🎯 ${m.pob} Brotitos → ${m.g} ${m.t}`; $("meta-sub").textContent = m.s;
     $("meta-bar").style.width = clamp((E.bichos.length - antes) / (m.pob - antes), 0, 1) * 100 + "%";
-  } else { $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `${E.islas.filter((i) => i.colonizada).length} islas conquistadas`; $("meta-bar").style.width = "100%"; }
+  } else { $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
   if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; }
   else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; }
   const p = $("pedido");
@@ -989,12 +974,12 @@ function mostrarEventos() {
     if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(controles.target); }
     if (ev.tipo === "era") { const e = ERAS[E.era]; logro(e.g, `¡Era de ${e.n}!`, e.s || ""); festejo(controles.target); }
     if (ev.tipo === "listo") {
-      const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", puente: "el puente 🌉 ¡Isla nueva!" }[ev.e.tipo] || ev.e.tipo;
+      const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", tierra: "tierra nueva 🌱 ¡El mundo creció!" }[ev.e.tipo] || ev.e.tipo;
       aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo");
     }
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
-    if (ev.tipo === "puente") aviso("🌉 La isla se llenó: ¡construyen un puente a otra isla!");
+    if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
     if (ev.tipo === "nivelMina") aviso(`⛏️ ¡La mina ya tiene ${E.mina.prof} niveles! Más hondo, más gemas`);
     if (ev.tipo === "cohete") { aviso("🚀 ¡Despegó un cohete! Trajo 5 💎"); despegar(); }
   }
@@ -1021,7 +1006,7 @@ if (!primeraVez) {
     if (lugar > 0) partes.push(`hicieron lugar para <b>${lugar}</b> más`);
     if (E.meta > antes.m) partes.push(`desbloquearon <b>${METAS.slice(antes.m, E.meta).map((m) => m.g + " " + m.t).join(", ")}</b>`);
     const islasN = E.islas.filter((i) => i.colonizada).length - antes.islas;
-    if (islasN > 0) partes.push(`conquistaron <b>${islasN}</b> ${islasN === 1 ? "isla nueva" : "islas nuevas"} 🌉`);
+    if (islasN > 0) partes.push(`agrandaron el mundo <b>${islasN}</b> ${islasN === 1 ? "vez" : "veces"} 🌱`);
     if (E.era > antes.era) partes.push(`¡pasaron a la <b>Era de ${ERAS[E.era].n}</b> ${ERAS[E.era].g}!`);
     $("vuelta-txt").innerHTML = partes.length ? "Mientras no estabas " + partes.join(", ") + ". 🎉" : "Tus Brotitos estuvieron juntando cosas mientras no estabas.";
     $("c-vuelta").classList.add("ver");
