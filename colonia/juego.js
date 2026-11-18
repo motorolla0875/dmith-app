@@ -158,6 +158,22 @@ function inventar(sem) {
     r: { w, d: w * entre(.8, 1.1), pisos: Math.round(entre(t.p[0], t.p[1] + extra)), h: entre(1.9, 2.5), color: `hsl(${rd() * 360 | 0},${35 + rd() * 30 | 0}%,${62 + rd() * 22 | 0}%)`, ct: `hsl(${rd() * 360 | 0},${40 + rd() * 30 | 0}%,${38 + rd() * 20 | 0}%)`, techo: en(t.techo), partes },
   };
 }
+// ---- inventor con IA: muy de vez en cuando; si falla o no hay cupo, siguen los edificios combinados ----
+let pensando = false;
+async function pedirInvento() {
+  if (pensando) return; pensando = true;
+  try {
+    const ya = E.edificios.filter((e) => e.tipo === "inv").slice(-30).map((e) => e.inv.n).concat((E.colaInv || []).map((v) => v.n), CATALOGO.filter((c) => E.hechos[c.id]).slice(-10).map((c) => c.n));
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
+    const r = await fetch("/api/sitios/colonia-invento", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ era: E.era, pob: E.bichos.length, ya }), signal: ctl.signal });
+    clearTimeout(to);
+    if (!r.ok) return;
+    const v = await r.json();
+    if (!v || !v.n || !v.r || !v.ef) return;
+    (E.colaInv = E.colaInv || []).push(v);
+    aviso(`💡 A los más sabios se les ocurrió algo: ${v.g} ${v.n}`);
+  } catch (e) {} finally { pensando = false; }
+}
 function construirInvento() {
   E.invT = (E.invT || 0);
   if (E.invT < 180 || E.bichos.length < 40) return;
@@ -1278,7 +1294,7 @@ function mostrarEventos() {
     if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(controles.target); }
     if (ev.tipo === "era") { const e = ERAS[E.era]; logro(e.g, `¡Era de ${e.n}!`, e.s || ""); festejo(controles.target); }
     if (ev.tipo === "listo" && ev.e.tipo === "cat") { const c = CAT[ev.e.cat]; logro(c.g, `¡Construyeron ${c.n}!`, c.s); festejo(ev.e); continue; }
-    if (ev.tipo === "listo" && ev.e.tipo === "inv") { const v = ev.e.inv; logro(v.g, `¡Terminaron ${v.n}!`, v.s); festejo(ev.e); continue; }
+    if (ev.tipo === "listo" && ev.e.tipo === "inv") { const v = ev.e.inv; logro(v.g, v.ia ? `💡 ¡Inventaron ${v.n}!` : `¡Terminaron ${v.n}!`, v.s); festejo(ev.e); continue; }
     if (ev.tipo === "listo") {
       const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", tierra: "tierra nueva 🌱 ¡El mundo creció!" }[ev.e.tipo] || ev.e.tipo;
       aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo");
@@ -1536,6 +1552,9 @@ function dibujarTodo(ahora, dt) {
 function bucle(ahora) {
   const dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora;
   paso(dt, false);
+  // cada 15 minutos de juego, si son bastantes, piensan un invento con IA
+  E.iaT = (E.iaT ?? 600) + dt;
+  if (E.iaT > 900 && E.bichos.length >= 40 && (E.colaInv || []).length < 2 && navigator.onLine !== false) { E.iaT = 0; pedirInvento(); }
   dibujarTodo(ahora, dt);
   hudT += dt; if (hudT > .2) { hudT = 0; pintarHUD(); mostrarEventos(); }
   guardarT += dt; if (guardarT > 5) { guardarT = 0; guardar(); }
@@ -1543,5 +1562,5 @@ function bucle(ahora) {
 }
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
-window.__col = { get E() { return E; }, inventar, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
+window.__col = { get E() { return E; }, inventar, pedirInvento, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
 requestAnimationFrame(bucle);

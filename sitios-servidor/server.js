@@ -104,6 +104,42 @@ const ETAPAS = {
   chico: "Sos un CHICO de unos 8 años. Hablás con frases simples y naturales, sos muy curioso, contás cosas de tus recuerdos, hacés preguntas a tu dueño y chistes simples.",
   grande: "Sos un ADOLESCENTE simpático. Conversás bien, tenés humor, opinás, te acordás de todo lo que te enseñaron y lo usás, y le preguntás a tu dueño por cosas que te contó antes."
 };
+// ===== Brotitos (dmith.app/colonia): inventos con IA. Pocos y baratos: si no hay cupo, el juego inventa solo.
+const coloniaIp = {}, coloniaDia = { dia: "", n: 0 };
+const ERAS_COL = ["chozas de madera", "ladrillo", "máquinas a vapor", "electricidad", "era espacial"];
+const EF_COL = ["comida", "madera", "piedra", "sab", "obra", "vel", "nacer", "gemas", "animo"];
+const EF_TXT = { comida: "comida", madera: "madera", piedra: "piedra", sab: "sabiduría", obra: "construcción", vel: "velocidad", nacer: "nacimientos", gemas: "gemas", animo: "ánimo" };
+const PARTES_COL = ["columnas", "chimenea", "toldo", "antena", "bandera", "reloj", "torre", "arboles", "esfera", "neon", "vidrio"];
+async function coloniaInvento(b) {
+  const key = groqKey(); if (!key) throw err(503, "Sin IA");
+  const txt = (x, n) => String(x || "").replace(/\s+/g, " ").trim().slice(0, n);
+  const era = Math.max(0, Math.min(4, b.era | 0)), pob = Math.max(1, Math.min(1e7, b.pob | 0));
+  const ya = (Array.isArray(b.ya) ? b.ya : []).slice(-40).map((x) => txt(x, 40)).filter(Boolean).join(", ") || "(nada todavía)";
+  const sistema = `Inventás construcciones para un juego de una colonia de bichitos tiernos llamados Brotitos. Están en la era de ${ERAS_COL[era]} y son ${pob}.
+Inventá UNA construcción nueva, original y graciosa, que tenga sentido para esa era y ese tamaño de colonia. NO repitas ni te parezcas a estas que ya tienen: ${ya}.
+Respondé SOLO con JSON:
+{"nombre":"2 a 4 palabras en español, creativo","emoji":"un solo emoji que la represente","descripcion":"qué hace, en español rioplatense, máximo 60 caracteres","efecto":"uno de: ${EF_COL.join(", ")}","techo":"dos|plano|cupula|cono","pisos":1-10,"ancho":3-5.5,"color":"#rrggbb pared","colorTecho":"#rrggbb","partes":["hasta 3 de: ${PARTES_COL.join(", ")}"]}
+Nada violento, feo ni de adultos.`;
+  for (const model of ["openai/gpt-oss-20b", "llama-3.1-8b-instant"]) {
+    const oss = model.startsWith("openai/");
+    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", { method: "POST", headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
+      body: JSON.stringify({ model, messages: [{ role: "system", content: sistema }, { role: "user", content: "Inventá algo nuevo." }], temperature: 1, max_tokens: oss ? 1200 : 300, ...(oss ? { reasoning_effort: "low" } : {}), response_format: { type: "json_object" } }) }).catch(() => null);
+    if (!r || !r.ok) { console.log("colonia: Groq", model, r ? r.status : "sin conexión"); continue; }
+    try {
+      const j = JSON.parse((await r.json()).choices[0].message.content);
+      const n = txt(j.nombre, 36); if (!n) continue;
+      const ef = EF_COL.includes(j.efecto) ? j.efecto : EF_COL[Math.random() * EF_COL.length | 0];
+      const v = ef === "animo" ? .04 : .08;
+      const hex = (c, d) => /^#[0-9a-f]{6}$/i.test(c) ? c : d;
+      const num = (x, a, z, d) => { x = +x; return isFinite(x) ? Math.max(a, Math.min(z, x)) : d; };
+      const g = [...txt(j.emoji, 8)][0] || "💡";
+      return { ia: true, g, n, s: `${txt(j.descripcion, 70)}${txt(j.descripcion, 70) ? " · " : ""}${ef === "animo" ? "más ánimo" : "+8% " + EF_TXT[ef]}`, ef: { [ef]: v },
+        r: { techo: ["dos", "plano", "cupula", "cono"].includes(j.techo) ? j.techo : "dos", pisos: Math.round(num(j.pisos, 1, 10, 2)), w: num(j.ancho, 3, 5.5, 4), d: num(j.ancho, 3, 5.5, 4), h: 2.2,
+          color: hex(j.color, "#E0C9A6"), ct: hex(j.colorTecho, "#8E3B2E"), partes: (Array.isArray(j.partes) ? j.partes : []).filter((p) => PARTES_COL.includes(p)).slice(0, 3) } };
+    } catch (e) { console.log("colonia: respuesta rara", e.message); continue; }
+  }
+  throw err(502, "La IA no respondió");
+}
 async function mascotaIA(b) {
   const key = groqKey(); if (!key) throw err(503, "Falta la clave de la IA");
   const etapa = ETAPAS[b.etapa] ? b.etapa : "bebe";
@@ -296,6 +332,16 @@ const rutas = {
     const c = (d.consultas || []).find((x) => x.id === b.id); if (!c) throw err(404, "Consulta no encontrada");
     if (b.borrar) d.consultas = d.consultas.filter((x) => x !== c); else c.atendida = !!b.atendida;
     save(d); return { ok: true };
+  },
+
+  "POST /api/sitios/colonia-invento": async (req) => {
+    const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+    const t = Date.now(), hoy = new Date().toISOString().slice(0, 10);
+    if (coloniaDia.dia !== hoy) { coloniaDia.dia = hoy; coloniaDia.n = 0; }
+    coloniaIp[ip] = (coloniaIp[ip] || []).filter((x) => t - x < 3600e3);
+    if (coloniaIp[ip].length >= 6 || coloniaDia.n >= 300) throw err(429, "Sin cupo: el juego inventa solo");
+    coloniaIp[ip].push(t); coloniaDia.n++;
+    return coloniaInvento(await body(req));
   },
 
   "POST /api/sitios/mascota": async (req) => {
