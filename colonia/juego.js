@@ -604,7 +604,7 @@ let AC = null, sonidoOn = true;
 try { sonidoOn = localStorage.getItem("brotitos-sonido") !== "0"; } catch (e) {}
 function audio() { if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); cargarSonidos(); } if (AC.state === "suspended") AC.resume(); return AC; }
 // ---- sonidos grabados (colonia/sonidos) ----
-const MUESTRAS = { aplastar: ["aplastar1", "aplastar2", "aplastar3"], rebotar: ["rebotar1", "rebotar2", "rebotar3"], pasos: ["pasos"], desbloqueo: ["desbloqueo"], boton: ["boton"] };
+const MUESTRAS = { aplastar: ["aplastar1", "aplastar2", "aplastar3"], rebotar: ["rebotar1", "rebotar2", "rebotar3"], pasos: ["paso1", "paso2", "paso3", "paso4"], desbloqueo: ["desbloqueo"], boton: ["boton"] };
 const BUF = {};
 function cargarSonidos() {
   for (const k in MUESTRAS) for (const n of MUESTRAS[k]) {
@@ -1418,19 +1418,14 @@ function entrar() {
   aviso("👑 ¡Entraste! Sos el Brotito dorado");
   for (const b of E.bichos) if (b._m && !b.adentro && dist(b, yo) < 8 && b.susto <= 0 && Math.random() < .6) hablar(b, elegir(["¿¿" + balbuceo(1) + "??", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]));
 }
-let pasosSrc = null;
-function pasos(on, vel) {
-  if (on && !pasosSrc && sonidoOn && AC && BUF.pasos) {
-    const src = AC.createBufferSource(), g = AC.createGain(); src.buffer = BUF.pasos; src.loop = true; src.loopEnd = BUF.pasos.duration;
-    g.gain.value = .55; src.connect(g).connect(AC.destination); src.start(); pasosSrc = { src, g };
-  }
-  if (pasosSrc) {
-    if (!on || !sonidoOn) { try { pasosSrc.src.stop(); } catch (e) {} pasosSrc = null; }
-    else pasosSrc.src.playbackRate.value = clamp(.75 + vel / 13, .8, 1.3);
-  }
+// pasos del rey: uno por cada pisada, al ritmo de la caminata
+let ultimoPie = 0;
+function pasos(on) {
+  if (!on) return;
+  const pie = Math.floor(yo.fase / Math.PI);
+  if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .5, rnd(.9, 1.1)); }
 }
 function salir() {
-  pasos(false);
   dentroMundo = false; document.body.classList.remove("dentro");
   if (yo._m) yo._m.g.visible = false;
   if (yo.carga) { E[yo.carga] += yo.cant; yo.carga = null; yo.cant = 0; }
