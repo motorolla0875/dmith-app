@@ -286,12 +286,55 @@ $("voz").textContent = vozOn ? "🔊" : "🔈";
 $("voz").onclick = () => { vozOn = !vozOn; $("voz").textContent = vozOn ? "🔊" : "🔈"; try { localStorage.setItem("bebe-ia-voz", vozOn ? "1" : "0"); } catch (e) {} if (!vozOn) speechSynthesis.cancel(); };
 let vozLista = false;
 function desbloquearVoz() {
+  audio();
   if (vozLista || !("speechSynthesis" in window)) return;
   try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); vozLista = true; } catch (e) {}
 }
-document.addEventListener("pointerdown", desbloquearVoz, { once: true });
-function hablar(t) {
-  if (!vozOn || !("speechSynthesis" in window)) return;
+document.addEventListener("pointerdown", desbloquearVoz);
+// ---- Idioma bebé: sonidos tipo "Animal Crossing" generados en el celular (gratis, sin grabaciones)
+let AC = null;
+function audio() {
+  if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); }
+  if (AC.state === "suspended") AC.resume();
+  return AC;
+}
+// Formantes de cada vocal (subidos para que suene a voz de bebé)
+const VOCALES = { a: [1000, 1700], e: [650, 2600], i: [400, 3100], o: [700, 1250], u: [450, 1100] };
+const VOZ = { bebe: { f: 560, vel: 105, var: 90 }, nene: { f: 450, vel: 90, var: 70 }, chico: { f: 340, vel: 78, var: 55 } };
+function silaba(ctx, t0, vocal, f0, dur, sube) {
+  const [f1, f2] = VOCALES[vocal] || VOCALES.a;
+  const o = ctx.createOscillator(), g = ctx.createGain(), b1 = ctx.createBiquadFilter(), b2 = ctx.createBiquadFilter(), mix = ctx.createGain();
+  o.type = "sawtooth";
+  o.frequency.setValueAtTime(f0 * (sube < 0 ? 1.12 : 1), t0);
+  o.frequency.linearRampToValueAtTime(f0 * (sube > 0 ? 1.25 : sube < 0 ? .85 : 1.04), t0 + dur);
+  b1.type = b2.type = "bandpass"; b1.frequency.value = f1 * 1.25; b2.frequency.value = f2 * 1.2; b1.Q.value = 6; b2.Q.value = 9;
+  mix.gain.value = 1;
+  o.connect(b1); o.connect(b2); b1.connect(g); b2.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(.95, t0 + .012);
+  g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+  o.start(t0); o.stop(t0 + dur + .02);
+}
+function balbucear(t, emo) {
+  const ctx = audio(); if (!ctx) return 0;
+  const v = VOZ[etapa().id] || VOZ.chico;
+  let base = v.f * (emo === "triste" ? .82 : emo === "sorpresa" || emo === "risa" ? 1.12 : 1);
+  const voc = (t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").match(/[aeiou]/g) || ["a"]).slice(0, 34);
+  let t0 = ctx.currentTime + .03;
+  voc.forEach((c, i) => {
+    const fin = i === voc.length - 1, pregunta = /\?\s*$/.test(t), grito = /!\s*$/.test(t);
+    const f = base + (Math.random() - .5) * v.var + (c === "i" ? 40 : c === "u" ? -30 : 0);
+    const d = (v.vel + Math.random() * 25) / 1000;
+    silaba(ctx, t0, c, f, d * (fin ? 1.6 : 1), fin && pregunta ? 1 : fin && !grito ? -1 : 0);
+    t0 += d * (fin ? 1.6 : 1) + .012;
+  });
+  if (emo === "risa") for (let k = 0; k < 4; k++) { silaba(ctx, t0, "i", base * (1.35 - k * .07), .07, -1); t0 += .095; }
+  return (t0 - ctx.currentTime) * 1000;
+}
+function hablar(t, emo) {
+  if (!vozOn) return;
+  if (etapa().id !== "grande") { try { speechSynthesis && speechSynthesis.cancel(); } catch (e) {} balbucear(t, emo); return; }
+  if (!("speechSynthesis" in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ""));
@@ -305,10 +348,15 @@ function globo(html, segs = 7) {
   const g = $("globo"); g.innerHTML = html; g.classList.add("ver");
   clearTimeout(globoT); if (segs) globoT = setTimeout(() => g.classList.remove("ver"), segs * 1000);
 }
+let tipeo;
 function decir(t, emo) {
   if (emo) { emocion = emo; emoHasta = Date.now() + 4500; }
-  const d = document.createElement("div"); d.textContent = t;
-  globo(d.innerHTML, Math.max(5, t.length / 9)); hablar(t); dibujar();
+  clearInterval(tipeo);
+  const g = $("globo"), letras = Array.from(t);
+  globo("", Math.max(5, t.length / 9) + 1.5);
+  let i = 0; const paso = etapa().id === "grande" ? 18 : (VOZ[etapa().id] || VOZ.chico).vel * .45;
+  tipeo = setInterval(() => { i++; g.textContent = letras.slice(0, i).join(""); if (i >= letras.length) clearInterval(tipeo); }, paso);
+  hablar(t, emo); dibujar();
 }
 function logMsg(t, cls) {
   const d = document.createElement("div"); d.className = "m " + cls; d.textContent = t;
