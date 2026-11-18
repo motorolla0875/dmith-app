@@ -98,6 +98,28 @@ function calcularBonos() {
   if (typeof bonosPoder === "function") sumarEf(bonosPoder());
   BONOS = b;
 }
+// ======================= Poder: más Brotitos, más poder (niveles sin fin) =======================
+const MEJORAS = [
+  { k: "vel", v: .04, t: "Caminan +4% más rápido" },
+  { k: "comida", v: .05, t: "+5% comida" },
+  { k: "obra", v: .05, t: "Construyen +5% más rápido" },
+  { k: "madera", v: .05, t: "+5% madera" },
+  { k: "sab", v: .05, t: "+5% sabiduría" },
+  { k: "piedra", v: .05, t: "+5% piedra" },
+  { k: "nacer", v: .05, t: "Nacen +5% más rápido" },
+  { k: "animo", v: .02, t: "Están más contentos" },
+  { k: "gemas", v: .05, t: "+5% gemas" },
+  { k: "alto", v: 1, t: "Las casas pueden tener 1 piso más" },
+];
+const nivelPoder = (pob) => Math.floor(Math.sqrt(pob) / 2);
+const pobParaNivel = (n) => 4 * n * n;
+const mejoraDe = (n) => MEJORAS[(n - 1) % MEJORAS.length];
+function bonosPoder() {
+  const b = {};
+  for (let n = 1; n <= (E.poder || 0); n++) { const m = mejoraDe(n); b[m.k] = (b[m.k] || 0) + m.v; }
+  if (b.alto) b.alto = Math.min(b.alto, 20);
+  return b;
+}
 function sumar(k, v) { E["_r" + k] = (E["_r" + k] || 0) + v; if (E["_r" + k] >= 1) { const n = E["_r" + k] | 0; E[k] += n; E["_r" + k] -= n; } }
 const costoCat = (c) => ({ madera: Math.round(10 + c.pob * .12), piedra: Math.round(6 + c.pob * .08), gemas: c.era >= 2 ? Math.min(6, 1 + c.era) : 0 });
 const proximoCat = () => CATALOGO.find((c) => !E.hechos[c.id] && E.era >= c.era && E.bichos.length >= c.pob);
@@ -162,7 +184,7 @@ function crearBicho(x, z, adulto, isla) {
 function nuevoEstado() {
   E = { t: Date.now(), tiempo: 30, id: 1, comida: 6, madera: 4, piedra: 2, gemas: 0, animo: 80, energia: 10,
     nacidos: 1, explotados: 0, meta: 0, maxNivel: 2, sab: 0, era: 0, islas: [], puentes: [], bichos: [], recursos: [], edificios: [], mina: null,
-    pedido: null, proxPedido: 25, cohete: 150, hechos: {} };
+    pedido: null, proxPedido: 25, cohete: 150, hechos: {}, poder: 0 };
   const isla = crearIsla(0, 0); isla.capital = true; colonizar(isla);
   E.edificios.push({ id: E.id++, tipo: "fogata", isla: isla.id, x: isla.x, z: isla.z, prog: 1, nivel: 1, era: 0 });
   E.recursos = E.recursos.filter((r) => Math.hypot(r.x - isla.x, r.z - isla.z) > 4);
@@ -311,6 +333,9 @@ function paso(dt, offline) {
     }
   }
   // islas con lugar: si todas las casas posibles están hechas, preparar puente antes de llenarse
+  // ¿subieron de poder?
+  const np = nivelPoder(E.bichos.length);
+  if (np > (E.poder || 0)) { E.poder = np; calcularBonos(); eventos.push({ tipo: "poder", n: np, m: mejoraDe(np) }); }
   E.catT = (E.catT || 0) + dt;
   if (E.catT > 5) { E.catT = 0; construirCatalogo(); }
   if (!E.puentes.some((p) => p.prog < 1) && E.islas.filter(lugarLibre).every((i) => lugares(i).length - i.nLugar < 3) && E.madera >= 30 && E.piedra >= 15) {
@@ -1174,6 +1199,8 @@ function pintarHUD() {
   const era = ERAS[E.era], sig = ERAS[E.era + 1];
   $("h-era").textContent = era.g;
   $("h-pob").textContent = "👥 " + num(E.bichos.length);
+  $("h-poder").textContent = "⚡" + (E.poder || 0);
+  { const t = $("poder-txt"), n = E.poder || 0, txt = `⚡ Poder nivel ${n} → nivel ${n + 1} con ${num(pobParaNivel(n + 1))} Brotitos (${mejoraDe(n + 1).t.toLowerCase()})`; if (t.textContent !== txt) t.textContent = txt; }
   $("h-comida").textContent = "🍎 " + num(E.comida); $("h-madera").textContent = "🪵 " + num(E.madera); $("h-piedra").textContent = "🪨 " + num(E.piedra);
   $("h-gemas").hidden = !E.mina && !E.gemas; $("h-gemas").textContent = "💎 " + num(E.gemas);
   $("h-hora").textContent = esNoche() ? "🌙" : "☀️";
@@ -1210,6 +1237,7 @@ function mostrarEventos() {
       aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo");
     }
     if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
+    if (ev.tipo === "poder") { logro("⚡", `¡Poder nivel ${ev.n}!`, ev.m.t); continue; }
     if (ev.tipo === "obraCat") aviso(`🏗️ Empezaron a construir: ${ev.g} ${ev.n}`);
     if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
     if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
