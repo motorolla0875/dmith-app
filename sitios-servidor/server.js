@@ -300,9 +300,10 @@ const rutas = {
   "POST /api/sitios/mascota": async (req) => {
     const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
     const t = Date.now(); mascotaIp[ip] = (mascotaIp[ip] || []).filter((x) => t - x < 3600e3);
-    if (mascotaIp[ip].length >= 120) throw err(429, "Estoy cansadito de tanto hablar… volvé en un rato 😴");
-    mascotaIp[ip].push(t);
-    return mascotaIA(await body(req));
+    if (mascotaIp[ip].length >= 300) throw err(429, "Estoy cansadito de tanto hablar… volvé en un rato 😴");
+    const r = await mascotaIA(await body(req));
+    mascotaIp[ip].push(t); // solo cuentan los mensajes que salieron bien
+    return r;
   },
 
   "GET /api/sitios/admin": async (req, q) => {
