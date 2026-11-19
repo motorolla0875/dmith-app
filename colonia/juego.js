@@ -1860,7 +1860,9 @@ function actualizarMision(dt) {
     if (yo.objeto && db < 2.8) { terminarMision(true); return; }
   } else if (m.tipo === "acompañar") {
     if (!m.b.sigue && db < 3.2) { m.b.sigue = true; fila.push(m.b); }
-    if (dist(m.b, m.destino) < radioDe(m.destino) + 4) { terminarMision(true); return; }
+    // llegaron: el Brotito cerca del lugar, o el rey en la puerta con el Brotito atrás
+    const rd = radioDe(m.destino);
+    if (dist(m.b, m.destino) < rd + 6.5 || (dist(yo, m.destino) < rd + 4 && dist(m.b, yo) < 6)) { terminarMision(true); return; }
   }
   // tarjetita y flecha
   const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? `${m.b.n} quiere hablar con vos ❗` : m.txt()); if ($("mision-txt").textContent !== txt) $("mision-txt").textContent = txt;
