@@ -1,0 +1,21 @@
+{
+ "name": "SERenidad Masoterapia Holística",
+ "short_name": "SERenidad",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FFFFFF",
+ "theme_color": "#FFFFFF",
+ "icons": [
+  {
+   "src": "../serenidad/icono-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../serenidad/icono-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
