@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GMP Cursos Online · Academia de Belleza</title>
+<meta name="description" content="Cursos online de manicuría, lashista, estilista femenino y masculino, barbería, alisado, botox y keratina. Certificación oficial, credencial y acompañamiento de por vida.">
+<meta name="theme-color" content="#2A1626">
+<meta property="og:title" content="GMP Cursos Online · Academia de Belleza">
+<meta property="og:description" content="Aprendé un oficio de belleza online. Certificación oficial, credencial y acompañamiento de por vida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tinta: #2A1626; --tinta2: #4A2A43; --rosa: #C2185B; --rosa2: #E85C93; --rubor: #FBEFF3; --rubor2: #F5DCE5;
+    --champan: #E8CC94; --papel: #FFFBFC; --suave: #7D6577; --linea: #EBD9E1;
+    --titulo: "Bricolage Grotesque", "Arial Rounded MT Bold", system-ui, sans-serif;
+    --cuerpo: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.6 var(--cuerpo); -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--rosa2); outline-offset: 3px; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  h1, h2, h3 { font-family: var(--titulo); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+  section { padding-block: clamp(56px, 8vw, 96px); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 14px; padding: 15px 24px; font: 700 16px var(--cuerpo); text-decoration: none; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 19px; height: 19px; flex: none; }
+  .btn-pri { background: var(--rosa); color: #fff; box-shadow: 0 10px 24px rgba(194,24,91,.28); }
+  .btn-pri:hover { background: #A8134E; }
+  .btn-sec { background: transparent; color: var(--tinta); border: 2px solid var(--tinta); }
+
+  /* encabezado */
+  header { position: sticky; top: 0; z-index: 20; background: rgba(255,251,252,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
+  header .wrap { display: flex; align-items: center; gap: 16px; height: 68px; }
+  .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
+  .mono { width: 42px; height: 42px; border-radius: 12px; background: var(--tinta); color: var(--champan); display: grid; place-items: center; font: 800 15px var(--titulo); letter-spacing: .02em; }
+  .marca b { display: block; font: 800 18px/1 var(--titulo); }
+  .marca small { display: block; font-size: 12.5px; color: var(--suave); margin-top: 3px; }
+  nav { display: flex; gap: 22px; }
+  nav a { text-decoration: none; font-weight: 500; font-size: 15px; }
+  header .btn { padding: 11px 18px; font-size: 15px; }
+  @media (max-width: 860px) { nav { display: none; } }
+  @media (max-width: 420px) { header .btn { display: none; } }
+
+  /* portada */
+  .hero { padding-block: clamp(40px, 7vw, 84px) clamp(56px, 8vw, 96px); background: radial-gradient(900px 500px at 85% 10%, var(--rubor2), transparent 60%), var(--papel); overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .rot { display: inline-block; font-weight: 700; font-size: 14.5px; color: var(--rosa); background: var(--rubor); border: 1px solid var(--rubor2); border-radius: 999px; padding: 6px 14px; margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(40px, 6.4vw, 74px); font-weight: 800; }
+  .hero h1 span { color: var(--rosa); }
+  .hero p.baj { font-size: clamp(17px, 2vw, 20px); color: var(--tinta2); max-width: 34ch; margin: 20px 0 28px; }
+  .acc { display: flex; flex-wrap: wrap; gap: 12px; }
+  .sellos { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 30px; font-weight: 700; font-size: 15px; }
+  .sellos span { display: flex; align-items: center; gap: 8px; }
+  .sellos svg { width: 20px; height: 20px; color: var(--rosa); }
+
+  /* la credencial */
+  .cred-zona { position: relative; display: grid; place-items: center; padding: 20px 0; }
+  .cred { width: min(400px, 100%); aspect-ratio: 1.58; border-radius: 22px; padding: 22px; color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #3A1E35 0%, var(--tinta) 55%, #1B0E19 100%); box-shadow: 0 30px 60px rgba(42,22,38,.35); transform: rotate(-4deg); display: flex; flex-direction: column; }
+  .cred::before { content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%; right: -90px; top: -110px; background: radial-gradient(circle, rgba(232,92,147,.55), transparent 65%); }
+  .cred .top { display: flex; align-items: center; gap: 10px; position: relative; }
+  .cred .top .mono { width: 34px; height: 34px; font-size: 12px; background: var(--champan); color: var(--tinta); border-radius: 9px; }
+  .cred .top small { font-size: 11px; letter-spacing: .12em; color: var(--champan); font-weight: 700; }
+  .cred .nom { margin-top: auto; position: relative; }
+  .cred .nom small { display: block; font-size: 11.5px; color: #D9C3D3; }
+  .cred .nom b { display: block; font: 800 clamp(20px, 3vw, 26px)/1.1 var(--titulo); margin: 2px 0 10px; }
+  .cred .curso { display: inline-flex; gap: 8px; align-items: center; font-weight: 700; font-size: 13.5px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px; }
+  .cred .sello { position: absolute; right: 18px; bottom: 18px; width: 72px; height: 72px; border-radius: 50%; border: 2px dashed var(--champan); color: var(--champan); display: grid; place-items: center; text-align: center; font: 800 10px/1.15 var(--cuerpo); letter-spacing: .04em; transform: rotate(12deg); }
+  .nota-cred { position: absolute; left: 0; bottom: -6px; background: #fff; border: 1px solid var(--linea); border-radius: 14px; padding: 10px 14px; font-size: 14px; font-weight: 700; box-shadow: 0 12px 26px rgba(42,22,38,.12); display: flex; align-items: center; gap: 8px; }
+  .nota-cred i { width: 10px; height: 10px; border-radius: 50%; background: #2BB673; }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .cred-zona { padding: 10px 0 30px; } }
+
+  /* qué incluye */
+  .incluye { background: var(--tinta); color: #fff; }
+  .incluye h2 { font-size: clamp(30px, 4.4vw, 48px); max-width: 16ch; }
+  .incluye .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 36px; }
+  .inc { border: 1px solid rgba(255,255,255,.14); border-radius: 20px; padding: 22px; background: rgba(255,255,255,.04); }
+  .inc svg { width: 34px; height: 34px; color: var(--champan); }
+  .inc h3 { font-size: 21px; margin: 14px 0 8px; }
+  .inc p { margin: 0; color: #D9C3D3; font-size: 15.5px; }
+  @media (max-width: 940px) { .incluye .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .incluye .grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* cursos */
+  .cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 26px; }
+  .cab h2 { font-size: clamp(32px, 4.6vw, 52px); }
+  .cab p { margin: 10px 0 0; color: var(--suave); max-width: 46ch; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .filtros button { border: 1.5px solid var(--linea); background: #fff; border-radius: 999px; padding: 9px 16px; font: 700 14.5px var(--cuerpo); cursor: pointer; color: var(--tinta2); }
+  .filtros button.on { background: var(--tinta); border-color: var(--tinta); color: #fff; }
+  .cursos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .curso { background: #fff; border: 1px solid var(--linea); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .curso .area { font-size: 13.5px; font-weight: 700; color: var(--rosa); }
+  .curso h3 { font-size: 25px; }
+  .curso p { margin: 0; color: var(--suave); font-size: 15.5px; }
+  .nivel { display: flex; gap: 5px; align-items: center; font-size: 13.5px; font-weight: 700; color: var(--tinta2); }
+  .nivel i { width: 22px; height: 6px; border-radius: 3px; background: var(--rubor2); }
+  .nivel i.on { background: var(--rosa); }
+  .curso .btn { margin-top: auto; padding: 12px 16px; font-size: 15px; background: var(--rubor); color: var(--rosa); }
+  .curso .btn:hover { background: var(--rubor2); }
+  @media (max-width: 940px) { .cursos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .cursos { grid-template-columns: minmax(0, 1fr); } }
+
+  /* camino de niveles */
+  .camino { background: var(--rubor); }
+  .camino .wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; align-items: center; }
+  .camino h2 { font-size: clamp(30px, 4.2vw, 46px); }
+  .camino p { color: var(--tinta2); margin: 14px 0 0; }
+  .pasos-nivel { display: grid; gap: 12px; }
+  .pn { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: center; background: #fff; border-radius: 18px; padding: 16px; border: 1px solid var(--rubor2); }
+  .pn b.n { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font: 800 22px var(--titulo); background: var(--rubor2); color: var(--rosa); }
+  .pn:nth-child(2) b.n { background: var(--rosa2); color: #fff; }
+  .pn:nth-child(3) b.n { background: var(--rosa); color: #fff; }
+  .pn h3 { font-size: 20px; }
+  .pn span { color: var(--suave); font-size: 15px; }
+  @media (max-width: 860px) { .camino .wrap { grid-template-columns: minmax(0, 1fr); } }
+
+  /* cómo funciona */
+  .como h2 { font-size: clamp(30px, 4.2vw, 46px); margin-bottom: 30px; }
+  .como .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: p; }
+  .paso { border-top: 3px solid var(--tinta); padding-top: 16px; counter-increment: p; }
+  .paso::before { content: counter(p); font: 800 40px/1 var(--titulo); color: var(--rosa); }
+  .paso h3 { font-size: 21px; margin: 10px 0 6px; }
+  .paso p { margin: 0; color: var(--suave); font-size: 15.5px; }
+  @media (max-width: 860px) { .como .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .como .grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* preguntas */
+  .faq .wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 40px; }
+  .faq h2 { font-size: clamp(30px, 4.2vw, 46px); }
+  details { border-bottom: 1px solid var(--linea); padding-block: 16px; }
+  summary { cursor: pointer; font-weight: 700; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 14px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font: 800 24px/1 var(--titulo); color: var(--rosa); }
+  details[open] summary::after { content: "−"; }
+  details p { margin: 10px 0 0; color: var(--tinta2); }
+  @media (max-width: 860px) { .faq .wrap { grid-template-columns: minmax(0, 1fr); } }
+
+  /* cierre */
+  .final { padding-top: 0; }
+  .final .caja { background: var(--rosa); color: #fff; border-radius: 28px; padding: clamp(28px, 5vw, 56px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; background-image: radial-gradient(600px 300px at 100% 0, rgba(255,255,255,.18), transparent 60%); }
+  .final h2 { font-size: clamp(30px, 4.4vw, 50px); max-width: 15ch; }
+  .final p { margin: 10px 0 0; color: #FFE3EE; }
+  .final .btn { background: #fff; color: var(--rosa); }
+  footer { padding-block: 34px calc(34px + env(safe-area-inset-bottom)); color: var(--suave); font-size: 14.5px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
+  .flota { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; z-index: 15; color: #fff;
+    background: linear-gradient(45deg, #F9A23B, #E1306C 50%, #833AB4); box-shadow: 0 12px 26px rgba(225,48,108,.35); }
+  .flota svg { width: 28px; height: 28px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></g><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="ok" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></g></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <a class="marca" href="#inicio"><span class="mono">GMP</span><span><b>GMP Cursos Online</b><small>Academia de Belleza</small></span></a>
+    <nav aria-label="Secciones"><a href="#incluye">Qué incluye</a><a href="#cursos">Cursos</a><a href="#como">Cómo funciona</a><a href="#preguntas">Preguntas</a></nav>
+    <a class="btn btn-pri" href="#" data-ig>Inscribirme</a>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="rot">Cursos online de belleza</span>
+        <h1>Aprendé un oficio de belleza <span>y certificalo</span></h1>
+        <p class="baj">Manicuría, lashista, estilismo, barbería y alisados. Cursás online, a tu ritmo, y te llevás tu certificación oficial y tu credencial.</p>
+        <div class="acc">
+          <a class="btn btn-pri" href="#cursos">Ver los cursos</a>
+          <a class="btn btn-sec" href="#" data-ig><svg><use href="#ig"/></svg>Consultar</a>
+        </div>
+        <div class="sellos">
+          <span><svg><use href="#ok"/></svg>Certificación oficial</span>
+          <span><svg><use href="#ok"/></svg>Credencial</span>
+          <span><svg><use href="#ok"/></svg>Acompañamiento de por vida</span>
+        </div>
+      </div>
+      <div class="cred-zona" aria-label="Ejemplo de credencial">
+        <div class="cred">
+          <div class="top"><span class="mono">GMP</span><small>CREDENCIAL PROFESIONAL</small></div>
+          <div class="nom">
+            <small>Egresada</small>
+            <b>Tu nombre acá</b>
+            <span class="curso">Manicuría · Nivel avanzado</span>
+          </div>
+          <div class="sello">CERTIFI&shy;CACIÓN<br>OFICIAL</div>
+        </div>
+        <div class="nota-cred"><i></i>Te acompañamos aún después de recibirte</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="incluye" id="incluye">
+    <div class="wrap">
+      <h2>Todo lo que te llevás con cada curso</h2>
+      <div class="grid">
+        <div class="inc"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="13" r="7"/><path d="M11.5 18.5 10 28l6-3 6 3-1.5-9.5"/></svg><h3>Certificación oficial</h3><p>Al terminar, recibís tu certificado oficial para trabajar con respaldo.</p></div>
+        <div class="inc"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="24" height="16" rx="3"/><circle cx="11" cy="15" r="2.5"/><path d="M7.5 21c.6-2 2-3 3.5-3s2.9 1 3.5 3M18 14h6M18 18h4"/></svg><h3>Credencial</h3><p>Tu credencial profesional con tu nombre y el curso que hiciste.</p></div>
+        <div class="inc"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h20v13H14l-6 5v-5H6z"/><path d="M11 13h10M11 17h6"/></svg><h3>Acompañamiento de por vida</h3><p>Seguís consultando tus dudas siempre, también después de recibirte.</p></div>
+        <div class="inc"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="14" height="26" rx="3"/><path d="M14 25h4M13.5 12.5l5 3-5 3z"/></svg><h3>100% online</h3><p>Cursás desde el celular o la compu, cuando y donde quieras.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cursos">
+    <div class="wrap">
+      <div class="cab">
+        <div><h2>Nuestros cursos</h2><p>Elegí tu área. Manicuría y lashista se dividen en tres niveles, así arrancás desde donde estás.</p></div>
+      </div>
+      <div class="filtros" id="filtros" role="tablist" aria-label="Filtrar cursos"></div>
+      <div class="cursos" id="lista"></div>
+    </div>
+  </section>
+
+  <section class="camino">
+    <div class="wrap">
+      <div>
+        <h2>Avanzá de nivel a tu ritmo</h2>
+        <p>En manicuría y lashista podés hacer cada nivel por separado o el recorrido completo. Si ya tenés experiencia, empezás por el que te corresponde.</p>
+      </div>
+      <div class="pasos-nivel">
+        <div class="pn"><b class="n">1</b><div><h3>Inicial</h3><span>Para empezar desde cero, con las bases bien firmes.</span></div></div>
+        <div class="pn"><b class="n">2</b><div><h3>Intermedio</h3><span>Sumás técnicas y ganás velocidad y prolijidad.</span></div></div>
+        <div class="pn"><b class="n">3</b><div><h3>Avanzado</h3><span>Técnicas de nivel profesional para destacarte.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="como" id="como">
+    <div class="wrap">
+      <h2>Cómo funciona</h2>
+      <div class="grid">
+        <div class="paso"><h3>Elegís tu curso</h3><p>Mirá las áreas y los niveles, y elegí el que va con vos.</p></div>
+        <div class="paso"><h3>Te inscribís</h3><p>Nos escribís y te contamos todo: contenido, duración y formas de pago.</p></div>
+        <div class="paso"><h3>Cursás online</h3><p>Aprendés a tu ritmo, con acompañamiento para tus dudas.</p></div>
+        <div class="paso"><h3>Te certificás</h3><p>Recibís tu certificación oficial y tu credencial.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="preguntas">
+    <div class="wrap">
+      <h2>Preguntas frecuentes</h2>
+      <div>
+        <details><summary>¿Necesito experiencia previa?</summary><p>No. Los niveles iniciales arrancan desde cero. Si ya tenés experiencia, podés empezar por el nivel intermedio o el avanzado.</p></details>
+        <details><summary>¿La certificación es oficial?</summary><p>Sí. Cada curso incluye certificación oficial y tu credencial profesional.</p></details>
+        <details><summary>¿Qué significa acompañamiento de por vida?</summary><p>Que después de terminar el curso podés seguir consultándonos tus dudas cuando las tengas.</p></details>
+        <details><summary>¿Puedo hacer un solo nivel?</summary><p>Sí. En manicuría y lashista cada nivel se puede hacer por separado.</p></details>
+        <details><summary>¿Cuánto duran y cuánto salen?</summary><p>Depende del curso y del nivel. Escribinos y te pasamos la información completa del que te interesa.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div class="caja">
+        <div><h2>Empezá hoy tu formación</h2><p>Escribinos y te contamos todo sobre el curso que te interesa.</p></div>
+        <a class="btn" href="#" data-ig><svg><use href="#ig"/></svg>Quiero inscribirme</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><b>GMP Cursos Online</b> · Academia de Belleza</span>
+    <a href="https://www.instagram.com/gmpcursosonline/" target="_blank" rel="noopener">@gmpcursosonline</a>
+  </div>
+</footer>
+<a class="flota" href="#" data-ig aria-label="Escribinos por Instagram"><svg><use href="#ig"/></svg></a>
+
+<script>
+const IG = "https://ig.me/m/gmpcursosonline";
+const cursos = [
+  { a: "Manicuría", n: "Manicuría inicial", nivel: 1, d: "Las bases: preparación de la uña, cuidado de cutículas y esmaltado prolijo." },
+  { a: "Manicuría", n: "Manicuría intermedia", nivel: 2, d: "Sumás técnicas y diseños para trabajar con más velocidad y terminación." },
+  { a: "Manicuría", n: "Manicuría avanzada", nivel: 3, d: "Técnicas profesionales para ofrecer un servicio completo y destacarte." },
+  { a: "Lashista", n: "Lashista inicial", nivel: 1, d: "Arrancás desde cero: materiales, cuidado del ojo y primeras aplicaciones." },
+  { a: "Lashista", n: "Lashista intermedio", nivel: 2, d: "Perfeccionás la técnica y ganás prolijidad y rapidez." },
+  { a: "Lashista", n: "Lashista avanzado", nivel: 3, d: "Técnicas avanzadas para trabajar a nivel profesional." },
+  { a: "Estilismo", n: "Estilista femenino", nivel: 0, d: "Cortes y peinados para trabajar en peluquería o por tu cuenta." },
+  { a: "Estilismo", n: "Estilista masculino", nivel: 0, d: "Cortes masculinos actuales, con técnica y terminación prolija." },
+  { a: "Barbería", n: "Barbería", nivel: 0, d: "Cortes, degradados y arreglo de barba para trabajar como barbero." },
+  { a: "Alisados", n: "Alisado, botox y keratina", nivel: 0, d: "Tratamientos capilares de alisado y nutrición, paso a paso." }
+];
+const NIVELES = ["", "Inicial", "Intermedio", "Avanzado"];
+const areas = ["Todos", ...new Set(cursos.map(c => c.a))];
+let actual = "Todos";
+const filtros = document.getElementById("filtros"), lista = document.getElementById("lista");
+function pintar() {
+  filtros.innerHTML = areas.map(a => `<button type="button" role="tab" aria-selected="${a === actual}" class="${a === actual ? "on" : ""}">${a}</button>`).join("");
+  filtros.querySelectorAll("button").forEach((b, i) => b.onclick = () => { actual = areas[i]; pintar(); });
+  lista.innerHTML = cursos.filter(c => actual === "Todos" || c.a === actual).map(c => `<article class="curso">
+    <span class="area">${c.a}</span><h3>${c.n}</h3>
+    ${c.nivel ? `<div class="nivel">${[1, 2, 3].map(i => `<i class="${i <= c.nivel ? "on" : ""}"></i>`).join("")}<span>&nbsp;Nivel ${NIVELES[c.nivel].toLowerCase()}</span></div>` : ""}
+    <p>${c.d}</p>
+    <a class="btn" href="${IG}" target="_blank" rel="noopener">Quiero info de este curso</a></article>`).join("");
+}
+pintar();
+document.querySelectorAll("[data-ig]").forEach(a => { a.href = IG; a.target = "_blank"; a.rel = "noopener"; });
+</script>
+<script src="/m/franja.js" data-negocio="GMP Cursos Online" data-slug="gmpcursos"></script>
+</body>
+</html>
