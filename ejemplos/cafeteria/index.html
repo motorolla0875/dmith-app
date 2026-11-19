@@ -165,15 +165,16 @@
 <footer><div class="wrap"><span>Miga Café y Panadería</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const carta = {
+const carta = DEMO.lista("carta", {
   "Café": [["Espresso", 2800], ["Cortado", 3200], ["Café con leche", 3600, "Taza grande"], ["Flat white", 4200], ["Capuchino", 4400, "Con cacao o canela"]],
   "Para acompañar": [["Medialuna de manteca", 900], ["Tostado de jamón y queso", 5800, "En pan de miga casero"], ["Tostadas con palta y huevo", 7400, "En pan de masa madre"], ["Porción de budín", 2900, "Limón, naranja o marmolado"], ["Alfajor de maicena", 1800]],
-};
+}, {"campos": ["Nombre", "Precio", "Detalle"]});
 document.getElementById("carta-box").innerHTML = Object.entries(carta).map(([c, items]) => `<div><h3>${c}</h3>${items.map(([n, p, d]) => `<div class="it"><span>${n}${d ? `<small>${d}</small>` : ""}</span><i></i><b>${fmt(p)}</b></div>`).join("")}</div>`).join("");
 const flavors = ["Chocotorta", "Lemon pie", "Red velvet", "Carrot cake", "Rogel"];
-const sizes = [["Chica (8 porciones)", 22000], ["Mediana (12 porciones)", 32000], ["Grande (20 porciones)", 48000]];
+const sizes = DEMO.lista("sizes", [["Chica (8 porciones)", 22000], ["Mediana (12 porciones)", 32000], ["Grande (20 porciones)", 48000]], {"campos": ["Tamaño", "Precio"]});
 let flavor = flavors[0], size = sizes[1];
 function opts(id, list, label, set, init) {
   const box = document.getElementById(id);

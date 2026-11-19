@@ -153,14 +153,15 @@
 <footer><div class="wrap"><span>Trufa Pet Shop</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const foods = [
+const foods = DEMO.lista("foods", [
   { n: "Perro adulto", s: "Raza mediana y grande", c: "#127C74", opts: { "3 kg": 14500, "15 kg": 52000, "21 kg": 68000 } },
   { n: "Cachorro", s: "Hasta 12 meses", c: "#D96C3B", opts: { "3 kg": 16800, "15 kg": 59000 } },
   { n: "Gato adulto", s: "Castrado o no", c: "#5B5FB0", opts: { "1 kg": 7900, "3 kg": 19500, "7,5 kg": 42000 } },
   { n: "Perro senior", s: "Más de 7 años", c: "#3E6B3A", opts: { "3 kg": 17500, "15 kg": 61000 } },
-];
+], {"etiquetas": {"s": "Detalle", "c": "Color"}});
 const box = document.getElementById("foods");
 foods.forEach(f => {
   const el = document.createElement("div"); el.className = "food";
@@ -172,7 +173,7 @@ foods.forEach(f => {
   upd(); box.appendChild(el);
 });
 const sizes = [{ n: "Chico", d: "hasta 10 kg", f: 1 }, { n: "Mediano", d: "10 a 25 kg", f: 1.35 }, { n: "Grande", d: "más de 25 kg", f: 1.8 }];
-const svcs = [{ n: "Baño", p: 9000 }, { n: "Baño y corte", p: 14000 }, { n: "Corte de uñas", p: 3000 }, { n: "Deslanado", p: 12000 }];
+const svcs = DEMO.lista("svcs", [{ n: "Baño", p: 9000 }, { n: "Baño y corte", p: 14000 }, { n: "Corte de uñas", p: 3000 }, { n: "Deslanado", p: 12000 }]);
 let size = sizes[0]; const chosen = new Set(["Baño"]);
 const sBox = document.getElementById("sizes"), vBox = document.getElementById("svcs");
 sizes.forEach((s, i) => { const b = document.createElement("button"); b.innerHTML = `${s.n}<small>${s.d}</small>`; if (!i) b.className = "on"; b.onclick = () => { sBox.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); size = s; tot(); }; sBox.appendChild(b); });

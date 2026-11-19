@@ -179,13 +179,14 @@
 <footer><div class="wrap"><span>Hierro Gym · Quilmes centro · @hierro.gym</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const planes = [
+const planes = DEMO.lista("planes", [
   { n: "2 veces", p: 22000, f: ["2 días por semana", "Sala de musculación", "Rutina armada por un profe"] },
   { n: "Pase libre", p: 32000, top: true, f: ["Todos los días", "Sala + todas las clases", "Rutina y seguimiento mensual", "Vestuario con lockers"] },
   { n: "Clases", p: 26000, f: ["Funcional, spinning, boxeo y yoga", "Hasta 12 clases por mes", "Reservás por WhatsApp"] },
-];
+], {"etiquetas": {"f": "Incluye", "top": "Destacado"}});
 document.getElementById("plans").innerHTML = planes.map(p => `<div class="plan${p.top ? " top" : ""}"><h3>${p.n}</h3><div class="big">${fmt(p.p)} <small>por mes</small></div><ul>${p.f.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn${p.top ? "" : " dark"}" style="justify-content:center" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hola Hierro! Quiero info del plan ${p.n} (${fmt(p.p)} por mes).`)}">Quiero este plan</a></div>`).join("");
 const dias = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const C = { F: ["Funcional","c-func"], S: ["Spinning","c-spin"], B: ["Boxeo","c-box"], Y: ["Yoga","c-yoga"] };

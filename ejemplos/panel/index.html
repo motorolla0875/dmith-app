@@ -137,7 +137,7 @@ let D = null, estado = { listas: {}, textos: {} }, nombreWeb = "";
 
 const ETIQUETAS = { n: "Nombre", d: "Descripción", p: "Precio $", old: "Precio anterior $ (tachado)", img: "Foto", talles: "Talles", sin: "Talles sin stock", badge: "Etiqueta", c: "Categoría", m: "Minutos", extra: "Es un adicional" };
 const ORDEN = ["img", "n", "c", "d", "p", "old", "m", "talles", "sin", "badge", "extra"];
-const SECCIONES = { productos: ["Productos", "Precios, fotos, talles y stock"], carta: ["Menú", "Lo que se puede pedir"], bolsones: ["Bolsones", "Combos armados"], prods: ["Productos por kilo", "Precios de la semana"], servicios: ["Servicios", "Precios y duración"] };
+const SECCIONES = { productos: ["Productos", "Precios, fotos, talles y stock"], carta: ["Menú", "Lo que se puede pedir"], bolsones: ["Bolsones", "Combos armados"], prods: ["Productos por kilo", "Precios de la semana"], servicios: ["Servicios", "Precios y duración"], planes: ["Planes", "Precios y lo que incluye"], foods: ["Alimentos", "Marcas, detalle y color"], svcs: ["Servicios", "Precios y detalle"], sizes: ["Tamaños y precios", "Lo que se puede pedir"], groups: ["Gustos", "Por categoría"], ramos: ["Ramos", "Fotos, detalle y precio"], props: ["Propiedades", "Fotos, precio y datos"] };
 const fmt = n => n ? Number(n).toLocaleString("es-AR") : "";
 const copia = x => JSON.parse(JSON.stringify(x));
 
@@ -212,7 +212,7 @@ function achicar(archivo) {
 }
 // un campo según el tipo de dato
 function campo(obj, k, etiqueta, muestra) {
-  const v = obj[k] !== undefined ? obj[k] : muestra;
+  const v = obj[k] !== undefined ? obj[k] : (typeof muestra === "string" ? "" : muestra);
   if (k === "img") {
     const mini = el("div", { class: "mini-foto" });
     const pintar = () => mini.style.backgroundImage = obj[k] ? `url("${D.img(obj[k], 200)}")` : "";
@@ -255,9 +255,12 @@ function campo(obj, k, etiqueta, muestra) {
 function listaItems(arr, def, opc) {
   const caja = el("div", { style: "display:grid;gap:10px" });
   const esFila = Array.isArray(def[0]);
-  const claves = esFila ? def[0].map((_, i) => i) : ORDEN.filter(k => def.some(x => k in x)).concat([...new Set(def.flatMap(Object.keys))].filter(k => !ORDEN.includes(k)));
+  const molde = esFila ? def.reduce((a, b) => b.length > a.length ? b : a, def[0]) : null;
   const muestra = k => { for (const x of def) if (x[k] !== undefined) return x[k]; return ""; };
-  const vacio = () => { if (esFila) return def[0].map(v => typeof v === "number" ? 0 : typeof v === "string" && v[0] === "#" ? v : ""); const o = {}; claves.forEach(k => { const m = muestra(k); o[k] = typeof m === "number" ? 0 : typeof m === "boolean" ? false : Array.isArray(m) ? [] : ""; }); o.n = "Nuevo"; return o; };
+  const esObjeto = v => v && typeof v === "object" && !Array.isArray(v);
+  const claves = esFila ? molde.map((_, i) => i) : ORDEN.filter(k => def.some(x => k in x)).concat([...new Set(def.flatMap(Object.keys))].filter(k => !ORDEN.includes(k))).filter(k => !esObjeto(muestra(k)));
+  const etq = opc.etiquetas || {};
+  const vacio = () => { if (esFila) return molde.map(v => typeof v === "number" ? 0 : typeof v === "string" && v[0] === "#" ? v : ""); const o = {}; claves.forEach(k => { const m = muestra(k); o[k] = typeof m === "number" ? 0 : typeof m === "boolean" ? false : Array.isArray(m) ? [] : ""; }); o.n = "Nuevo"; return o; };
   const redibujar = () => {
     caja.innerHTML = "";
     arr.forEach((it, i) => {
@@ -268,8 +271,8 @@ function listaItems(arr, def, opc) {
         el("button", { type: "button", class: "mini", "aria-label": "Bajar", onclick: () => mover(1), html: '<svg><use href="#i-abajo"/></svg>' }),
         el("button", { type: "button", class: "mini borrar", "aria-label": "Borrar", onclick: () => { arr.splice(i, 1); cambio(); redibujar(); }, html: '<svg><use href="#i-borrar"/></svg>' }));
       const campos = el("div", { class: "campos" }, claves.map(k => {
-        const etq = esFila ? ((opc.campos || [])[k] || "Dato " + (k + 1)) : (ETIQUETAS[k] || k);
-        const c = campo(it, k, etq, esFila ? def[0][k] : muestra(k));
+        const nombreCampo = esFila ? ((opc.campos || [])[k] || "Dato " + (k + 1)) : (etq[k] || ETIQUETAS[k] || k);
+        const c = campo(it, k, nombreCampo, esFila ? molde[k] : muestra(k));
         if (c._setTitular) c._setTitular(() => titulo.textContent = (esFila ? it[0] : it.n) || "Sin nombre");
         return c;
       }));

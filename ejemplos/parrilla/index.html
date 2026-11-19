@@ -151,13 +151,14 @@
 <footer><div class="wrap"><span>Brasa Parrilla · @brasa.parrilla</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const carta = {
+const carta = DEMO.lista("carta", {
   "Para empezar": [["Provoleta", 9500, "Con orégano y tomates asados"], ["Chorizo y morcilla", 7800, "Con pan casero y chimichurri"], ["Mollejas", 16500, "Crocantes, con limón"]],
   "Cortes": [["Bife de chorizo", 22000, "400 g, jugoso o a punto"], ["Vacío", 19500, "350 g, el de siempre"], ["Entraña", 21000, "La más pedida"], ["Ojo de bife", 24500, "400 g"]],
   "Para compartir": [["Parrillada para 2", 42000, "Asado, vacío, chorizo, morcilla y mollejas"], ["Parrillada para 4", 78000, "Lo mismo, el doble y con más achuras"]],
-};
+}, {"campos": ["Nombre", "Precio", "Detalle"]});
 document.getElementById("carta-box").innerHTML = Object.entries(carta).map(([c, items]) => `<div class="cat"><h3>${c}</h3>${items.map(([n, p, d]) => `<div class="it"><b>${n}</b><span>${fmt(p)}</span><small>${d}</small></div>`).join("")}</div>`).join("");
 let ppl = 2, slot = null;
 const date = document.getElementById("r-date");

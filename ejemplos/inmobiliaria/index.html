@@ -148,8 +148,9 @@
 <footer><div class="wrap"><span>Umbral Propiedades</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
-const props = [
+const props = DEMO.lista("props", [
   { c: "UM-101", op: "Comprar", t: "Casa", z: "Bernal", p: "US$ 185.000", n: "Casa con pileta y quincho", a: "Bernal Oeste", amb: 4, m2: 220, d: 3, img: "KtOid0FLjqU" },
   { c: "UM-102", op: "Comprar", t: "Casa", z: "Quilmes", p: "US$ 128.000", n: "Casa de ladrillo con jardín", a: "Quilmes Oeste", amb: 4, m2: 160, d: 3, img: "uOYak90r4L0" },
   { c: "UM-103", op: "Comprar", t: "Departamento", z: "Quilmes", p: "US$ 89.000", n: "Depto luminoso con balcón", a: "Quilmes centro", amb: 3, m2: 72, d: 2, img: "1vieZivk1As" },
@@ -158,7 +159,7 @@ const props = [
   { c: "UM-106", op: "Alquilar", t: "Casa", z: "Bernal", p: "$ 850.000 / mes", n: "Casa con parque y cochera", a: "Bernal", amb: 4, m2: 180, d: 3, img: "Dy-HDgXzzhc" },
   { c: "UM-107", op: "Alquilar", t: "PH", z: "Quilmes", p: "$ 560.000 / mes", n: "PH reciclado con terraza", a: "Quilmes Este", amb: 3, m2: 70, d: 2, img: "eVb3HwIVnw0" },
   { c: "UM-108", op: "Comprar", t: "Casa", z: "Berazategui", p: "US$ 210.000", n: "Casa en barrio parque", a: "Hudson", amb: 5, m2: 300, d: 4, img: "dmXD7r2mSPs" },
-];
+], {"etiquetas": {"c": "Código", "op": "Operación", "t": "Tipo", "z": "Zona", "p": "Precio", "n": "Título", "a": "Barrio", "amb": "Ambientes", "m2": "Metros²", "d": "Dormitorios"}});
 let op = "Comprar";
 const box = document.getElementById("props");
 function render() {
@@ -166,7 +167,7 @@ function render() {
   const list = props.filter(p => p.op === op && (t === "Todos" || p.t === t) && (z === "Todas" || p.z === z) && p.amb >= a);
   document.getElementById("p-title").textContent = op === "Comprar" ? "En venta" : "En alquiler";
   document.getElementById("p-count").textContent = `${list.length} propiedad${list.length === 1 ? "" : "es"}`;
-  box.innerHTML = list.length ? list.map(p => `<div class="prop"><div class="ph"><img src="https://unsplash.com/photos/${p.img}/download?w=700" alt="${p.n}" loading="lazy"><span class="tag${p.op === "Alquilar" ? " alq" : ""}">${p.t} · ${p.op === "Comprar" ? "Venta" : "Alquiler"}</span></div><div class="body"><div class="price">${p.p}</div><h3>${p.n}</h3><div class="addr">${p.a} · Cód. ${p.c}</div><div class="feats"><span><b>${p.amb}</b> amb.</span><span><b>${p.d}</b> dorm.</span><span><b>${p.m2}</b> m²</span></div></div><a class="btn navy" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hola Umbral! Me interesa la propiedad ${p.c} (${p.n}, ${p.p}). ¿Puedo verla?`)}">Consultar</a></div>`).join("")
+  box.innerHTML = list.length ? list.map(p => `<div class="prop"><div class="ph"><img src="${DEMO.img(p.img, 700)}" alt="${p.n}" loading="lazy"><span class="tag${p.op === "Alquilar" ? " alq" : ""}">${p.t} · ${p.op === "Comprar" ? "Venta" : "Alquiler"}</span></div><div class="body"><div class="price">${p.p}</div><h3>${p.n}</h3><div class="addr">${p.a} · Cód. ${p.c}</div><div class="feats"><span><b>${p.amb}</b> amb.</span><span><b>${p.d}</b> dorm.</span><span><b>${p.m2}</b> m²</span></div></div><a class="btn navy" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hola Umbral! Me interesa la propiedad ${p.c} (${p.n}, ${p.p}). ¿Puedo verla?`)}">Consultar</a></div>`).join("")
     : `<div class="empty">No hay propiedades con esos filtros ahora. Escribinos y te avisamos cuando entre una.</div>`;
 }
 document.querySelectorAll("#op button").forEach(b => b.onclick = () => { op = b.textContent; document.querySelectorAll("#op button").forEach(x => x.classList.toggle("on", x === b)); render(); });

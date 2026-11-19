@@ -146,14 +146,15 @@
   </div>
 </div>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const sizes = [{ n: "1/4 kg", max: 3, p: 7500 }, { n: "1/2 kg", max: 3, p: 13500 }, { n: "1 kg", max: 4, p: 24000, free: true }, { n: "Cucurucho", max: 2, p: 5000 }];
-const groups = {
+const sizes = DEMO.lista("sizes", [{ n: "1/4 kg", max: 3, p: 7500 }, { n: "1/2 kg", max: 3, p: 13500 }, { n: "1 kg", max: 4, p: 24000, free: true }, { n: "Cucurucho", max: 2, p: 5000 }], {"etiquetas": {"n": "Tamaño", "max": "Gustos máximos", "free": "Envío gratis"}});
+const groups = DEMO.lista("groups", {
   "Cremas": [["Dulce de leche", "#C98A4B"], ["Dulce de leche granizado", "#B57A40"], ["Vainilla", "#F6E7B8"], ["Crema americana", "#FFF4DA"], ["Sambayón", "#F2D27A"], ["Tramontana", "#E8C08F"]],
   "Chocolates": [["Chocolate amargo", "#4B2A20"], ["Chocolate con almendras", "#6B3A2A"], ["Chocolate blanco", "#F5EFE3"], ["Mousse de chocolate", "#7A4A36"]],
   "Frutales": [["Frutilla al agua", "#FF6F91"], ["Limón", "#FFF07A"], ["Maracuyá", "#FFC43D"], ["Frutos rojos", "#B8325A"], ["Durazno", "#FFB38A"]],
-};
+}, {"campos": ["Gusto", "Color"]});
 let size = null; const chosen = [];
 const sBox = document.getElementById("sizes");
 sizes.forEach(s => {

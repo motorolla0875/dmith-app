@@ -73,17 +73,17 @@ const grupos = [
   { t: "Turnos y servicios", s: "Eligen el servicio, el día y la hora, y te llega el turno por WhatsApp. Vos cambiás servicios y precios.", items: [
     ["barberia", "Navaja Sur", "Barbería", "BBGyxhtPpC0", 1],
     ["unas", "Nácar Nails", "Uñas y estética", "3rSc8jGIVHI", 1] ] },
-  { t: "Más rubros", s: "Todos se pueden modificar desde el panel. ¿Tu rubro no está? Lo hacemos igual.", items: [
-    ["ropa-chicos", "Pompón", "Ropa infantil", "RUHUy-21oHo"],
-    ["gimnasio", "Hierro Gym", "Gimnasio", "IYLLF511aOY"],
-    ["petshop", "Trufa", "Pet shop", "ufPziMiRqU8"],
-    ["cafeteria", "Miga", "Café y panadería", "MH8Iu7OC_UE"],
-    ["heladeria", "Nieve", "Heladería", "G5ZenftPPOA"],
-    ["floreria", "Malva", "Florería", "vN8HQcKv8Lg"],
-    ["parrilla", "Brasa", "Parrilla", "Qi7NlvF-ZsY"],
-    ["inmobiliaria", "Umbral", "Inmobiliaria", "KtOid0FLjqU"],
-    ["taller", "Pistón", "Taller mecánico", "XP8o9_Arwqg"],
-    ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA"] ] },
+  { t: "Más rubros", s: "Cada uno con su panel. ¿Tu rubro no está? Lo hacemos igual.", items: [
+    ["ropa-chicos", "Pompón", "Ropa infantil", "RUHUy-21oHo", 1],
+    ["gimnasio", "Hierro Gym", "Gimnasio", "IYLLF511aOY", 1],
+    ["petshop", "Trufa", "Pet shop", "ufPziMiRqU8", 1],
+    ["cafeteria", "Miga", "Café y panadería", "MH8Iu7OC_UE", 1],
+    ["heladeria", "Nieve", "Heladería", "G5ZenftPPOA", 1],
+    ["floreria", "Malva", "Florería", "vN8HQcKv8Lg", 1],
+    ["parrilla", "Brasa", "Parrilla", "Qi7NlvF-ZsY", 1],
+    ["inmobiliaria", "Umbral", "Inmobiliaria", "KtOid0FLjqU", 1],
+    ["taller", "Pistón", "Taller mecánico", "XP8o9_Arwqg", 1],
+    ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA", 1] ] },
 ];
 document.getElementById("grupos").innerHTML = grupos.map(g => `<section class="grupo"><h2>${g.t}</h2><p>${g.s}</p><div class="grid">${g.items.map(([slug, n, r, img, panel]) =>
   `<div class="card"><img src="https://unsplash.com/photos/${img}/download?w=600" alt="" loading="lazy"><div class="info"><div><b>${n}</b><small>${r}</small></div>

@@ -170,9 +170,10 @@
 <footer><div class="wrap"><span class="logo" style="font-size:24px"><i></i>pompón</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="install" id="install">Instalar la app de Pompón</button>
 
+<script src="../demo.js"></script>
 <script>
 const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>';
-const productos = [
+const productos = DEMO.lista("productos", [
   { n: "Camiseta Beisbolera", e: "Bebés", p: 16900, img: "Cg_GS_2RUGo", talles: ["6m","12m","18m","24m"], sin: ["6m"], badge: "Nuevo" },
   { n: "Conjunto Frisa Bordó", e: "Bebés", p: 24500, img: "jJueqz0Mptw", talles: ["12m","18m","24m"], sin: [] },
   { n: "Remera Básica Negra", e: "Chicos", p: 12900, img: "zrTGh0_EZaY", talles: ["2","4","6","8"], sin: [] },
@@ -181,7 +182,7 @@ const productos = [
   { n: "Buzo Polera Verde", e: "Grandes", p: 26900, img: "5zaweEWW7GM", talles: ["8","10","12","14"], sin: [] },
   { n: "Campera Parka Verde", e: "Grandes", p: 48900, img: "_BbXjjuCDFo", talles: ["8","10","12"], sin: ["12"] },
   { n: "Pack Remeras Colores", e: "Chicos", p: 29900, img: "xXJ6utyoSw0", talles: ["4","6","8"], sin: [], badge: "Combo" },
-];
+], {"etiquetas": {"e": "Edad"}});
 const fmt = n => "$" + n.toLocaleString("es-AR");
 const box = document.getElementById("productos");
 const tabs = document.getElementById("tabs");
@@ -194,7 +195,7 @@ function render() {
   productos.filter(p => actual === "Todo" || p.e === actual).forEach(pr => {
     const el = document.createElement("div");
     el.className = "card";
-    el.innerHTML = `<div class="ph"><img src="https://unsplash.com/photos/${pr.img}/download?w=600" alt="${pr.n}" loading="lazy">${pr.badge ? `<span class="badge">${pr.badge}</span>` : ""}</div>
+    el.innerHTML = `<div class="ph"><img src="${DEMO.img(pr.img, 600)}" alt="${pr.n}" loading="lazy">${pr.badge ? `<span class="badge">${pr.badge}</span>` : ""}</div>
       <div class="body"><h3>${pr.n}</h3><div class="price">${fmt(pr.p)}</div>
       <div class="sizes">${pr.talles.map(t => `<button ${pr.sin.includes(t) ? "disabled title='Sin stock'" : ""}>${t}</button>`).join("")}</div>
       <a class="ask" target="_blank" rel="noopener">${WA_ICON}Pedir</a></div>`;

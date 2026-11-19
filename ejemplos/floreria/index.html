@@ -140,21 +140,22 @@
 <footer><div class="wrap"><span>Malva Florería · Quilmes centro · @malva.flores</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const ramos = [
+const ramos = DEMO.lista("ramos", [
   { n: "Rosa pastel", d: "Rosas y claveles rosados", p: 32000, img: "vN8HQcKv8Lg" },
   { n: "Tulipanes", d: "12 tulipanes rojos y rosados", p: 38000, img: "VLpbgwu2phY" },
   { n: "Sol de otoño", d: "Astromelias amarillas y blancas", p: 24000, img: "HcmTXrnzJog" },
   { n: "Florero clásico", d: "Rosas rojas en florero de vidrio", p: 45000, img: "1h68SIbrxWk" },
   { n: "Jardín silvestre", d: "Flores de estación y follaje", p: 29000, img: "10VrDx2akC0" },
   { n: "Ramo sorpresa", d: "Lo armamos con lo más lindo del día", p: 22000, img: "F3HNRyow1CI", noimg: true },
-];
+]);
 let sel = ramos[0];
 const list = document.getElementById("list");
 ramos.filter(r => !r.noimg).forEach((r, i) => {
   const el = document.createElement("div"); el.className = "ramo" + (i ? "" : " on");
-  el.innerHTML = `<img src="https://unsplash.com/photos/${r.img}/download?w=600" alt="${r.n}" loading="lazy"><div><h3>${r.n}</h3><p>${r.d}</p><b>${fmt(r.p)}</b></div>`;
+  el.innerHTML = `<img src="${DEMO.img(r.img, 600)}" alt="${r.n}" loading="lazy"><div><h3>${r.n}</h3><p>${r.d}</p><b>${fmt(r.p)}</b></div>`;
   el.onclick = () => { list.querySelectorAll(".ramo").forEach(x => x.classList.remove("on")); el.classList.add("on"); sel = r; upd(); document.getElementById("pedido").scrollIntoView({ behavior: "smooth" }); };
   list.appendChild(el);
 });
@@ -162,7 +163,7 @@ const date = document.getElementById("o-date");
 date.min = new Date().toISOString().slice(0, 10); date.value = date.min;
 ["o-msg","o-to","o-zone","o-date"].forEach(id => document.getElementById(id).addEventListener("input", upd));
 function upd() {
-  document.getElementById("o-img").src = `https://unsplash.com/photos/${sel.img}/download?w=200`;
+  document.getElementById("o-img").src = `${DEMO.img(sel.img, 200)}`;
   document.getElementById("o-name").textContent = sel.n;
   document.getElementById("o-price").textContent = fmt(sel.p);
   const msg = document.getElementById("o-msg").value.trim(), to = document.getElementById("o-to").value.trim();

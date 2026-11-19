@@ -169,16 +169,17 @@
 <footer><div class="wrap"><span>Pistón Taller Mecánico</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + n.toLocaleString("es-AR");
-const svcs = [
+const svcs = DEMO.lista("svcs", [
   { c: "SRV-01", n: "Service completo", d: "Cambio de aceite, filtros de aceite, aire y combustible, revisión de 30 puntos.", p: 45000 },
   { c: "SRV-02", n: "Frenos", d: "Pastillas, discos y líquido. Te mostramos el desgaste antes de cambiar.", p: 38000 },
   { c: "SRV-03", n: "Tren delantero", d: "Bujes, rótulas, extremos y alineación.", p: 52000 },
   { c: "SRV-04", n: "Distribución", d: "Kit de distribución y bomba de agua.", p: 95000 },
   { c: "SRV-05", n: "Diagnóstico", d: "Scanner computarizado para luces del tablero y fallas de motor.", p: 18000 },
   { c: "SRV-06", n: "Embrague", d: "Kit de embrague completo y revisión de volante.", p: 110000 },
-];
+], {"etiquetas": {"c": "Código"}});
 document.getElementById("svcs").innerHTML = svcs.map(s => `<div class="svc"><span class="code">${s.c}</span><h3>${s.n}</h3><p>${s.d}</p><span class="from">Desde <b>${fmt(s.p)}</b></span></div>`).join("");
 document.getElementById("q-svc").innerHTML = svcs.map(s => `<option>${s.n}</option>`).join("") + "<option>Otro / no sé</option>";
 const v = id => document.getElementById(id).value.trim();
