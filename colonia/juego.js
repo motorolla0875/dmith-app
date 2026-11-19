@@ -706,7 +706,10 @@ controles.minDistance = 7; controles.maxDistance = 420; controles.maxPolarAngle 
 controles.screenSpacePanning = false;
 controles.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
 controles.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
-addEventListener("resize", () => { camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix(); render.setSize(innerWidth, innerHeight); });
+function ajustarPantalla() { camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix(); render.setSize(innerWidth, innerHeight); }
+addEventListener("resize", ajustarPantalla);
+// al girar el celular, el iPhone a veces avisa antes de cambiar el tamaño: reajustar un rato después también
+addEventListener("orientationchange", () => { setTimeout(ajustarPantalla, 150); setTimeout(ajustarPantalla, 500); });
 
 const hemi = new THREE.HemisphereLight("#ffffff", "#7a6a50", .9); escena.add(hemi);
 const sol = new THREE.DirectionalLight("#fff4dd", 1.7);
