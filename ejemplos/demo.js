@@ -82,3 +82,31 @@ window.DEMO = (function () {
     }
   };
 })();
+
+// Botón para volver a la página principal (no se muestra dentro del panel de muestra)
+(function () {
+  if (window.top !== window) return;
+  var a = document.createElement("a");
+  a.href = "/sitios/#ejemplos";
+  a.id = "dm-volver";
+  a.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Volver a dmith';
+  var css = document.createElement("style");
+  css.textContent = "#dm-volver{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:6px;" +
+    "background:#181B4A;color:#fff;font:700 14px/1 'DM Sans',system-ui,-apple-system,sans-serif;text-decoration:none;padding:11px 15px 11px 11px;border-radius:999px;box-shadow:0 8px 22px rgba(21,23,46,.35)}" +
+    "#dm-volver:focus-visible{outline:3px solid #FFC23D;outline-offset:2px}";
+  document.head.appendChild(css);
+  document.body.appendChild(a);
+  // si la web tiene una barra fija abajo (carrito, reservar), el botón se pone arriba de ella
+  function acomodar() {
+    var alto = 0;
+    Array.prototype.forEach.call(document.body.querySelectorAll("*"), function (el) {
+      if (el === a || el.contains(a)) return;
+      var cs = getComputedStyle(el);
+      if (cs.position !== "fixed" || cs.display === "none" || cs.visibility === "hidden") return;
+      var r = el.getBoundingClientRect();
+      if (r.width > innerWidth * 0.6 && r.bottom >= innerHeight - 4 && r.height < innerHeight * 0.5) alto = Math.max(alto, r.height);
+    });
+    a.style.bottom = alto ? "calc(" + Math.round(alto + 10) + "px + env(safe-area-inset-bottom))" : "";
+  }
+  setTimeout(acomodar, 300); setInterval(acomodar, 1500); addEventListener("resize", acomodar);
+})();

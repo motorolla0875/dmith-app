@@ -323,7 +323,7 @@ const ex = [
   ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA"],
   ["verduleria", "La Canasta", "Verdulería", "GPxxXAbzsXU"],
 ];
-document.getElementById("examples").innerHTML = ex.map(([p, n, r, img]) => `<div class="ex"><img src="https://unsplash.com/photos/${img}/download?w=500" alt="" loading="lazy"><div><b>${n}</b><small>${r}</small><span class="ex-acc"><a href="../ejemplos/${p}/" target="_blank" rel="noopener">Ver la web</a><a class="pan" href="../ejemplos/panel/?w=${p}" target="_blank" rel="noopener">Probar el panel</a></span></div></div>`).join("");
+document.getElementById("examples").innerHTML = ex.map(([p, n, r, img]) => `<div class="ex"><img src="https://unsplash.com/photos/${img}/download?w=500" alt="" loading="lazy"><div><b>${n}</b><small>${r}</small><span class="ex-acc"><a href="../ejemplos/${p}/">Ver la web</a><a class="pan" href="../ejemplos/panel/?w=${p}">Probar el panel</a></span></div></div>`).join("");
 
 const v = id => document.getElementById(id).value.trim();
 const text = () => `Hola Diego! Quiero mi muestra gratis. Mi negocio es: ${v("m-type").toLowerCase()}.`;

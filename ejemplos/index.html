@@ -87,7 +87,7 @@ const grupos = [
 ];
 document.getElementById("grupos").innerHTML = grupos.map(g => `<section class="grupo"><h2>${g.t}</h2><p>${g.s}</p><div class="grid">${g.items.map(([slug, n, r, img, panel]) =>
   `<div class="card"><img src="https://unsplash.com/photos/${img}/download?w=600" alt="" loading="lazy"><div class="info"><div><b>${n}</b><small>${r}</small></div>
-   <div class="acc${panel ? "" : " solo"}"><a class="web" href="${slug}/" target="_blank" rel="noopener">Ver la web</a>${panel ? `<a class="pan" href="panel/?w=${slug}" target="_blank" rel="noopener">Probar el panel</a>` : ""}</div></div></div>`).join("")}</div></section>`).join("") +
+   <div class="acc${panel ? "" : " solo"}"><a class="web" href="${slug}/">Ver la web</a>${panel ? `<a class="pan" href="panel/?w=${slug}">Probar el panel</a>` : ""}</div></div></div>`).join("")}</div></section>`).join("") +
   `<div class="final"><div><h2>¿Te gusta? Te armamos la tuya gratis</h2><p>$25.000 por mes, con panel incluido. Pagás recién cuando te gusta.</p></div><a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Quiero mi muestra gratis</a></div>`;
 document.querySelectorAll("[data-wa]").forEach(a => a.href = wa("Hola Diego! Vi los ejemplos y quiero mi muestra gratis."));
 </script>
