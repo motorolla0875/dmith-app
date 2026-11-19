@@ -1,5 +1,7 @@
 // Contenido inicial de la web. Lo que la clienta guarda en el panel reemplaza esto (se guarda en el servidor).
 window.WEB_SLUG = "serenidad";
+// Web en pausa: true muestra el cartel en la web y en el panel. Para reactivarla, poner false.
+window.WEB_PAUSA = true;
 window.CONTENIDO_BASE = {
   contacto: {
     persona: "Gabriela",
@@ -77,3 +79,28 @@ window.CONTENIDO_BASE = {
     foto: "regalo.jpg"
   }
 };
+
+// Cartel de "web en pausa" (tapa la web y el panel)
+(function () {
+  if (!window.WEB_PAUSA) return;
+  var panel = /\/panel(\/|$)/.test(location.pathname);
+  function poner() {
+    if (document.getElementById("web-pausa")) return;
+    var base = panel ? "../" : "";
+    var css = document.createElement("style");
+    css.textContent = "#web-pausa{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left));" +
+      "background:radial-gradient(circle at 15% 10%,#E3CFF2 0,transparent 45%),radial-gradient(circle at 90% 90%,#F5DDBF 0,transparent 45%),#FBF7F2;font:400 17px/1.55 Jost,system-ui,-apple-system,'Segoe UI',sans-serif;color:#3A2D45;text-align:center}" +
+      "#web-pausa .c{max-width:420px;background:#fff;border:1px solid #E6DAEE;border-radius:28px;padding:34px 26px;box-shadow:0 24px 50px rgba(61,30,87,.10)}" +
+      "#web-pausa img{height:80px;width:auto;margin:0 auto 18px;display:block}" +
+      "#web-pausa h1{font:600 34px/1.1 'Cormorant Garamond',Georgia,serif;color:#3D1E57;margin:0 0 10px}" +
+      "#web-pausa p{margin:0;color:#7A6B86}";
+    document.head.appendChild(css);
+    var d = document.createElement("div");
+    d.id = "web-pausa"; d.setAttribute("role", "alert");
+    d.innerHTML = '<div class="c"><img src="' + base + 'logo.png" alt="SERenidad"><h1>' + (panel ? "Tu web está en pausa" : "La web está en pausa") + "</h1><p>" +
+      (panel ? "Por ahora no se pueden hacer cambios. Para reactivarla, escribinos." : "Volvé a visitarnos pronto.") + "</p></div>";
+    document.body.appendChild(d);
+    document.documentElement.style.overflow = "hidden";
+  }
+  if (document.body) poner(); else document.addEventListener("DOMContentLoaded", poner);
+})();
