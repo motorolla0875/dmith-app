@@ -455,6 +455,7 @@ function actualizarBicho(b, dt, offline, noche) {
   b.edad += dt * (hay("escuela") && b.edad < GRANDE ? 2 : 1); b.fase += dt * 10;
   if (b.charlaT > 0) b.charlaT -= dt;
   const isla = islaDe(b.isla); if (!isla) return;
+  if (b.sigue) { seguirAlRey(b, dt); b.fase += dt * 4; return; }
   if (b.caida > 0) { // lo chocó el rey: se cae para atrás, se levanta asustado y se va
     b.caida -= dt; const k = Math.max(0, b.caida - 1.1) * 4;
     b.x += b.kx * k * dt; b.z += b.kz * k * dt; dentro(b, isla);
@@ -1191,7 +1192,7 @@ function actualizarMallaBicho(b, ahora) {
   g.visible = !b.adentro && b.y > -2.3;
   if (!g.visible) return;
   const trabaja = b.est === "juntar" || b.est === "construir";
-  const camina = !trabaja && !b.caida && !["quieto", "bajar", "subir", "durmiendo"].includes(b.est);
+  const camina = !trabaja && !b.caida && !["quieto", "bajar", "subir", "durmiendo", "esperar"].includes(b.est);
   const salto = camina ? Math.abs(Math.sin(b.fase)) * .3 : trabaja ? Math.abs(Math.sin(b.fase * 1.5)) * .15 : 0;
   const esc = bebe ? .55 + b.edad / GRANDE * .3 : 1;
   const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * .08 : 0;
@@ -1450,6 +1451,7 @@ function pasos(on) {
   if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .12, rnd(.9, 1.1)); }
 }
 function salir() {
+  soltarFila(false);
   dentroMundo = false; document.body.classList.remove("dentro");
   if (yo._m) yo._m.g.visible = false;
   if (yo.carga) { E[yo.carga] += yo.cant; yo.carga = null; yo.cant = 0; }
@@ -1508,6 +1510,36 @@ function saludar() {
   }
   E.animo = clamp(E.animo + 1, 0, 100);
 }
+// ---- 🚩 Síganme: los de alrededor te siguen en fila, como patitos ----
+let fila = [];
+function siganme() {
+  audio();
+  if (fila.length) { soltarFila(true); return; }
+  const cerca = E.bichos.filter((b) => !b.adentro && b.y === 0 && !(b.caida > 0) && !b.alzado && b.edad > GRANDE && dist(b, yo) < 10).sort((a, b) => dist(a, yo) - dist(b, yo)).slice(0, 8);
+  if (!cerca.length) { aviso("No hay nadie cerca para que te siga"); return; }
+  hablar(yo, "¡" + balbuceo(1) + "!", true);
+  for (const b of cerca) {
+    if (b.susto > 0) { hablar(b, "😨"); continue; }
+    b.sigue = true; b.est = "seguir"; b.oficio = null; b.adentro = false; fila.push(b);
+    setTimeout(() => hablar(b, elegir(["¡sí!", "🚩", "¡" + balbuceo(1) + "!", "¡bu bu!"])), rnd(100, 800));
+  }
+  if (fila.length) aviso(`🚩 ${fila.length} Brotitos te siguen. Llevalos a donde quieras`);
+}
+function soltarFila(avisar) {
+  for (const b of fila) { b.sigue = false; if (b.est === "seguir" || b.est === "esperar") { b.est = "quieto"; b.quieto = rnd(.3, 1.2); } const z = zonaEn(b.x, b.z); if (z) b.isla = z.id; }
+  if (avisar && fila.length) { aviso("✋ ¡A trabajar acá!"); for (const b of fila) if (Math.random() < .5) hablar(b, "¡" + balbuceo(1) + "!"); }
+  fila = [];
+}
+function seguirAlRey(b, dt) {
+  const i = fila.indexOf(b);
+  if (i < 0 || !dentroMundo) { b.sigue = false; b.est = "quieto"; b.quieto = .5; return; }
+  if (b.susto > 0) { fila.splice(i, 1); b.sigue = false; return; } // si lo asustaste, se va
+  const lider = i === 0 ? yo : fila[i - 1], dx = lider.x - b.x, dz = lider.z - b.z, d = Math.hypot(dx, dz) || .01;
+  if (d > 30) { b.x = lider.x - dx / d * 1.8; b.z = lider.z - dz / d * 1.8; } // si quedó muy atrás, aparece cerca
+  if (d > 1.9) { const v = Math.min(d - 1.9, (d > 6 ? 9 : 7) * dt); b.dx = dx / d; b.dz = dz / d; b.x += b.dx * v; b.z += b.dz * v; b.est = "seguir"; }
+  else b.est = "esperar";
+  const z = zonaEn(b.x, b.z); if (z) b.isla = z.id;
+}
 function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; }
 // ---- choques: el rey no atraviesa nada ----
 const RADIO_EDIF = { casa: 1.9, fogata: 1, huerta: 2.6, mina: 1.5, escuela: 2.6, biblioteca: 2.8, torre: 1.5, molino: 1.6, fabrica: 2.6, central: 2.7, base: 2.8, cohete: 1.5 };
@@ -1524,7 +1556,7 @@ function choca(x, z) {
 }
 function chocarBichos(mx, mz) {
   for (const b of E.bichos) {
-    if (b.adentro || b.y !== 0) continue;
+    if (b.adentro || b.y !== 0 || b.sigue) continue;
     const dx = b.x - yo.x, dz = b.z - yo.z, d2 = dx * dx + dz * dz;
     if (d2 > 1.7 * 1.7) continue;
     const d = Math.sqrt(d2) || .01;
@@ -1596,6 +1628,8 @@ function actualizarYo(dt, ahora) {
   accionT += dt;
   if (accionT > .15) {
     accionT = 0; accion = elegirAccion();
+    fila = fila.filter((b) => E.bichos.includes(b) && b.sigue);
+    { const bs = $("a-siganme"), t = fila.length ? `✋ Suéltenme (${fila.length})` : "🚩 Síganme"; if (bs.textContent !== t) bs.textContent = t; }
     const bt = $("a-hacer");
     bt.style.visibility = accion ? "visible" : "hidden";
     if (accion) { if (bt.textContent !== accion.txt) bt.textContent = accion.txt; bt.disabled = accion.tipo === "lleno"; }
@@ -1612,6 +1646,7 @@ $("b-salir").onclick = salir;
 $("a-hacer").onclick = hacer;
 $("a-saludar").onclick = saludar;
 $("a-saltar").onclick = saltar;
+$("a-siganme").onclick = siganme;
 {
   const pad = $("joy"), palo = pad.querySelector("i");
   const mover = (e) => {
@@ -1631,6 +1666,7 @@ addEventListener("keydown", (e) => {
   if (e.code === "Space") { saltar(); e.preventDefault(); }
   if (e.code === "KeyE") hacer();
   if (e.code === "KeyQ") saludar();
+  if (e.code === "KeyF") siganme();
   if (e.code === "Escape") salir();
 });
 addEventListener("keyup", (e) => { teclas[e.code] = false; });
