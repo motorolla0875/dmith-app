@@ -269,7 +269,7 @@ function cargar() {
     sigId = s.sigId || 1000;
     s.hechos = s.hechos || {};
     for (const b of s.bichos) if (!b.hc) { b.hue = semilla(b.id * 7 + 3)() * 360 | 0; b.hc = 1; }
-    for (const b of s.bichos) { delete b.baile; delete b.bailando; delete b.sigue; delete b.alzado; delete b.vuelo; delete b.amigoT; b.alto = 0; b.caida = 0; b.abrazo = 0; b.giro = 0; if (["seguir", "esperar", "alzado", "volar", "bailar"].includes(b.est)) { b.est = "quieto"; b.quieto = .5; } }
+    for (const b of s.bichos) { delete b.mision; delete b.baile; delete b.bailando; delete b.sigue; delete b.alzado; delete b.vuelo; delete b.amigoT; b.alto = 0; b.caida = 0; b.abrazo = 0; b.giro = 0; if (["seguir", "esperar", "alzado", "volar", "bailar"].includes(b.est)) { b.est = "quieto"; b.quieto = .5; } }
     for (const b of s.bichos) { if (b.y < 0 || b.est === "cruzar") { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
@@ -457,6 +457,7 @@ function actualizarBicho(b, dt, offline, noche) {
   if (b.charlaT > 0) b.charlaT -= dt;
   const isla = islaDe(b.isla); if (!isla) return;
   if (llevarYVolar(b, dt)) return;
+  if (b.mision && !b.sigue) { b.est = "esperar"; if (dentroMundo && dist(b, yo) < 9) { b.dx = yo.x - b.x; b.dz = yo.z - b.z; } return; }
   if (b.baile) { bailarAlRey(b, dt); return; }
   if (b.sigue) { seguirAlRey(b, dt); b.fase += dt * 4; return; }
   if (b.caida > 0) { // lo chocó el rey: se cae para atrás, se levanta asustado y se va
@@ -1459,6 +1460,8 @@ function pasos(on) {
 }
 function salir() {
   if (baile) baile.t = 0.001;
+  if (mision) terminarMision(false);
+  if (flecha) flecha.visible = false; $("mision").classList.remove("ver");
   soltarFila(false); if (alzado) dejar();
   dentroMundo = false; document.body.classList.remove("dentro");
   if (yo._m) yo._m.g.visible = false;
@@ -1489,6 +1492,7 @@ function elegirAccion() {
     if (!yo.carga || (yo.carga === tipo && yo.cant < 6)) return { tipo: "juntar", o: r, txt: "✋ Juntar " + ICONO[tipo] };
     return { tipo: "lleno", txt: yo.carga === tipo ? "🎒 Lleno: llevalo a una casa" : "🎒 Primero llevá lo que tenés" };
   }
+  if (yo.carga && mision && mision.tipo === "traer" && mision.estado === "activa" && yo.carga === mision.recurso) return { tipo: "lleno", txt: yo.cant >= mision.falta ? `📜 Llevale ${ICONO[yo.carga]} a ${mision.b.n}` : `📜 Juntá ${mision.falta - yo.cant} ${ICONO[yo.carga]} más` };
   if (yo.carga) return { tipo: "lleno", txt: `🏠 Llevá ${yo.cant} ${ICONO[yo.carga]} a una casa` };
   return null;
 }
@@ -1656,6 +1660,89 @@ function bailarAlRey(b, dt) {
   b.fase += dt * (b.bailando ? 12 : 10);
   const z = zonaEn(b.x, b.z); if (z) b.isla = z.id;
 }
+// ---- 📜 Misiones del rey: un Brotito te pide algo y si lo hacés te da un premio ----
+let mision = null, misionT = 12, flecha = null;
+const NOMBRE_EDIF = { fogata: "la fogata 🔥", mina: "la mina ⛏️", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", huerta: "la huerta 🥕" };
+const nombreEdif = (e) => e.tipo === "cat" ? `${CAT[e.cat].n} ${CAT[e.cat].g}` : e.tipo === "inv" ? `${e.inv.n} ${e.inv.g}` : NOMBRE_EDIF[e.tipo];
+function nuevaMision() {
+  const cands = E.bichos.filter((b) => libreParaTocar(b) && b.edad > GRANDE && !b.sigue && !b.baile && !(b.susto > 0) && dist(b, yo) > 6 && dist(b, yo) < 24);
+  const b = elegir(cands); if (!b) return;
+  const tipos = ["traer", "gorro", "acompañar"], tipo = elegir(tipos);
+  const m = { b, tipo, estado: "esperando" };
+  if (tipo === "traer") { m.recurso = elegir(["comida", "madera", "piedra"]); m.falta = 3 + (Math.random() * 3 | 0); m.txt = () => `Traele ${m.falta} ${ICONO[m.recurso]} a ${b.n}`; m.pide = ICONO[m.recurso] + "?"; }
+  else if (tipo === "gorro") {
+    let p = null;
+    for (let i = 0; i < 40 && !p; i++) { const a = Math.random() * 6.28, r = rnd(12, 26), x = b.x + Math.cos(a) * r, z = b.z + Math.sin(a) * r; obsT = 1; if (tierraEn(x, z) && !E.edificios.some((e) => Math.hypot(e.x - x, e.z - z) < radioDe(e) + 1.2)) p = { x, z }; }
+    if (!p) return;
+    m.obj = p; m.txt = () => yo.objeto ? `Llevale el gorro a ${b.n} 🎩` : `Buscá el gorro perdido de ${b.n} 🎩`; m.pide = "🎩?";
+  } else {
+    const dest = E.edificios.filter((e) => listo(e) && nombreEdif(e) && dist(e, b) > 15 && dist(e, b) < 45);
+    const e = elegir(dest); if (!e) return;
+    m.destino = e; m.txt = () => `Acompañá a ${b.n} hasta ${nombreEdif(e)}`; m.pide = "📍?";
+  }
+  b.mision = true; b.est = "esperar"; b.isla = (zonaEn(b.x, b.z) || {}).id ?? b.isla;
+  mision = m;
+  aviso(`❗ ${b.n} quiere hablar con vos`);
+}
+function marcas() {
+  const m = mision; if (!m) return;
+  if (m.b._m && !m.b._m.marca) m.b._m.marca = cartel("❗", 0, 3.6, m.b._m.g, .9);
+  if (m.obj && !m.obj.m && !yo.objeto) {
+    const g = new THREE.Group();
+    g.add(malla(G.cil, mat("#2E2440"), .9, .08, .9, 0, .04, 0), malla(G.cil, mat("#2E2440"), .55, .7, .55, 0, .4, 0), malla(G.cil, mat("#E8424F"), .57, .14, .57, 0, .2, 0, false));
+    g.position.set(m.obj.x, .1, m.obj.z); escena.add(g); m.obj.m = g;
+  }
+  if (m.destino && m.estado === "activa" && !m.destino._marca) { const g = new THREE.Group(); cartel("📍", 0, 0, g, 1.4); g.position.set(m.destino.x, altoDe(m.destino) + 3, m.destino.z); escena.add(g); m.destino._marca = g; }
+}
+const altoDe = (e) => e.tipo === "cat" ? altoReceta(CAT[e.cat].r) : e.tipo === "inv" ? altoReceta(e.inv.r) : e.tipo === "casa" ? e.nivel * PISO + 2 : 6;
+function terminarMision(ok) {
+  const m = mision; if (!m) return; mision = null; misionT = rnd(35, 70);
+  m.b.mision = false; if (m.b.est === "esperar") { m.b.est = "quieto"; m.b.quieto = 1; }
+  if (m.b._m && m.b._m.marca) { m.b._m.g.remove(m.b._m.marca); m.b._m.marca = null; }
+  if (m.obj && m.obj.m) { escena.remove(m.obj.m); m.obj.m = null; }
+  if (m.destino && m.destino._marca) { escena.remove(m.destino._marca); m.destino._marca = null; }
+  if (yo.objeto) { yo.objeto = false; if (yo._gorro) { yo._m.g.remove(yo._gorro); yo._gorro = null; } }
+  if (m.tipo === "acompañar") { const i = fila.indexOf(m.b); if (i >= 0) fila.splice(i, 1); m.b.sigue = false; }
+  if (!ok) return;
+  const premio = 3 + E.era;
+  E.gemas += premio; E.animo = clamp(E.animo + 10, 0, 100); E.misiones = (E.misiones || 0) + 1;
+  corazones(m.b); setTimeout(() => corazones(m.b), 300); festejo(m.b);
+  hablar(m.b, elegir(["¡gracias!", "💚", "¡yei " + balbuceo(1) + "!"]), true);
+  logro("📜", "¡Misión cumplida!", `+${premio} 💎 · ${m.b.n} está feliz`);
+}
+function actualizarMision(dt) {
+  if (!dentroMundo) return;
+  if (!mision) { misionT -= dt; if (misionT <= 0) { misionT = 20; nuevaMision(); } }
+  const m = mision; if (!m) { if (flecha) flecha.visible = false; $("mision").classList.remove("ver"); return; }
+  if (!E.bichos.includes(m.b)) { aviso("La misión se canceló 😢"); terminarMision(false); return; }
+  marcas();
+  const db = dist(m.b, yo);
+  if (m.estado === "esperando") {
+    if (db < 3.2) { m.estado = "activa"; hablar(m.b, m.pide + " " + balbuceo(1), true); aviso("📜 " + m.txt()); if (m.tipo === "acompañar" && !m.b.sigue) { m.b.sigue = true; fila.push(m.b); } }
+  } else if (m.tipo === "traer") {
+    if (db < 2.8 && yo.carga === m.recurso) {
+      const k = Math.min(yo.cant, m.falta); m.falta -= k; yo.cant -= k; if (!yo.cant) yo.carga = null;
+      hablar(m.b, "¡" + ICONO[m.recurso] + "!", true);
+      if (m.falta <= 0) { terminarMision(true); return; }
+    }
+  } else if (m.tipo === "gorro") {
+    if (!yo.objeto && Math.hypot(m.obj.x - yo.x, m.obj.z - yo.z) < 1.8) {
+      yo.objeto = true; if (m.obj.m) { escena.remove(m.obj.m); m.obj.m = null; }
+      yo._gorro = cartel("🎩", 0, 3.3, yo._m.g, .9); muestra("boton", .7); aviso("🎩 ¡Lo encontraste! Llevaselo a " + m.b.n);
+    }
+    if (yo.objeto && db < 2.8) { terminarMision(true); return; }
+  } else if (m.tipo === "acompañar") {
+    if (!m.b.sigue && db < 3.2) { m.b.sigue = true; fila.push(m.b); }
+    if (dist(m.b, m.destino) < radioDe(m.destino) + 4) { terminarMision(true); return; }
+  }
+  // tarjetita y flecha
+  const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? `${m.b.n} quiere hablar con vos ❗` : m.txt()); if (c.textContent !== txt) c.textContent = txt;
+  let obj = m.b;
+  if (m.estado === "activa") { if (m.tipo === "gorro" && !yo.objeto) obj = m.obj; else if (m.tipo === "acompañar") obj = m.destino; else if (m.tipo === "traer" && yo.carga !== m.recurso) obj = null; }
+  if (!flecha) { flecha = new THREE.Group(); const p = malla(G.cono, mat("#FFC23D"), .55, 1.1, .3, 0, 0, 0, false); p.rotation.x = Math.PI / 2; flecha.add(p); escena.add(flecha); }
+  flecha.visible = !!obj && Math.hypot(obj.x - yo.x, obj.z - yo.z) > 3;
+  if (flecha.visible) { const a = Math.atan2(obj.x - yo.x, obj.z - yo.z); flecha.position.set(yo.x + Math.sin(a) * 1.9, .35 + yo.alto, yo.z + Math.cos(a) * 1.9); flecha.rotation.y = a; }
+}
 function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; }
 // ---- choques: el rey no atraviesa nada ----
 const RADIO_EDIF = { casa: 1.9, fogata: 1, huerta: 2.6, mina: 1.5, escuela: 2.6, biblioteca: 2.8, torre: 1.5, molino: 1.6, fabrica: 2.6, central: 2.7, base: 2.8, cohete: 1.5 };
@@ -1730,11 +1817,12 @@ function actualizarYo(dt, ahora) {
   if (yo.golpe > 0) { yo.golpe -= dt; yo.fase += dt * 10; }
   if (yo.abrazo > 0) yo.abrazo -= dt;
   actualizarBaile(dt);
+  actualizarMision(dt);
   yo.est = yo.golpe > 0 ? "juntar" : moviendo ? "pasear" : "quieto";
   yo.bailando = !!baile && !moviendo;
   if (yo.charlaT > 0) yo.charlaT -= dt;
   // dejar lo que llevo si paso por una casa
-  if (yo.carga) {
+  if (yo.carga && !(mision && mision.tipo === "traer" && mision.estado === "activa" && yo.carga === mision.recurso)) {
     const casa = cercaDeMi(todosAlmacenes(), 3.8);
     if (casa) {
       sumar(yo.carga, yo.cant * bono(yo.carga)); aviso(`+${yo.cant} ${ICONO[yo.carga]} ¡Gracias! 💚`); sonido("dar");
@@ -1868,5 +1956,5 @@ function bucle(ahora) {
 }
 document.addEventListener("visibilitychange", () => { if (document.hidden) guardar(); });
 addEventListener("pagehide", guardar);
-window.__col = { get E() { return E; }, inventar, pedirInvento, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
+window.__col = { get mision() { return mision; }, nuevaMision, get E() { return E; }, inventar, pedirInvento, yo, entrar, salir, hacer, saludar, saltar, joy, paso, explotar, camara, controles, verTodo, dibujarTodo, sincronizar, limpiarEventos: () => { eventos = []; }, capacidad, casas, setActivas: (s) => { activas = s; } };
 requestAnimationFrame(bucle);
