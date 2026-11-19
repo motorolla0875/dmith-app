@@ -5,17 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GMP Cursos Online · Academia de Belleza</title>
 <meta name="description" content="Cursos online de manicuría, lashista, estilista femenino y masculino, barbería, alisado, botox y keratina. Certificación oficial, credencial y acompañamiento de por vida.">
-<meta name="theme-color" content="#2A1626">
+<meta name="theme-color" content="#2B1238">
+<link rel="icon" href="icono-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="GMP Cursos Online · Academia de Belleza">
-<meta property="og:description" content="Aprendé un oficio de belleza online. Certificación oficial, credencial y acompañamiento de por vida.">
+<meta property="og:description" content="Aprendé belleza desde cero, online. Certificación oficial, credencial y acompañamiento de por vida.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --tinta: #2A1626; --tinta2: #4A2A43; --rosa: #C2185B; --rosa2: #E85C93; --rubor: #FBEFF3; --rubor2: #F5DCE5;
-    --champan: #E8CC94; --papel: #FFFBFC; --suave: #7D6577; --linea: #EBD9E1;
-    --titulo: "Bricolage Grotesque", "Arial Rounded MT Bold", system-ui, sans-serif;
+    --tinta: #2B1238; --tinta2: #4E2A5E; --rosa: #7A2A8C; --rosa2: #B66BD3; --rubor: #F5ECF8; --rubor2: #E9D8F1;
+    --champan: #E9C46A; --oro: #C9962C; --oro-brillo: linear-gradient(100deg, #A8741A 0%, #E7B948 30%, #FBE29A 50%, #D9A53A 70%, #A8741A 100%);
+    --papel: #FDF9F1; --suave: #7B6886; --linea: #EADFEE;
+    --titulo: "Playfair Display", Georgia, "Times New Roman", serif;
     --cuerpo: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
@@ -30,14 +33,16 @@
   section { padding-block: clamp(56px, 8vw, 96px); }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 14px; padding: 15px 24px; font: 700 16px var(--cuerpo); text-decoration: none; cursor: pointer; white-space: nowrap; }
   .btn svg { width: 19px; height: 19px; flex: none; }
-  .btn-pri { background: var(--rosa); color: #fff; box-shadow: 0 10px 24px rgba(194,24,91,.28); }
-  .btn-pri:hover { background: #A8134E; }
+  .btn-pri { background: var(--rosa); color: #fff; box-shadow: 0 10px 24px rgba(122,42,140,.3); }
+  .btn-pri:hover { background: #62207A; }
+  .btn-oro { background: var(--oro-brillo); color: var(--tinta); box-shadow: 0 10px 24px rgba(201,150,44,.35); }
   .btn-sec { background: transparent; color: var(--tinta); border: 2px solid var(--tinta); }
 
   /* encabezado */
   header { position: sticky; top: 0; z-index: 20; background: rgba(255,251,252,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
   header .wrap { display: flex; align-items: center; gap: 16px; height: 68px; }
   .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
+  .marca img { width: 50px; height: 50px; }
   .mono { width: 42px; height: 42px; border-radius: 12px; background: var(--tinta); color: var(--champan); display: grid; place-items: center; font: 800 15px var(--titulo); letter-spacing: .02em; }
   .marca b { display: block; font: 800 18px/1 var(--titulo); }
   .marca small { display: block; font-size: 12.5px; color: var(--suave); margin-top: 3px; }
@@ -48,11 +53,12 @@
   @media (max-width: 420px) { header .btn { display: none; } }
 
   /* portada */
-  .hero { padding-block: clamp(40px, 7vw, 84px) clamp(56px, 8vw, 96px); background: radial-gradient(900px 500px at 85% 10%, var(--rubor2), transparent 60%), var(--papel); overflow: hidden; }
+  .hero { padding-block: clamp(40px, 7vw, 84px) clamp(56px, 8vw, 96px); background: radial-gradient(900px 520px at 85% 10%, var(--rubor2), transparent 60%), radial-gradient(500px 300px at 0% 100%, #F6E7C3, transparent 70%), var(--papel); overflow: hidden; }
   .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
   .rot { display: inline-block; font-weight: 700; font-size: 14.5px; color: var(--rosa); background: var(--rubor); border: 1px solid var(--rubor2); border-radius: 999px; padding: 6px 14px; margin-bottom: 18px; }
   .hero h1 { font-size: clamp(40px, 6.4vw, 74px); font-weight: 800; }
-  .hero h1 span { color: var(--rosa); }
+  .hero h1 span { background: var(--oro-brillo); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero h1 em { font-style: italic; color: var(--rosa); }
   .hero p.baj { font-size: clamp(17px, 2vw, 20px); color: var(--tinta2); max-width: 34ch; margin: 20px 0 28px; }
   .acc { display: flex; flex-wrap: wrap; gap: 12px; }
   .sellos { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 30px; font-weight: 700; font-size: 15px; }
@@ -62,16 +68,16 @@
   /* la credencial */
   .cred-zona { position: relative; display: grid; place-items: center; padding: 20px 0; }
   .cred { width: min(400px, 100%); aspect-ratio: 1.58; border-radius: 22px; padding: 22px; color: #fff; position: relative; overflow: hidden;
-    background: linear-gradient(135deg, #3A1E35 0%, var(--tinta) 55%, #1B0E19 100%); box-shadow: 0 30px 60px rgba(42,22,38,.35); transform: rotate(-4deg); display: flex; flex-direction: column; }
-  .cred::before { content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%; right: -90px; top: -110px; background: radial-gradient(circle, rgba(232,92,147,.55), transparent 65%); }
+    background: linear-gradient(135deg, #4A1F5E 0%, var(--tinta) 55%, #1A0A24 100%); box-shadow: 0 30px 60px rgba(43,18,56,.38); border: 2px solid #D9A53A; transform: rotate(-4deg); display: flex; flex-direction: column; }
+  .cred::before { content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%; right: -90px; top: -110px; background: radial-gradient(circle, rgba(182,107,211,.55), transparent 65%); }
   .cred .top { display: flex; align-items: center; gap: 10px; position: relative; }
-  .cred .top .mono { width: 34px; height: 34px; font-size: 12px; background: var(--champan); color: var(--tinta); border-radius: 9px; }
+  .cred .top img { width: 44px; height: 44px; }
   .cred .top small { font-size: 11px; letter-spacing: .12em; color: var(--champan); font-weight: 700; }
   .cred .nom { margin-top: auto; position: relative; }
   .cred .nom small { display: block; font-size: 11.5px; color: #D9C3D3; }
-  .cred .nom b { display: block; font: 800 clamp(20px, 3vw, 26px)/1.1 var(--titulo); margin: 2px 0 10px; }
+  .cred .nom b { display: block; font: 700 clamp(21px, 3vw, 27px)/1.1 var(--titulo); margin: 2px 0 10px; }
   .cred .curso { display: inline-flex; gap: 8px; align-items: center; font-weight: 700; font-size: 13.5px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px; }
-  .cred .sello { position: absolute; right: 18px; bottom: 18px; width: 72px; height: 72px; border-radius: 50%; border: 2px dashed var(--champan); color: var(--champan); display: grid; place-items: center; text-align: center; font: 800 10px/1.15 var(--cuerpo); letter-spacing: .04em; transform: rotate(12deg); }
+  .cred .sello { position: absolute; right: 18px; bottom: 18px; width: 74px; height: 74px; border-radius: 50%; border: 2px solid #F2D27E; color: var(--tinta); background: var(--oro-brillo); box-shadow: 0 6px 16px rgba(0,0,0,.3); display: grid; place-items: center; text-align: center; font: 800 10px/1.15 var(--cuerpo); letter-spacing: .04em; transform: rotate(12deg); }
   .nota-cred { position: absolute; left: 0; bottom: -6px; background: #fff; border: 1px solid var(--linea); border-radius: 14px; padding: 10px 14px; font-size: 14px; font-weight: 700; box-shadow: 0 12px 26px rgba(42,22,38,.12); display: flex; align-items: center; gap: 8px; }
   .nota-cred i { width: 10px; height: 10px; border-radius: 50%; background: #2BB673; }
   @media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .cred-zona { padding: 10px 0 30px; } }
@@ -82,6 +88,7 @@
   .incluye .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 36px; }
   .inc { border: 1px solid rgba(255,255,255,.14); border-radius: 20px; padding: 22px; background: rgba(255,255,255,.04); }
   .inc svg { width: 34px; height: 34px; color: var(--champan); }
+  .incluye { background: radial-gradient(700px 400px at 100% 0, #4A1F5E, transparent 70%), var(--tinta); }
   .inc h3 { font-size: 21px; margin: 14px 0 8px; }
   .inc p { margin: 0; color: #D9C3D3; font-size: 15.5px; }
   @media (max-width: 940px) { .incluye .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -97,7 +104,9 @@
   .cursos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .curso { background: #fff; border: 1px solid var(--linea); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .curso .area { font-size: 13.5px; font-weight: 700; color: var(--rosa); }
-  .curso h3 { font-size: 25px; }
+  .curso.top { border: 2px solid var(--oro); background: linear-gradient(180deg, #FFF8E6, #fff 40%); }
+  .curso .etq { align-self: flex-start; font-size: 12.5px; font-weight: 800; color: var(--tinta); background: var(--oro-brillo); border-radius: 999px; padding: 4px 11px; }
+  .curso h3 { font-size: 25px; font-weight: 700; }
   .curso p { margin: 0; color: var(--suave); font-size: 15.5px; }
   .nivel { display: flex; gap: 5px; align-items: center; font-size: 13.5px; font-weight: 700; color: var(--tinta2); }
   .nivel i { width: 22px; height: 6px; border-radius: 3px; background: var(--rubor2); }
@@ -114,7 +123,7 @@
   .camino p { color: var(--tinta2); margin: 14px 0 0; }
   .pasos-nivel { display: grid; gap: 12px; }
   .pn { display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: center; background: #fff; border-radius: 18px; padding: 16px; border: 1px solid var(--rubor2); }
-  .pn b.n { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font: 800 22px var(--titulo); background: var(--rubor2); color: var(--rosa); }
+  .pn b.n { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font: 800 24px var(--titulo); background: var(--rubor2); color: var(--rosa); }
   .pn:nth-child(2) b.n { background: var(--rosa2); color: #fff; }
   .pn:nth-child(3) b.n { background: var(--rosa); color: #fff; }
   .pn h3 { font-size: 20px; }
@@ -125,7 +134,7 @@
   .como h2 { font-size: clamp(30px, 4.2vw, 46px); margin-bottom: 30px; }
   .como .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: p; }
   .paso { border-top: 3px solid var(--tinta); padding-top: 16px; counter-increment: p; }
-  .paso::before { content: counter(p); font: 800 40px/1 var(--titulo); color: var(--rosa); }
+  .paso::before { content: counter(p); font: 800 44px/1 var(--titulo); color: var(--oro); }
   .paso h3 { font-size: 21px; margin: 10px 0 6px; }
   .paso p { margin: 0; color: var(--suave); font-size: 15.5px; }
   @media (max-width: 860px) { .como .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -137,21 +146,21 @@
   details { border-bottom: 1px solid var(--linea); padding-block: 16px; }
   summary { cursor: pointer; font-weight: 700; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 14px; }
   summary::-webkit-details-marker { display: none; }
-  summary::after { content: "+"; font: 800 24px/1 var(--titulo); color: var(--rosa); }
+  summary::after { content: "+"; font: 700 26px/1 var(--titulo); color: var(--oro); }
   details[open] summary::after { content: "−"; }
   details p { margin: 10px 0 0; color: var(--tinta2); }
   @media (max-width: 860px) { .faq .wrap { grid-template-columns: minmax(0, 1fr); } }
 
   /* cierre */
   .final { padding-top: 0; }
-  .final .caja { background: var(--rosa); color: #fff; border-radius: 28px; padding: clamp(28px, 5vw, 56px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; background-image: radial-gradient(600px 300px at 100% 0, rgba(255,255,255,.18), transparent 60%); }
+  .final .caja { background: linear-gradient(120deg, var(--tinta), var(--rosa)); color: #fff; border-radius: 28px; padding: clamp(28px, 5vw, 56px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; background-image: radial-gradient(600px 300px at 100% 0, rgba(255,255,255,.18), transparent 60%); }
   .final h2 { font-size: clamp(30px, 4.4vw, 50px); max-width: 15ch; }
-  .final p { margin: 10px 0 0; color: #FFE3EE; }
-  .final .btn { background: #fff; color: var(--rosa); }
+  .final p { margin: 10px 0 0; color: #EBD9F3; }
+  .final .btn { background: var(--oro-brillo); color: var(--tinta); }
   footer { padding-block: 34px calc(34px + env(safe-area-inset-bottom)); color: var(--suave); font-size: 14.5px; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
   .flota { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; z-index: 15; color: #fff;
-    background: linear-gradient(45deg, #F9A23B, #E1306C 50%, #833AB4); box-shadow: 0 12px 26px rgba(225,48,108,.35); }
+    background: #25D366; box-shadow: 0 12px 26px rgba(37,211,102,.35); }
   .flota svg { width: 28px; height: 28px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
@@ -159,14 +168,15 @@
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></g><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
   <symbol id="ok" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></g></symbol>
 </svg>
 
 <header>
   <div class="wrap">
-    <a class="marca" href="#inicio"><span class="mono">GMP</span><span><b>GMP Cursos Online</b><small>Academia de Belleza</small></span></a>
+    <a class="marca" href="#inicio"><img src="logo.png" alt="GMP Academia de Bellezas, cursos online" width="50" height="50"><span><b>GMP Cursos Online</b><small>Academia de Bellezas</small></span></a>
     <nav aria-label="Secciones"><a href="#incluye">Qué incluye</a><a href="#cursos">Cursos</a><a href="#como">Cómo funciona</a><a href="#preguntas">Preguntas</a></nav>
-    <a class="btn btn-pri" href="#" data-ig>Inscribirme</a>
+    <a class="btn btn-pri" href="#" data-wa>Inscribirme</a>
   </div>
 </header>
 
@@ -174,12 +184,12 @@
   <section class="hero">
     <div class="wrap">
       <div>
-        <span class="rot">Cursos online de belleza</span>
-        <h1>Aprendé un oficio de belleza <span>y certificalo</span></h1>
-        <p class="baj">Manicuría, lashista, estilismo, barbería y alisados. Cursás online, a tu ritmo, y te llevás tu certificación oficial y tu credencial.</p>
+        <span class="rot">Aprendé belleza desde cero</span>
+        <h1>Tu oficio de belleza, <span>con certificación</span></h1>
+        <p class="baj">Manicuría, lashista, estilismo, barbería y alisados. Cursos online, a tu ritmo, con certificación oficial, credencial y asistencia permanente.</p>
         <div class="acc">
           <a class="btn btn-pri" href="#cursos">Ver los cursos</a>
-          <a class="btn btn-sec" href="#" data-ig><svg><use href="#ig"/></svg>Consultar</a>
+          <a class="btn btn-sec" href="#" data-wa><svg><use href="#wa"/></svg>Consultar</a>
         </div>
         <div class="sellos">
           <span><svg><use href="#ok"/></svg>Certificación oficial</span>
@@ -189,7 +199,7 @@
       </div>
       <div class="cred-zona" aria-label="Ejemplo de credencial">
         <div class="cred">
-          <div class="top"><span class="mono">GMP</span><small>CREDENCIAL PROFESIONAL</small></div>
+          <div class="top"><img src="logo.png" alt=""><small>CREDENCIAL PROFESIONAL</small></div>
           <div class="nom">
             <small>Egresada</small>
             <b>Tu nombre acá</b>
@@ -217,7 +227,7 @@
   <section id="cursos">
     <div class="wrap">
       <div class="cab">
-        <div><h2>Nuestros cursos</h2><p>Elegí tu área. Manicuría y lashista se dividen en tres niveles, así arrancás desde donde estás.</p></div>
+        <div><h2>Nuestros cursos</h2><p>Elegí tu área. Manicuría y lashista se dividen en tres niveles, así arrancás desde donde estás. O hacés la formación completa.</p></div>
       </div>
       <div class="filtros" id="filtros" role="tablist" aria-label="Filtrar cursos"></div>
       <div class="cursos" id="lista"></div>
@@ -228,7 +238,7 @@
     <div class="wrap">
       <div>
         <h2>Avanzá de nivel a tu ritmo</h2>
-        <p>En manicuría y lashista podés hacer cada nivel por separado o el recorrido completo. Si ya tenés experiencia, empezás por el que te corresponde.</p>
+        <p>En manicuría y lashista podés hacer cada nivel por separado o el recorrido completo. Con los tres niveles de manicuría obtenés tu <b>Máster en Manicuría Profesional</b>.</p>
       </div>
       <div class="pasos-nivel">
         <div class="pn"><b class="n">1</b><div><h3>Inicial</h3><span>Para empezar desde cero, con las bases bien firmes.</span></div></div>
@@ -267,7 +277,7 @@
     <div class="wrap">
       <div class="caja">
         <div><h2>Empezá hoy tu formación</h2><p>Escribinos y te contamos todo sobre el curso que te interesa.</p></div>
-        <a class="btn" href="#" data-ig><svg><use href="#ig"/></svg>Quiero inscribirme</a>
+        <a class="btn" href="#" data-wa><svg><use href="#wa"/></svg>Quiero inscribirme</a>
       </div>
     </div>
   </section>
@@ -276,21 +286,25 @@
 <footer>
   <div class="wrap">
     <span><b>GMP Cursos Online</b> · Academia de Belleza</span>
-    <a href="https://www.instagram.com/gmpcursosonline/" target="_blank" rel="noopener">@gmpcursosonline</a>
+    <span>WhatsApp 261 719 5392 · <a href="https://www.instagram.com/gmpcursosonline/" target="_blank" rel="noopener">@gmpcursosonline</a></span>
   </div>
 </footer>
-<a class="flota" href="#" data-ig aria-label="Escribinos por Instagram"><svg><use href="#ig"/></svg></a>
+<a class="flota" href="#" data-wa aria-label="Escribinos por WhatsApp"><svg><use href="#wa"/></svg></a>
 
 <script>
-const IG = "https://ig.me/m/gmpcursosonline";
+const WA = "5492617195392";
+const wa = t => "https://wa.me/" + WA + "?text=" + encodeURIComponent(t);
 const cursos = [
-  { a: "Manicuría", n: "Manicuría inicial", nivel: 1, d: "Las bases: preparación de la uña, cuidado de cutículas y esmaltado prolijo." },
-  { a: "Manicuría", n: "Manicuría intermedia", nivel: 2, d: "Sumás técnicas y diseños para trabajar con más velocidad y terminación." },
-  { a: "Manicuría", n: "Manicuría avanzada", nivel: 3, d: "Técnicas profesionales para ofrecer un servicio completo y destacarte." },
+  { a: "Manicuría", n: "Máster en Manicuría Profesional", top: "Formación completa", nivel: 0, d: "Los tres niveles juntos, de cero a profesional. Incluye plantillas de nail art." },
+  { a: "Manicuría", n: "Manicuría inicial", nivel: 1, d: "Higiene y preparación, cuidado de la uña natural, y esmaltado tradicional y semipermanente." },
+  { a: "Manicuría", n: "Manicuría intermedia", nivel: 2, d: "Capping, nivelación de la uña, diseños básicos y decoraciones, y técnica francesa." },
+  { a: "Manicuría", n: "Manicuría avanzada", nivel: 3, d: "Soft gel, esculpidas en acrílico, nail art avanzado, efectos y tendencias." },
+  { a: "Lashista", n: "Pack Lashista Pro", top: "Formación completa", nivel: 0, d: "Curso 100% online, asistencia permanente, actualizaciones constantes, certificación profesional y material de estudio." },
   { a: "Lashista", n: "Lashista inicial", nivel: 1, d: "Arrancás desde cero: materiales, cuidado del ojo y primeras aplicaciones." },
   { a: "Lashista", n: "Lashista intermedio", nivel: 2, d: "Perfeccionás la técnica y ganás prolijidad y rapidez." },
   { a: "Lashista", n: "Lashista avanzado", nivel: 3, d: "Técnicas avanzadas para trabajar a nivel profesional." },
-  { a: "Estilismo", n: "Estilista femenino", nivel: 0, d: "Cortes y peinados para trabajar en peluquería o por tu cuenta." },
+  { a: "Lashista", n: "Lifting y permanente de pestañas", nivel: 0, d: "Curvatura, definición y duración para pestañas naturales." },
+  { a: "Estilismo", n: "Estilista femenino", nivel: 0, d: "Peluquería femenina: cortes, color y peinados para trabajar en un salón o por tu cuenta." },
   { a: "Estilismo", n: "Estilista masculino", nivel: 0, d: "Cortes masculinos actuales, con técnica y terminación prolija." },
   { a: "Barbería", n: "Barbería", nivel: 0, d: "Cortes, degradados y arreglo de barba para trabajar como barbero." },
   { a: "Alisados", n: "Alisado, botox y keratina", nivel: 0, d: "Tratamientos capilares de alisado y nutrición, paso a paso." }
@@ -302,14 +316,14 @@ const filtros = document.getElementById("filtros"), lista = document.getElementB
 function pintar() {
   filtros.innerHTML = areas.map(a => `<button type="button" role="tab" aria-selected="${a === actual}" class="${a === actual ? "on" : ""}">${a}</button>`).join("");
   filtros.querySelectorAll("button").forEach((b, i) => b.onclick = () => { actual = areas[i]; pintar(); });
-  lista.innerHTML = cursos.filter(c => actual === "Todos" || c.a === actual).map(c => `<article class="curso">
-    <span class="area">${c.a}</span><h3>${c.n}</h3>
+  lista.innerHTML = cursos.filter(c => actual === "Todos" || c.a === actual).map(c => `<article class="curso${c.top ? " top" : ""}">
+    ${c.top ? `<span class="etq">${c.top}</span>` : ""}<span class="area">${c.a}</span><h3>${c.n}</h3>
     ${c.nivel ? `<div class="nivel">${[1, 2, 3].map(i => `<i class="${i <= c.nivel ? "on" : ""}"></i>`).join("")}<span>&nbsp;Nivel ${NIVELES[c.nivel].toLowerCase()}</span></div>` : ""}
     <p>${c.d}</p>
-    <a class="btn" href="${IG}" target="_blank" rel="noopener">Quiero info de este curso</a></article>`).join("");
+    <a class="btn" href="${wa("Hola! Quiero info del curso " + c.n + ".")}" target="_blank" rel="noopener">Quiero info de este curso</a></article>`).join("");
 }
 pintar();
-document.querySelectorAll("[data-ig]").forEach(a => { a.href = IG; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll("[data-wa]").forEach(a => { a.href = wa("Hola! Quiero info de los cursos."); a.target = "_blank"; a.rel = "noopener"; });
 </script>
 <script src="/m/franja.js" data-negocio="GMP Cursos Online" data-slug="gmpcursos"></script>
 </body>
