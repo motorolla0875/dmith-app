@@ -92,6 +92,32 @@ function send(res, code, data) {
 
 const consultasIp = {};
 
+// ===== Webs editables desde el panel del cliente (dmith.app/<slug>/panel) =====
+// Datos en /root/sitios-datos/webs/<slug>/: contenido.json, fotos/, acceso.json (clave y sesiones).
+// La clave se crea con: node /var/www/dmith-app/sitios-servidor/web-clave.js <slug>
+const WEBS = path.join(DIR, "webs");
+const slugOk = (s) => { s = String(s || ""); if (!/^[a-z0-9-]{2,40}$/.test(s)) throw err(400, "Web no válida"); return s; };
+const webDir = (s) => path.join(WEBS, slugOk(s));
+const leerJson = (f, def) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch (e) { return def; } };
+const escribirJson = (f, d) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f + ".tmp", JSON.stringify(d, null, 1)); fs.renameSync(f + ".tmp", f); };
+const sha = (x) => crypto.createHash("sha256").update(String(x)).digest("hex");
+function bodyGrande(req, max) {
+  return new Promise((ok, no) => {
+    const partes = []; let n = 0;
+    req.on("data", (c) => { n += c.length; if (n > max) { no(err(413, "Es demasiado grande")); req.destroy(); } else partes.push(c); });
+    req.on("end", () => { try { const s = Buffer.concat(partes).toString("utf8"); ok(s ? JSON.parse(s) : {}); } catch (e) { no(err(400, "JSON inválido")); } });
+  });
+}
+function sesionWeb(slug, t) {
+  const a = leerJson(path.join(webDir(slug), "acceso.json"), null);
+  if (!a || !t) throw err(401, "Tenés que entrar de nuevo");
+  const ok = (a.sesiones || []).some((x) => x.h === sha(t) && x.vence > Date.now());
+  if (!ok) throw err(401, "Tenés que entrar de nuevo");
+  return a;
+}
+const entradasIp = {};
+
+
 // ===== Mascota IA (dmith.app/mascota) — usa la clave de Groq de /root/tujuego.env o del .env de sitios
 const mascotaIp = {};
 function groqKey() {
@@ -353,6 +379,44 @@ const rutas = {
     return r;
   },
 
+
+  // ----- webs editables -----
+  "GET /api/sitios/web/contenido": async (req, q) => leerJson(path.join(webDir(q.get("slug")), "contenido.json"), {}),
+  "POST /api/sitios/web/entrar": async (req) => {
+    const b = await body(req); const slug = slugOk(b.slug);
+    const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+    const t0 = Date.now(); entradasIp[ip] = (entradasIp[ip] || []).filter((x) => t0 - x < 15 * 60e3);
+    if (entradasIp[ip].length >= 10) throw err(429, "Demasiados intentos. Probá de nuevo en 15 minutos.");
+    entradasIp[ip].push(t0);
+    const f = path.join(webDir(slug), "acceso.json"), a = leerJson(f, null);
+    if (!a) throw err(404, "Este panel todavía no está activado");
+    if (sha(a.sal + String(b.clave || "").trim()) !== a.hash) throw err(403, "La clave no es correcta");
+    const t = crypto.randomBytes(24).toString("hex");
+    a.sesiones = (a.sesiones || []).filter((x) => x.vence > Date.now()).slice(-9);
+    a.sesiones.push({ h: sha(t), vence: Date.now() + 180 * 864e5 });
+    escribirJson(f, a); entradasIp[ip] = [];
+    return { t };
+  },
+  "POST /api/sitios/web/guardar": async (req) => {
+    const b = await bodyGrande(req, 300e3); const slug = slugOk(b.slug); sesionWeb(slug, b.t);
+    if (!b.c || typeof b.c !== "object") throw err(400, "Faltan los datos");
+    const d = webDir(slug), f = path.join(d, "contenido.json");
+    if (fs.existsSync(f)) { fs.mkdirSync(path.join(d, "historial"), { recursive: true }); fs.copyFileSync(f, path.join(d, "historial", Date.now() + ".json"));
+      const h = fs.readdirSync(path.join(d, "historial")).sort(); h.slice(0, Math.max(0, h.length - 30)).forEach((x) => fs.unlinkSync(path.join(d, "historial", x))); }
+    b.c.guardado = ahora(); escribirJson(f, b.c);
+    return { ok: true, guardado: b.c.guardado };
+  },
+  "POST /api/sitios/web/foto": async (req) => {
+    const b = await bodyGrande(req, 2.5e6); const slug = slugOk(b.slug); sesionWeb(slug, b.t);
+    const m = String(b.data || "").match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/);
+    if (!m) throw err(400, "La foto no se pudo leer");
+    const buf = Buffer.from(m[2], "base64");
+    const esJpg = buf[0] === 0xff && buf[1] === 0xd8, esPng = buf[0] === 0x89 && buf[1] === 0x50, esWebp = buf.slice(8, 12).toString() === "WEBP";
+    if (!(esJpg || esPng || esWebp) || buf.length > 1.8e6) throw err(400, "La foto no es válida o es muy pesada");
+    const ext = esJpg ? "jpg" : esPng ? "png" : "webp", nombre = crypto.randomBytes(8).toString("hex") + "." + ext;
+    const dir = path.join(webDir(slug), "fotos"); fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, nombre), buf);
+    return { url: "/api/sitios/web/foto/" + slug + "/" + nombre };
+  },
   "GET /api/sitios/admin": async (req, q) => {
     esAdmin(q.get("k"));
     return load().clientes.map((c) => ({ ...publico(c), id: c.preapproval_id, prueba: !!c.prueba, token: c.prueba ? c.token : undefined, email: c.email || "", dominio_aviso: c.dominio_aviso || "", admin_sin_leer: c.admin_sin_leer || 0 })).reverse();
@@ -361,6 +425,16 @@ const rutas = {
 
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");
+  // fotos subidas desde el panel de cada web
+  const fm = req.method === "GET" && u.pathname.match(/^\/api\/sitios\/web\/foto\/([a-z0-9-]{2,40})\/([a-f0-9]{16}\.(jpg|png|webp))$/);
+  if (fm) {
+    const f = path.join(WEBS, fm[1], "fotos", fm[2]);
+    return fs.readFile(f, (e, buf) => {
+      if (e) { res.writeHead(404); return res.end(); }
+      res.writeHead(200, { "Content-Type": { jpg: "image/jpeg", png: "image/png", webp: "image/webp" }[fm[3]], "Cache-Control": "public, max-age=31536000, immutable" });
+      res.end(buf);
+    });
+  }
   const f = rutas[req.method + " " + u.pathname.replace(/\/$/, "")];
   if (!f) return send(res, 404, { error: "No existe" });
   try { send(res, 200, await f(req, u.searchParams)); }
