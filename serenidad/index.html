@@ -138,13 +138,15 @@
   @media (max-width: 820px) { .regalo .wrap { grid-template-columns: 1fr; } .regalo .foto { max-width: 420px; } }
 
   /* ---- dónde ---- */
-  .donde { background: var(--lavanda); }
-  .donde .wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-  .dato { background: #fff; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  .dato small { font: 600 12.5px var(--cuerpo); letter-spacing: .14em; text-transform: uppercase; color: var(--oro); }
-  .dato b { font: 600 24px/1.2 var(--titulo); color: var(--ciruela); overflow-wrap: anywhere; }
-  .dato b.ig { font-size: 20px; }
-  .dato a { font-size: 15px; font-weight: 500; color: var(--violeta); margin-top: auto; padding-top: 8px; }
+  /* dónde: banda oscura como en la versión 3, con los colores de la marca */
+  .donde { background: var(--ciruela); color: var(--crema); }
+  .donde .wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; }
+  .dato { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .dato small { font: 600 12.5px var(--cuerpo); letter-spacing: .14em; text-transform: uppercase; color: var(--oro2); margin-bottom: 4px; }
+  .dato b { font: 600 26px/1.2 var(--titulo); color: #fff; overflow-wrap: anywhere; }
+  .dato b.ig { font-size: 24px; }
+  .dato span { color: var(--lila); font-size: 15px; }
+  .dato a { font-size: 15px; font-weight: 600; color: #fff; margin-top: 8px; }
 
   /* ---- galería (fotos de ejemplo que la clienta cambia desde el panel) ---- */
   .galeria .grid-fotos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
@@ -161,8 +163,8 @@
   .aviso-panel b { color: var(--violeta); }
   @media (max-width: 820px) { .galeria .grid-fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  footer { padding-block: 34px 120px; text-align: center; font-size: 14px; color: var(--suave); }
-  footer img { height: 70px; width: auto; margin: 0 auto 12px; }
+  footer { background: var(--ciruela); padding-block: 10px 120px; text-align: center; font-size: 14px; color: var(--lila); }
+  footer img { height: 70px; width: auto; margin: 0 auto 12px; background: var(--crema); border-radius: 18px; padding: 8px 14px; }
 
   /* botón flotante de WhatsApp */
   .flota { position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); width: 60px; height: 60px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 12px 28px rgba(37,211,102,.4); z-index: 30; }
