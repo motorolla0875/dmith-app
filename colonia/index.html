@@ -88,6 +88,7 @@
   body.dentro #acciones-izq { display: flex; }
   #acciones-izq button { font: inherit; border: 0; border-radius: 999px; background: #ffffffe8; box-shadow: 0 3px 10px #0003; padding: 9px 13px; font-size: 14px; font-weight: 600; color: #2E2440; cursor: pointer; touch-action: manipulation; }
   #acciones-izq button:active { transform: scale(.93); }
+  #acciones-izq #a-atacar { background: #E8424F; color: #fff; }
   body.dentro .esquina { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 40px); }
   body.dentro .pedido { margin-bottom: 150px; }
   #mision { position: fixed; left: 10px; top: calc(max(10px, env(safe-area-inset-top)) + 100px); max-width: 58vw; background: #FFF4D6ee; color: #5A3E00; border: 2px solid #FFC23D; border-radius: 12px; padding: 5px 10px; font-size: 13px; font-weight: 600; display: none; z-index: 4; pointer-events: none; }
@@ -135,7 +136,7 @@
 </div>
 
 <div id="joy"><i></i></div>
-<div id="acciones-izq"><button id="a-siganme">🚩 Síganme</button><button id="a-bailar">💃 Bailar</button></div>
+<div id="acciones-izq"><button id="a-atacar" style="display:none">⚔️ ¡Ataquen!</button><button id="a-siganme">🚩 Síganme</button><button id="a-bailar">💃 Bailar</button></div>
 <div id="acciones">
   <button id="a-hacer">✋ Juntar</button>
   <div class="fila2" id="fila-bicho" style="display:none"><button id="a-abrazar">🤗 Abrazar</button><button id="a-alzar">✋ Alzar</button></div>
@@ -161,7 +162,7 @@
       <li>De noche se van a dormir a sus casas.</li>
       <li>Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.</li>
       <li>🚪 <b>Entrar</b>: sos un Brotito más (el dorado 👑). Caminá con el joystick, juntá cosas y llevalas a una casa, ayudá en las obras y saludalos. Si los chocás se caen y se asustan; si saltás encima de uno… 😵. Con 🚪 salís.</li>
-      <li>👑 Adentro podés hacer que te sigan 🚩, abrazarlos 🤗, alzarlos y tirarlos ✋, bailar 💃 y cumplir <b>misiones</b> 📜 cuando alguno tiene un ❗.</li>
+      <li>👑 Adentro podés hacer que te sigan 🚩, abrazarlos 🤗, alzarlos y tirarlos ✋, mandarlos al ataque ⚔️, bailar 💃 y cumplir <b>misiones</b> 📜 cuando alguno tiene un ❗.</li>
       <li>Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.</li>
       <li>La colonia sigue creciendo aunque cierres la página.</li>
     </ul>
@@ -178,6 +179,6 @@
   </div>
 </div>
 
-<script type="module" src="juego.js?v=21"></script>
+<script type="module" src="juego.js?v=22"></script>
 </body>
 </html>

@@ -269,7 +269,7 @@ function cargar() {
     sigId = s.sigId || 1000;
     s.hechos = s.hechos || {};
     for (const b of s.bichos) if (!b.hc) { b.hue = semilla(b.id * 7 + 3)() * 360 | 0; b.hc = 1; }
-    for (const b of s.bichos) { delete b.mision; delete b.baile; delete b.bailando; delete b.sigue; delete b.alzado; delete b.vuelo; delete b.amigoT; b.alto = 0; b.caida = 0; b.abrazo = 0; b.giro = 0; if (["seguir", "esperar", "alzado", "volar", "bailar"].includes(b.est)) { b.est = "quieto"; b.quieto = .5; } }
+    for (const b of s.bichos) { delete b.ataque; if (b.oficio === "soldado") b.oficio = null; delete b.mision; delete b.baile; delete b.bailando; delete b.sigue; delete b.alzado; delete b.vuelo; delete b.amigoT; b.alto = 0; b.caida = 0; b.abrazo = 0; b.giro = 0; if (["seguir", "esperar", "alzado", "volar", "bailar"].includes(b.est)) { b.est = "quieto"; b.quieto = .5; } }
     for (const b of s.bichos) { if (b.y < 0 || b.est === "cruzar") { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
@@ -585,9 +585,9 @@ $("d-comida").onclick = () => dar("comida");
 $("d-madera").onclick = () => dar("madera");
 $("d-piedra").onclick = () => dar("piedra");
 
-function explotar(b) {
+function explotar(b, porSoldado) {
   E.bichos = E.bichos.filter((o) => o !== b); E.explotados++;
-  E.animo = clamp(E.animo - 15, 0, 100);
+  E.animo = clamp(E.animo - (porSoldado ? 4 : 15), 0, 100);
   const esc = b.edad < GRANDE ? .55 + b.edad / GRANDE * .3 : 1;
   quitarMallaBicho(b);
   aplastado(b, esc);
@@ -595,7 +595,7 @@ function explotar(b) {
   for (let i = 0; i < 22; i++) particula({ x: b.x, y: .6, z: b.z }, { x: rnd(-4.5, 4.5), y: rnd(2.5, 7), z: rnd(-4.5, 4.5) }, rojo, rnd(.6, 1.1), rnd(.07, .16), null, true);
   onda(b);
   for (const o of E.bichos) {
-    if (o.adentro || o.y !== 0 || o.isla !== b.isla || o.est === "cruzar") continue;
+    if (o.adentro || o.y !== 0 || o.isla !== b.isla || o.est === "cruzar" || o.sigue) continue;
     const d = dist(o, b);
     if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", "¡ayyy!", "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
   }
@@ -1125,6 +1125,7 @@ const GORROS = {
   lenador: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#D84B4B"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.esfera, mat("#ffffff"), .28, .28, .28, 0, .48, 0, false)); return g; },
   granjero: () => { const g = new THREE.Group(); g.add(malla(G.cil, mat("#E9C46A"), 1.9, .06, 1.9, 0, .02, 0, false)); g.add(malla(G.media, mat("#E9C46A"), .95, .7, .95, 0, 0, 0, false)); g.add(malla(G.cil, mat("#C0392B"), .97, .1, .97, 0, .08, 0, false)); return g; },
   minero: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#F4C430"), 1.15, .95, 1.15, 0, 0, 0, false)); g.add(malla(G.cil, mat("#F4C430"), 1.35, .06, 1.35, 0, .02, 0, false)); g.add(malla(G.esfera, new THREE.MeshBasicMaterial({ color: "#FFF7C2" }), .22, .22, .12, 0, .25, .52, false)); return g; },
+  soldado: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#7C8A93"), 1.18, .95, 1.18, 0, 0, 0, false)); g.add(malla(G.cil, mat("#5E6B73"), 1.3, .07, 1.3, 0, .02, 0, false)); g.add(malla(G.cono, mat("#E8424F"), .18, .45, .18, 0, .55, 0, false)); return g; },
   constructor: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#FF8A3D"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.cil, mat("#FF8A3D"), 1.4, .06, 1.4, 0, .02, .1, false)); g.add(malla(G.caja, mat("#E06A20"), .1, .5, .9, 0, .3, 0, false)); return g; },
 };
 const cuerpos = [];
@@ -1538,15 +1539,63 @@ function siganme() {
   if (fila.length) aviso(`🚩 ${fila.length} Brotitos te siguen. Llevalos a donde quieras`);
 }
 function soltarFila(avisar) {
+  if (ataque) { ataque = null; for (const b of fila) { b.ataque = null; b.alto = 0; b.oficio = null; } }
   for (const b of fila) { b.sigue = false; if (b.est === "seguir" || b.est === "esperar") { b.est = "quieto"; b.quieto = rnd(.3, 1.2); } const z = zonaEn(b.x, b.z); if (z) b.isla = z.id; }
   if (avisar && fila.length) { aviso("✋ ¡A trabajar acá!"); for (const b of fila) if (Math.random() < .5) hablar(b, "¡" + balbuceo(1) + "!"); }
   fila = [];
+}
+// ---- ⚔️ ¡Ataquen!: los que te siguen saltan encima de los demás y los aplastan ----
+let ataque = null;
+function atacar() {
+  audio();
+  if (ataque) { pararAtaque(); return; }
+  const soldados = fila.filter((b) => !b.mision);
+  if (!soldados.length) { aviso("Primero hacé que te sigan con 🚩"); return; }
+  ataque = { t: 25 };
+  for (const b of soldados) { b.ataque = { obj: null, salto: null, muertes: 0 }; b.oficio = "soldado"; setTimeout(() => hablar(b, elegir(["¡¡" + balbuceo(1) + "!!", "⚔️", "¡grrr!", "¡a la carga!"]), true), rnd(50, 500)); }
+  hablar(yo, "¡⚔️!", true);
+  aviso(`⚔️ ¡${soldados.length} soldados al ataque!`);
+}
+function pararAtaque() {
+  if (!ataque) return; ataque = null;
+  for (const b of fila) if (b.ataque) { b.ataque = null; b.alto = 0; b.oficio = null; }
+  aviso("🛑 ¡Alto! Vuelven con vos");
+}
+function victimaPara(b) {
+  let m = null, d = 16;
+  for (const o of E.bichos) {
+    if (o.sigue || o.mision || o.alzado || o.vuelo || o.adentro || o.y !== 0 || o.ataque) continue;
+    if (Math.abs(o.x - b.x) > d || Math.abs(o.z - b.z) > d) continue;
+    const dd = Math.hypot(o.x - b.x, o.z - b.z); if (dd < d && dist(o, yo) < 22) { d = dd; m = o; }
+  }
+  return m;
+}
+function soldado(b, dt) {
+  const a = b.ataque;
+  if (a.salto) { // en el aire, cayendo encima
+    const s = a.salto; s.p += dt / .5; const p = Math.min(1, s.p), v = a.obj && E.bichos.includes(a.obj) ? a.obj : s.fin;
+    b.x = s.x0 + (v.x - s.x0) * p; b.z = s.z0 + (v.z - s.z0) * p; b.alto = Math.sin(p * Math.PI) * 2.4; b.fase += dt * 20;
+    if (p >= 1) {
+      b.alto = 0; a.salto = null;
+      if (a.obj && E.bichos.includes(a.obj) && dist(a.obj, b) < 1.8) { explotar(a.obj, true); a.muertes++; if (Math.random() < .6) hablar(b, elegir(["¡ja!", "💪", "¡" + balbuceo(1) + "!"]), true); }
+      else onda(b);
+      a.obj = null;
+    }
+    return;
+  }
+  if (!a.obj || !E.bichos.includes(a.obj) || a.obj.adentro || a.obj.sigue) a.obj = victimaPara(b);
+  if (!a.obj) { b.est = "esperar"; return false; }
+  const dx = a.obj.x - b.x, dz = a.obj.z - b.z, d = Math.hypot(dx, dz) || .01;
+  b.dx = dx / d; b.dz = dz / d; b.est = "seguir";
+  if (d < 3) { a.salto = { p: 0, x0: b.x, z0: b.z, fin: { x: a.obj.x, z: a.obj.z } }; return; }
+  const v = Math.min(d, 8.5 * dt); b.x += b.dx * v; b.z += b.dz * v; b.fase += dt * 6;
 }
 function seguirAlRey(b, dt) {
   const i = fila.indexOf(b);
   if (i < 0 || !dentroMundo) { b.sigue = false; b.est = "quieto"; b.quieto = .5; return; }
   if (b.amigoT !== undefined) { b.amigoT -= dt; if (b.amigoT <= 0) { delete b.amigoT; fila.splice(i, 1); b.sigue = false; b.est = "quieto"; b.quieto = 1; hablar(b, "¡chau " + balbuceo(1) + "!"); return; } }
-  if (b.susto > 0) { fila.splice(i, 1); b.sigue = false; return; } // si lo asustaste, se va
+  if (b.susto > 0 && !b.ataque) { fila.splice(i, 1); b.sigue = false; return; } // si lo asustaste, se va
+  if (b.ataque) { if (!ataque) { b.ataque = null; b.alto = 0; b.oficio = null; } else if (soldado(b, dt) !== false) { const z = zonaEn(b.x, b.z); if (z) b.isla = z.id; return; } }
   const lider = i === 0 ? yo : fila[i - 1], dx = lider.x - b.x, dz = lider.z - b.z, d = Math.hypot(dx, dz) || .01;
   if (d > 30) { b.x = lider.x - dx / d * 1.8; b.z = lider.z - dz / d * 1.8; } // si quedó muy atrás, aparece cerca
   if (d > 1.9) { const v = Math.min(d - 1.9, (d > 6 ? 9 : 7) * dt); b.dx = dx / d; b.dz = dz / d; b.x += b.dx * v; b.z += b.dz * v; b.est = "seguir"; }
@@ -1817,6 +1866,7 @@ function actualizarYo(dt, ahora) {
   if (yo.golpe > 0) { yo.golpe -= dt; yo.fase += dt * 10; }
   if (yo.abrazo > 0) yo.abrazo -= dt;
   actualizarBaile(dt);
+  if (ataque) { ataque.t -= dt; if (ataque.t <= 0 || !fila.some((b) => b.ataque)) pararAtaque(); }
   actualizarMision(dt);
   yo.est = yo.golpe > 0 ? "juntar" : moviendo ? "pasear" : "quieto";
   yo.bailando = !!baile && !moviendo;
@@ -1836,6 +1886,7 @@ function actualizarYo(dt, ahora) {
   if (accionT > .15) {
     accionT = 0; accion = elegirAccion();
     fila = fila.filter((b) => E.bichos.includes(b) && b.sigue);
+    { const ba = $("a-atacar"), hay = fila.some((b) => !b.mision); ba.style.display = hay ? "" : "none"; const t = ataque ? "🛑 ¡Alto!" : "⚔️ ¡Ataquen!"; if (ba.textContent !== t) ba.textContent = t; }
     { const bs = $("a-siganme"), t = fila.length ? `✋ Suéltenme (${fila.length})` : "🚩 Síganme"; if (bs.textContent !== t) bs.textContent = t; }
     { const cerca = !alzado && bichoCerca(), fb = $("fila-bicho"); fb.style.display = alzado || cerca ? "flex" : "none";
       const ta = alzado ? "🫳 Dejar" : "🤗 Abrazar", tb = alzado ? "🤾 Tirar" : "✋ Alzar";
@@ -1858,6 +1909,7 @@ $("a-saludar").onclick = saludar;
 $("a-saltar").onclick = saltar;
 $("a-siganme").onclick = siganme;
 $("a-bailar").onclick = bailar;
+$("a-atacar").onclick = atacar;
 $("a-abrazar").onclick = () => (alzado ? dejar() : abrazar());
 $("a-alzar").onclick = alzar;
 {
@@ -1881,6 +1933,7 @@ addEventListener("keydown", (e) => {
   if (e.code === "KeyQ") saludar();
   if (e.code === "KeyF") siganme();
   if (e.code === "KeyB") bailar();
+  if (e.code === "KeyX") atacar();
   if (e.code === "KeyR") (alzado ? dejar() : abrazar());
   if (e.code === "KeyT") alzar();
   if (e.code === "Escape") salir();
