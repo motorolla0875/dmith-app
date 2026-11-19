@@ -787,17 +787,66 @@ function andamio(g, w, h, d, prog, y0 = 0) {
   if (prog > 0) g.add(malla(G.caja, mat("#E8C79A"), w * .96, h * prog, d * .96, 0, y0 + h * prog / 2, 0));
 }
 const PISO = 2;
-const ESTILOS = [
-  (id) => ({ pared: `hsl(${26 + id % 12},50%,${56 + id % 10}%)`, techo: "#E8C048", tipoTecho: "paja" }),
-  (id) => ({ pared: `hsl(${12 + id % 16},62%,${56 + id % 10}%)`, techo: ["#D9442E", "#E86A2C", "#C73B5A"][id % 3], tipoTecho: "teja" }),
-  (id) => ({ pared: `hsl(${[38, 200, 20, 160][id % 4]},${30 + id % 10}%,${72 + id % 8}%)`, techo: ["#3E7CB1", "#2E8B6A", "#B5442F"][id % 3], tipoTecho: "teja", chimenea: true }),
-  (id) => ({ pared: `hsl(${id * 47 % 360},60%,${80 + id % 6}%)`, techo: "#3FA9E8", tipoTecho: "plano", farol: true }),
-  (id) => ({ pared: "#F4F7FB", techo: "#7FE7F2", tipoTecho: "cupula", farol: true }),
+// cada casa es distinta: colores, techo y detalles salen de su número (siempre los mismos para esa casa)
+const PALETAS = [
+  { pared: ["#D9A066", "#C98B4F", "#E3B778", "#B9784A", "#E8C69A", "#A8D08D", "#8FC1E3", "#E89A7A"], techo: ["#E8C048", "#D9A441", "#C9A36B", "#E0B65A"], tipo: ["paja", "paja", "dos"] },
+  { pared: ["#E8734A", "#F2A65A", "#F6D06F", "#F49AC1", "#9ED9A0", "#8EC5F0", "#F2EBDD", "#D96C6C", "#C9A0DC", "#F7B267"], techo: ["#D9442E", "#E86A2C", "#C73B5A", "#3E7CB1", "#2E8B6A", "#7A4B2A"], tipo: ["teja", "dos", "dos"] },
+  { pared: ["#E9DFC9", "#C9D6E3", "#BFE3D6", "#F0D9B5", "#D7C4E8", "#F5C6A5", "#B8C2CC", "#F2E2A0"], techo: ["#3E7CB1", "#2E8B6A", "#B5442F", "#5D4E8C", "#4A5568", "#C0392B"], tipo: ["teja", "dos", "dos"], chimenea: true },
+  { pared: ["#FFB3BA", "#FFDFBA", "#FFF3A8", "#BAFFC9", "#BAE1FF", "#E0BBE4", "#F7F7F7", "#C7F0F0", "#FFD1E8"], techo: ["#3FA9E8", "#FF6F91", "#4FB477", "#FFC23D", "#8E7CFF"], tipo: ["plano"], farol: true },
+  { pared: ["#F4F7FB", "#9FD8FF", "#FFC2E2", "#B8F5D0", "#FFE9A8", "#CDBFFF", "#FFB89A", "#A8F0F0"], techo: ["#7FE7F2", "#B8A6FF", "#9FF0C2", "#FFC2E2"], tipo: ["cupula"], farol: true },
 ];
+const FLORES = ["#FF6F91", "#FFC23D", "#FFFFFF", "#B39DFF", "#FF7A59", "#5EC8F2"];
+function estiloCasa(id, era) {
+  const rd = semilla(id * 7919 + 13), p = PALETAS[era], en = (a) => a[rd() * a.length | 0];
+  return {
+    pared: en(p.pared), techo: en(p.techo), tipoTecho: en(p.tipo), chimenea: p.chimenea || (era < 2 && rd() < .3), farol: p.farol,
+    puerta: en(["#6B4A33", "#2E5AAC", "#C0392B", "#2E8B57", "#F2C14E", "#5D4E8C", "#FFFFFF"]),
+    detalle: en(["flores", "postigos", "toldo", "nada", "flores", "postigos"]),
+    franja: rd() < .4 ? en(["#FFFFFF", "#6B4A33", "#2E2440", "#F2C14E"]) : null,
+    patio: en(["arbol", "arbusto", "cerca", "buzon", "nada", "arbol"]),
+    techoExtra: en(["nada", "paneles", "jardin", "antena"]), giroTecho: rd() < .5,
+    flor: en(FLORES), color2: en(p.pared),
+  };
+}
+const ESTILOS = [0, 1, 2, 3, 4].map((era) => (id) => estiloCasa(id, era));
+const PRISMA = (() => { const g = new THREE.CylinderGeometry(.5, .5, 1, 3); g.rotateX(-Math.PI / 2); g.translate(0, .125, 0); return g; })();
 function techo(g, est, y, w) {
-  if (est.tipoTecho === "plano") { g.add(malla(G.caja, mat(est.techo), w + .3, .3, w + .3, 0, y + .15, 0)); g.add(malla(G.cil, mat("#888"), .05, 1.2, .05, w * .3, y + .9, w * .3)); g.add(malla(G.esfera, NEON, .2, .2, .2, w * .3, y + 1.5, w * .3, false)); return; }
-  if (est.tipoTecho === "cupula") { g.add(malla(G.media, new THREE.MeshLambertMaterial({ color: est.techo, transparent: true, opacity: .85 }), w * 1.1, w * .8, w * 1.1, 0, y, 0)); g.add(malla(G.cil, NEON, w + .1, .12, w + .1, 0, y, 0, false)); return; }
+  if (est.tipoTecho === "plano") {
+    g.add(malla(G.caja, mat(est.techo), w + .3, .3, w + .3, 0, y + .15, 0));
+    if (est.techoExtra === "paneles") for (const s of [-1, 1]) { const p = malla(G.caja, mat("#2B3E7A"), w * .38, .06, w * .6, s * w * .22, y + .5, 0, false); p.rotation.x = -.35; g.add(p); }
+    else if (est.techoExtra === "jardin") { g.add(malla(G.caja, mat("#4FAE5A"), w * .8, .25, w * .8, 0, y + .42, 0, false)); for (let i = 0; i < 3; i++) g.add(malla(G.esfera, mat(FLORES[i * 2]), .3, .3, .3, -.8 + i * .8, y + .62, .2, false)); }
+    else { g.add(malla(G.cil, mat("#888"), .05, 1.2, .05, w * .3, y + .9, w * .3)); g.add(malla(G.esfera, NEON, .2, .2, .2, w * .3, y + 1.5, w * .3, false)); }
+    return;
+  }
+  if (est.tipoTecho === "cupula") { g.add(malla(G.media, new THREE.MeshLambertMaterial({ color: vivo(est.techo), transparent: true, opacity: .85 }), w * 1.1, w * .8, w * 1.1, 0, y, 0)); g.add(malla(G.cil, NEON, w + .1, .12, w + .1, 0, y, 0, false)); return; }
+  if (est.tipoTecho === "dos") { // techo a dos aguas
+    const t = malla(PRISMA, mat(est.techo), w * 1.25, 2.1, w * 1.18, 0, y, 0); if (est.giroTecho) t.rotation.y = Math.PI / 2; g.add(t);
+    return;
+  }
   const t = malla(G.piramide, mat(est.techo), w * 1.5, est.tipoTecho === "paja" ? 2 : 1.6, w * 1.5, 0, y + (est.tipoTecho === "paja" ? 1 : .8), 0); t.rotation.y = Math.PI / 4; g.add(t);
+}
+function detallesCasa(g, est, e, hechos, w) {
+  const era = e.era || 0, fz = w / 2 + .02;
+  // franja de color entre pisos
+  if (est.franja) for (let i = 1; i <= hechos; i++) g.add(malla(G.caja, mat(est.franja), w + .12, .18, w + .12, 0, i * PISO - .1, 0, false));
+  for (let i = 0; i < hechos; i++) {
+    const y = i * PISO + 1.1;
+    for (const vx of [-.75, .75]) {
+      if (i === 0 && vx < 0 && era < 3) continue;
+      if (era >= 3) continue;
+      if (est.detalle === "flores") { g.add(malla(G.caja, mat("#7A4B2A"), .65, .16, .22, vx, y - .38, fz + .1, false)); for (const k of [-.2, 0, .2]) g.add(malla(G.esfera, mat(est.flor), .16, .16, .16, vx + k, y - .24, fz + .12, false)); }
+      if (est.detalle === "postigos") for (const s of [-1, 1]) g.add(malla(G.caja, mat(est.puerta === "#FFFFFF" ? "#2E8B57" : est.puerta), .14, .6, .04, vx + s * .38, y, fz + .02, false));
+    }
+    // balcón en los pisos de arriba
+    if (i > 0 && (e.id + i) % 3 === 0 && era >= 1) { g.add(malla(G.caja, mat("#DDD6CC"), 1.6, .1, .55, .75, i * PISO + .5, fz + .27, false)); g.add(malla(G.caja, mat(era >= 3 ? "#9FE3F5" : "#5A4636"), 1.6, .4, .05, .75, i * PISO + .75, fz + .53, false)); }
+  }
+  if (est.detalle === "toldo" && era < 4) for (let k = 0; k < 3; k++) { const t = malla(G.caja, mat(k % 2 ? "#FFFFFF" : est.flor), .3, .07, .7, (era >= 3 ? 1.1 : -.75) - .3 + k * .3, 1.32, fz + .3, false); t.rotation.x = .35; g.add(t); }
+  // patio
+  const px = w / 2 + .9;
+  if (est.patio === "arbol") g.add(malla(G.cil, mat("#7A4B2A"), .16, 1.2, .16, px, .6, 1), malla(G.esfera, mat(era >= 3 ? "#7ED957" : "#4FAE5A"), 1.2, 1.3, 1.2, px, 1.7, 1));
+  else if (est.patio === "arbusto") g.add(malla(G.esfera, mat("#5CB85C"), .9, .7, .9, px - .2, .35, 1.3), malla(G.esfera, mat(est.flor), .2, .2, .2, px - .1, .7, 1.5, false));
+  else if (est.patio === "cerca" && era < 3) for (let k = 0; k < 5; k++) g.add(malla(G.caja, mat("#F4F0E6"), .1, .55, .08, -w / 2 + .2 + k * .55, .28, fz + 1.1, false));
+  else if (est.patio === "buzon") g.add(malla(G.cil, mat("#555"), .06, .8, .06, 1.2, .4, fz + 1), malla(G.caja, mat(est.puerta === "#FFFFFF" ? "#C0392B" : est.puerta), .35, .25, .5, 1.2, .9, fz + 1, false));
 }
 // ---- edificios armados con piezas (catálogo, combinados e inventos) ----
 const VIDRIO = new THREE.MeshLambertMaterial({ color: "#BFE6FF", emissive: "#5FA8D8", emissiveIntensity: .15, transparent: true, opacity: .75 });
@@ -950,7 +999,7 @@ function mallaEdificio(e, simple) {
     return g;
   }
   if (e.tipo === "casa") {
-    const hechos = pisosListos(e), est = ESTILOS[e.era || 0](e.id), w = 3.2;
+    const hechos = pisosListos(e), est = ESTILOS[e.era || 0](e.id), w = 3.2 * (.88 + (e.id * 7 % 5) * .06);
     if (simple) { if (hechos) { g.add(malla(G.caja, mat(est.pared), w, hechos * PISO, w, 0, hechos * PISO / 2, 0, false)); g.add(malla(G.caja, VENTANA, w + .02, .5, .5, 0, hechos * PISO * .6, 0, false)); techo(g, est, hechos * PISO, w); } return g; }
     const pared = mat(est.pared);
     for (let i = 0; i < hechos; i++) {
@@ -959,8 +1008,8 @@ function mallaEdificio(e, simple) {
       const vent = (e.era || 0) >= 3 ? [[0, 1.61, 0, 2.2], [1.61, 0, Math.PI / 2, 2.2], [-1.61, 0, Math.PI / 2, 2.2], [0, -1.61, 0, 2.2]] : [[-.75, 1.61, 0, .55], [.75, 1.61, 0, .55], [1.61, 0, Math.PI / 2, .55], [-1.61, 0, Math.PI / 2, .55], [-.75, -1.61, 0, .55], [.75, -1.61, 0, .55]];
       for (const [vx, vz, ry, ancho] of vent) { if (i === 0 && vz > 1.6 && vx <= 0 && ancho < 1) continue; const v = malla(G.caja, VENTANA, ancho, .55, .06, vx, i * PISO + 1.1, vz, false); v.rotation.y = ry; g.add(v); }
     }
-    if (hechos > 0) g.add(malla(G.caja, mat("#6B4A33"), .7, 1.15, .1, (e.era || 0) >= 3 ? 1.1 : -.75, .58, 1.62, false));
-    if (hechos > 0 && est.chimenea) { g.add(malla(G.caja, mat("#6E6E6E"), .5, 1.6, .5, 1, hechos * PISO + .8, -.8)); g.userData.humo = { x: 1, y: hechos * PISO + 1.7, z: -.8 }; }
+    if (hechos > 0) { g.add(malla(G.caja, mat(est.puerta), .7, 1.15, .1, (e.era || 0) >= 3 ? 1.1 : -.75, .58, 1.62, false)); detallesCasa(g, est, e, hechos, w); }
+    if (hechos > 0 && est.chimenea) { g.add(malla(G.caja, mat(e.id % 2 ? "#6E6E6E" : "#A0522D"), .5, 1.6, .5, 1, hechos * PISO + .8, -.8)); g.userData.humo = { x: 1, y: hechos * PISO + 1.7, z: -.8 }; }
     if (hechos > 0 && est.farol) { g.add(malla(G.cil, mat("#555"), .08, 2.4, .08, 2.2, 1.2, 2.2)); g.add(malla(G.esfera, NEON, .3, .3, .3, 2.2, 2.5, 2.2, false)); }
     const yt = hechos * PISO;
     if (!listo(e)) andamio(g, w, PISO, w, e.prog, yt);
