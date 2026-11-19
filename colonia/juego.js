@@ -695,7 +695,7 @@ render.setSize(innerWidth, innerHeight);
 render.shadowMap.enabled = true; render.shadowMap.type = THREE.PCFSoftShadowMap;
 $("lienzo").appendChild(render.domElement);
 const escena = new THREE.Scene();
-const CIELO_DIA = new THREE.Color("#9FE3F5"), CIELO_NOCHE = new THREE.Color("#1B1C48");
+const CIELO_DIA = new THREE.Color("#5CCBFF"), CIELO_NOCHE = new THREE.Color("#1B1C48");
 escena.background = CIELO_DIA.clone();
 escena.fog = new THREE.Fog(CIELO_DIA.clone(), 220, 520);
 const camara = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .5, 1400);
@@ -711,8 +711,8 @@ addEventListener("resize", ajustarPantalla);
 // al girar el celular, el iPhone a veces avisa antes de cambiar el tamaño: reajustar un rato después también
 addEventListener("orientationchange", () => { setTimeout(ajustarPantalla, 150); setTimeout(ajustarPantalla, 500); });
 
-const hemi = new THREE.HemisphereLight("#ffffff", "#7a6a50", .9); escena.add(hemi);
-const sol = new THREE.DirectionalLight("#fff4dd", 1.7);
+const hemi = new THREE.HemisphereLight("#eaf7ff", "#8a7a40", .95); escena.add(hemi);
+const sol = new THREE.DirectionalLight("#fff1d0", 1.75);
 sol.castShadow = true; sol.shadow.mapSize.set(2048, 2048); sol.shadow.bias = -.0006; sol.shadow.normalBias = .03;
 { const s = sol.shadow.camera; s.left = -55; s.right = 55; s.top = 55; s.bottom = -55; s.near = 1; s.far = 400; }
 escena.add(sol, sol.target);
@@ -725,7 +725,14 @@ const estrellas = (() => {
 })();
 
 const MAT = {};
-const mat = (c) => MAT[c] || (MAT[c] = new THREE.MeshLambertMaterial({ color: c }));
+// colores más vivos: a todo lo que tiene color le subimos la saturación (los grises quedan grises)
+const _hsl = {};
+function vivo(c) {
+  const col = new THREE.Color(c); col.getHSL(_hsl);
+  if (_hsl.s > .06) col.setHSL(_hsl.h, Math.min(1, _hsl.s * 1.45 + .1), _hsl.l > .8 ? _hsl.l : _hsl.l * .97);
+  return col;
+}
+const mat = (c) => MAT[c] || (MAT[c] = new THREE.MeshLambertMaterial({ color: vivo(c) }));
 const VENTANA = new THREE.MeshLambertMaterial({ color: "#FFF3B0", emissive: "#FFC75A", emissiveIntensity: .1 });
 const NEON = new THREE.MeshLambertMaterial({ color: "#B8F3FF", emissive: "#5FE3FF", emissiveIntensity: .2 });
 const LLAMA = new THREE.MeshBasicMaterial({ color: "#FF9A3D" }), LLAMA2 = new THREE.MeshBasicMaterial({ color: "#FFE07A" });
@@ -781,10 +788,10 @@ function andamio(g, w, h, d, prog, y0 = 0) {
 }
 const PISO = 2;
 const ESTILOS = [
-  (id) => ({ pared: `hsl(${26 + id % 12},42%,${52 + id % 10}%)`, techo: "#D9B45A", tipoTecho: "paja" }),
-  (id) => ({ pared: `hsl(${8 + id % 10},48%,${44 + id % 8}%)`, techo: "#8E3B2E", tipoTecho: "teja" }),
-  (id) => ({ pared: `hsl(215,${6 + id % 8}%,${58 + id % 10}%)`, techo: "#4A5568", tipoTecho: "teja", chimenea: true }),
-  (id) => ({ pared: `hsl(${200 + id % 20},25%,${86 + id % 6}%)`, techo: "#5DADE2", tipoTecho: "plano", farol: true }),
+  (id) => ({ pared: `hsl(${26 + id % 12},50%,${56 + id % 10}%)`, techo: "#E8C048", tipoTecho: "paja" }),
+  (id) => ({ pared: `hsl(${12 + id % 16},62%,${56 + id % 10}%)`, techo: ["#D9442E", "#E86A2C", "#C73B5A"][id % 3], tipoTecho: "teja" }),
+  (id) => ({ pared: `hsl(${[38, 200, 20, 160][id % 4]},${30 + id % 10}%,${72 + id % 8}%)`, techo: ["#3E7CB1", "#2E8B6A", "#B5442F"][id % 3], tipoTecho: "teja", chimenea: true }),
+  (id) => ({ pared: `hsl(${id * 47 % 360},60%,${80 + id % 6}%)`, techo: "#3FA9E8", tipoTecho: "plano", farol: true }),
   (id) => ({ pared: "#F4F7FB", techo: "#7FE7F2", tipoTecho: "cupula", farol: true }),
 ];
 function techo(g, est, y, w) {
@@ -1121,8 +1128,8 @@ function poner(o, k, crear, esEdificio) {
 
 // ======================= 3D: Brotitos =======================
 const MAT_HUE = {};
-const matHue = (h, triste) => { const q = Math.round(h / 8) * 8, k = q + (triste ? "t" : ""); return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},${triste ? 22 : 58}%,${triste ? 58 : 62}%)`) })); };
-const matPie = (h) => { const q = Math.round(h / 8) * 8, k = "p" + q; return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},45%,45%)`) })); };
+const matHue = (h, triste) => { const q = Math.round(h / 8) * 8, k = q + (triste ? "t" : ""); return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},${triste ? 25 : 85}%,${triste ? 58 : 60}%)`) })); };
+const matPie = (h) => { const q = Math.round(h / 8) * 8, k = "p" + q; return MAT_HUE[k] || (MAT_HUE[k] = new THREE.MeshLambertMaterial({ color: new THREE.Color(`hsl(${q},70%,42%)`) })); };
 const NEGRO = new THREE.MeshBasicMaterial({ color: "#2E2440" }), BLANCO = new THREE.MeshBasicMaterial({ color: "#ffffff" });
 const GORROS = {
   lenador: () => { const g = new THREE.Group(); g.add(malla(G.media, mat("#D84B4B"), 1.15, .9, 1.15, 0, 0, 0, false)); g.add(malla(G.esfera, mat("#ffffff"), .28, .28, .28, 0, .48, 0, false)); return g; },
