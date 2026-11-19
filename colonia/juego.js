@@ -1499,6 +1499,11 @@ function entrar() {
     for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2; c.add(malla(G.cono, oro, .2, .35, .2, Math.sin(a) * .42, .3, Math.cos(a) * .42, false)); }
     c.add(malla(G.esfera, mat("#FF4F79"), .18, .18, .18, 0, .05, .48, false));
     c.position.y = 1.78; yo._m.g.add(c);
+    // cejas de enojado (solo se ven cuando el rey se pone malo)
+    const cejas = new THREE.Group();
+    for (const s of [-1, 1]) { const c2 = malla(G.caja, NEGRO, .38, .09, .08, s * .25, 1.42, .74, false); c2.rotation.z = s * .5; cejas.add(c2); }
+    cejas.visible = false; yo._m.g.add(cejas); yo._m.cejas = cejas;
+    yo._m.enojo = cartel("💢", .55, 2.6, yo._m.g, .7); yo._m.enojo.visible = false;
   }
   yo._m.g.visible = true;
   dentroMundo = true; document.body.classList.add("dentro");
@@ -1611,7 +1616,7 @@ function atacar() {
   if (ataque) { pararAtaque(); return; }
   const soldados = fila.filter((b) => !b.mision);
   if (!soldados.length) { aviso("Primero hacé que te sigan con 🚩"); return; }
-  ataque = { t: 25 };
+  ataque = { t: 25 }; ponerseMalo();
   for (const b of soldados) { b.ataque = { obj: null, salto: null, muertes: 0 }; b.oficio = "soldado"; setTimeout(() => hablar(b, elegir(["¡¡" + balbuceo(1) + "!!", "⚔️", "¡grrr!", "¡a la carga!"]), true), rnd(50, 500)); }
   hablar(yo, "¡⚔️!", true);
   aviso(`⚔️ ¡${soldados.length} soldados al ataque!`);
@@ -1874,6 +1879,26 @@ function actualizarMision(dt) {
   flecha.visible = !!obj && Math.hypot(obj.x - yo.x, obj.z - yo.z) > 3;
   if (flecha.visible) { const a = Math.atan2(obj.x - yo.x, obj.z - yo.z); flecha.position.set(yo.x + Math.sin(a) * 1.9, .35 + yo.alto, yo.z + Math.cos(a) * 1.9); flecha.rotation.y = a; }
 }
+// ---- 😠 el rey se pone malo cuando ataca o pisa a alguien, y después se le pasa ----
+function ponerseMalo() {
+  if (!(yo.malo > 0)) { aviso("😠 ¡El Rey Brotito se puso malo!"); hablar(yo, elegir(["¡grrr!", "😠", "¡hmpf!"]), true); }
+  yo.malo = 8;
+}
+function caraDelRey(dt) {
+  const m = yo._m; if (!m || !m.cejas) return;
+  if (ataque) yo.malo = Math.max(yo.malo || 0, 3); // mientras sus soldados atacan, sigue malo
+  if (yo.malo > 0) {
+    yo.malo -= dt;
+    if (yo.malo <= 0) { yo.malo = 0; aviso("😊 Al Rey Brotito ya se le pasó"); hablar(yo, elegir(["¡" + balbuceo(1) + "!", "😊"]), true); }
+  }
+  const malo = yo.malo > 0;
+  m.cejas.visible = malo; m.enojo.visible = malo;
+  if (malo) {
+    m.boca.scale.set(1.5, .22, .5); m.boca.position.y = .82;
+    m.o1.scale.y = m.o2.scale.y = .9;
+    m.enojo.position.y = 2.6 + Math.abs(Math.sin(performance.now() / 180)) * .15;
+  } else { m.boca.position.y = .86; }
+}
 function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; }
 // ---- choques: el rey no atraviesa nada ----
 const RADIO_EDIF = { casa: 1.9, fogata: 1, huerta: 2.6, mina: 1.5, escuela: 2.6, biblioteca: 2.8, torre: 1.5, molino: 1.6, fabrica: 2.6, central: 2.7, base: 2.8, cohete: 1.5 };
@@ -1944,6 +1969,7 @@ function actualizarYo(dt, ahora) {
       yo.alto = 0; yo.vy = 0;
       const abajo = E.bichos.filter((b) => !b.adentro && b.y === 0 && !b.alzado && !b.vuelo && dist(b, yo) < 1.4);
       for (const b of abajo) explotar(b);
+      if (abajo.length) ponerseMalo();
       if (!abajo.length) onda(yo);
     }
   }
@@ -1981,6 +2007,7 @@ function actualizarYo(dt, ahora) {
   }
   // dibujo
   actualizarMallaBicho(yo, ahora);
+  caraDelRey(dt);
   yo._m.g.position.y += yo.alto;
   // la cámara te sigue
   const ddx = yo.x - controles.target.x, ddz = yo.z - controles.target.z;
