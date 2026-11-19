@@ -371,6 +371,5 @@ window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); diferi
 document.getElementById("install").onclick = async () => { if (!diferido) return; diferido.prompt(); await diferido.userChoice; diferido = null; document.getElementById("install").style.display = "none"; };
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
-<script src="/m/franja.js" data-negocio="SERenidad" data-slug="serenidad"></script>
 </body>
 </html>
