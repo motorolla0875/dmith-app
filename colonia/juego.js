@@ -269,6 +269,7 @@ function cargar() {
     sigId = s.sigId || 1000;
     s.hechos = s.hechos || {};
     for (const b of s.bichos) if (!b.hc) { b.hue = semilla(b.id * 7 + 3)() * 360 | 0; b.hc = 1; }
+    for (const b of s.bichos) { delete b.sigue; delete b.alzado; delete b.vuelo; delete b.amigoT; b.alto = 0; b.caida = 0; b.abrazo = 0; b.giro = 0; if (["seguir", "esperar", "alzado", "volar"].includes(b.est)) { b.est = "quieto"; b.quieto = .5; } }
     for (const b of s.bichos) { if (b.y < 0 || b.est === "cruzar") { b.y = 0; b.est = "quieto"; b.quieto = .5; } b.adentro = false; }
     return s;
   } catch (e) { return null; }
@@ -455,6 +456,7 @@ function actualizarBicho(b, dt, offline, noche) {
   b.edad += dt * (hay("escuela") && b.edad < GRANDE ? 2 : 1); b.fase += dt * 10;
   if (b.charlaT > 0) b.charlaT -= dt;
   const isla = islaDe(b.isla); if (!isla) return;
+  if (llevarYVolar(b, dt)) return;
   if (b.sigue) { seguirAlRey(b, dt); b.fase += dt * 4; return; }
   if (b.caida > 0) { // lo chocó el rey: se cae para atrás, se levanta asustado y se va
     b.caida -= dt; const k = Math.max(0, b.caida - 1.1) * 4;
@@ -1192,7 +1194,7 @@ function actualizarMallaBicho(b, ahora) {
   g.visible = !b.adentro && b.y > -2.3;
   if (!g.visible) return;
   const trabaja = b.est === "juntar" || b.est === "construir";
-  const camina = !trabaja && !b.caida && !["quieto", "bajar", "subir", "durmiendo", "esperar"].includes(b.est);
+  const camina = !trabaja && !b.caida && !(b.abrazo > 0) && !["quieto", "bajar", "subir", "durmiendo", "esperar", "volar"].includes(b.est);
   const salto = camina ? Math.abs(Math.sin(b.fase)) * .3 : trabaja ? Math.abs(Math.sin(b.fase * 1.5)) * .15 : 0;
   const esc = bebe ? .55 + b.edad / GRANDE * .3 : 1;
   const tiembla = b.susto > 0 ? Math.sin(ahora / 25) * .08 : 0;
@@ -1200,6 +1202,9 @@ function actualizarMallaBicho(b, ahora) {
   g.scale.setScalar(esc);
   g.rotation.y = Math.atan2(b.dx, b.dz);
   g.rotation.x = trabaja ? Math.sin(b.fase * 1.5) * .15 : 0;
+  if (b.alto) g.position.y += b.alto;
+  if (b.giro) g.rotation.x = b.giro;
+  if (b.abrazo > 0) { const k = Math.sin(Math.min(1, (1.3 - b.abrazo) / .25) * Math.PI / 2) * (b.abrazo < .3 ? b.abrazo / .3 : 1); g.scale.set(esc * (1 + .14 * k), esc * (1 - .1 * k), esc * (1 + .14 * k)); }
   if (b.caida > 0) { const t = 1.8 - b.caida, k = t < .3 ? t / .3 : b.caida < .45 ? b.caida / .45 : 1; g.rotation.x = -1.35 * k; g.position.y = .25 * k; }
   const lejos = camara.position.distanceToSquared(g.position) > 70 * 70;
   if (m.lejos !== lejos) { m.lejos = lejos; for (const o of [m.o1, m.o2, m.boca, m.pies[0], m.pies[1], m.hoja2]) o.visible = !lejos; }
@@ -1451,7 +1456,7 @@ function pasos(on) {
   if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .12, rnd(.9, 1.1)); }
 }
 function salir() {
-  soltarFila(false);
+  soltarFila(false); if (alzado) dejar();
   dentroMundo = false; document.body.classList.remove("dentro");
   if (yo._m) yo._m.g.visible = false;
   if (yo.carga) { E[yo.carga] += yo.cant; yo.carga = null; yo.cant = 0; }
@@ -1533,12 +1538,73 @@ function soltarFila(avisar) {
 function seguirAlRey(b, dt) {
   const i = fila.indexOf(b);
   if (i < 0 || !dentroMundo) { b.sigue = false; b.est = "quieto"; b.quieto = .5; return; }
+  if (b.amigoT !== undefined) { b.amigoT -= dt; if (b.amigoT <= 0) { delete b.amigoT; fila.splice(i, 1); b.sigue = false; b.est = "quieto"; b.quieto = 1; hablar(b, "¡chau " + balbuceo(1) + "!"); return; } }
   if (b.susto > 0) { fila.splice(i, 1); b.sigue = false; return; } // si lo asustaste, se va
   const lider = i === 0 ? yo : fila[i - 1], dx = lider.x - b.x, dz = lider.z - b.z, d = Math.hypot(dx, dz) || .01;
   if (d > 30) { b.x = lider.x - dx / d * 1.8; b.z = lider.z - dz / d * 1.8; } // si quedó muy atrás, aparece cerca
   if (d > 1.9) { const v = Math.min(d - 1.9, (d > 6 ? 9 : 7) * dt); b.dx = dx / d; b.dz = dz / d; b.x += b.dx * v; b.z += b.dz * v; b.est = "seguir"; }
   else b.est = "esperar";
   const z = zonaEn(b.x, b.z); if (z) b.isla = z.id;
+}
+// ---- 🤗 abrazar, ✋ alzar, 🫳 dejar y 🤾 tirar ----
+let alzado = null;
+const libreParaTocar = (b) => E.bichos.includes(b) && !b.adentro && b.y === 0 && !(b.caida > 0) && !b.vuelo && !b.alzado;
+function bichoCerca() { return cercaDeMi(E.bichos.filter(libreParaTocar), 2.6); }
+function abrazar() {
+  audio();
+  const b = bichoCerca(); if (!b) { aviso("Acercate a un Brotito"); return; }
+  if (b.susto > 0) { hablar(b, elegir(["😨", "¡no no!"]), true); return; }
+  b.abrazo = 1.3; yo.abrazo = 1.3; b.isla = yo.isla; b.dx = yo.x - b.x; b.dz = yo.z - b.z; yo.dx = -b.dx; yo.dz = -b.dz;
+  corazones(b); setTimeout(() => corazones(b), 400);
+  hablar(b, elegir(["💚", "¡" + balbuceo(1) + "!", "🥰"]), true);
+  E.animo = clamp(E.animo + 2, 0, 100);
+  // se hace tu amigo y te sigue un rato
+  if (!b.sigue && fila.length < 12) { b.sigue = true; b.amigoT = 40; b.oficio = null; fila.push(b); setTimeout(() => aviso(`💚 ${b.n} se hizo tu amigo y te sigue un rato`), 900); }
+}
+function alzar() {
+  audio();
+  if (alzado) { tirar(); return; }
+  const b = bichoCerca(); if (!b) { aviso("Acercate a un Brotito"); return; }
+  const i = fila.indexOf(b); if (i >= 0) fila.splice(i, 1);
+  b.sigue = false; b.alzado = true; b.carga = null; b.est = "alzado"; b.isla = yo.isla; alzado = b;
+  hablar(b, elegir(["¡wiii!", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]), true);
+}
+function dejar() {
+  audio();
+  const b = alzado; if (!b) return; alzado = null; b.alzado = false;
+  const d = Math.hypot(yo.dx, yo.dz) || 1, x = yo.x + yo.dx / d * 1.7, z = yo.z + yo.dz / d * 1.7;
+  if (tierraEn(x, z)) { b.x = x; b.z = z; } else { b.x = yo.x; b.z = yo.z; }
+  b.alto = 0; b.est = "quieto"; b.quieto = 1; hablar(b, "¡" + balbuceo(1) + "!");
+}
+function tirar() {
+  const b = alzado; if (!b) return; alzado = null; b.alzado = false;
+  const d = Math.hypot(yo.dx, yo.dz) || 1;
+  b.vuelo = { vx: yo.dx / d * 9, vz: yo.dz / d * 9, vy: 7 }; b.alto = 2.3 + yo.alto; b.est = "volar";
+  hablar(b, elegir(["¡aaaay!", "¡wiiii!", "😱", "¡no no no!"]), true);
+  for (const o of E.bichos) if (o !== b && !o.adentro && o.y === 0 && !o.sigue && dist(o, yo) < 7 && Math.random() < .6) { o.susto = rnd(2, 4); const dd = dist(o, yo) || 1; o.dx = (o.x - yo.x) / dd; o.dz = (o.z - yo.z) / dd; }
+}
+function llevarYVolar(b, dt) {
+  if (b.alzado) {
+    if (alzado !== b || !dentroMundo) { b.alzado = false; b.alto = 0; b.est = "quieto"; return true; }
+    b.x = yo.x; b.z = yo.z; b.alto = 2.25 + yo.alto; b.dx = yo.dx; b.dz = yo.dz; b.isla = yo.isla; b.fase += dt * 14;
+    return true;
+  }
+  if (b.vuelo) {
+    const v = b.vuelo, nx = b.x + v.vx * dt, nz = b.z + v.vz * dt;
+    if (tierraEn(nx, nz)) { b.x = nx; b.z = nz; } else { v.vx = v.vz = 0; }
+    v.vy -= 22 * dt; b.alto += v.vy * dt; b.giro = (b.giro || 0) + dt * 9;
+    const z = zonaEn(b.x, b.z); if (z) b.isla = z.id;
+    if (b.alto <= 0) {
+      const l = Math.hypot(v.vx, v.vz) || 1;
+      b.alto = 0; b.giro = 0; b.vuelo = null;
+      b.caida = 1.8; b.kx = v.vx / l || 0; b.kz = v.vz / l || 0; b.dx = -b.kx; b.dz = -b.kz;
+      if (!muestra("rebotar", .8, rnd(.9, 1.05))) sonido("ay", b);
+      onda(b); E.animo = clamp(E.animo - 1, 0, 100);
+    }
+    return true;
+  }
+  if (b.abrazo > 0) { b.abrazo -= dt; return true; }
+  return false;
 }
 function saltar() { audio(); if (yo.alto > 0 || yo.vy !== 0) return; yo.vy = 10; }
 // ---- choques: el rey no atraviesa nada ----
@@ -1556,7 +1622,7 @@ function choca(x, z) {
 }
 function chocarBichos(mx, mz) {
   for (const b of E.bichos) {
-    if (b.adentro || b.y !== 0 || b.sigue) continue;
+    if (b.adentro || b.y !== 0 || b.sigue || b.alzado || b.vuelo) continue;
     const dx = b.x - yo.x, dz = b.z - yo.z, d2 = dx * dx + dz * dz;
     if (d2 > 1.7 * 1.7) continue;
     const d = Math.sqrt(d2) || .01;
@@ -1606,12 +1672,13 @@ function actualizarYo(dt, ahora) {
     yo.vy -= 28 * dt; yo.alto += yo.vy * dt;
     if (yo.alto <= 0) {
       yo.alto = 0; yo.vy = 0;
-      const abajo = E.bichos.filter((b) => !b.adentro && b.y === 0 && dist(b, yo) < 1.4);
+      const abajo = E.bichos.filter((b) => !b.adentro && b.y === 0 && !b.alzado && !b.vuelo && dist(b, yo) < 1.4);
       for (const b of abajo) explotar(b);
       if (!abajo.length) onda(yo);
     }
   }
   if (yo.golpe > 0) { yo.golpe -= dt; yo.fase += dt * 10; }
+  if (yo.abrazo > 0) yo.abrazo -= dt;
   yo.est = yo.golpe > 0 ? "juntar" : moviendo ? "pasear" : "quieto";
   if (yo.charlaT > 0) yo.charlaT -= dt;
   // dejar lo que llevo si paso por una casa
@@ -1630,6 +1697,9 @@ function actualizarYo(dt, ahora) {
     accionT = 0; accion = elegirAccion();
     fila = fila.filter((b) => E.bichos.includes(b) && b.sigue);
     { const bs = $("a-siganme"), t = fila.length ? `✋ Suéltenme (${fila.length})` : "🚩 Síganme"; if (bs.textContent !== t) bs.textContent = t; }
+    { const cerca = !alzado && bichoCerca(), fb = $("fila-bicho"); fb.style.display = alzado || cerca ? "flex" : "none";
+      const ta = alzado ? "🫳 Dejar" : "🤗 Abrazar", tb = alzado ? "🤾 Tirar" : "✋ Alzar";
+      if ($("a-abrazar").textContent !== ta) $("a-abrazar").textContent = ta; if ($("a-alzar").textContent !== tb) $("a-alzar").textContent = tb; }
     const bt = $("a-hacer");
     bt.style.visibility = accion ? "visible" : "hidden";
     if (accion) { if (bt.textContent !== accion.txt) bt.textContent = accion.txt; bt.disabled = accion.tipo === "lleno"; }
@@ -1647,6 +1717,8 @@ $("a-hacer").onclick = hacer;
 $("a-saludar").onclick = saludar;
 $("a-saltar").onclick = saltar;
 $("a-siganme").onclick = siganme;
+$("a-abrazar").onclick = () => (alzado ? dejar() : abrazar());
+$("a-alzar").onclick = alzar;
 {
   const pad = $("joy"), palo = pad.querySelector("i");
   const mover = (e) => {
@@ -1667,6 +1739,8 @@ addEventListener("keydown", (e) => {
   if (e.code === "KeyE") hacer();
   if (e.code === "KeyQ") saludar();
   if (e.code === "KeyF") siganme();
+  if (e.code === "KeyR") (alzado ? dejar() : abrazar());
+  if (e.code === "KeyT") alzar();
   if (e.code === "Escape") salir();
 });
 addEventListener("keyup", (e) => { teclas[e.code] = false; });
