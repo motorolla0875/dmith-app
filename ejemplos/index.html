@@ -2,44 +2,94 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ejemplos de sitios</title>
-<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ejemplos de webs con panel · dmith</title>
+<meta name="description" content="Mirá ejemplos de webs para negocios y probá el panel con el que las modificás vos mismo: ropa, comida con carrito, turnos y más.">
+<meta name="theme-color" content="#181B4A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
-  body { margin: 0; background: #F4F5F7; color: #1C2230; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-  main { max-width: 980px; margin: 0 auto; padding: 40px max(16px, env(safe-area-inset-left)); }
-  h1 { margin: 0 0 6px; font-size: 32px; }
-  p { margin: 0 0 28px; color: #5A6273; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
-  a { text-decoration: none; color: inherit; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
-  img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
-  div { padding: 14px 16px 18px; }
-  b { font-size: 19px; display: block; }
-  small { color: #5A6273; }
+  :root { --noche: #181B4A; --tinta: #15172E; --papel: #F6F5FB; --sol: #FFC23D; --suave: #6A6C8A; --linea: #E3E2EF; --wa: #25D366; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.55 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  :focus-visible { outline: 3px solid #3E9BFF; outline-offset: 2px; }
+  header { background: var(--noche); color: #fff; padding-block: 18px 54px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 40px; }
+  .logo { display: flex; align-items: center; gap: 9px; font: 700 20px Unbounded, system-ui, sans-serif; color: #fff; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 22px; }
+  .mark i { aspect-ratio: 1; border-radius: 3px; background: #3E9BFF; } .mark i:nth-child(2) { background: var(--sol); } .mark i:nth-child(3) { background: #26D6A0; } .mark i:nth-child(4) { background: #FF5A6E; }
+  h1 { font: 800 clamp(32px, 5vw, 54px)/1.05 Unbounded, system-ui, sans-serif; margin: 0 0 14px; text-wrap: balance; max-width: 18ch; }
+  header p { color: #C9CAEE; font-size: 18px; max-width: 52ch; margin: 0; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 18px; font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-wa { background: var(--wa); color: #fff; }
+  main { padding-block: 40px 70px; display: grid; gap: 46px; }
+  h2 { font: 800 clamp(22px, 3vw, 30px)/1.15 Unbounded, system-ui, sans-serif; margin: 0 0 6px; }
+  .grupo > p { color: var(--suave); margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid var(--linea); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+  .card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: var(--linea); }
+  .card .info { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .card b { font-size: 18px; display: block; }
+  .card small { color: var(--suave); }
+  .acc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+  .acc a { text-align: center; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 11px; padding: 11px 8px; }
+  .acc .web { border: 1.5px solid var(--noche); color: var(--noche); }
+  .acc .pan { background: var(--sol); color: var(--tinta); }
+  .acc.solo { grid-template-columns: 1fr; }
+  .final { background: var(--noche); color: #fff; border-radius: 24px; padding: clamp(24px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; }
+  .final h2 { color: #fff; }
+  .final p { color: #C9CAEE; margin: 0; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Ejemplos de sitios para negocios</h1>
-  <p>Cada sitio se hace a medida, con tus fotos, tu logo y tus colores. Se ve como una app en el celular y los pedidos y turnos llegan a tu WhatsApp.</p>
-  <div class="grid">
-    <a href="ropa-mujer/"><img src="https://unsplash.com/photos/IuVz1J2dajY/download?w=700" alt=""><div><b>Lirio Boutique</b><small>Ropa de mujer · estilo elegante</small></div></a>
-    <a href="ropa-urbana/"><img src="https://unsplash.com/photos/GiAaGUimWok/download?w=700" alt=""><div><b>Andén 9</b><small>Ropa urbana · estilo calle</small></div></a>
-    <a href="ropa-chicos/"><img src="https://unsplash.com/photos/RUHUy-21oHo/download?w=700" alt=""><div><b>Pompón</b><small>Ropa infantil · estilo alegre</small></div></a>
-    <a href="barberia/"><img src="https://unsplash.com/photos/BBGyxhtPpC0/download?w=700" alt=""><div><b>Navaja Sur</b><small>Barbería · turnos online</small></div></a>
-    <a href="hamburgueseria/"><img src="https://unsplash.com/photos/88YAXjnpvrM/download?w=700" alt=""><div><b>Doble Queso</b><small>Hamburguesas y pizzas · pedidos con carrito</small></div></a>
-    <a href="unas/"><img src="https://unsplash.com/photos/3rSc8jGIVHI/download?w=700" alt=""><div><b>Nácar Nails</b><small>Uñas y estética · reservas online</small></div></a>
-    <a href="gimnasio/"><img src="https://unsplash.com/photos/IYLLF511aOY/download?w=700" alt=""><div><b>Hierro Gym</b><small>Gimnasio · planes y clase gratis</small></div></a>
-    <a href="petshop/"><img src="https://unsplash.com/photos/ufPziMiRqU8/download?w=700" alt=""><div><b>Trufa Pet Shop</b><small>Alimento con envío y peluquería canina</small></div></a>
-    <a href="cafeteria/"><img src="https://unsplash.com/photos/MH8Iu7OC_UE/download?w=700" alt=""><div><b>Miga</b><small>Café y panadería · tortas por encargo</small></div></a>
-    <a href="inmobiliaria/"><img src="https://unsplash.com/photos/KtOid0FLjqU/download?w=700" alt=""><div><b>Umbral Propiedades</b><small>Inmobiliaria · buscador de propiedades</small></div></a>
-    <a href="floreria/"><img src="https://unsplash.com/photos/vN8HQcKv8Lg/download?w=700" alt=""><div><b>Malva</b><small>Florería · envío con tarjeta</small></div></a>
-    <a href="heladeria/"><img src="https://unsplash.com/photos/G5ZenftPPOA/download?w=700" alt=""><div><b>Nieve</b><small>Heladería · armá tu kilo</small></div></a>
-    <a href="taller/"><img src="https://unsplash.com/photos/XP8o9_Arwqg/download?w=700" alt=""><div><b>Pistón</b><small>Taller mecánico · presupuesto online</small></div></a>
-    <a href="parrilla/"><img src="https://unsplash.com/photos/Qi7NlvF-ZsY/download?w=700" alt=""><div><b>Brasa</b><small>Parrilla · reserva de mesa</small></div></a>
-    <a href="contador/"><img src="https://unsplash.com/photos/3Hgqb3xHfbA/download?w=700" alt=""><div><b>Balance</b><small>Estudio contable · consulta guiada</small></div></a>
-    <a href="verduleria/"><img src="https://unsplash.com/photos/GPxxXAbzsXU/download?w=700" alt=""><div><b>La Canasta</b><small>Verdulería · pedido por kilo y bolsones</small></div></a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol></svg>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith</a>
+      <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Quiero mi muestra gratis</a>
+    </div>
+    <h1>Mirá la web y probá el panel</h1>
+    <p>Cada web viene con su panel. Entrá a los dos: cambiá un precio, un producto o una foto en el panel y mirá cómo cambia la web al instante.</p>
   </div>
-</main>
+</header>
+
+<main class="wrap" id="grupos"></main>
+
+<script>
+const WA = "5491150540357";
+const wa = t => "https://wa.me/" + WA + "?text=" + encodeURIComponent(t);
+const grupos = [
+  { t: "Tiendas de ropa", s: "Cargás tus productos con fotos, talles y precio, y marcás lo que no tenés en stock.", items: [
+    ["ropa-mujer", "Lirio Boutique", "Ropa de mujer", "IuVz1J2dajY", 1],
+    ["ropa-urbana", "Andén 9", "Ropa urbana", "GiAaGUimWok", 1] ] },
+  { t: "Comida y pedidos con carrito", s: "Tus clientes arman el pedido en el carrito y te llega por WhatsApp. Vos cambiás el menú y los precios.", items: [
+    ["hamburgueseria", "Doble Queso", "Hamburguesas y pizzas", "88YAXjnpvrM", 1],
+    ["verduleria", "La Canasta", "Verdulería por kilo y bolsones", "GPxxXAbzsXU", 1] ] },
+  { t: "Turnos y servicios", s: "Eligen el servicio, el día y la hora, y te llega el turno por WhatsApp. Vos cambiás servicios y precios.", items: [
+    ["barberia", "Navaja Sur", "Barbería", "BBGyxhtPpC0", 1],
+    ["unas", "Nácar Nails", "Uñas y estética", "3rSc8jGIVHI", 1] ] },
+  { t: "Más rubros", s: "Todos se pueden modificar desde el panel. ¿Tu rubro no está? Lo hacemos igual.", items: [
+    ["ropa-chicos", "Pompón", "Ropa infantil", "RUHUy-21oHo"],
+    ["gimnasio", "Hierro Gym", "Gimnasio", "IYLLF511aOY"],
+    ["petshop", "Trufa", "Pet shop", "ufPziMiRqU8"],
+    ["cafeteria", "Miga", "Café y panadería", "MH8Iu7OC_UE"],
+    ["heladeria", "Nieve", "Heladería", "G5ZenftPPOA"],
+    ["floreria", "Malva", "Florería", "vN8HQcKv8Lg"],
+    ["parrilla", "Brasa", "Parrilla", "Qi7NlvF-ZsY"],
+    ["inmobiliaria", "Umbral", "Inmobiliaria", "KtOid0FLjqU"],
+    ["taller", "Pistón", "Taller mecánico", "XP8o9_Arwqg"],
+    ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA"] ] },
+];
+document.getElementById("grupos").innerHTML = grupos.map(g => `<section class="grupo"><h2>${g.t}</h2><p>${g.s}</p><div class="grid">${g.items.map(([slug, n, r, img, panel]) =>
+  `<div class="card"><img src="https://unsplash.com/photos/${img}/download?w=600" alt="" loading="lazy"><div class="info"><div><b>${n}</b><small>${r}</small></div>
+   <div class="acc${panel ? "" : " solo"}"><a class="web" href="${slug}/" target="_blank" rel="noopener">Ver la web</a>${panel ? `<a class="pan" href="panel/?w=${slug}" target="_blank" rel="noopener">Probar el panel</a>` : ""}</div></div></div>`).join("")}</div></section>`).join("") +
+  `<div class="final"><div><h2>¿Te gusta? Te armamos la tuya gratis</h2><p>$25.000 por mes, con panel incluido. Pagás recién cuando te gusta.</p></div><a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Quiero mi muestra gratis</a></div>`;
+document.querySelectorAll("[data-wa]").forEach(a => a.href = wa("Hola Diego! Vi los ejemplos y quiero mi muestra gratis."));
+</script>
 </body>
 </html>

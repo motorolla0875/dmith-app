@@ -194,15 +194,16 @@
 <footer><div class="wrap"><span>Nácar Nails Studio</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
-const servicios = [
+const servicios = DEMO.lista("servicios", [
   { n: "Semipermanente", d: "Esmaltado que dura 3 semanas sin descascararse.", p: 12000, m: 60 },
   { n: "Esculpidas", d: "Uñas de gel o acrílico a la medida que quieras.", p: 22000, m: 120 },
   { n: "Kapping", d: "Capa de gel sobre tu uña natural para fortalecerla.", p: 16000, m: 75 },
   { n: "Nail art", d: "Diseños a mano alzada, francesitas, glitter y más.", p: 4000, m: 20, extra: true },
   { n: "Belleza de pies", d: "Limado, cutículas, hidratación y esmaltado.", p: 14000, m: 60 },
   { n: "Retiro de material", d: "Retiramos el gel o acrílico sin dañar la uña.", p: 6000, m: 30 },
-];
+]);
 const fmt = n => "$" + n.toLocaleString("es-AR");
 const sel = { svc: null, day: null, hour: null };
 const menu = document.getElementById("menu");

@@ -132,8 +132,9 @@
   </div>
 </div>
 
+<script src="../demo.js"></script>
 <script>
-const carta = {
+const carta = DEMO.lista("carta", {
   "Hamburguesas": [
     { n: "Clásica", d: "Medallón smash, cheddar, lechuga, tomate y salsa de la casa", p: 9500, img: "y7s_Wby3woo" },
     { n: "Doble Queso", d: "Doble medallón, doble cheddar y cebolla caramelizada", p: 12900, img: "88YAXjnpvrM" },
@@ -155,7 +156,7 @@ const carta = {
     { n: "Cerveza lata 473 cc", d: "Rubia o roja", p: 3200 },
     { n: "Agua 500 cc", d: "Con o sin gas", p: 1800 },
   ],
-};
+});
 const fmt = n => "$" + n.toLocaleString("es-AR");
 const cart = {};
 let modo = "Delivery";
@@ -169,7 +170,7 @@ Object.entries(carta).forEach(([cat, items], ci) => {
   items.forEach(it => {
     const el = document.createElement("div");
     el.className = "item" + (it.img ? "" : " noimg");
-    el.innerHTML = `${it.img ? `<img src="https://unsplash.com/photos/${it.img}/download?w=300" alt="${it.n}" loading="lazy">` : ""}<div><h3>${it.n}</h3><p>${it.d}</p><div class="row"><span class="price">${fmt(it.p)}</span><div class="qty"><button class="minus" aria-label="Quitar">−</button><b>0</b><button aria-label="Agregar">+</button></div></div></div>`;
+    el.innerHTML = `${it.img ? `<img src="${DEMO.img(it.img, 300)}" alt="${it.n}" loading="lazy">` : ""}<div><h3>${it.n}</h3><p>${it.d}</p><div class="row"><span class="price">${fmt(it.p)}</span><div class="qty"><button class="minus" aria-label="Quitar">−</button><b>0</b><button aria-label="Agregar">+</button></div></div></div>`;
     const [minus, plus] = el.querySelectorAll("button"), q = el.querySelector(".qty b");
     const set = v => { cart[it.n] = { ...it, q: Math.max(0, v) }; q.textContent = cart[it.n].q; upd(); };
     plus.onclick = () => set((cart[it.n]?.q || 0) + 1);

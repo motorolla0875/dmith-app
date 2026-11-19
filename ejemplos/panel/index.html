@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Panel de muestra · dmith</title>
+<meta name="theme-color" content="#181B4A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root { --noche: #181B4A; --noche2: #22266A; --tinta: #15172E; --papel: #F6F5FB; --sol: #FFC23D; --menta: #1FB98A; --coral: #E5484D; --suave: #6A6C8A; --linea: #E3E2EF; --wa: #25D366; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.5 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid #3E9BFF; outline-offset: 2px; }
+
+  .barra { position: sticky; top: 0; z-index: 20; background: var(--noche); color: #fff; padding-top: env(safe-area-inset-top, 0px); }
+  .barra .in { display: flex; align-items: center; gap: 12px; height: 60px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .marca { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 22px; flex: none; }
+  .marca i { aspect-ratio: 1; border-radius: 3px; background: #3E9BFF; } .marca i:nth-child(2) { background: var(--sol); } .marca i:nth-child(3) { background: #26D6A0; } .marca i:nth-child(4) { background: #FF5A6E; }
+  .barra .nom { flex: 1; min-width: 0; line-height: 1.2; }
+  .barra .nom b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .barra .nom small { color: #A9ABDA; font-size: 13px; }
+  .barra a, .barra button { color: #fff; background: none; border: 1.5px solid rgba(255,255,255,.3); border-radius: 10px; padding: 7px 12px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; white-space: nowrap; }
+  .aviso-demo { background: var(--sol); color: var(--tinta); font-size: 15px; padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left)); text-align: center; }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap: 28px; max-width: 1180px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-right)) 120px max(16px, env(safe-area-inset-left)); align-items: start; }
+  .vista { position: sticky; top: 84px; }
+  .tel { width: 410px; height: min(820px, calc(100vh - 110px)); background: #0B0C22; border-radius: 40px; padding: 10px; box-shadow: 0 30px 60px rgba(21,23,46,.25); margin: 0 auto; }
+  .tel iframe { width: 100%; height: 100%; border: 0; border-radius: 31px; background: #fff; display: block; }
+  .vista p { text-align: center; color: var(--suave); font-size: 14px; margin: 12px 0 0; }
+
+  .hola h1 { font-size: 28px; line-height: 1.15; margin: 0 0 6px; }
+  .hola p { margin: 0 0 18px; color: var(--suave); }
+  details.sec { background: #fff; border: 1px solid var(--linea); border-radius: 18px; margin-bottom: 12px; overflow: hidden; }
+  details.sec > summary { list-style: none; cursor: pointer; padding: 16px 18px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 19px; }
+  details.sec > summary::-webkit-details-marker { display: none; }
+  details.sec > summary small { display: block; font-weight: 400; font-size: 14px; color: var(--suave); }
+  details.sec > summary span { flex: 1; }
+  details.sec > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--noche); border-bottom: 2px solid var(--noche); transform: rotate(45deg); transition: transform .2s; flex: none; margin-right: 4px; }
+  details.sec[open] > summary::after { transform: rotate(-135deg); }
+  .cuerpo { padding: 0 18px 20px; display: grid; gap: 12px; }
+  .cat { font-weight: 700; color: var(--noche2); margin: 8px 0 -2px; font-size: 15px; }
+
+  .item { border: 1.5px solid var(--linea); border-radius: 14px; padding: 12px; display: grid; gap: 10px; background: #FCFCFE; }
+  .item-cab { display: flex; align-items: center; gap: 6px; }
+  .item-cab b { flex: 1; min-width: 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini { border: 1px solid var(--linea); background: #fff; border-radius: 9px; width: 34px; height: 32px; cursor: pointer; display: grid; place-items: center; color: var(--suave); flex: none; }
+  .mini:hover { color: var(--noche); border-color: var(--noche); }
+  .mini.borrar:hover { color: var(--coral); border-color: var(--coral); }
+  .mini svg { width: 16px; height: 16px; }
+  .campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .campos .ancho { grid-column: 1 / -1; }
+  label.campo { display: grid; gap: 4px; font-size: 13.5px; font-weight: 500; color: var(--suave); min-width: 0; }
+  input[type=text], textarea { width: 100%; min-width: 0; border: 1.5px solid var(--linea); background: var(--papel); border-radius: 10px; padding: 9px 11px; font-size: 16px; color: var(--tinta); }
+  textarea { resize: vertical; min-height: 64px; line-height: 1.4; }
+  input:focus, textarea:focus { outline: none; border-color: var(--noche2); background: #fff; }
+  input[type=color] { width: 100%; height: 42px; border: 1.5px solid var(--linea); border-radius: 10px; background: #fff; padding: 3px; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--tinta); }
+  .check input { width: 20px; height: 20px; accent-color: var(--noche); }
+  .foto { display: flex; align-items: center; gap: 10px; }
+  .foto .mini-foto { width: 64px; height: 64px; border-radius: 10px; background: var(--papel) center/cover no-repeat; border: 1px solid var(--linea); flex: none; }
+  .foto button, .agregar { border: 1.5px solid var(--noche2); color: var(--noche2); background: #fff; border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: 14px; cursor: pointer; }
+  .agregar { border-style: dashed; border-radius: 12px; padding: 11px; width: 100%; }
+  .foto input[type=file] { display: none; }
+
+  .pie { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(246,245,251,.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--linea); padding: 10px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left)); display: flex; gap: 10px; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 13px 20px; font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none; }
+  .btn svg { width: 19px; height: 19px; }
+  .btn-ver { background: var(--noche); color: #fff; flex: 1; max-width: 260px; }
+  .btn-wa { background: var(--wa); color: #fff; flex: 1; max-width: 300px; }
+  .guardado { position: fixed; left: 50%; top: 120px; transform: translateX(-50%); background: var(--menta); color: #fff; padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; z-index: 30; pointer-events: none; transition: opacity .3s; }
+
+  /* en el celular la vista previa se abre a pantalla completa */
+  @media (max-width: 959px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .vista { position: fixed; inset: 0; z-index: 40; background: var(--noche); padding: calc(10px + env(safe-area-inset-top, 0px)) 0 0; display: flex; flex-direction: column; }
+    .vista:not(.abierta) { visibility: hidden; pointer-events: none; }
+    .tel { width: 100%; height: auto; flex: 1; border-radius: 0; padding: 0; box-shadow: none; }
+    .tel iframe { border-radius: 0; }
+    .vista p { display: none; }
+    .volver { display: flex !important; }
+  }
+  @media (min-width: 960px) { .btn-ver { display: none; } }
+  @media (max-width: 600px) { #ver-web, .barra .nom small { display: none; } .btn { font-size: 15px; padding: 12px 14px; white-space: nowrap; } }
+  .volver { display: none; justify-content: center; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--noche); }
+  .volver .btn { flex: 1; max-width: 260px; }
+  .volver .b1 { background: var(--sol); color: var(--tinta); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arriba" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-abajo" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-borrar" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
+</svg>
+
+<div class="barra"><div class="in">
+  <span class="marca"><i></i><i></i><i></i><i></i></span>
+  <div class="nom"><b id="nombre">Panel de muestra</b><small>Panel de muestra</small></div>
+  <a id="ver-web" href="#" target="_blank" rel="noopener">Ver la web</a>
+  <button type="button" id="reiniciar">Volver a empezar</button>
+</div></div>
+<div class="aviso-demo">Esto es una muestra: cambiá lo que quieras y mirá cómo queda la web. Los cambios se guardan solo en tu teléfono.</div>
+
+<div class="layout">
+  <main>
+    <div class="hola">
+      <h1>Así manejás tu web</h1>
+      <p>Abrí cada parte, cambiá precios, productos, fotos o textos, y se actualiza al instante.</p>
+    </div>
+    <div id="editor"><p style="color:var(--suave)">Cargando…</p></div>
+  </main>
+  <aside class="vista" id="vista" aria-label="Vista previa de la web">
+    <div class="tel"><iframe id="web" title="Vista previa de la web"></iframe></div>
+    <p>Así se ve en el celular de tus clientes</p>
+    <div class="volver"><button class="btn b1" type="button" id="volver">Volver al panel</button><a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Quiero mi web</a></div>
+  </aside>
+</div>
+
+<div class="pie">
+  <button class="btn btn-ver" type="button" id="abrir-vista">Ver cómo queda</button>
+  <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Quiero mi web así</a>
+</div>
+<div class="guardado" id="guardado" style="opacity:0">Listo, ya cambió</div>
+
+<script>
+const WA = "5491150540357";
+const $ = id => document.getElementById(id);
+const slug = (new URLSearchParams(location.search).get("w") || "").replace(/[^a-z0-9-]/g, "");
+const web = $("web");
+let D = null, estado = { listas: {}, textos: {} }, nombreWeb = "";
+
+const ETIQUETAS = { n: "Nombre", d: "Descripción", p: "Precio $", old: "Precio anterior $ (tachado)", img: "Foto", talles: "Talles", sin: "Talles sin stock", badge: "Etiqueta", c: "Categoría", m: "Minutos", extra: "Es un adicional" };
+const ORDEN = ["img", "n", "c", "d", "p", "old", "m", "talles", "sin", "badge", "extra"];
+const SECCIONES = { productos: ["Productos", "Precios, fotos, talles y stock"], carta: ["Menú", "Lo que se puede pedir"], bolsones: ["Bolsones", "Combos armados"], prods: ["Productos por kilo", "Precios de la semana"], servicios: ["Servicios", "Precios y duración"] };
+const fmt = n => n ? Number(n).toLocaleString("es-AR") : "";
+const copia = x => JSON.parse(JSON.stringify(x));
+
+function waLink() {
+  return "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola Diego! Probé el panel de muestra" + (nombreWeb ? " de " + nombreWeb : "") + " y quiero mi web así.");
+}
+
+if (!slug) { $("editor").innerHTML = '<p>Elegí un ejemplo desde <a href="../">la lista de ejemplos</a>.</p>'; }
+else {
+  $("ver-web").href = "../" + slug + "/";
+  web.src = "../" + slug + "/";
+  web.addEventListener("load", primeraCarga, { once: true });
+}
+
+function primeraCarga() {
+  const w = web.contentWindow;
+  if (!w.DEMO) { $("editor").innerHTML = "<p>Este ejemplo todavía no tiene panel de muestra.</p>"; return; }
+  D = w.DEMO;
+  nombreWeb = (w.document.title || "").split(/[·|-]/)[0].trim();
+  $("nombre").textContent = nombreWeb || "Panel de muestra";
+  document.title = "Panel · " + (nombreWeb || "muestra");
+  document.querySelectorAll("[data-wa]").forEach(a => a.href = waLink());
+  try { estado = JSON.parse(localStorage.getItem(D.KEY) || "null") || { listas: {}, textos: {} }; } catch (e) {}
+  estado.listas = estado.listas || {}; estado.textos = estado.textos || {};
+  for (const k in D.registro.listas) if (!estado.listas[k]) estado.listas[k] = copia(D.registro.listas[k].def);
+  dibujar();
+}
+
+// ---------- guardar y refrescar la vista ----------
+let tGuardar;
+function cambio() {
+  clearTimeout(tGuardar);
+  tGuardar = setTimeout(() => {
+    try { localStorage.setItem(D.KEY, JSON.stringify(estado)); }
+    catch (e) { avisar("No entra más en este teléfono. Probá con fotos más chicas."); return; }
+    const y = web.contentWindow ? web.contentWindow.scrollY : 0;
+    web.addEventListener("load", () => { try { web.contentWindow.scrollTo(0, y); } catch (e) {} }, { once: true });
+    web.contentWindow.location.reload();
+    avisar("Listo, ya cambió");
+  }, 450);
+}
+let tAviso;
+function avisar(t) { const g = $("guardado"); g.textContent = t; g.style.opacity = 1; clearTimeout(tAviso); tAviso = setTimeout(() => g.style.opacity = 0, 1400); }
+
+$("reiniciar").onclick = () => {
+  if ($("reiniciar").dataset.seguro !== "1") { $("reiniciar").dataset.seguro = "1"; $("reiniciar").textContent = "¿Seguro? Tocá de nuevo"; setTimeout(() => { $("reiniciar").dataset.seguro = ""; $("reiniciar").textContent = "Volver a empezar"; }, 3000); return; }
+  try { localStorage.removeItem(D.KEY); } catch (e) {}
+  location.reload();
+};
+$("abrir-vista").onclick = () => $("vista").classList.add("abierta");
+$("volver").onclick = () => $("vista").classList.remove("abierta");
+
+// ---------- piezas ----------
+function el(tag, props, ...hijos) {
+  const e = document.createElement(tag);
+  for (const k in props || {}) { if (k === "class") e.className = props[k]; else if (k === "html") e.innerHTML = props[k]; else if (k.startsWith("on")) e[k] = props[k]; else e.setAttribute(k, props[k]); }
+  hijos.flat(Infinity).forEach(h => h != null && e.append(h));
+  return e;
+}
+function achicar(archivo) {
+  return new Promise((ok, no) => {
+    const url = URL.createObjectURL(archivo), img = new Image();
+    img.onload = () => {
+      const f = Math.min(1, 700 / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement("canvas"); cv.width = Math.round(img.naturalWidth * f); cv.height = Math.round(img.naturalHeight * f);
+      const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url); ok(cv.toDataURL("image/jpeg", .72));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); no(); };
+    img.src = url;
+  });
+}
+// un campo según el tipo de dato
+function campo(obj, k, etiqueta, muestra) {
+  const v = obj[k] !== undefined ? obj[k] : muestra;
+  if (k === "img") {
+    const mini = el("div", { class: "mini-foto" });
+    const pintar = () => mini.style.backgroundImage = obj[k] ? `url("${D.img(obj[k], 200)}")` : "";
+    const archivo = el("input", { type: "file", accept: "image/*" });
+    archivo.onchange = async () => { const a = archivo.files[0]; archivo.value = ""; if (!a) return; try { obj[k] = await achicar(a); pintar(); cambio(); } catch (e) { avisar("Esa foto no se pudo abrir"); } };
+    pintar();
+    return el("div", { class: "campo ancho" }, el("label", { class: "campo" }, etiqueta), el("div", { class: "foto" }, mini, el("button", { type: "button", onclick: () => archivo.click() }, "Cambiar foto"), archivo));
+  }
+  if (typeof muestra === "boolean") {
+    const c = el("input", { type: "checkbox" }); c.checked = !!obj[k];
+    c.onchange = () => { obj[k] = c.checked; cambio(); };
+    return el("label", { class: "check" }, c, etiqueta);
+  }
+  if (typeof muestra === "number") {
+    const i = el("input", { type: "text", inputmode: "numeric" }); i.value = fmt(v);
+    i.oninput = () => { const n = parseInt(i.value.replace(/\D/g, ""), 10); obj[k] = isNaN(n) ? 0 : n; cambio(); };
+    i.onblur = () => i.value = fmt(obj[k]);
+    return el("label", { class: "campo" }, etiqueta, i);
+  }
+  if (Array.isArray(muestra)) {
+    const i = el("input", { type: "text", placeholder: "separados por coma" }); i.value = (obj[k] || []).join(", ");
+    i.oninput = () => { obj[k] = i.value.split(",").map(x => x.trim()).filter(Boolean); cambio(); };
+    return el("label", { class: "campo" }, etiqueta, i);
+  }
+  if (typeof v === "string" && /^#[0-9a-f]{3,6}$/i.test(v)) {
+    const i = el("input", { type: "color" }); i.value = v;
+    i.oninput = () => { obj[k] = i.value; cambio(); };
+    return el("label", { class: "campo" }, etiqueta, i);
+  }
+  const largo = k === "d" || String(v || "").length > 45;
+  const i = largo ? el("textarea", { rows: 2 }) : el("input", { type: "text" });
+  i.value = v == null ? "" : v;
+  i.oninput = () => { obj[k] = i.value; cambio(); if (k === "n" || k === 0) titular(); };
+  let titular = () => {};
+  const l = el("label", { class: "campo" + (largo ? " ancho" : "") }, etiqueta, i);
+  l._setTitular = f => titular = f;
+  return l;
+}
+// lista de items (objetos o filas) con agregar, borrar y ordenar
+function listaItems(arr, def, opc) {
+  const caja = el("div", { style: "display:grid;gap:10px" });
+  const esFila = Array.isArray(def[0]);
+  const claves = esFila ? def[0].map((_, i) => i) : ORDEN.filter(k => def.some(x => k in x)).concat([...new Set(def.flatMap(Object.keys))].filter(k => !ORDEN.includes(k)));
+  const muestra = k => { for (const x of def) if (x[k] !== undefined) return x[k]; return ""; };
+  const vacio = () => { if (esFila) return def[0].map(v => typeof v === "number" ? 0 : typeof v === "string" && v[0] === "#" ? v : ""); const o = {}; claves.forEach(k => { const m = muestra(k); o[k] = typeof m === "number" ? 0 : typeof m === "boolean" ? false : Array.isArray(m) ? [] : ""; }); o.n = "Nuevo"; return o; };
+  const redibujar = () => {
+    caja.innerHTML = "";
+    arr.forEach((it, i) => {
+      const titulo = el("b", {}, (esFila ? it[0] : it.n) || "Sin nombre");
+      const mover = d => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; cambio(); redibujar(); };
+      const cab = el("div", { class: "item-cab" }, titulo,
+        el("button", { type: "button", class: "mini", "aria-label": "Subir", onclick: () => mover(-1), html: '<svg><use href="#i-arriba"/></svg>' }),
+        el("button", { type: "button", class: "mini", "aria-label": "Bajar", onclick: () => mover(1), html: '<svg><use href="#i-abajo"/></svg>' }),
+        el("button", { type: "button", class: "mini borrar", "aria-label": "Borrar", onclick: () => { arr.splice(i, 1); cambio(); redibujar(); }, html: '<svg><use href="#i-borrar"/></svg>' }));
+      const campos = el("div", { class: "campos" }, claves.map(k => {
+        const etq = esFila ? ((opc.campos || [])[k] || "Dato " + (k + 1)) : (ETIQUETAS[k] || k);
+        const c = campo(it, k, etq, esFila ? def[0][k] : muestra(k));
+        if (c._setTitular) c._setTitular(() => titulo.textContent = (esFila ? it[0] : it.n) || "Sin nombre");
+        return c;
+      }));
+      caja.append(el("div", { class: "item" }, cab, campos));
+    });
+    caja.append(el("button", { type: "button", class: "agregar", onclick: () => { arr.push(vacio()); cambio(); redibujar(); } }, "+ Agregar"));
+  };
+  redibujar();
+  return caja;
+}
+function seccion(titulo, sub, abierta, ...hijos) {
+  const d = el("details", { class: "sec" }, el("summary", {}, el("span", {}, titulo, el("small", {}, sub))), el("div", { class: "cuerpo" }, hijos));
+  if (abierta) d.open = true;
+  return d;
+}
+
+// ---------- todo el panel ----------
+function dibujar() {
+  const ed = $("editor"); ed.innerHTML = "";
+  let primera = true;
+  for (const nombre in D.registro.listas) {
+    const { def, opc } = D.registro.listas[nombre];
+    const actual = estado.listas[nombre];
+    const [tit, sub] = SECCIONES[nombre] || [nombre, ""];
+    let contenido;
+    if (Array.isArray(def)) contenido = listaItems(actual, def, opc);
+    else contenido = Object.keys(actual).map(cat => [el("p", { class: "cat" }, cat), listaItems(actual[cat], def[cat] || Object.values(def)[0], opc)]);
+    ed.append(seccion(tit, sub, primera, contenido));
+    primera = false;
+  }
+  const textos = D.registro.textos.map(t => {
+    const largo = t.def.length > 50;
+    const i = largo ? el("textarea", { rows: 2 }) : el("input", { type: "text" });
+    i.value = typeof estado.textos[t.k] === "string" ? estado.textos[t.k] : t.def;
+    i.oninput = () => { estado.textos[t.k] = i.value; cambio(); };
+    return el("label", { class: "campo" }, t.tipo, i);
+  });
+  if (textos.length) ed.append(seccion("Textos de la web", "Títulos, frases y datos", false, textos));
+}
+</script>
+</body>
+</html>

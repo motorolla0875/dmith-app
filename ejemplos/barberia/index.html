@@ -170,15 +170,16 @@
 <footer><div class="wrap"><span>Navaja Sur Barbería</span><span>Sitio de ejemplo hecho por dmith.app</span></div></footer>
 <button class="btn install" id="install">Instalar la app</button>
 
+<script src="../demo.js"></script>
 <script>
-const servicios = [
+const servicios = DEMO.lista("servicios", [
   { n: "Corte clásico", d: "Tijera y máquina, lavado incluido", p: 9000, m: 30 },
   { n: "Fade / degradé", d: "Degradé a navaja con diseño de nuca", p: 11000, m: 40 },
   { n: "Barba", d: "Perfilado, toalla caliente y aceite", p: 6500, m: 20 },
   { n: "Corte + barba", d: "El combo más pedido", p: 15000, m: 60 },
   { n: "Afeitado a navaja", d: "Afeitado completo con toalla caliente", p: 8000, m: 30 },
   { n: "Corte para chicos", d: "Hasta 12 años", p: 7500, m: 30 },
-];
+]);
 const fmt = n => "$" + n.toLocaleString("es-AR");
 document.getElementById("services").innerHTML = servicios.map(s => `<div class="svc"><div><h3>${s.n}</h3><p>${s.d} · ${s.m} min</p></div><div class="pr">${fmt(s.p)}</div></div>`).join("");
 const sel = { svc: null, day: null, hour: null };

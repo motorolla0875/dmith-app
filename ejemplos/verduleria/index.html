@@ -142,20 +142,21 @@
   </div>
 </div>
 
+<script src="../demo.js"></script>
 <script>
 const fmt = n => "$" + Math.round(n).toLocaleString("es-AR");
-const bolsones = [
+const bolsones = DEMO.lista("bolsones", [
   { n: "Bolsón chico", d: "Para 1 o 2 personas: 6 kg de fruta y verdura surtida.", p: 12000, img: "bWg-BeVJPG4" },
   { n: "Bolsón familiar", d: "Para 4 personas: 10 kg, con papa, cebolla, tomate, lechuga y fruta de estación.", p: 18500, img: "2WmVYrCwEKg" },
   { n: "Bolsón frutero", d: "8 kg de fruta: banana, manzana, naranja y lo que esté más rico.", p: 15000, img: "PM16-G2eVAs" },
-];
-const prods = {
+]);
+const prods = DEMO.lista("prods", {
   "Verduras": [["Papa", 1100, "kg", "#C9A46A"], ["Cebolla", 1300, "kg", "#E8C99A"], ["Tomate", 2400, "kg", "#E2492F"], ["Zanahoria", 1200, "kg", "#F08A2A"], ["Lechuga", 1500, "u", "#7FBF4D"], ["Zapallo anco", 1600, "kg", "#E9A23B"]],
   "Frutas": [["Banana", 2200, "kg", "#F4D03F"], ["Manzana roja", 2600, "kg", "#C0392B"], ["Naranja", 1500, "kg", "#F39C12"], ["Mandarina", 1800, "kg", "#F5A623"], ["Frutilla", 3500, "kg", "#D7263D"], ["Limón", 1900, "kg", "#E6E04A"]],
   "Otros": [["Huevos x 12", 4200, "u", "#F3E3C3"], ["Ajo (cabeza)", 600, "u", "#EDE6DA"], ["Albahaca (atado)", 1200, "u", "#3E8E41"], ["Palta", 1800, "u", "#4F7A28"]],
-};
+}, { campos: ["Nombre", "Precio", "Unidad (kg o u)", "Color"] });
 const cart = {};
-document.getElementById("bolsones-box").innerHTML = bolsones.map((b, i) => `<div class="bol"><img src="https://unsplash.com/photos/${b.img}/download?w=700" alt="${b.n}" loading="lazy"><div><h3>${b.n}</h3><p>${b.d}</p><div class="row"><b>${fmt(b.p)}</b><button class="btn" data-b="${i}">Agregar</button></div></div></div>`).join("");
+document.getElementById("bolsones-box").innerHTML = bolsones.map((b, i) => `<div class="bol"><img src="${DEMO.img(b.img, 700)}" alt="${b.n}" loading="lazy"><div><h3>${b.n}</h3><p>${b.d}</p><div class="row"><b>${fmt(b.p)}</b><button class="btn" data-b="${i}">Agregar</button></div></div></div>`).join("");
 document.querySelectorAll("[data-b]").forEach(btn => btn.onclick = () => { const b = bolsones[btn.dataset.b]; cart[b.n] = { n: b.n, p: b.p, u: "u", q: (cart[b.n]?.q || 0) + 1 }; btn.textContent = `Agregado (${cart[b.n].q})`; upd(); });
 const tabs = document.getElementById("tabs"), list = document.getElementById("list");
 let cat = "Verduras";
