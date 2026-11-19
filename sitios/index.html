@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Página web y app para tu negocio desde $25.000/mes | dmith Sitios</title>
-<meta name="description" content="Diseño de página web y app a medida para negocios en Argentina, lista en 24 horas. Pedidos, turnos y reservas por WhatsApp, hosting incluido. Desde $25.000 por mes, sin permanencia. Pedí tu muestra gratis.">
+<title>Tu página web a medida por $25.000/mes | dmith Sitios</title>
+<meta name="description" content="Diseño de página web y app a medida para negocios en Argentina, lista en 24 horas. Pedidos, turnos y reservas por WhatsApp, panel para modificar todo tu sitio y hosting incluido. $25.000 por mes, sin permanencia. Pedí tu muestra gratis.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="keywords" content="página web para negocios, diseño web Argentina, página web para emprendedores, crear página web, app para mi negocio, página web barata, diseño web Quilmes, página web con WhatsApp, turnos online, catálogo online">
 <meta name="theme-color" content="#181B4A">
@@ -18,7 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Página web y app para tu negocio en 24 horas">
-<meta name="twitter:description" content="Diseño web a medida con pedidos y turnos por WhatsApp. Desde $25.000/mes, sin permanencia. Muestra gratis.">
+<meta name="twitter:description" content="Diseño web a medida con pedidos y turnos por WhatsApp. $25.000 por mes, sin permanencia. Muestra gratis.">
 <meta name="twitter:image" content="https://dmith.app/assets/apps/sitios/og.png">
 <meta property="og:title" content="Página web y app para tu negocio en 24 horas · dmith Sitios">
 <meta property="og:description" content="Sitios a medida con pedidos por WhatsApp. Muestra gratis con tu nombre antes de pagar.">
@@ -93,6 +93,11 @@
   .ex-more { margin-top: 18px; color: var(--mute); }
 
   .plans-sec { background: var(--white); }
+  .uno { display: grid; grid-template-columns: 1fr minmax(0, 440px); gap: 40px; align-items: center; }
+  .uno .plan { gap: 18px; }
+  .uno .plan .price { font-size: 46px; }
+  .uno .plan .btn { white-space: normal; text-align: center; }
+  .uno .plan.star::before { content: none; }
   .toggle { display: inline-flex; background: var(--paper); border-radius: 999px; padding: 5px; margin-bottom: 30px; border: 1px solid var(--line); }
   .toggle button { border: 0; background: none; padding: 10px 18px; border-radius: 999px; font: 700 15px "DM Sans", sans-serif; cursor: pointer; color: var(--ink); }
   .toggle button.on { background: var(--night); color: #fff; }
@@ -142,12 +147,12 @@
   footer { padding: 34px 0 44px; color: var(--mute); font-size: 15px; }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; }
 
-  .float { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(45deg, #F9A23B, #E1306C 50%, #833AB4); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 26px rgba(225,48,108,.4); }
+  .float { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40; width: 58px; height: 58px; border-radius: 50%; background: #25D366; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 26px rgba(37,211,102,.4); }
   .float svg { width: 30px; height: 30px; }
 
   @media (max-width: 880px) {
     nav { display: none; }
-    .hero .wrap, .faq, .final { grid-template-columns: minmax(0, 1fr); }
+    .hero .wrap, .faq, .final, .uno { grid-template-columns: minmax(0, 1fr); }
     .hero .wrap { padding-top: 36px; }
     .phones { height: 430px; margin-top: 10px; }
     .phone { width: 180px; height: 368px; border-radius: 28px; padding: 8px; }
@@ -165,24 +170,24 @@
   @media (max-width: 420px) { header .btn span { display: none; } .phone.p1, .phone.p3 { opacity: .9; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .ex { transition: none; } }
 </style>
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "ProfessionalService", "@id": "https://dmith.app/sitios/#negocio", "name": "dmith Sitios", "description": "Diseño de páginas web y apps a medida para negocios: pedidos, turnos y reservas por WhatsApp, hosting y app instalable incluidos.", "url": "https://dmith.app/sitios/", "image": "https://dmith.app/assets/apps/sitios/og.png", "logo": "https://dmith.app/icon.png", "priceRange": "$25.000 - $60.000 por mes", "address": {"@type": "PostalAddress", "addressLocality": "Quilmes", "addressRegion": "Buenos Aires", "addressCountry": "AR"}, "areaServed": {"@type": "Country", "name": "Argentina"}, "sameAs": ["https://www.instagram.com/dmith_app/", "https://www.facebook.com/profile.php?id=61552599632137"], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Planes de página web", "itemListElement": [{"@type": "Offer", "name": "Plan Vidriera", "price": "25000", "priceCurrency": "ARS", "url": "https://dmith.app/sitios/#planes", "itemOffered": {"@type": "Service", "name": "Página web y app para negocios · plan Vidriera"}}, {"@type": "Offer", "name": "Plan Catálogo", "price": "40000", "priceCurrency": "ARS", "url": "https://dmith.app/sitios/#planes", "itemOffered": {"@type": "Service", "name": "Página web y app para negocios · plan Catálogo"}}, {"@type": "Offer", "name": "Plan Negocio", "price": "60000", "priceCurrency": "ARS", "url": "https://dmith.app/sitios/#planes", "itemOffered": {"@type": "Service", "name": "Página web y app para negocios · plan Negocio"}}]}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Trabajan con inteligencia artificial?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, y no lo vamos a esconder. La IA escribe código rapidísimo y nunca pide vacaciones (todavía). Pero alguien tiene que decirle qué hacer, revisar que no ponga tu pizzería en Noruega y contestarte los mensajes. Ese soy yo, peleando por mi puesto todos los días. Gracias a eso podemos ser tan rápidos y tan baratos."}}, {"@type": "Question", "name": "¿Cómo pueden cobrar tan poco?", "acceptedAnswer": {"@type": "Answer", "text": "Porque no tenemos oficina con mesa de ping pong ni un gerente de \"sinergias\". Usamos IA para lo repetitivo y ponemos el tiempo donde importa: que tu sitio venda."}}, {"@type": "Question", "name": "¿En serio está listo en 24 horas?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, si nos mandás las fotos y los datos. Si tardás tres semanas en elegir el color del logo, eso no corre por nuestra cuenta."}}, {"@type": "Question", "name": "¿Es una plantilla?", "acceptedAnswer": {"@type": "Answer", "text": "No. Cada sitio se hace para tu negocio, con tus colores, tus fotos y lo que vos vendés. Si querés una plantilla, hay miles gratis; te va a quedar igual que a otros 40 mil negocios."}}, {"@type": "Question", "name": "¿Qué pasa si no me gusta?", "acceptedAnswer": {"@type": "Answer", "text": "Lo cambiamos hasta que te guste. Y si igual no te convence, no pagás. Así de simple."}}, {"@type": "Question", "name": "¿Tengo que firmar algo por 12 meses?", "acceptedAnswer": {"@type": "Answer", "text": "No. Sin permanencia. Si un día no lo querés más, avisás y listo. No te vamos a llamar llorando (bueno, capaz un poquito)."}}, {"@type": "Question", "name": "¿El dominio es mío?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, 100% tuyo. Lo comprás vos (un .com.ar sale poco por año) y nosotros lo conectamos. Si algún día te vas, te lo llevás. No secuestramos dominios."}}, {"@type": "Question", "name": "¿Necesito saber de computación?", "acceptedAnswer": {"@type": "Answer", "text": "Si sabés mandar un audio de WhatsApp, estás sobrecalificado."}}, {"@type": "Question", "name": "¿Los pedidos llegan a mi WhatsApp?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, al toque y ya escritos: qué quiere, el talle o el gusto, y el total. Vos solo respondés \"dale, te lo mando\"."}}, {"@type": "Question", "name": "¿Y si necesito cambiar un precio a las 11 de la noche?", "acceptedAnswer": {"@type": "Answer", "text": "Con el plan Catálogo lo cambiás vos desde el celular. Con el plan Vidriera nos escribís y lo cambiamos. A las 11 de la noche capaz estamos durmiendo, pero a primera hora queda."}}, {"@type": "Question", "name": "¿La app está en Play Store?", "acceptedAnswer": {"@type": "Answer", "text": "No, y te lo decimos de entrada. Tu sitio se instala en el celular como una app: ícono con tu logo, pantalla completa, sin barra del navegador. Tus clientes la instalan desde tu sitio en dos toques, sin buscarla en ninguna tienda. Si igual querés tu app publicada en Play Store, se puede: es un extra que se cotiza aparte."}}, {"@type": "Question", "name": "¿Por qué la muestra se pide por Instagram?", "acceptedAnswer": {"@type": "Answer", "text": "Porque necesitamos saber que tu negocio existe. Si nos escribís desde la cuenta de tu local, vemos qué vendés, usamos tus fotos de verdad y no terminamos armándole una muestra gratis a tu primo que nos quería hacer laburar de onda."}}, {"@type": "Question", "name": "¿Por qué tendría que confiar en ustedes?", "acceptedAnswer": {"@type": "Answer", "text": "Porque te armamos una muestra gratis con tu nombre antes de que pongas un peso. Si no te gusta, no perdiste nada. Si te gusta… bueno, ya sabés dónde escribirnos."}}]}]</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "ProfessionalService", "@id": "https://dmith.app/sitios/#negocio", "name": "dmith Sitios", "description": "Diseño de páginas web y apps a medida para negocios: pedidos, turnos y reservas por WhatsApp, hosting y app instalable incluidos.", "url": "https://dmith.app/sitios/", "image": "https://dmith.app/assets/apps/sitios/og.png", "logo": "https://dmith.app/icon.png", "priceRange": "$25.000 por mes", "address": {"@type": "PostalAddress", "addressLocality": "Quilmes", "addressRegion": "Buenos Aires", "addressCountry": "AR"}, "areaServed": {"@type": "Country", "name": "Argentina"}, "sameAs": ["https://www.instagram.com/dmith_app/", "https://www.facebook.com/profile.php?id=61552599632137"], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Planes de página web", "itemListElement": [{"@type": "Offer", "name": "Tu web", "price": "25000", "priceCurrency": "ARS", "url": "https://dmith.app/sitios/#planes", "itemOffered": {"@type": "Service", "name": "Página web a medida con panel para negocios"}}]}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Trabajan con inteligencia artificial?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, y no lo vamos a esconder. La IA escribe código rapidísimo y nunca pide vacaciones (todavía). Pero alguien tiene que decirle qué hacer, revisar que no ponga tu pizzería en Noruega y contestarte los mensajes. Ese soy yo, peleando por mi puesto todos los días. Gracias a eso podemos ser tan rápidos y tan baratos."}}, {"@type": "Question", "name": "¿Cómo pueden cobrar tan poco?", "acceptedAnswer": {"@type": "Answer", "text": "Porque no tenemos oficina con mesa de ping pong ni un gerente de \"sinergias\". Usamos IA para lo repetitivo y ponemos el tiempo donde importa: que tu sitio venda."}}, {"@type": "Question", "name": "¿En serio está listo en 24 horas?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, si nos mandás las fotos y los datos. Si tardás tres semanas en elegir el color del logo, eso no corre por nuestra cuenta."}}, {"@type": "Question", "name": "¿Es una plantilla?", "acceptedAnswer": {"@type": "Answer", "text": "No. Cada sitio se hace para tu negocio, con tus colores, tus fotos y lo que vos vendés. Si querés una plantilla, hay miles gratis; te va a quedar igual que a otros 40 mil negocios."}}, {"@type": "Question", "name": "¿Qué pasa si no me gusta?", "acceptedAnswer": {"@type": "Answer", "text": "Lo cambiamos hasta que te guste. Y si igual no te convence, no pagás. Así de simple."}}, {"@type": "Question", "name": "¿Tengo que firmar algo por 12 meses?", "acceptedAnswer": {"@type": "Answer", "text": "No. Sin permanencia. Si un día no lo querés más, avisás y listo. No te vamos a llamar llorando (bueno, capaz un poquito)."}}, {"@type": "Question", "name": "¿Qué es eso del dominio?", "acceptedAnswer": {"@type": "Answer", "text": "Es la dirección de tu web, como tunegocio.com.ar. Usás la nuestra gratis o tu dominio propio, que conectás desde tu panel. El dominio siempre es 100% tuyo."}}, {"@type": "Question", "name": "¿Necesito saber de computación?", "acceptedAnswer": {"@type": "Answer", "text": "Si sabés mandar un audio de WhatsApp, estás sobrecalificado."}}, {"@type": "Question", "name": "¿Los pedidos llegan a mi WhatsApp?", "acceptedAnswer": {"@type": "Answer", "text": "Sí, al toque y ya escritos: qué quiere, el talle o el gusto, y el total. Vos solo respondés \"dale, te lo mando\"."}}, {"@type": "Question", "name": "¿Y si necesito cambiar un precio a las 11 de la noche?", "acceptedAnswer": {"@type": "Answer", "text": "Lo cambiás vos desde tu panel, en el celular, en un minuto. Textos, fotos, precios, productos: todo el sitio."}}, {"@type": "Question", "name": "¿La app está en Play Store?", "acceptedAnswer": {"@type": "Answer", "text": "No, y te lo decimos de entrada. Tu sitio se instala en el celular como una app: ícono con tu logo, pantalla completa, sin barra del navegador. Tus clientes la instalan desde tu sitio en dos toques, sin buscarla en ninguna tienda. Si igual querés tu app publicada en Play Store, se puede: es un extra que se cotiza aparte."}}, {"@type": "Question", "name": "¿Con quién hablo?", "acceptedAnswer": {"@type": "Answer", "text": "Con Diego, por WhatsApp. Le contás cómo es tu negocio, te arma la muestra y te acompaña hasta que tu web está online."}}, {"@type": "Question", "name": "¿Por qué tendría que confiar en ustedes?", "acceptedAnswer": {"@type": "Answer", "text": "Porque te armamos una muestra gratis con tu nombre antes de que pongas un peso. Si no te gusta, no perdiste nada. Si te gusta… bueno, ya sabés dónde escribirnos."}}]}]</script>
 </head>
 <body>
 <header>
   <div class="wrap">
     <a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith<small>sitios</small></a>
-    <nav><a href="#como">Cómo funciona</a><a href="#ejemplos">Ejemplos</a><a href="#planes">Planes</a><a href="#preguntas">Preguntas</a></nav>
-    <a class="btn" href="#muestra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Muestra gratis</span></a>
+    <nav><a href="#como">Cómo funciona</a><a href="#ejemplos">Ejemplos</a><a href="#planes">Precio</a><a href="#preguntas">Preguntas</a></nav>
+    <a class="btn" href="#muestra" data-wa><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg><span>Muestra gratis</span></a>
   </div>
 </header>
 
 <div class="hero">
   <div class="wrap">
     <div>
-      <h1>Tu negocio con sitio y app en <span class="hl">24 horas</span></h1>
-      <p>Hecho a medida, con tus fotos y tus colores, y se instala como app en el celular con tu logo. Los pedidos, turnos y reservas te llegan al WhatsApp ya escritos. Desde $25.000 por mes, sin permanencia.</p>
-      <div class="hero-btns"><a class="btn" href="#muestra">Quiero mi muestra gratis</a><a class="btn ghost" href="#ejemplos">Ver ejemplos</a></div>
-      <div class="ticks"><span>Muestra gratis con tu nombre</span><span>Sin costo de alta</span><span>Te das de baja cuando quieras</span></div>
+      <h1>Tu web online, <span class="hl">a tu medida</span></h1>
+      <p>Diseñada para tu negocio, con un panel donde modificás todo el sitio vos mismo. Conectás tu dominio o usás el nuestro. $25.000 por mes, sin permanencia.</p>
+      <div class="hero-btns"><a class="btn" href="#muestra" data-wa><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>Quiero mi muestra gratis</a><a class="btn ghost" href="#ejemplos">Ver ejemplos</a></div>
+      <div class="ticks"><span>Muestra gratis con tu nombre</span><span>Pagás recién cuando te gusta</span><span>Te das de baja cuando quieras</span></div>
     </div>
     <div class="phones" aria-label="Ejemplos de sitios en el celular">
       <div class="phone p1"><div class="screen"><iframe src="../ejemplos/ropa-mujer/" title="Ejemplo tienda de ropa" loading="lazy" tabindex="-1"></iframe><a class="cover" href="../ejemplos/ropa-mujer/" aria-label="Ver ejemplo de tienda de ropa"></a></div><span class="phone-label">Tienda de ropa</span></div>
@@ -198,9 +203,9 @@
     <h2>Vos atendés tu negocio, nosotros el resto</h2>
     <p class="lead">No tenés que saber nada de computación. Si sabés mandar un audio de WhatsApp, alcanza.</p>
     <div class="steps">
-      <div class="step"><span class="n">1</span><h3>Nos escribís por Instagram</h3><p>Desde la cuenta de tu negocio, así vemos qué vendés y tomamos tus fotos y tu logo de ahí. Si no tenés logo, lo resolvemos.</p></div>
+      <div class="step"><span class="n">1</span><h3>Nos escribís por WhatsApp</h3><p>Hablás con Diego, le contás cómo es tu negocio y le pasás tus fotos y tu logo. Si no tenés logo, lo resolvemos.</p></div>
       <div class="step"><span class="n">2</span><h3>Te armamos la muestra gratis</h3><p>En 24 horas ves tu sitio armado, con tu nombre. Si algo no te gusta, lo cambiamos.</p></div>
-      <div class="step"><span class="n">3</span><h3>Lo publicamos</h3><p>Lo conectamos a tu dominio y empezás a recibir pedidos. Pagás recién cuando está online.</p></div>
+      <div class="step"><span class="n">3</span><h3>Lo publicamos</h3><p>Lo ponemos online con tu dominio o con el nuestro, y te damos tu panel. Pagás recién cuando te gusta.</p></div>
     </div>
   </div>
 </section>
@@ -216,16 +221,31 @@
 </section>
 
 <section class="plans-sec" id="planes">
+  <div class="wrap uno">
+    <div>
+      <p class="eyebrow">Precio</p>
+      <h2>Un solo plan, todo incluido</h2>
+      <p class="lead">Sin costo de alta y sin permanencia. Primero ves tu muestra gratis y pagás recién cuando te gusta.</p>
+    </div>
+    <div class="plan star">
+      <h3>Tu web</h3>
+      <div class="price">$25.000 <small>por mes</small></div>
+      <ul>
+        <li>Tu web online</li>
+        <li>Diseño a medida, con tus fotos y tus colores</li>
+        <li>Panel para modificar todo el sitio vos mismo: textos, fotos, precios y productos</li>
+        <li>Conectás tu dominio o usás el nuestro gratis</li>
+        <li>Pedidos, turnos y consultas por WhatsApp</li>
+        <li>Se instala como app en el celular, con tu logo</li>
+        <li>Hosting, seguridad (https) y soporte</li>
+      </ul>
+      <a class="btn" href="#muestra" data-wa><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>Quiero mi muestra gratis</a>
+    </div>
+  </div>
   <div class="wrap">
-    <p class="eyebrow">Planes</p>
-    <h2>Precios claros, sin letra chica</h2>
-    <p class="lead">Sin costo de alta y sin permanencia. Si pagás el año, te regalamos 2 meses.</p>
-    <div class="toggle" role="group" aria-label="Forma de pago"><button class="on" data-p="m">Por mes</button><button data-p="a">Por año <em>2 meses gratis</em></button></div>
-    <div class="plans" id="plans"></div>
-    <div class="always"><span>Siempre incluido:</span><span>Hosting</span><span>Candadito de seguridad (https)</span><span>Se instala como app con tu logo</span><span>Se ve perfecto en el celular</span><span>Aparece en Google</span><span>Botón de WhatsApp</span></div>
     <a href="/a-medida/" style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:22px;padding:18px 22px;border-radius:18px;background:#181B4A;color:#fff;text-decoration:none">
       <span><b style="font-size:18px">¿Necesitás una aplicación a medida?</b><br><span style="color:#C9CBEA;font-size:15px">Stock, reparto, turnos, pedidos, apps para Android y iPhone… Contanos tu idea.</span></span>
-      <span style="background:#FFC23D;color:#15172E;font-weight:700;padding:11px 18px;border-radius:12px">Consultanos →</span>
+      <span style="background:#FFC23D;color:#15172E;font-weight:700;padding:11px 18px;border-radius:12px">Consultanos</span>
     </a>
   </div>
 </section>
@@ -244,12 +264,12 @@
       <details><summary>¿Es una plantilla?</summary><p>No. Cada sitio se hace para tu negocio, con tus colores, tus fotos y lo que vos vendés. Si querés una plantilla, hay miles gratis; te va a quedar igual que a otros 40 mil negocios.</p></details>
       <details><summary>¿Qué pasa si no me gusta?</summary><p>Lo cambiamos hasta que te guste. Y si igual no te convence, no pagás. Así de simple.</p></details>
       <details><summary>¿Tengo que firmar algo por 12 meses?</summary><p>No. Sin permanencia. Si un día no lo querés más, avisás y listo. No te vamos a llamar llorando (bueno, capaz un poquito).</p></details>
-      <details><summary>¿El dominio es mío?</summary><p>Sí, 100% tuyo. Lo comprás vos (un .com.ar sale poco por año) y nosotros lo conectamos. Si algún día te vas, te lo llevás. No secuestramos dominios.</p></details>
+      <details><summary>¿Qué es eso del dominio?</summary><p>Es la dirección de tu web, como tunegocio.com.ar. Tenés dos opciones: usás la nuestra gratis (dmith.app/tunegocio) o usás tu dominio propio. Si tenés uno, lo conectás desde tu panel siguiendo unos pasos simples, y si te trabás, lo hacemos con vos. El dominio siempre es 100% tuyo.</p></details>
       <details><summary>¿Necesito saber de computación?</summary><p>Si sabés mandar un audio de WhatsApp, estás sobrecalificado.</p></details>
       <details><summary>¿Los pedidos llegan a mi WhatsApp?</summary><p>Sí, al toque y ya escritos: qué quiere, el talle o el gusto, y el total. Vos solo respondés "dale, te lo mando".</p></details>
-      <details><summary>¿Y si necesito cambiar un precio a las 11 de la noche?</summary><p>Con el plan Catálogo lo cambiás vos desde el celular. Con el plan Vidriera nos escribís y lo cambiamos. A las 11 de la noche capaz estamos durmiendo, pero a primera hora queda.</p></details>
+      <details><summary>¿Y si necesito cambiar un precio a las 11 de la noche?</summary><p>Lo cambiás vos desde tu panel, en el celular, en un minuto. Textos, fotos, precios, productos: todo el sitio. Y si preferís que lo hagamos nosotros, nos escribís.</p></details>
       <details><summary>¿La app está en Play Store?</summary><p>No, y te lo decimos de entrada. Tu sitio se instala en el celular como una app: ícono con tu logo, pantalla completa, sin barra del navegador. Tus clientes la instalan desde tu sitio en dos toques, sin buscarla en ninguna tienda. Si igual querés tu app publicada en Play Store, se puede: es un extra que se cotiza aparte.</p></details>
-      <details><summary>¿Por qué la muestra se pide por Instagram?</summary><p>Porque necesitamos saber que tu negocio existe. Si nos escribís desde la cuenta de tu local, vemos qué vendés, usamos tus fotos de verdad y no terminamos armándole una muestra gratis a tu primo que nos quería hacer laburar de onda.</p></details>
+      <details><summary>¿Con quién hablo?</summary><p>Con Diego, por WhatsApp. Le contás cómo es tu negocio, te arma la muestra y te acompaña hasta que tu web está online. Nada de bots ni de formularios eternos.</p></details>
       <details><summary>¿Por qué tendría que confiar en ustedes?</summary><p>Porque te armamos una muestra gratis con tu nombre antes de que pongas un peso. Si no te gusta, no perdiste nada. Si te gusta… bueno, ya sabés dónde escribirnos.</p></details>
     </div>
   </div>
@@ -260,15 +280,12 @@
     <div class="final">
       <div>
         <h2>Pedí tu muestra gratis</h2>
-        <p>Escribinos <b style="color:#fff">desde el Instagram de tu negocio</b>. Así vemos qué vendés y armamos la muestra con tus fotos reales. En 24 horas la tenés en el celular. Sin compromiso.</p>
-        <p class="note">Mensajes de cuentas personales o sin negocio no los respondemos. Nada personal: es para poder dedicarle tiempo a los negocios de verdad.</p>
+        <p>Escribinos por WhatsApp y <b style="color:#fff">hablás con Diego</b>. Contale cómo es tu negocio y te armamos la muestra con tu nombre. Si te gusta, la ponemos online. Si no, no pagás nada.</p>
       </div>
       <div class="form">
-        <label>¿Qué es tu negocio?<select id="m-type"><option>Tienda de ropa</option><option>Comida (hamburguesas, pizzas, rotisería)</option><option>Peluquería o barbería</option><option>Uñas o estética</option><option>Gimnasio</option><option>Pet shop o veterinaria</option><option>Cafetería o panadería</option><option>Heladería</option><option>Florería</option><option>Verdulería o almacén</option><option>Inmobiliaria</option><option>Taller mecánico</option><option>Restaurante o parrilla</option><option>Profesional (contador, abogado, etc.)</option><option>Otro</option></select></label>
-        <label>Plan que te interesa<select id="m-plan"><option>Todavía no sé</option><option>Vidriera</option><option>Catálogo</option><option>Negocio</option></select></label>
+        <label>¿Qué es tu negocio?<select id="m-type"><option>Tienda de ropa</option><option>Comida (hamburguesas, pizzas, rotisería)</option><option>Peluquería o barbería</option><option>Uñas o estética</option><option>Masajes o terapias</option><option>Gimnasio</option><option>Pet shop o veterinaria</option><option>Cafetería o panadería</option><option>Heladería</option><option>Florería</option><option>Verdulería o almacén</option><option>Inmobiliaria</option><option>Taller mecánico</option><option>Restaurante o parrilla</option><option>Profesional (contador, abogado, etc.)</option><option>Otro</option></select></label>
         <div class="msg"><small>Tu mensaje</small><span id="m-text"></span></div>
-        <button class="btn" id="m-go" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Copiar mensaje y abrir Instagram</button>
-        <small class="hint" id="m-hint">Se copia el mensaje: cuando se abra nuestro chat, mantené apretado y pegalo.</small>
+        <a class="btn" id="m-go" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>Hablar con Diego por WhatsApp</a>
       </div>
     </div>
   </div>
@@ -276,12 +293,11 @@
 
 <footer><div class="wrap"><a class="logo" href="#" style="color:var(--ink)"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith<small style="color:var(--mute)">sitios</small></a><span>Diseño de páginas web y apps para negocios. Hecho en Quilmes, para negocios de zona sur, CABA y todo el país. · <a href="/sitios/guias/" style="color:inherit">Guías para tu negocio</a></span></div></footer>
 
-<a class="float" id="float" target="_blank" rel="noopener" aria-label="Escribinos por Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+<a class="float" id="float" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg></a>
 
 <script>
-// Instagram donde llegan los pedidos de muestra
-const IG_USER = "dmith_app";
-const IG = `https://ig.me/m/${IG_USER}`;
+// WhatsApp de Diego, donde llegan los pedidos de muestra
+const WA = "5491150540357";
 const fmt = n => "$" + n.toLocaleString("es-AR");
 
 const ex = [
@@ -304,38 +320,15 @@ const ex = [
 ];
 document.getElementById("examples").innerHTML = ex.map(([p, n, r, img]) => `<a class="ex" href="../ejemplos/${p}/" target="_blank" rel="noopener"><img src="https://unsplash.com/photos/${img}/download?w=500" alt="" loading="lazy"><div><b>${n}</b><small>${r}</small></div></a>`).join("");
 
-const plans = [
-  { n: "Vidriera", for: "Para que te encuentren y te escriban", m: 25000, f: ["Sitio a medida con tu logo, fotos y colores", "Pedidos, turnos o reservas por WhatsApp", "Mapa, horarios e Instagram", "Se instala como app en el celular, con tu logo", "Hasta 2 cambios por mes, los hacemos nosotros"], no: ["Panel para cambiar vos precios y fotos"] },
-  { n: "Catálogo", star: true, for: "Para los que cambian precios y productos seguido", m: 40000, f: ["Todo lo del plan Vidriera", "Panel desde el celular: cambiás precios, fotos y productos", "Marcás \"sin stock\" en un toque", "Cambios de diseño cuando los necesites"], no: [] },
-  { n: "Negocio", for: "Para los que quieren ordenar todo", m: 60000, f: ["Todo lo del plan Catálogo", "Pedidos y turnos guardados en el panel", "Turnos reales: un horario tomado ya no aparece", "Estadísticas de visitas y pedidos", "Correo con el nombre de tu negocio"], no: [] },
-];
-let mode = "m";
-function renderPlans() {
-  document.getElementById("plans").innerHTML = plans.map(p => {
-    const year = p.m * 10;
-    const price = mode === "m" ? `${fmt(p.m)} <small>por mes</small>` : `${fmt(year)} <small>por año</small>`;
-    const save = mode === "a" ? `Ahorrás ${fmt(p.m * 2)}` : "";
-    return `<div class="plan${p.star ? " star" : ""}"><h3>${p.n}</h3><p class="for">${p.for}</p><div class="price">${price}</div><div class="save">${save}</div><ul>${p.f.map(x => `<li>${x}</li>`).join("")}${p.no.map(x => `<li class="no">${x}</li>`).join("")}</ul><a class="btn${p.star ? "" : " dark"}" href="#muestra" data-plan="${p.n}">Quiero el plan ${p.n}</a></div>`;
-  }).join("");
-}
-document.querySelectorAll(".toggle button").forEach(b => b.onclick = () => { mode = b.dataset.p; document.querySelectorAll(".toggle button").forEach(x => x.classList.toggle("on", x === b)); renderPlans(); });
-renderPlans();
-document.getElementById("plans").addEventListener("click", e => { const a = e.target.closest("[data-plan]"); if (a) { document.getElementById("m-plan").value = a.dataset.plan; upd(); } });
-
 const v = id => document.getElementById(id).value.trim();
-function text() {
-  const plan = v("m-plan");
-  return `Hola! Quiero mi muestra gratis. Mi negocio es: ${v("m-type").toLowerCase()}.${plan !== "Todavía no sé" ? ` Me interesa el plan ${plan}.` : ""}`;
-}
-function upd() { document.getElementById("m-text").textContent = text(); }
-["m-type", "m-plan"].forEach(id => document.getElementById(id).addEventListener("input", upd));
+const text = () => `Hola Diego! Quiero mi muestra gratis. Mi negocio es: ${v("m-type").toLowerCase()}.`;
+const waLink = t => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+function upd() { document.getElementById("m-text").textContent = text(); document.getElementById("m-go").href = waLink(text()); }
+document.getElementById("m-type").addEventListener("input", upd);
 upd();
-document.getElementById("m-go").onclick = async () => {
-  try { await navigator.clipboard.writeText(text()); document.getElementById("m-hint").textContent = "Mensaje copiado. Pegalo en nuestro chat de Instagram."; }
-  catch (e) { document.getElementById("m-hint").textContent = "Copiá el mensaje de arriba y pegalo en nuestro chat de Instagram."; }
-  window.location.href = IG;
-};
-document.getElementById("float").href = IG;
+// los botones "muestra gratis" abren WhatsApp directo
+document.querySelectorAll("[data-wa]").forEach(a => { a.href = waLink("Hola Diego! Quiero mi muestra gratis."); a.target = "_blank"; a.rel = "noopener"; });
+document.getElementById("float").href = waLink("Hola Diego! Quería consultarte por una web para mi negocio.");
 </script>
 </body>
 </html>

@@ -6,7 +6,8 @@
   var me = document.currentScript;
   var negocio = (me && me.dataset.negocio) || "tu negocio";
   var slug = (me && me.dataset.slug) || location.pathname.split("/").filter(Boolean).pop() || "";
-  var IG = "https://ig.me/m/dmith_app";
+  var WA = "5491150540357"; // WhatsApp de Diego
+  function wa(t) { return "https://wa.me/" + WA + "?text=" + encodeURIComponent(t); }
 
   var listo = false;
   fetch("/api/sitios/estado?slug=" + encodeURIComponent(slug)).then(function (r) { return r.json(); }).then(function (j) { listo = true; if (!j.activo) mostrar(); }).catch(function () { if (!listo) { listo = true; mostrar(); } });
@@ -31,8 +32,8 @@
   bar.id = "dm-franja";
   bar.innerHTML =
     '<div class="t">🎁 Esta es la <b>muestra gratis</b> de ' + esc(negocio) + ". ¿Te gusta?</div>" +
-    '<a class="c" href="' + IG + '" id="dm-cambios">Quiero cambios</a>' +
-    '<a class="a" href="/activar/?n=' + encodeURIComponent(negocio) + "&s=" + encodeURIComponent(slug) + '">Activar mi web</a>';
+    '<a class="c" target="_blank" rel="noopener" href="' + esc(wa("Hola Diego! Vi la muestra de " + negocio + ". Quiero estos cambios: ")) + '">Quiero cambios</a>' +
+    '<a class="a" target="_blank" rel="noopener" href="' + esc(wa("Hola Diego! Vi la muestra de " + negocio + " (dmith.app/" + slug + ") y me gusta. Quiero activar mi web.")) + '">Activar mi web</a>';
   var hint = document.createElement("div");
   hint.id = "dm-hint";
   document.body.appendChild(bar);
@@ -40,18 +41,6 @@
 
   function pad() { document.body.style.paddingTop = bar.offsetHeight + "px"; }
   pad(); addEventListener("resize", pad);
-
-  document.getElementById("dm-cambios").addEventListener("click", function (e) {
-    var txt = "Hola! Vi la muestra de " + negocio + ". Quiero estos cambios: ";
-    if (navigator.clipboard) {
-      e.preventDefault();
-      navigator.clipboard.writeText(txt).catch(function () {}).then(function () {
-        hint.textContent = "Mensaje copiado. Pegalo en el chat y contanos qué cambiar.";
-        hint.style.display = "block";
-        setTimeout(function () { location.href = IG; }, 1200);
-      });
-    }
-  });
 
   }
 
