@@ -67,6 +67,23 @@
   .agregar { border-style: dashed; border-radius: 12px; padding: 11px; width: 100%; }
   .foto input[type=file] { display: none; }
 
+  .dominio { background: #fff; border: 2px solid var(--noche); border-radius: 18px; padding: 18px; margin-bottom: 16px; display: grid; gap: 12px; }
+  .dom-cab h2 { margin: 0; font-size: 21px; }
+  .dom-cab p { margin: 0; color: var(--suave); font-size: 14px; }
+  .dom-actual { background: var(--papel); border-radius: 12px; padding: 10px 14px; display: grid; }
+  .dom-actual span, .dom-actual small { font-size: 13px; color: var(--suave); }
+  .dom-actual b { font-size: 18px; color: var(--noche); overflow-wrap: anywhere; }
+  .dom-q { margin: 2px 0 0; font-weight: 700; }
+  .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .opcion { border: 1.5px solid var(--linea); background: #fff; border-radius: 12px; padding: 10px; font-weight: 700; cursor: pointer; }
+  .opcion.on { border-color: var(--noche); background: var(--noche); color: #fff; }
+  .dom-cuerpo { display: grid; gap: 10px; }
+  .boton-dom { justify-self: start; background: var(--sol); border: 0; border-radius: 10px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
+  .pasos { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .pasos li { display: flex; gap: 10px; align-items: flex-start; }
+  .pasos li > b { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--noche); color: #fff; display: grid; place-items: center; font-size: 14px; }
+  .pasos a { color: var(--noche2); font-weight: 700; }
+  .ayuda { margin: 0; font-size: 14px; color: var(--suave); }
   .pie { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(246,245,251,.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--linea); padding: 10px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left)); display: flex; gap: 10px; justify-content: center; }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 13px 20px; font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none; }
   .btn svg { width: 19px; height: 19px; }
@@ -111,7 +128,7 @@
   <main>
     <div class="hola">
       <h1>Así manejás tu web</h1>
-      <p>Abrí cada parte, cambiá precios, productos, fotos o textos, y se actualiza al instante.</p>
+      <p>Desde acá cambiás absolutamente todo: productos, precios, fotos, colores, textos y tu dominio. Se actualiza al instante.</p>
     </div>
     <div id="editor"><p style="color:var(--suave)">Cargando…</p></div>
   </main>
@@ -292,6 +309,13 @@ function seccion(titulo, sub, abierta, ...hijos) {
 // ---------- todo el panel ----------
 function dibujar() {
   const ed = $("editor"); ed.innerHTML = "";
+  estado.fotos = estado.fotos || {}; estado.colores = estado.colores || {};
+  ed.append(tarjetaDominio());
+  ed.append(seccion("Tus datos", "Tu WhatsApp para pedidos y turnos", false,
+    (() => { const i = el("input", { type: "text", inputmode: "tel", placeholder: "Ej: 11 2345 6789" }); i.value = estado.whatsapp || "";
+      i.oninput = () => { estado.whatsapp = i.value; cambio(); };
+      return el("label", { class: "campo" }, "Número de WhatsApp (con código de área)", i); })(),
+    ayuda("Todos los botones de pedir, reservar y consultar de la web te escriben a este número.")));
   let primera = true;
   for (const nombre in D.registro.listas) {
     const { def, opc } = D.registro.listas[nombre];
@@ -303,6 +327,16 @@ function dibujar() {
     ed.append(seccion(tit, sub, primera, contenido));
     primera = false;
   }
+  if (D.registro.fotos.length) ed.append(seccion("Fotos de la web", "Portada, el local y las demás fotos", false, D.registro.fotos.map(f => {
+    const o = {};
+    Object.defineProperty(o, "img", { get: () => estado.fotos[f.k] || f.def, set: v => { estado.fotos[f.k] = v; }, enumerable: true });
+    return campo(o, "img", f.alt || "Foto " + (f.k + 1), "");
+  })));
+  if (D.registro.colores.length) ed.append(seccion("Colores", "Los colores de tu marca", false, el("div", { class: "campos" }, D.registro.colores.map((c, n) => {
+    const i = el("input", { type: "color" }); i.value = estado.colores[c.nombre] || c.def;
+    i.oninput = () => { estado.colores[c.nombre] = i.value; cambio(); };
+    return el("label", { class: "campo" }, "Color " + (n + 1), i);
+  })), ayuda("Probá cambiar uno y mirá la web.")));
   const textos = D.registro.textos.map(t => {
     const largo = t.def.length > 50;
     const i = largo ? el("textarea", { rows: 2 }) : el("input", { type: "text" });
@@ -310,7 +344,60 @@ function dibujar() {
     i.oninput = () => { estado.textos[t.k] = i.value; cambio(); };
     return el("label", { class: "campo" }, t.tipo, i);
   });
-  if (textos.length) ed.append(seccion("Textos de la web", "Títulos, frases y datos", false, textos));
+  if (textos.length) ed.append(seccion("Todos los textos", "Títulos, botones, horarios, dirección y más", false, textos));
+}
+const ayuda = t => el("p", { class: "ayuda" }, t);
+
+// ---------- dominio (en la muestra se explica; en el panel real se verifica de verdad) ----------
+function tarjetaDominio() {
+  const caja = el("section", { class: "dominio" });
+  const cuerpo = el("div", { class: "dom-cuerpo" });
+  const paso = (n, t) => el("li", {}, el("b", {}, n), el("span", { html: t }));
+  const conTengo = () => {
+    cuerpo.innerHTML = "";
+    const i = el("input", { type: "text", placeholder: "minegocio.com.ar", autocapitalize: "off", spellcheck: "false" });
+    const pasos = el("div");
+    const ver = el("button", { type: "button", class: "boton-dom" }, "Ver los pasos");
+    ver.onclick = () => {
+      const d = i.value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
+      if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d)) { pasos.innerHTML = '<p class="ayuda" style="color:var(--coral)">Escribí tu dominio, por ejemplo minegocio.com.ar</p>'; return; }
+      const ar = /\.ar$/.test(d);
+      const res = el("p", { class: "ayuda" });
+      const verificar = el("button", { type: "button", class: "boton-dom" }, "Verificar");
+      verificar.onclick = () => { verificar.disabled = true; verificar.textContent = "Revisando…"; setTimeout(() => {
+        verificar.disabled = false; verificar.textContent = "Verificar";
+        res.innerHTML = "<b>Así funciona en tu panel:</b> acá revisamos solos si " + d + " ya quedó conectado. Si todavía no, lo seguimos revisando y te avisamos. Cuando queda, tu web abre en " + d + " con el candadito de seguridad, sin que hagas nada más."; }, 1300); };
+      pasos.innerHTML = "";
+      pasos.append(el("ol", { class: "pasos" },
+        ar ? [paso("1", 'Entrá a <a href="https://nic.ar" target="_blank" rel="noopener">nic.ar</a> con tu Clave Fiscal y abrí tu dominio <b>' + d + "</b>."),
+              paso("2", "Tocá <b>Delegar</b> y pegá los dos datos que te aparecen acá en tu panel, con el botón de copiar."),
+              paso("3", "Guardá y volvé acá. Tocá <b>Verificar</b>.")]
+           : [paso("1", "Entrá a la página donde compraste <b>" + d + "</b> (GoDaddy, Hostinger, etc.) y abrí la parte de <b>DNS</b>."),
+              paso("2", "Cambiá el dato que te mostramos acá en tu panel. Lo copiás con un botón."),
+              paso("3", "Guardá y volvé acá. Tocá <b>Verificar</b>.")]),
+        ayuda("Se hace una sola vez y tarda unos minutos. Si te trabás, lo hacemos con vos por WhatsApp."), verificar, res);
+    };
+    cuerpo.append(el("label", { class: "campo" }, "¿Cuál es tu dominio?", i), ver, pasos);
+  };
+  const conQuiero = () => {
+    cuerpo.innerHTML = "";
+    cuerpo.append(el("ol", { class: "pasos" },
+      paso("1", "Elegí el nombre. Por ejemplo <b>minegocio.com.ar</b>."),
+      paso("2", 'Si es .com.ar, lo sacás en <a href="https://nic.ar" target="_blank" rel="noopener">nic.ar</a> con tu Clave Fiscal. Queda a tu nombre y es tuyo.'),
+      paso("3", "Volvés acá, tocás <b>Ya tengo dominio</b> y seguís los pasos.")),
+      ayuda("¿Preferís que lo hagamos con vos? Escribinos y te guiamos paso a paso."));
+  };
+  const b1 = el("button", { type: "button", class: "opcion on" }, "Ya tengo dominio");
+  const b2 = el("button", { type: "button", class: "opcion" }, "Quiero sacar uno");
+  b1.onclick = () => { b1.classList.add("on"); b2.classList.remove("on"); conTengo(); };
+  b2.onclick = () => { b2.classList.add("on"); b1.classList.remove("on"); conQuiero(); };
+  caja.append(
+    el("div", { class: "dom-cab" }, el("h2", {}, "Tu dominio"), el("p", {}, "La dirección de tu web")),
+    el("div", { class: "dom-actual" }, el("span", {}, "Ahora funciona en"), el("b", {}, "dmith.app/tu-negocio"), el("small", {}, "Gratis y ya está online")),
+    el("p", { class: "dom-q" }, "¿Querés usar tu propio dominio, como minegocio.com.ar?"),
+    el("div", { class: "opciones" }, b1, b2), cuerpo);
+  conTengo();
+  return caja;
 }
 </script>
 </body>

@@ -103,6 +103,11 @@
   .pie .estado.ok { color: var(--verde); }
   .pie .estado.mal { color: var(--rojo); }
   .pie .btn { width: auto; padding-inline: 26px; }
+  .dominio { background: #fff; border: 2px solid var(--violeta); border-radius: 20px; padding: 18px; margin-bottom: 14px; display: grid; gap: 12px; }
+  .dominio h2 { font-size: 24px; }
+  .dom-actual { background: var(--lavanda); border-radius: 14px; padding: 10px 14px; display: grid; }
+  .dom-actual span { font-size: 13px; color: var(--suave); }
+  .dom-actual a { font-weight: 600; font-size: 18px; color: var(--violeta); overflow-wrap: anywhere; }
   .aviso { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); background: var(--ciruela); color: #fff; padding: 11px 18px; border-radius: 14px; font-size: 14.5px; z-index: 20; box-shadow: 0 12px 30px rgba(61,30,87,.3); max-width: calc(100% - 32px); }
 </style>
 </head>
@@ -314,6 +319,7 @@ function dibujar() {
   const k = C.contacto, h = C.inicio, pr = C.promo;
   C.secciones = C.secciones || {};
   const ed = $("editor"); ed.innerHTML = "";
+  ed.append(tarjetaDominio());
   ed.append(
     seccion("Tus datos", "WhatsApp, dirección, Instagram",
       fila(texto(k, "persona", "Tu nombre", { nota: "va en los mensajes" }), texto(k, "nombre_completo", "Nombre completo")),
@@ -402,6 +408,22 @@ function seccionClave() {
   return seccion("Cambiar clave", "Para entrar a este panel",
     campo("Clave actual", "c-actual"), campo("Clave nueva", "c-nueva"), campo("Repetí la clave nueva", "c-otra"),
     ayuda("Mínimo 6 letras o números. Anotala en un lugar seguro."), msj, el("div", {}, boton));
+}
+function tarjetaDominio() {
+  const i = el("input", { type: "text", placeholder: "minegocio.com.ar", autocapitalize: "off", spellcheck: "false" });
+  const msj = el("p", { class: "ayuda" });
+  const boton = el("button", { type: "button", class: "boton-sec", onclick: () => {
+    const d = i.value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
+    if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d)) { msj.textContent = "Escribí tu dominio, por ejemplo minegocio.com.ar"; return; }
+    msj.textContent = "Te abrimos WhatsApp con el pedido. Lo conectamos con vos paso a paso: se hace una sola vez.";
+    window.open("https://wa.me/5491150540357?text=" + encodeURIComponent("Hola Diego! Quiero conectar mi dominio " + d + " a mi web (dmith.app/" + SLUG + ")."), "_blank", "noopener");
+  } }, "Conectar mi dominio");
+  return el("section", { class: "dominio" },
+    el("h2", {}, "Tu dominio"),
+    el("div", { class: "dom-actual" }, el("span", {}, "Tu web está en"), el("a", { href: "../", target: "_blank", rel: "noopener" }, "dmith.app/" + SLUG)),
+    el("label", { class: "campo" }, "¿Querés usar tu propio dominio, como minegocio.com.ar?", i),
+    el("div", {}, boton), msj,
+    ayuda("¿No tenés uno? Si es .com.ar lo sacás en nic.ar con tu Clave Fiscal y queda a tu nombre. Después lo conectamos."));
 }
 function diasCerrados() {
   C.agenda = C.agenda || { cerrado: [] };
