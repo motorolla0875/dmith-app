@@ -378,8 +378,30 @@ function dibujar() {
       interruptor(C.regalo, "activo", "Mostrar la gift card en la web"),
       fila(texto(C.regalo, "titulo", "Título"), texto(C.regalo, "titulo2", "Título, parte en violeta")),
       texto(C.regalo, "texto", "Texto", { largo: true, filas: 3 }),
-      foto(C.regalo, "foto", "Foto"))
+      foto(C.regalo, "foto", "Foto")),
+
+    seccionClave()
   );
+}
+function seccionClave() {
+  const campo = (etq, id) => el("label", { class: "campo" }, etq, el("input", { type: "password", id, autocomplete: id === "c-actual" ? "current-password" : "new-password" }));
+  const msj = el("p", { class: "error", id: "c-msj" });
+  const boton = el("button", { type: "button", class: "boton-sec", onclick: async () => {
+    const actual = $("c-actual").value, nueva = $("c-nueva").value.trim(), otra = $("c-otra").value.trim();
+    msj.style.color = "";
+    if (nueva.length < 6) { msj.textContent = "La clave nueva tiene que tener al menos 6 letras o números."; return; }
+    if (nueva !== otra) { msj.textContent = "Las dos claves nuevas no coinciden."; return; }
+    boton.disabled = true;
+    try {
+      await api("clave", { slug: SLUG, t: T, actual, nueva });
+      ["c-actual", "c-nueva", "c-otra"].forEach(i => $(i).value = "");
+      msj.style.color = "var(--verde)"; msj.textContent = "Listo, tu clave nueva ya funciona. Si estabas en otro teléfono, ahí vas a tener que entrar de nuevo.";
+    } catch (e) { msj.textContent = e.message; }
+    boton.disabled = false;
+  } }, "Cambiar clave");
+  return seccion("Cambiar clave", "Para entrar a este panel",
+    campo("Clave actual", "c-actual"), campo("Clave nueva", "c-nueva"), campo("Repetí la clave nueva", "c-otra"),
+    ayuda("Mínimo 6 letras o números. Anotala en un lugar seguro."), msj, el("div", {}, boton));
 }
 function diasCerrados() {
   C.agenda = C.agenda || { cerrado: [] };

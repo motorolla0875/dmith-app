@@ -406,6 +406,16 @@ const rutas = {
     b.c.guardado = ahora(); escribirJson(f, b.c);
     return { ok: true, guardado: b.c.guardado };
   },
+  "POST /api/sitios/web/clave": async (req) => {
+    const b = await body(req); const slug = slugOk(b.slug); const a = sesionWeb(slug, b.t);
+    if (sha(a.sal + String(b.actual || "").trim()) !== a.hash) throw err(403, "La clave actual no es correcta");
+    const nueva = String(b.nueva || "").trim();
+    if (nueva.length < 6 || nueva.length > 60) throw err(400, "La clave nueva tiene que tener al menos 6 letras o números");
+    a.sal = crypto.randomBytes(12).toString("hex"); a.hash = sha(a.sal + nueva);
+    a.sesiones = (a.sesiones || []).filter((x) => x.h === sha(b.t)); // quedan cerradas las demás sesiones
+    escribirJson(path.join(webDir(slug), "acceso.json"), a);
+    return { ok: true };
+  },
   "POST /api/sitios/web/foto": async (req) => {
     const b = await bodyGrande(req, 2.5e6); const slug = slugOk(b.slug); sesionWeb(slug, b.t);
     const m = String(b.data || "").match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/);

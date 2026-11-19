@@ -1,11 +1,14 @@
 // Crea (o cambia) la clave del panel de una web de cliente y la muestra para pasársela.
-// Uso en el servidor:  node /var/www/dmith-app/sitios-servidor/web-clave.js serenidad
+// Uso en el servidor:  node /var/www/dmith-app/sitios-servidor/web-clave.js serenidad   (clave al azar)
+//                      node /var/www/dmith-app/sitios-servidor/web-clave.js serenidad miclave123   (clave elegida)
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
 const slug = String(process.argv[2] || "");
 if (!/^[a-z0-9-]{2,40}$/.test(slug)) { console.log("Uso: node web-clave.js <nombre-de-la-web>   (ej: serenidad)"); process.exit(1); }
 const DIR = process.env.SITIOS_DIR || "/root/sitios-datos", f = path.join(DIR, "webs", slug, "acceso.json");
 const letras = "abcdefghjkmnpqrstuvwxyz23456789";
-const clave = Array.from(crypto.randomBytes(10), (b) => letras[b % letras.length]).join("").replace(/(.{5})/, "$1-");
+const elegida = String(process.argv[3] || "").trim();
+if (elegida && elegida.length < 6) { console.log("La clave tiene que tener al menos 6 letras o números"); process.exit(1); }
+const clave = elegida || Array.from(crypto.randomBytes(10), (b) => letras[b % letras.length]).join("").replace(/(.{5})/, "$1-");
 const sal = crypto.randomBytes(12).toString("hex");
 fs.mkdirSync(path.dirname(f), { recursive: true });
 fs.writeFileSync(f, JSON.stringify({ sal, hash: crypto.createHash("sha256").update(sal + clave).digest("hex"), sesiones: [], creada: new Date().toISOString() }, null, 1));
