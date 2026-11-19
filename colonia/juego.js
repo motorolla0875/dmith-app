@@ -1470,6 +1470,7 @@ function pasos(on) {
   if (pie !== ultimoPie) { ultimoPie = pie; muestra("pasos", .12, rnd(.9, 1.1)); }
 }
 function salir() {
+  autoIr = false;
   if (baile) baile.t = 0.001;
   if (mision) terminarMision(false);
   if (flecha) flecha.visible = false; $("mision").classList.remove("ver");
@@ -1754,7 +1755,25 @@ function marcas() {
   if (m.destino && m.estado === "activa" && !m.destino._marca) { const g = new THREE.Group(); cartel("📍", 0, 0, g, 1.4); g.position.set(m.destino.x, altoDe(m.destino) + 3, m.destino.z); escena.add(g); m.destino._marca = g; }
 }
 const altoDe = (e) => e.tipo === "cat" ? altoReceta(CAT[e.cat].r) : e.tipo === "inv" ? altoReceta(e.inv.r) : e.tipo === "casa" ? e.nivel * PISO + 2 : 6;
+// ---- 🧭 Ir solo: el rey camina solo hasta donde marca la misión ----
+let autoIr = false, autoAtasco = 0, autoDesvio = 0, autoLado = 1, autoUlt = null;
+function irSolo() { audio(); autoIr = !autoIr; autoAtasco = autoDesvio = 0; autoUlt = null; if (autoIr) aviso("🧭 Vamos para allá…"); }
+function direccionAuto(dt) {
+  const m = mision, obj = m && m.meta;
+  if (!autoIr || !obj) { autoIr = false; return null; }
+  const dx = obj.x - yo.x, dz = obj.z - yo.z, d = Math.hypot(dx, dz);
+  const llegar = obj === m.destino ? radioDe(obj) + 2.5 : obj === m.obj ? .9 : 2.2;
+  if (d < llegar) { autoIr = false; return null; }
+  // si no avanza, se desvía un poco para rodear lo que tiene adelante
+  if (!autoUlt) autoUlt = { x: yo.x, z: yo.z, t: 0 };
+  autoUlt.t += dt;
+  if (autoUlt.t > .6) { if (Math.hypot(yo.x - autoUlt.x, yo.z - autoUlt.z) < .8) { autoDesvio = 1.1; autoLado = -autoLado; } autoUlt = { x: yo.x, z: yo.z, t: 0 }; }
+  let a = Math.atan2(dx, dz);
+  if (autoDesvio > 0) { autoDesvio -= dt; a += autoLado * 1.25; }
+  return { x: Math.sin(a), z: Math.cos(a) };
+}
 function terminarMision(ok) {
+  autoIr = false;
   const m = mision; if (!m) return; mision = null; misionT = rnd(35, 70);
   m.b.mision = false; if (m.b.est === "esperar") { m.b.est = "quieto"; m.b.quieto = 1; }
   if (m.b._m && m.b._m.marca) { m.b._m.g.remove(m.b._m.marca); m.b._m.marca = null; }
@@ -1795,10 +1814,12 @@ function actualizarMision(dt) {
     if (dist(m.b, m.destino) < radioDe(m.destino) + 4) { terminarMision(true); return; }
   }
   // tarjetita y flecha
-  const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? `${m.b.n} quiere hablar con vos ❗` : m.txt()); if (c.textContent !== txt) c.textContent = txt;
+  const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? `${m.b.n} quiere hablar con vos ❗` : m.txt()); if ($("mision-txt").textContent !== txt) $("mision-txt").textContent = txt;
   let obj = m.b;
   if (m.estado === "activa") { if (m.tipo === "gorro" && !yo.objeto) obj = m.obj; else if (m.tipo === "acompañar") obj = m.destino; else if (m.tipo === "traer" && yo.carga !== m.recurso) obj = null; }
   if (!flecha) { flecha = new THREE.Group(); const p = malla(G.cono, mat("#FFC23D"), .55, 1.1, .3, 0, 0, 0, false); p.rotation.x = Math.PI / 2; flecha.add(p); escena.add(flecha); }
+  m.meta = obj;
+  { const ir = $("mision-ir"), t = !obj ? "" : autoIr ? "⏹ Parar" : "🧭 Ir"; ir.style.display = obj ? "" : "none"; if (ir.textContent !== t) ir.textContent = t; }
   flecha.visible = !!obj && Math.hypot(obj.x - yo.x, obj.z - yo.z) > 3;
   if (flecha.visible) { const a = Math.atan2(obj.x - yo.x, obj.z - yo.z); flecha.position.set(yo.x + Math.sin(a) * 1.9, .35 + yo.alto, yo.z + Math.cos(a) * 1.9); flecha.rotation.y = a; }
 }
@@ -1843,7 +1864,9 @@ function actualizarYo(dt, ahora) {
   const largo = Math.hypot(jx, jy); if (largo > 1) { jx /= largo; jy /= largo; }
   const fx = controles.target.x - camara.position.x, fz = controles.target.z - camara.position.z, fl = Math.hypot(fx, fz) || 1;
   const ux = fx / fl, uz = fz / fl;
-  const mx = ux * jy - uz * jx, mz = uz * jy + ux * jx;
+  let mx = ux * jy - uz * jx, mz = uz * jy + ux * jx;
+  if (Math.hypot(jx, jy) > .1) autoIr = false; // si movés el joystick, manejás vos
+  else { const a = direccionAuto(dt); if (a) { mx = a.x; mz = a.z; } }
   const moviendo = Math.hypot(mx, mz) > .1, vel = 6.5 * Math.min(1, Math.hypot(mx, mz));
   obsT += dt;
   if (obsT > .25) { // lo que está cerca y no se puede atravesar
@@ -1920,6 +1943,7 @@ $("a-saltar").onclick = saltar;
 $("a-siganme").onclick = siganme;
 $("a-bailar").onclick = bailar;
 $("a-atacar").onclick = atacar;
+$("mision").onclick = () => { if (mision && mision.meta) irSolo(); };
 $("a-abrazar").onclick = () => (alzado ? dejar() : abrazar());
 $("a-alzar").onclick = alzar;
 {
