@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>dmith Reels · Ropa</title>
-<meta name="description" content="Creá reels para tu tienda de ropa en un minuto: elegí una plantilla, subí tus fotos y descargá el video listo para Instagram.">
+<title>dmith Reels</title>
+<meta name="description" content="Creá reels para tu negocio en un minuto: elegí una plantilla, subí tus fotos y descargá el video listo para Instagram.">
 <meta name="theme-color" content="#181B4A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Playfair+Display:ital,wght@1,800&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Playfair+Display:ital,wght@0,800;1,800&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root { --noche: #181B4A; --tinta: #15172E; --papel: #F6F5FB; --sol: #FFC23D; --suave: #6A6C8A; --linea: #E3E2EF; --wa: #25D366; --azul: #3E9BFF; }
   * { box-sizing: border-box; }
@@ -38,7 +38,7 @@
   .play { position: absolute; inset: 10px; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; border-radius: 22px; }
   .play span { width: 84px; height: 84px; border-radius: 50%; background: rgba(0,0,0,.55); display: grid; place-items: center; transition: transform .15s; }
   .play:hover span { transform: scale(1.06); }
-  .play svg { width: 34px; height: 34px; fill: #fff; margin-left: 5px; }
+  .play svg { width: 34px; height: 34px; color: #fff; fill: #fff; margin-left: 5px; }
   .play.on span { opacity: 0; }
   .barra { display: flex; align-items: center; gap: 10px; }
   .barra input { flex: 1; accent-color: var(--noche); }
@@ -69,6 +69,10 @@
   label.c { display: grid; gap: 5px; font-size: 14px; font-weight: 700; }
   label.c input { border: 1.5px solid var(--linea); border-radius: 11px; padding: 11px 12px; font-weight: 400; background: #fff; width: 100%; min-width: 0; }
   label.c input:focus { border-color: var(--noche); outline: none; }
+  label.c textarea { border: 1.5px solid var(--linea); border-radius: 11px; padding: 11px 12px; font-weight: 400; background: #fff; width: 100%; min-width: 0; resize: vertical; line-height: 1.45; }
+  label.c textarea:focus { border-color: var(--noche); outline: none; }
+  label.c.ancho { grid-column: 1 / -1; }
+  #rubros .op { font-size: 14.5px; padding: 8px 13px; }
   label.c small { font-weight: 400; color: var(--suave); }
   .sub { font-size: 14px; font-weight: 700; margin: 0 0 -6px; }
   .opciones { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -118,7 +122,7 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.900-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/></symbol>
   <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></symbol>
   <symbol id="i-vid" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m16 10 5-3v10l-5-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
@@ -131,9 +135,9 @@
       <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith <span>Reels</span></a>
       <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Lo quiero</a>
     </div>
-    <span class="chip">Ejemplo: rubro ropa</span>
+    <span class="chip">Plantillas para cada rubro</span>
     <h1>Tu reel listo en un minuto</h1>
-    <p>Elegí una plantilla, cargá las fotos de tus prendas y tocá Crear video. Sale listo para subir a Instagram o TikTok.</p>
+    <p>Elegí tu rubro y una plantilla, cargá tus fotos y tocá Crear video. Sale listo para subir a Instagram o TikTok.</p>
   </div>
 </header>
 
@@ -150,13 +154,14 @@
 
   <div class="editor">
     <section class="caja">
-      <h2><b>1</b>Elegí la plantilla</h2>
+      <h2><b>1</b>Elegí tu rubro y la plantilla</h2>
+      <div class="opciones" id="rubros"></div>
       <div class="plantillas" id="plantillas"></div>
     </section>
 
     <section class="caja">
       <h2><b>2</b>Subí tus fotos</h2>
-      <div class="fila"><small style="color:var(--suave)">Hasta 6 fotos. Ponele nombre y precio a cada prenda si querés que aparezcan.</small><button class="link" id="ejemplo">Usar fotos de ejemplo</button></div>
+      <div class="fila"><small style="color:var(--suave)" id="ayudaFotos">Hasta 6 fotos. Ponele nombre y precio a cada una si querés que aparezcan.</small><button class="link" id="ejemplo">Usar fotos de ejemplo</button></div>
       <div class="fotos" id="fotos"></div>
       <input type="file" id="archivos" accept="image/*" multiple hidden>
     </section>
@@ -187,7 +192,7 @@
     </section>
 
     <div class="final">
-      <div><strong>¿Lo querés para tu negocio?</strong><p>Te lo armamos con tus colores, tu logo y las plantillas de tu rubro.</p></div>
+      <div><strong>¿Lo querés para tu negocio?</strong><p>Viene incluido con tu web: el reel sale con tus productos, tus colores y tu logo.</p></div>
       <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Escribinos</a>
     </div>
   </div>
@@ -207,32 +212,146 @@
 const WA = "5491150540357";
 document.querySelectorAll("[data-wa]").forEach(a => a.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola Diego! Vi dmith Reels y lo quiero para mi negocio."));
 
-/* ---------- datos ---------- */
+/* ================= datos ================= */
 const W = 1080, H = 1920;
-const PLANTILLAS = {
-  llego:   { n: "Llegó mercadería", d: "Tus prendas nuevas una tras otra, al ritmo de la música.", campos: ["negocio", "titulo", "frase", "wa", "ig"] },
-  outfit:  { n: "Outfit del día", d: "Cada prenda con su nombre y su precio.", campos: ["negocio", "frase", "wa", "ig"] },
-  liquida: { n: "Liquidación", d: "Descuento grande, precio de antes y de ahora, y urgencia.", campos: ["negocio", "desc", "hasta", "wa", "ig"] },
-  talles:  { n: "Talles y colores", d: "Un producto con su precio, sus talles y sus colores.", campos: ["negocio", "titulo", "precio", "talles", "colores", "wa", "ig"] },
-};
 const CAMPOS = {
-  negocio: ["Nombre del negocio", "Lirio Boutique"],
-  titulo:  ["Título", "Nueva colección"],
-  frase:   ["Frase corta", "Envíos a todo el país"],
-  precio:  ["Precio", "$45.000"],
-  desc:    ["Descuento (%)", "40", "Solo el número"],
-  hasta:   ["Hasta cuándo", "Solo hasta el domingo"],
-  talles:  ["Talles", "S, M, L, XL", "Separados por coma"],
-  colores: ["Colores", "negro, beige, verde", "Separados por coma"],
-  wa:      ["WhatsApp", "11 5555-1234"],
-  ig:      ["Instagram", "@lirioboutique"],
+  negocio: ["Nombre del negocio"],
+  titulo:  ["Título"],
+  frase:   ["Frase corta"],
+  precio:  ["Precio"],
+  desc:    ["Descuento (%)", "Solo el número"],
+  hasta:   ["Hasta cuándo"],
+  items:   ["Detalles", "Separados por coma"],
+  colores: ["Colores", "Separados por coma"],
+  lista:   ["Lista", "Uno por renglón: nombre - precio", true],
+  resena:  ["Lo que dijo el cliente", "", true],
+  autor:   ["Nombre del cliente"],
+  dias:    ["Días que faltan", "Solo el número"],
+  wa:      ["WhatsApp"],
+  ig:      ["Instagram"],
+};
+const BASE = ["negocio", "wa", "ig"];
+const fecha = (p, titulo, frase, paleta) => ({ n: p === "Feliz día" ? "Día " + (titulo === "Mamá" ? "de la Madre" : "del Padre") : p, d: "Regalos con nombre y precio, y tu saludo.", paleta,
+  campos: ["negocio", ["titulo", "Para quién"], ["frase", "Saludo"], "wa", "ig"], datos: { titulo, frase },
+  esc: [["introFoto", { p, sub: "titulo" }], ["fotos", { tipo: "tarjeta", max: 4, beats: 2.5 }], ["texto", { campo: "frase" }]] });
+
+const RUBROS = {
+  ropa: { n: "Ropa", paleta: 0, datos: { negocio: "Lirio Boutique", ig: "@lirioboutique" },
+    fotos: [["photo-1515886657613-9f3515b0c78f", "Conjunto jogger", "$38.900"], ["photo-1509631179647-0177331693ae", "Pantalón rayado", "$32.500"], ["photo-1539109136881-3be0616acf4b", "Tapado celeste", "$79.900"], ["photo-1496747611176-843222e1e57c", "Vestido floral", "$45.000"], ["photo-1485968579580-b6d095142e6e", "Saco cuadrillé", "$68.000"], ["photo-1483985988355-763728e1935b", "Abrigo bordó", "$85.000"]],
+    pl: {
+      llego: { n: "Llegó mercadería", d: "Tus prendas nuevas una tras otra, al ritmo de la música.", campos: ["negocio", "titulo", "frase", "wa", "ig"], datos: { titulo: "Nueva colección", frase: "Envíos a todo el país" },
+        esc: [["introFoto", { p: "Llegó", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Nuevo" }], ["grilla", { t: "titulo", si: 3 }]] },
+      outfit: { n: "Outfit del día", d: "Cada prenda con su nombre y su precio.", campos: ["negocio", "frase", "wa", "ig"], datos: { frase: "Envíos a todo el país" },
+        esc: [["introClaro", { l1: "Outfit", l2: "del día", sub: "hoy" }], ["fotos", { tipo: "tarjeta", beats: 3 }]] },
+      liquida: { n: "Liquidación", d: "Descuento grande, precio de antes y de ahora, y urgencia.", paleta: 3, campos: ["negocio", "desc", "hasta", "wa", "ig"], datos: { desc: "40", hasta: "Solo hasta el domingo" },
+        esc: [["introRayas", { p: "Liquidación", badge: "desc" }], ["fotos", { tipo: "oferta" }], ["texto", { campo: "hasta", extra: "-{desc}% en toda la tienda" }]] },
+      talles: { n: "Talles y colores", d: "Un producto con su precio, sus talles y sus colores.", campos: ["negocio", ["titulo", "Producto"], "precio", ["items", "Talles", "Separados por coma"], "colores", "wa", "ig"], datos: { titulo: "Vestido floral", precio: "$45.000", items: "S, M, L, XL", colores: "negro, beige, verde" },
+        esc: [["fotoPrecio", { f: 3 }], ["chips", { titulo: "Talles", f: 1 }], ["colores", { f: 2 }], ["fotos", { tipo: "simple", desde: 4, max: 2 }]] },
+    } },
+  comida: { n: "Comida", paleta: 3, datos: { negocio: "Doble Queso", ig: "@doblequeso" },
+    fotos: [["photo-1568901346375-23c9450c58cd", "Doble cheddar", "$9.500"], ["photo-1513104890138-7c749659a591", "Muzza especial", "$12.000"], ["photo-1504674900247-0877df9cc836", "Menú ejecutivo", "$8.500"], ["photo-1555939594-58d7cb561ad1", "Parrillada x2", "$28.000"], ["photo-1546069901-ba9599a7e63c", "Bowl de salmón", "$11.000"], ["photo-1571091718767-18b5b1457add", "Clásica con papas", "$7.800"]],
+    pl: {
+      menu: { n: "Menú del día", d: "Los platos de hoy con sus precios.", campos: ["negocio", ["lista", "Menú", "Uno por renglón: plato - precio"], "frase", "wa", "ig"], datos: { lista: "Milanesa con puré - $8.500\nRavioles con tuco - $7.900\nPollo al horno con papas - $9.200\nEnsalada completa - $6.500", frase: "Pedí antes de las 12" },
+        esc: [["introClaro", { l1: "Menú", l2: "del día", sub: "hoy" }], ["lista", { titulo: "Hoy tenemos", campo: "lista" }], ["fotos", { tipo: "simple", max: 3 }]] },
+      estrella: { n: "Plato estrella", d: "Tu plato más pedido, en primer plano con su precio.", campos: ["negocio", ["titulo", "Plato"], "precio", "frase", "wa", "ig"], datos: { titulo: "Doble cheddar", precio: "$9.500", frase: "Con papas fritas incluidas" },
+        esc: [["introFoto", { p: "Probá", sub: "titulo" }], ["fotoPrecio", { f: 0 }], ["fotos", { tipo: "simple", desde: 1, max: 3 }]] },
+      combo: { n: "Combo", d: "Qué trae el combo y cuánto sale.", campos: ["negocio", ["titulo", "Nombre del combo"], "precio", ["items", "Qué incluye", "Separado por coma"], "wa", "ig"], datos: { titulo: "Combo familiar", precio: "$24.900", items: "2 pizzas, Papas grandes, Gaseosa 1,5 L" },
+        esc: [["introRayas", { p: "Combo", badge: "precio" }], ["chips", { titulo: "Incluye", f: 1 }], ["fotos", { tipo: "etiqueta", pill: "Combo", max: 3, usar: "titulo" }]] },
+      delivery: { n: "Pedí por WhatsApp", d: "Delivery: tus platos y el horario de envíos.", campos: ["negocio", "titulo", ["hasta", "Horario de envíos"], "wa", "ig"], datos: { titulo: "Sin moverte de tu casa", hasta: "Envíos de 20 a 24 hs" },
+        esc: [["introFoto", { p: "Pedí ya", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Delivery", max: 4 }], ["texto", { campo: "hasta" }]] },
+    } },
+  belleza: { n: "Belleza", paleta: 6, datos: { negocio: "Nácar Nails", ig: "@nacarnails" },
+    fotos: [["photo-1604654894610-df63bc536371", "Esmaltado semi", "$12.000"], ["photo-1610992015732-2449b76344bc", "Kapping", "$15.000"], ["photo-1522337360788-8b13dee7a37e", "Alisado", "$35.000"], ["photo-1599351431202-1e0f0137899a", "Corte y barba", "$9.000"], ["photo-1487412947147-5cebf100ffc2", "Maquillaje social", "$20.000"], ["photo-1560066984-138dadb4c035", "Nuestro salón", ""]],
+    pl: {
+      antes: { n: "Antes y después", d: "La foto de antes y la de después, con una cortina que las cambia.", campos: ["negocio", ["titulo", "Trabajo"], "frase", "wa", "ig"], datos: { titulo: "Kapping en gel", frase: "Pedí tu turno por WhatsApp" },
+        esc: [["introClaro", { l1: "Antes", l2: "y después", sub: "titulo" }], ["antes", { a: 0, b: 1 }], ["antes", { a: 2, b: 3, si: 4 }]] },
+      trabajos: { n: "Trabajos del mes", d: "Una galería rápida de tus trabajos.", campos: ["negocio", "titulo", "frase", "wa", "ig"], datos: { titulo: "del mes", frase: "Reservá tu turno" },
+        esc: [["introFoto", { p: "Trabajos", sub: "titulo" }], ["fotos", { tipo: "simple", beats: 1.5 }], ["grilla", { t: "negocio", si: 3 }]] },
+      turnos: { n: "Turnos disponibles", d: "Los días y horarios libres de la semana.", campos: ["negocio", ["lista", "Turnos", "Uno por renglón: día - horarios"], ["hasta", "Frase final"], "wa", "ig"], datos: { lista: "Martes 26 - 10:00 y 15:30\nMiércoles 27 - 11:00\nJueves 28 - 9:30 y 17:00\nSábado 30 - 10:00", hasta: "Reservá el tuyo" },
+        esc: [["introClaro", { l1: "Turnos", l2: "disponibles", sub: "hoy" }], ["lista", { titulo: "Esta semana", campo: "lista" }], ["texto", { campo: "hasta" }]] },
+      cursos: { n: "Cursos", d: "Para academias: el curso, qué incluye y cuándo empieza.", campos: ["negocio", ["titulo", "Curso"], "precio", ["items", "Qué incluye", "Separado por coma"], ["hasta", "Fecha de inicio"], "wa", "ig"], datos: { titulo: "Uñas esculpidas", precio: "$45.000", items: "Kit de regalo, Certificado, Práctica con modelos", hasta: "Empieza el lunes 2 de diciembre" },
+        esc: [["introFoto", { p: "Curso", sub: "titulo" }], ["fotoPrecio", { f: 1 }], ["chips", { titulo: "Incluye", f: 0 }], ["texto", { campo: "hasta" }]] },
+    } },
+  gimnasio: { n: "Gimnasio", paleta: 2, datos: { negocio: "Hierro Gym", ig: "@hierrogym" },
+    fotos: [["photo-1534438327276-14e5300c3a48", "Sala de musculación", ""], ["photo-1571019614242-c5c5dee9f50b", "Funcional", ""], ["photo-1517836357463-d25dfeac3438", "Peso muerto", ""], ["photo-1541534741688-6078c6bfb5c5", "Press militar", ""], ["photo-1583454110551-21f2fa2afe61", "Bíceps", ""], ["photo-1574680096145-d05b474e2155", "Sentadilla", ""]],
+    pl: {
+      clase: { n: "Clase o rutina", d: "La clase de hoy o los ejercicios de una rutina.", campos: ["negocio", "titulo", "frase", "wa", "ig"], datos: { titulo: "Funcional 19 hs", frase: "Primera clase gratis" },
+        esc: [["introFoto", { p: "Hoy", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Rutina" }]] },
+      cambio: { n: "Transformación", d: "El antes y después de un alumno.", campos: ["negocio", "titulo", "frase", "wa", "ig"], datos: { titulo: "12 semanas de entrenamiento", frase: "Vos también podés" },
+        esc: [["introClaro", { l1: "Antes", l2: "y después", sub: "titulo" }], ["antes", { a: 2, b: 3 }], ["texto", { campo: "frase" }]] },
+      planes: { n: "Planes y precios", d: "Todos tus planes con su precio.", campos: ["negocio", ["lista", "Planes", "Uno por renglón: plan - precio"], "frase", "wa", "ig"], datos: { lista: "2 veces por semana - $18.000\n3 veces por semana - $22.000\nPase libre - $28.000\nClase suelta - $5.000", frase: "Sin matrícula este mes" },
+        esc: [["introRayas", { p: "Planes", sub: "frase" }], ["lista", { titulo: "Precios", campo: "lista" }], ["fotos", { tipo: "simple", max: 2 }]] },
+    } },
+  inmo: { n: "Inmobiliaria", paleta: 4, datos: { negocio: "Umbral Propiedades", ig: "@umbralprop" },
+    fotos: [["photo-1600596542815-ffad4c1539a9", "Frente", ""], ["photo-1600585154340-be6161a56a0c", "Jardín", ""], ["photo-1502672260266-1c1ef2d93688", "Living", ""], ["photo-1560448204-e02f11c3d0e2", "Living comedor", ""], ["photo-1600607687939-ce8a6c25118c", "Cocina integrada", ""], ["photo-1484154218962-a197022b5858", "Cocina", ""]],
+    pl: {
+      recorrida: { n: "Recorrida de propiedad", d: "Cada ambiente con su nombre, los detalles y el precio.", campos: ["negocio", ["titulo", "Propiedad"], "precio", ["items", "Detalles", "Separados por coma"], "wa", "ig"], datos: { titulo: "Casa 4 ambientes", precio: "US$ 185.000", items: "4 ambientes, 160 m², Pileta, Cochera, Jardín" },
+        esc: [["introFoto", { p: "En venta", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Ambiente", desde: 1, max: 5 }], ["chips", { titulo: "Detalles", f: 0 }], ["fotoPrecio", { f: 0 }]] },
+      ingreso: { n: "Nuevo ingreso", d: "Una propiedad nueva en tu cartera.", campos: ["negocio", ["titulo", "Propiedad"], "precio", ["items", "Detalles", "Separados por coma"], "wa", "ig"], datos: { titulo: "Depto 2 ambientes en Quilmes", precio: "US$ 89.000", items: "2 ambientes, 55 m², Balcón, Apto crédito" },
+        esc: [["introRayas", { p: "Nuevo ingreso", sub: "titulo" }], ["fotos", { tipo: "simple", desde: 2, max: 4 }], ["chips", { titulo: "Detalles", f: 3 }], ["fotoPrecio", { f: 2 }]] },
+      vendido: { n: "Vendido o alquilado", d: "Un sello sobre la foto, para mostrar lo que ya cerraste.", campos: ["negocio", ["titulo", "Sello", "Por ejemplo: Vendido o Alquilado"], "frase", "wa", "ig"], datos: { titulo: "Vendido", frase: "¿Querés vender tu propiedad? Tasamos gratis" },
+        esc: [["fotos", { tipo: "sello", max: 1, beats: 4 }], ["fotos", { tipo: "simple", desde: 1, max: 2 }], ["texto", { campo: "frase" }]] },
+    } },
+  autos: { n: "Autos y talleres", paleta: 5, datos: { negocio: "Pistón Autos", ig: "@pistonautos" },
+    fotos: [["photo-1580273916550-e323be2ae537", "Vista lateral", ""], ["photo-1494976388531-d1058494cdd8", "Frente", ""], ["photo-1503376780353-7e6692767b70", "En ruta", ""], ["photo-1492144534655-ae79c964c9d7", "En el salón", ""], ["photo-1486262715619-67b85e0b08d3", "Motor", ""], ["photo-1619642751034-765dfdf7c58e", "Taller", ""]],
+    pl: {
+      venta: { n: "Auto en venta", d: "Fotos del auto, sus datos y el precio.", campos: ["negocio", ["titulo", "Auto"], "precio", ["items", "Datos del auto", "Separados por coma"], "wa", "ig"], datos: { titulo: "Sedán 2021 full", precio: "US$ 24.500", items: "2021, 45.000 km, Nafta, Automático" },
+        esc: [["introFoto", { p: "En venta", sub: "titulo" }], ["fotos", { tipo: "simple", desde: 1, max: 3 }], ["chips", { titulo: "Datos", f: 0 }], ["fotoPrecio", { f: 0 }]] },
+      arreglo: { n: "Antes y después", d: "Cómo llegó el auto y cómo se fue.", campos: ["negocio", ["titulo", "Trabajo"], "frase", "wa", "ig"], datos: { titulo: "Chapa y pintura", frase: "Presupuesto sin cargo" },
+        esc: [["introClaro", { l1: "Antes", l2: "y después", sub: "titulo" }], ["antes", { a: 4, b: 3 }], ["texto", { campo: "frase" }]] },
+      servicio: { n: "Servicio del mes", d: "El service en promo: qué incluye y cuánto sale.", campos: ["negocio", ["titulo", "Servicio"], "precio", ["items", "Qué incluye", "Separado por coma"], "hasta", "wa", "ig"], datos: { titulo: "Service completo", precio: "$65.000", items: "Cambio de aceite, Filtros, Frenos, Control de 20 puntos", hasta: "Solo en noviembre" },
+        esc: [["introRayas", { p: "Service", badge: "precio" }], ["chips", { titulo: "Incluye", f: 5 }], ["fotos", { tipo: "simple", desde: 4, max: 2 }], ["texto", { campo: "hasta" }]] },
+    } },
+  viajes: { n: "Viajes", paleta: 7, datos: { negocio: "Pasaporte Viajes", ig: "@pasaporteviajes" },
+    fotos: [["photo-1507525428034-b723cf961d3e", "Caribe", ""], ["photo-1476514525535-07fb3b4ae5f1", "Lagos del sur", ""], ["photo-1501785888041-af3ef285b470", "Bariloche", ""], ["photo-1469854523086-cc02fe5d8800", "Ruta 40", ""], ["photo-1530789253388-582c481c54b0", "Capadocia", ""], ["photo-1488646953014-85cb44e25828", "Armá tu viaje", ""]],
+    pl: {
+      paquete: { n: "Paquete o destino", d: "Fotos del destino, qué incluye y el precio.", campos: ["negocio", ["titulo", "Destino"], "precio", ["items", "Qué incluye", "Separado por coma"], "wa", "ig"], datos: { titulo: "Caribe 7 noches", precio: "Desde US$ 1.290", items: "Aéreos, Hotel all inclusive, Traslados, Asistencia" },
+        esc: [["introFoto", { p: "Viajá", sub: "titulo" }], ["fotos", { tipo: "simple", desde: 1, max: 3 }], ["chips", { titulo: "Incluye", f: 0 }], ["fotoPrecio", { f: 0 }]] },
+      salidas: { n: "Salidas confirmadas", d: "Las próximas fechas con su destino.", campos: ["negocio", ["lista", "Salidas", "Uno por renglón: fecha - destino"], "frase", "wa", "ig"], datos: { lista: "12/01 - Bariloche\n20/01 - Cataratas\n03/02 - Salta y Jujuy\n15/02 - Río de Janeiro", frase: "Cupos limitados" },
+        esc: [["introClaro", { l1: "Salidas", l2: "confirmadas", sub: "frase" }], ["lista", { titulo: "Próximas salidas", campo: "lista" }], ["fotos", { tipo: "simple", max: 3 }]] },
+      ultimos: { n: "Últimos lugares", d: "Urgencia: quedan pocos cupos.", campos: ["negocio", ["titulo", "Viaje"], "precio", ["hasta", "Cuántos quedan"], "wa", "ig"], datos: { titulo: "Bariloche en enero", precio: "US$ 650", hasta: "Quedan 4 lugares" },
+        esc: [["introRayas", { p: "Últimos lugares", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Quedan pocos", desde: 2, max: 3 }], ["fotoPrecio", { f: 2 }], ["texto", { campo: "hasta" }]] },
+    } },
+  todos: { n: "Para todos", paleta: 4, datos: { negocio: "Almacén La Esquina", ig: "@almacenlaesquina" },
+    fotos: [["photo-1441986300917-64674bd600d8", "Nuestro local", "$15.900"], ["photo-1556740738-b6a63e27c4df", "Atención personalizada", "$9.800"], ["photo-1555396273-367ea4eb4db5", "El salón", "$12.500"], ["photo-1472851294608-062f824d29cc", "Abierto", "$7.200"], ["photo-1604719312566-8912e9227c6a", "Mucha variedad", "$5.400"], ["photo-1534723452862-4c874018d66d", "Ofertas", "$3.900"]],
+    pl: {
+      producto: { n: "Producto nuevo", d: "Un producto nuevo con su precio.", campos: ["negocio", ["titulo", "Producto"], "precio", "frase", "wa", "ig"], datos: { titulo: "Llegó lo nuevo", precio: "$15.900", frase: "Consultá por WhatsApp" },
+        esc: [["introFoto", { p: "Nuevo", sub: "titulo" }], ["fotoPrecio", { f: 1 }], ["fotos", { tipo: "simple", desde: 2, max: 3 }]] },
+      promo: { n: "Promo o descuento", d: "El descuento grande y los precios de antes y ahora.", paleta: 3, campos: ["negocio", "desc", "hasta", "wa", "ig"], datos: { desc: "20", hasta: "Solo este fin de semana" },
+        esc: [["introRayas", { p: "Promo", badge: "desc" }], ["fotos", { tipo: "oferta", max: 4 }], ["texto", { campo: "hasta", extra: "-{desc}% en toda la tienda" }]] },
+      conoce: { n: "Conocé mi negocio", d: "Tu local, tu equipo y cómo trabajan.", campos: ["negocio", "titulo", "frase", "wa", "ig"], datos: { titulo: "Desde 1998 en el barrio", frase: "Te esperamos" },
+        esc: [["introFoto", { p: "Conocenos", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Así somos" }], ["grilla", { t: "negocio", si: 3 }]] },
+      resena: { n: "Reseña de cliente", d: "Lo que dijo un cliente, con estrellas.", campos: ["negocio", "resena", "autor", "wa", "ig"], datos: { resena: "Excelente atención, me asesoraron súper bien y llegó todo al otro día. ¡Recomendadísimos!", autor: "Carla, de Bernal" },
+        esc: [["introClaro", { l1: "Lo que dicen", l2: "los clientes" }], ["resena", {}], ["fotos", { tipo: "simple", max: 2 }]] },
+      horarios: { n: "Horarios y dirección", d: "Cuándo abrís y dónde estás.", campos: ["negocio", ["lista", "Horarios", "Uno por renglón: días - horario"], ["frase", "Dirección"], "wa", "ig"], datos: { lista: "Lunes a viernes - 9 a 20 hs\nSábados - 9 a 14 hs\nDomingos - Cerrado", frase: "Av. Calchaquí 1234, Quilmes" },
+        esc: [["introClaro", { l1: "Horarios", l2: "y dirección" }], ["lista", { titulo: "Te esperamos", campo: "lista" }], ["texto", { campo: "frase" }]] },
+      cuenta: { n: "Cuenta regresiva", d: "Faltan pocos días para algo importante.", campos: ["negocio", "dias", ["titulo", "Para qué"], "wa", "ig"], datos: { dias: "3", titulo: "para la gran apertura" },
+        esc: [["cuenta", {}], ["fotos", { tipo: "simple", max: 3 }]] },
+      sorteo: { n: "Sorteo", d: "El premio y los pasos para participar.", paleta: 0, campos: ["negocio", ["titulo", "Premio"], ["lista", "Cómo participar", "Un paso por renglón"], ["hasta", "Cuándo se sortea"], "wa", "ig"], datos: { titulo: "Una gift card de $50.000", lista: "Seguinos en Instagram\nDale me gusta a este posteo\nEtiquetá a 2 amigos", hasta: "Sorteamos el viernes 29" },
+        esc: [["introRayas", { p: "Sorteo", sub: "titulo" }], ["fotos", { tipo: "etiqueta", pill: "Premio", max: 2, usar: "titulo" }], ["pasos", { titulo: "Cómo participar", campo: "lista" }], ["texto", { campo: "hasta" }]] },
+    } },
+  fechas: { n: "Fechas especiales", paleta: 0, datos: { negocio: "Regalería Malva", ig: "@regaleriamalva" },
+    fotos: [["photo-1512909006721-3d6018887383", "Set de velas", "$12.500"], ["photo-1513885535751-8b9238bd345a", "Box sorpresa", "$18.900"], ["photo-1549465220-1a8b9238cd48", "Gift card", "$10.000"], ["photo-1607344645866-009c320b63e0", "Caja deluxe", "$24.000"], ["photo-1513201099705-a9746e1e201f", "Perfume", "$32.000"], ["photo-1482517967863-00e15c9b44be", "Decoración", "$8.500"]],
+    pl: {
+      madre: fecha("Feliz día", "Mamá", "Regalale algo especial", 0),
+      padre: fecha("Feliz día", "Papá", "El regalo ideal está acá", 4),
+      ninio: Object.assign(fecha("Día del Niño", "Juguetes y sorpresas", "Hacelos felices", 2), { n: "Día del Niño" }),
+      valentin: Object.assign(fecha("San Valentín", "Regalá amor", "Sorprendé a tu pareja", 3), { n: "San Valentín" }),
+      navidad: Object.assign(fecha("Navidad", "Regalos para todos", "Envolvemos gratis", 3), { n: "Navidad y Año Nuevo" }),
+      black: { n: "Black Friday / Hot Sale", d: "Descuentazo con precios de antes y ahora.", paleta: 5, campos: ["negocio", ["titulo", "Evento"], "desc", "hasta", "wa", "ig"], datos: { titulo: "Black Friday", desc: "50", hasta: "Solo por 72 horas" },
+        esc: [["introRayas", { pc: "titulo", badge: "desc" }], ["fotos", { tipo: "oferta", max: 4 }], ["texto", { campo: "hasta", extra: "Hasta -{desc}% en toda la tienda" }]] },
+      cole: Object.assign(fecha("Vuelta al cole", "Todo para arrancar", "Útiles, mochilas y más", 4), { n: "Vuelta al cole" }),
+    } },
 };
 const PALETAS = [
-  { n: "Rosa",  a: "#FF4F8B", f: "#1C1020", c: "#FFF3F7", on: "#FFFFFF" },
-  { n: "Arena", a: "#D2A679", f: "#2A211B", c: "#F7F1EA", on: "#2A211B" },
-  { n: "Lima",  a: "#C6F432", f: "#111511", c: "#F3F7EC", on: "#111511" },
-  { n: "Rojo",  a: "#FF3B30", f: "#160B0B", c: "#FFF4E0", on: "#FFFFFF" },
-  { n: "Azul",  a: "#3E7BFF", f: "#0B1230", c: "#EEF2FF", on: "#FFFFFF" },
+  { n: "Rosa",  a: "#FF4F8B", d: "#E0306E", f: "#1C1020", c: "#FFF3F7", on: "#FFFFFF" },
+  { n: "Arena", a: "#D2A679", d: "#9C6B3C", f: "#2A211B", c: "#F7F1EA", on: "#2A211B" },
+  { n: "Lima",  a: "#C6F432", d: "#4F6B00", f: "#111511", c: "#F3F7EC", on: "#111511" },
+  { n: "Rojo",  a: "#FF3B30", d: "#D92A20", f: "#160B0B", c: "#FFF4E0", on: "#FFFFFF" },
+  { n: "Azul",  a: "#3E7BFF", d: "#2A5FD6", f: "#0B1230", c: "#EEF2FF", on: "#FFFFFF" },
+  { n: "Noche", a: "#FFD60A", d: "#8A7000", f: "#0A0A0A", c: "#F5F5F2", on: "#0A0A0A" },
+  { n: "Lila",  a: "#B794F6", d: "#7A4FD0", f: "#1E1433", c: "#F5F0FF", on: "#1E1433" },
+  { n: "Menta", a: "#2ED3A0", d: "#0E8F6A", f: "#0E2A24", c: "#ECFBF5", on: "#0E2A24" },
 ];
 const FUENTES = {
   moderna:  { n: "Moderna",  t: '400 SZpx "Anton"', up: true },
@@ -240,20 +359,13 @@ const FUENTES = {
   redonda:  { n: "Redonda",  t: '800 SZpx "Bricolage Grotesque"', up: false },
 };
 const MUSICAS = { alegre: { n: "Alegre", bpm: 112 }, tranquila: { n: "Tranquila", bpm: 84 }, energia: { n: "Con energía", bpm: 126 }, propia: { n: "Subir mi música", bpm: 110 }, ninguna: { n: "Sin música", bpm: 110 } };
-const EJEMPLOS = [
-  ["photo-1515886657613-9f3515b0c78f", "Conjunto jogger", "$38.900"],
-  ["photo-1509631179647-0177331693ae", "Pantalón rayado", "$32.500"],
-  ["photo-1539109136881-3be0616acf4b", "Tapado celeste", "$79.900"],
-  ["photo-1496747611176-843222e1e57c", "Vestido floral", "$45.000"],
-  ["photo-1485968579580-b6d095142e6e", "Saco cuadrillé", "$68.000"],
-  ["photo-1483985988355-763728e1935b", "Abrigo bordó", "$85.000"],
-];
 const COLORES = { negro: "#151515", blanco: "#F4F4F2", beige: "#D9C3A5", crema: "#EFE3C8", gris: "#8A8A8A", azul: "#2B4FA8", celeste: "#8EC5EF", rojo: "#D42A2A", bordo: "#6D1A2B", "bordó": "#6D1A2B", rosa: "#F4A3BF", fucsia: "#E0218A", verde: "#2F7D4A", oliva: "#6B6B2E", amarillo: "#F5CF2B", naranja: "#F07A1A", violeta: "#7B4BC4", lila: "#C3A6E8", "marrón": "#6B4428", marron: "#6B4428", camel: "#C08A4E", jean: "#3D5A80", nude: "#E3BC9A", coral: "#FF6F61", mostaza: "#D4A017", caqui: "#B5A77A", chocolate: "#4A2C1D", plateado: "#C0C0C8", dorado: "#D4AF37" };
 
-const S = { audio: null, audioNombre: "", desde: 0, plantilla: "llego", paleta: 0, fuente: "moderna", musica: "alegre", marca: true, logo: null, fotos: [] };
-Object.keys(CAMPOS).forEach(k => S[k] = CAMPOS[k][1]);
+const S = { rubro: "ropa", plantilla: "llego", paleta: 0, fuente: "moderna", musica: "alegre", marca: true, logo: null, fotos: [], audio: null, desde: 0 };
+Object.keys(CAMPOS).forEach(k => S[k] = "");
+Object.assign(S, { wa: "11 5555-1234", desc: "30", dias: "3" });
 
-/* ---------- utilidades ---------- */
+/* ================= utilidades ================= */
 const $ = id => document.getElementById(id);
 const cv = $("cv"), ctx = cv.getContext("2d");
 const cl = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -267,6 +379,12 @@ const fTit = z => FU().t.replace("SZ", Math.round(z));
 const fCue = (z, w = 700) => `${w} ${Math.round(z)}px "DM Sans"`;
 const num = s => parseInt(String(s).replace(/\D/g, ""), 10);
 const pesos = n => "$" + n.toLocaleString("es-AR");
+const val = k => k ? String(S[k] ?? "").trim() : "";
+const beat = () => 60 / MUSICAS[S.musica].bpm;
+const coma = s => String(s).split(/,(?!\d)/).map(x => x.trim()).filter(Boolean);
+const renglones = s => String(s).split("\n").map(x => x.trim()).filter(Boolean);
+const parLista = s => renglones(s).map(l => { const m = l.split(/\s+[-–]\s+/); return [m[0], m.slice(1).join(" - ")]; });
+const plantilla = () => RUBROS[S.rubro].pl[S.plantilla];
 
 function achicar(img, max = 1440) {
   const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
@@ -305,7 +423,7 @@ function txt(s, x, y, z, o = {}) {
 function lineas(s, z, w, font) {
   ctx.font = font(z);
   const out = []; let l = "";
-  String(s).split(/\s+/).forEach(p => { const n = l ? l + " " + p : p; if (ctx.measureText(n).width > w && l) { out.push(l); l = p; } else l = n; });
+  String(s).split(/\s+/).filter(Boolean).forEach(p => { const n = l ? l + " " + p : p; if (ctx.measureText(n).width > w && l) { out.push(l); l = p; } else l = n; });
   if (l) out.push(l);
   return out;
 }
@@ -327,217 +445,352 @@ function kenBurns(i, lt, sd) {
   const px = [-.5, .5, 0, 0][m] * (k * 2 - 1), py = [0, 0, -.5, .5][m] * (k * 2 - 1);
   cover(foto(i).img, 0, 0, W, H, z, px, py);
 }
-function etiquetaNegocio(alpha = 1) {
-  txt(S.negocio, W / 2, 170, 44, { font: z => fCue(z, 700), alpha: .92 * alpha, sombra: true });
+function etiquetaNegocio(alpha = 1, color = "#fff", sombra = true) {
+  txt(S.negocio, W / 2, 170, 44, { font: z => fCue(z, 700), alpha: .92 * alpha, sombra, color });
 }
-function precioLiq(p) {
+function precioAntes(p) {
   const n = num(p), d = cl(num(S.desc) || 0, 0, 90);
   if (!n || !d) return null;
   return pesos(Math.round(n / (1 - d / 100) / 100) * 100);
 }
-
-/* ---------- escenas ---------- */
-function escCierre(lt, sd) {
-  const p = P();
-  fondo(p.f);
-  const r0 = eo(seg(lt, 0, .8));
-  ctx.save(); ctx.globalAlpha = .18; ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(W / 2, 640, 120 + 620 * r0, 0, 7); ctx.fill(); ctx.restore();
-  const a1 = eb(seg(lt, .05, .45));
-  ctx.save(); ctx.translate(W / 2, 600); ctx.scale(a1, a1);
-  if (S.logo) {
-    ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.clip(); ctx.fillStyle = "#fff"; ctx.fillRect(-160, -160, 320, 320);
-    const s = Math.max(320 / S.logo.width, 320 / S.logo.height); ctx.drawImage(S.logo, -S.logo.width * s / 2, -S.logo.height * s / 2, S.logo.width * s, S.logo.height * s); ctx.restore();
-  } else {
-    ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.fill();
-    txt(T(S.negocio.trim()[0] || "D"), 0, 8, 170, { color: p.on, base: "middle" });
-  }
+function cajaTexto(l, y, z, p, s) {
+  ctx.save(); ctx.beginPath(); ctx.rect(0, y - z - 20, W, z + 60); ctx.clip();
+  ctx.translate(0, (z + 40) * (1 - s));
+  ctx.font = fTit(z); const w = Math.min(ctx.measureText(l).width, W - 180) + 70;
+  caja(W / 2 - w / 2, y - z * .93, w, z * 1.15, 18, p.a);
+  txt(l, W / 2, y, z, { color: p.on, w: W - 180 });
   ctx.restore();
-  const a2 = eo(seg(lt, .3, .5));
-  ctx.save(); ctx.translate(0, 40 * (1 - a2));
-  txt(T(S.negocio), W / 2, 920, 130, { alpha: a2 });
-  if (PLANTILLAS[S.plantilla].campos.includes("frase") && S.frase) {
-    lineas(S.frase, 54, W - 200, z => fCue(z, 500)).slice(0, 2).forEach((l, i) => txt(l, W / 2, 1010 + i * 66, 54, { font: z => fCue(z, 500), color: p.c, alpha: a2 * .85 }));
-  }
-  ctx.restore();
-  const a3 = eb(seg(lt, .7, .5));
-  if (S.wa) {
-    ctx.save(); ctx.translate(W / 2, 1290); ctx.scale(a3, a3);
-    caja(-430, -110, 860, 220, 40, p.a);
-    txt("Pedí por WhatsApp", 0, -22, 46, { font: z => fCue(z, 700), color: p.on, w: 780 });
-    txt(S.wa, 0, 72, 92, { color: p.on, w: 780 });
-    ctx.restore();
-  }
-  const a4 = eo(seg(lt, 1.0, .5));
-  if (S.ig) txt(S.ig, W / 2, 1530, 58, { font: z => fCue(z, 700), alpha: a4 });
+}
+function estrella(cx, cy, r, color) {
+  ctx.beginPath();
+  for (let k = 0; k < 10; k++) { const rr2 = k % 2 ? r * .45 : r, an = -Math.PI / 2 + k * Math.PI / 5; ctx.lineTo(cx + Math.cos(an) * rr2, cy + Math.sin(an) * rr2); }
+  ctx.closePath(); ctx.fillStyle = color; ctx.fill();
 }
 
-function escIntroLlego(lt, sd) {
-  const p = P();
-  kenBurns(0, lt, sd * 1.6);
-  ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = p.f; ctx.globalAlpha = .35; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
-  etiquetaNegocio(eo(seg(lt, .1, .4)));
-  const s1 = seg(lt, 0, .28), z = 1 + .9 * (1 - eo(s1));
-  ctx.save(); ctx.translate(W / 2, 860); ctx.scale(z, z);
-  txt(T("Llegó"), 0, 0, 300, { alpha: s1, sombra: true });
-  ctx.restore();
-  const b = 60 / MUSICAS[S.musica].bpm, s2 = eo(seg(lt, b, .45));
-  const ls = lineas(T(S.titulo || "Nueva colección"), 150, W - 180, fTit).slice(0, 2);
-  ls.forEach((l, i) => {
-    const y = 1080 + i * 170;
-    ctx.save(); ctx.beginPath(); ctx.rect(0, y - 160, W, 190); ctx.clip();
-    ctx.translate(0, 190 * (1 - s2));
-    ctx.font = fTit(150); const w = Math.min(ctx.measureText(l).width, W - 180) + 70;
-    caja(W / 2 - w / 2, y - 140, w, 172, 18, p.a);
-    txt(l, W / 2, y, 150, { color: p.on, w: W - 180 });
+/* ================= escenas ================= */
+const ESC = {
+  introFoto: o => (lt, sd) => {
+    const p = P();
+    kenBurns(o.f || 0, lt, sd * 1.6);
+    ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = .35; fondo(p.f); ctx.globalAlpha = 1;
+    etiquetaNegocio(eo(seg(lt, .1, .4)));
+    const s1 = seg(lt, 0, .28), z = 1 + .9 * (1 - eo(s1));
+    ctx.save(); ctx.translate(W / 2, 860); ctx.scale(z, z);
+    txt(T(o.p), 0, 0, 280, { alpha: s1, sombra: true });
     ctx.restore();
-  });
-}
-function escFotoLlego(i) {
-  return (lt, sd) => {
-    const p = P(), f = foto(i);
-    kenBurns(i, lt, sd); sombraAbajo(.55, .75); sombraArriba();
-    etiquetaNegocio();
-    const a = eo(seg(lt, .08, .4));
-    ctx.save(); ctx.translate(-120 * (1 - a), 0); ctx.globalAlpha = a;
-    caja(80, H - 520, 230, 76, 38, p.a);
-    txt(T("Nuevo"), 195, H - 466, 46, { color: p.on, w: 200, font: FU().up ? fTit : z => fCue(z, 700) });
-    txt(T(f.nombre || S.titulo || ""), 80, H - 330, 120, { align: "left", w: W - 160, sombra: true });
+    const s2 = eo(seg(lt, beat(), .45));
+    lineas(T(val(o.sub)), 140, W - 180, fTit).slice(0, 3).forEach((l, i) => cajaTexto(l, 1080 + i * 165, 140, p, s2));
+  },
+  introClaro: o => (lt, sd) => {
+    const p = P();
+    fondo(p.c);
+    ctx.save(); ctx.globalAlpha = .9; ctx.fillStyle = p.a;
+    const r = eo(seg(lt, 0, .6)); ctx.beginPath(); ctx.arc(W * .82, H * .2, 360 * r, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * .1, H * .88, 250 * r, 0, 7); ctx.fill();
     ctx.restore();
-  };
-}
-function escGrilla(lt, sd) {
-  const p = P();
-  fondo(p.f);
-  const g = 22, cw = (W - g * 3) / 2, ch = (H - g * 3) / 2;
-  for (let k = 0; k < 4; k++) {
-    const a = eo(seg(lt, k * .1, .4)), x = g + (k % 2) * (cw + g), y = g + Math.floor(k / 2) * (ch + g);
-    ctx.save(); ctx.globalAlpha = a; ctx.translate(x + cw / 2, y + ch / 2); ctx.scale(.85 + .15 * a, .85 + .15 * a);
-    rr(-cw / 2, -ch / 2, cw, ch, 26); ctx.clip();
-    cover(foto(k).img, -cw / 2, -ch / 2, cw, ch, 1.05 + .05 * (lt / sd));
+    etiquetaNegocio(eo(seg(lt, .1, .4)), p.f, false);
+    const a = eo(seg(lt, 0, .35));
+    ctx.save(); ctx.translate(-W * (1 - a), 0); txt(T(o.l1), W / 2, 860, 270, { color: p.f }); ctx.restore();
+    const b = eo(seg(lt, .25, .35));
+    ctx.save(); ctx.translate(W * (1 - b), 0); txt(T(o.l2), W / 2, 1100, 210, { color: p.d }); ctx.restore();
+    const sub = o.sub === "hoy" ? new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "numeric" }) : val(o.sub);
+    if (sub) lineas(sub, 56, W - 200, z => fCue(z, 500)).slice(0, 2).forEach((l, i) => txt(l, W / 2, 1290 + i * 70, 56, { font: z => fCue(z, 500), color: p.f, alpha: eo(seg(lt, .6, .4)) }));
+  },
+  introRayas: o => (lt, sd) => {
+    const p = P();
+    fondo(p.a);
+    ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.5); ctx.fillStyle = "rgba(0,0,0,.12)";
+    const off = (lt * 220) % 240;
+    for (let x = -2400; x < 2400; x += 240) ctx.fillRect(x + off, -2000, 90, 4000);
     ctx.restore();
-  }
-  const a = eb(seg(lt, .45, .45));
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.05); ctx.scale(a, a);
-  ctx.font = fTit(120); const w = Math.min(ctx.measureText(T(S.titulo)).width + 100, W - 40);
-  caja(-w / 2, -95, w, 170, 20, p.a);
-  txt(T(S.titulo || S.negocio), 0, 40, 120, { color: p.on, w: W - 140 });
-  ctx.restore();
-}
-
-function escIntroOutfit(lt, sd) {
-  const p = P();
-  fondo(p.c);
-  ctx.save(); ctx.globalAlpha = .9; ctx.fillStyle = p.a;
-  const r = eo(seg(lt, 0, .6)); ctx.beginPath(); ctx.arc(W * .82, H * .22, 380 * r, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * .1, H * .86, 260 * r, 0, 7); ctx.fill();
-  ctx.restore();
-  txt(S.negocio, W / 2, 230, 46, { font: z => fCue(z, 700), color: p.f, alpha: eo(seg(lt, .1, .4)) });
-  const a = eo(seg(lt, 0, .35));
-  ctx.save(); ctx.translate(-W * (1 - a), 0); txt(T("Outfit"), W / 2, 860, 290, { color: p.f }); ctx.restore();
-  const b = eo(seg(lt, .25, .35));
-  ctx.save(); ctx.translate(W * (1 - b), 0); txt(T("del día"), W / 2, 1110, 230, { color: p.a }); ctx.restore();
-  const hoy = new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "numeric" });
-  txt(hoy, W / 2, 1290, 54, { font: z => fCue(z, 500), color: p.f, alpha: eo(seg(lt, .6, .4)) });
-}
-function escFotoOutfit(i, total) {
-  return (lt, sd) => {
-    const p = P(), f = foto(i);
-    kenBurns(i, lt, sd); sombraAbajo(.6, .5); sombraArriba(.2, .35);
-    caja(W - 230, 110, 150, 76, 38, "rgba(0,0,0,.55)");
-    txt(`${i + 1}/${total}`, W - 155, 164, 44, { font: z => fCue(z, 700), w: 130 });
-    const a = eb(seg(lt, .15, .5));
-    ctx.save(); ctx.translate(-(W + 40) * (1 - a), 0);
-    caja(60, H - 560, W - 120, 330, 34, p.c);
-    ctx.fillStyle = p.a; ctx.fillRect(60, H - 560, 18, 330);
-    txt(f.nombre || "Prenda " + (i + 1), 120, H - 455, 62, { align: "left", w: W - 240, font: z => fCue(z, 700), color: p.f });
-    if (f.precio) txt(f.precio, 118, H - 300, 150, { align: "left", w: W - 240, color: p.f });
+    etiquetaNegocio(eo(seg(lt, .1, .4)), p.on, false);
+    const s = seg(lt, 0, .25), z = 1 + 1.2 * (1 - eo(s));
+    const sh = lt < .5 ? Math.sin(lt * 90) * 14 * (1 - lt / .5) : 0;
+    const palabra = o.pc ? val(o.pc) : o.p;
+    const ls = lineas(T(palabra), 230, W - 100, fTit).slice(0, 2);
+    ctx.save(); ctx.translate(W / 2 + sh, 700 - (ls.length - 1) * 110); ctx.scale(z, z);
+    ls.forEach((l, i) => txt(l, 0, i * 220, 230, { color: p.on, alpha: s, w: W - 80, sombra: true }));
     ctx.restore();
-  };
-}
-
-function rayas(lt, c1, c2) {
-  fondo(c1);
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.5); ctx.fillStyle = c2;
-  const off = (lt * 220) % 240;
-  for (let x = -2400; x < 2400; x += 240) ctx.fillRect(x + off, -2000, 90, 4000);
-  ctx.restore();
-}
-function escIntroLiq(lt, sd) {
-  const p = P();
-  rayas(lt, p.a, "rgba(0,0,0,.12)");
-  txt(S.negocio, W / 2, 200, 46, { font: z => fCue(z, 700), color: p.on, alpha: eo(seg(lt, .1, .4)) });
-  const s = seg(lt, 0, .25), z = 1 + 1.2 * (1 - eo(s));
-  const sh = lt < .5 ? Math.sin(lt * 90) * 14 * (1 - lt / .5) : 0;
-  ctx.save(); ctx.translate(W / 2 + sh, 720); ctx.scale(z, z);
-  txt(T("Liquidación"), 0, 0, 220, { color: p.on, alpha: s, w: W - 80, sombra: true });
-  ctx.restore();
-  const b = 60 / MUSICAS[S.musica].bpm, a = eb(seg(lt, b * 1.5, .5));
-  ctx.save(); ctx.translate(W / 2, 1180); ctx.scale(a, a); ctx.rotate(-.12 + .05 * Math.sin(lt * 5));
-  ctx.fillStyle = p.f; ctx.beginPath(); ctx.arc(0, 0, 300, 0, 7); ctx.fill();
-  txt(`-${num(S.desc) || 0}%`, 0, 70, 220, { color: "#FFD60A", w: 520 });
-  ctx.restore();
-}
-function escFotoLiq(i) {
-  return (lt, sd) => {
-    const p = P(), f = foto(i);
-    kenBurns(i, lt, sd); sombraAbajo(.55, .8); sombraArriba(.2, .4);
-    etiquetaNegocio();
-    const a = eb(seg(lt, .05, .45));
-    ctx.save(); ctx.translate(W - 210, 360); ctx.scale(a, a); ctx.rotate(.15 + .06 * Math.sin(lt * 6));
-    ctx.fillStyle = p.a; ctx.beginPath();
-    for (let k = 0; k < 24; k++) { const r = k % 2 ? 150 : 175, an = k / 24 * Math.PI * 2; ctx.lineTo(Math.cos(an) * r, Math.sin(an) * r); }
-    ctx.fill();
-    txt(`-${num(S.desc) || 0}%`, 0, 34, 104, { color: p.on, w: 260 });
-    ctx.restore();
-    const ahora = f.precio || "", antes = precioLiq(ahora);
-    const b = eo(seg(lt, .2, .4));
-    ctx.save(); ctx.globalAlpha = b; ctx.translate(0, 60 * (1 - b));
-    if (f.nombre) txt(f.nombre, 80, H - 520, 56, { align: "left", font: z => fCue(z, 700), w: W - 160, sombra: true });
-    if (antes) {
-      txt("Antes " + antes, 80, H - 420, 58, { align: "left", font: z => fCue(z, 500), color: "rgba(255,255,255,.8)", w: W - 160 });
-      ctx.font = fCue(58, 500); const tw = ctx.measureText("Antes " + antes).width;
-      ctx.fillStyle = p.a; ctx.fillRect(76, H - 442, tw + 8, 8);
+    const a = eb(seg(lt, beat() * 1.5, .5));
+    if (o.badge) {
+      const t = o.badge === "desc" ? `-${num(S.desc) || 0}%` : val(o.badge);
+      ctx.save(); ctx.translate(W / 2, 1200); ctx.scale(a, a); ctx.rotate(-.12 + .05 * Math.sin(lt * 5));
+      ctx.fillStyle = p.f; ctx.beginPath(); ctx.arc(0, 0, 300, 0, 7); ctx.fill();
+      txt(t, 0, 0, 200, { color: p.a, w: 500, base: "middle" });
+      ctx.restore();
+    } else if (o.sub && val(o.sub)) {
+      const ls2 = lineas(val(o.sub), 70, W - 220, z => fCue(z, 700)).slice(0, 3);
+      ctx.save(); ctx.globalAlpha = cl(a); ctx.translate(0, 60 * (1 - cl(a)));
+      caja(80, 1060, W - 160, ls2.length * 90 + 80, 30, p.f);
+      ls2.forEach((l, i) => txt(l, W / 2, 1150 + i * 90, 70, { font: z => fCue(z, 700), color: p.c, w: W - 220 }));
+      ctx.restore();
     }
-    if (ahora) {
-      ctx.font = fTit(170); const w = Math.min(ctx.measureText(ahora).width, W - 220) + 70;
-      caja(70, H - 380, w, 210, 26, "#FFD60A");
-      txt(ahora, 105, H - 215, 170, { align: "left", color: "#160B0B", w: W - 220 });
+  },
+  foto: (o, i, total) => (lt, sd) => {
+    const p = P(), f = foto(i), b = beat();
+    kenBurns(i, lt, sd);
+    if (o.tipo === "etiqueta") {
+      sombraAbajo(.55, .75); sombraArriba(); etiquetaNegocio();
+      const a = eo(seg(lt, .08, .4));
+      ctx.save(); ctx.translate(-120 * (1 - a), 0); ctx.globalAlpha = a;
+      const t = o.usar ? val(o.usar) : (f.nombre || "");
+      const ls = lineas(T(t), 110, W - 160, fTit).slice(0, 2), yTop = H - 330 - (ls.length - 1) * 115;
+      ls.forEach((l, k) => txt(l, 80, yTop + k * 115, 110, { align: "left", w: W - 160, sombra: true }));
+      ctx.font = FU().up ? fTit(46) : fCue(46, 700); const pw = Math.min(ctx.measureText(T(o.pill)).width + 70, W - 160);
+      caja(80, yTop - 200, pw, 76, 38, p.a);
+      txt(T(o.pill), 80 + pw / 2, yTop - 146, 46, { color: p.on, w: pw - 40, font: FU().up ? fTit : z => fCue(z, 700) });
+      ctx.restore();
+    } else if (o.tipo === "tarjeta") {
+      sombraAbajo(.6, .5); sombraArriba(.2, .35);
+      caja(W - 230, 110, 150, 76, 38, "rgba(0,0,0,.55)");
+      txt(`${i - (o.desde || 0) + 1}/${total}`, W - 155, 164, 44, { font: z => fCue(z, 700), w: 130 });
+      const a = eb(seg(lt, .15, .5));
+      ctx.save(); ctx.translate(-(W + 40) * (1 - a), 0);
+      caja(60, H - 560, W - 120, 330, 34, p.c);
+      ctx.fillStyle = p.a; ctx.fillRect(60, H - 560, 18, 330);
+      txt(f.nombre || "", 120, H - 455, 62, { align: "left", w: W - 240, font: z => fCue(z, 700), color: p.f });
+      if (f.precio) txt(f.precio, 118, H - 300, 150, { align: "left", w: W - 240, color: p.f });
+      ctx.restore();
+    } else if (o.tipo === "oferta") {
+      sombraAbajo(.55, .8); sombraArriba(.2, .4); etiquetaNegocio();
+      const a = eb(seg(lt, .05, .45));
+      ctx.save(); ctx.translate(W - 210, 360); ctx.scale(a, a); ctx.rotate(.15 + .06 * Math.sin(lt * 6));
+      ctx.fillStyle = p.a; ctx.beginPath();
+      for (let k = 0; k < 24; k++) { const r = k % 2 ? 150 : 175, an = k / 24 * Math.PI * 2; ctx.lineTo(Math.cos(an) * r, Math.sin(an) * r); }
+      ctx.fill();
+      txt(`-${num(S.desc) || 0}%`, 0, 0, 104, { color: p.on, w: 260, base: "middle" });
+      ctx.restore();
+      const ahora = f.precio || "", antes = precioAntes(ahora);
+      const c = eo(seg(lt, .2, .4));
+      ctx.save(); ctx.globalAlpha = c; ctx.translate(0, 60 * (1 - c));
+      if (f.nombre) txt(f.nombre, 80, H - 520, 56, { align: "left", font: z => fCue(z, 700), w: W - 160, sombra: true });
+      if (antes) {
+        txt("Antes " + antes, 80, H - 420, 58, { align: "left", font: z => fCue(z, 500), color: "rgba(255,255,255,.85)", w: W - 160 });
+        ctx.font = fCue(58, 500); const tw = ctx.measureText("Antes " + antes).width;
+        ctx.fillStyle = p.a; ctx.fillRect(76, H - 442, tw + 8, 8);
+      }
+      if (ahora) {
+        ctx.font = fTit(170); const w = Math.min(ctx.measureText(ahora).width, W - 220) + 70;
+        caja(70, H - 380, w, 210, 26, "#FFD60A");
+        txt(ahora, 105, H - 215, 170, { align: "left", color: "#160B0B", w: W - 220 });
+      }
+      ctx.restore();
+    } else if (o.tipo === "sello") {
+      ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.fillRect(0, 0, W, H);
+      sombraArriba(); etiquetaNegocio();
+      const s = seg(lt, b * .8, .3);
+      if (s > 0) {
+        const z = 1 + 1.4 * (1 - eo(s));
+        ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.18); ctx.scale(z, z); ctx.globalAlpha = s;
+        const t = T(val("titulo") || "Vendido");
+        ctx.font = fTit(170); const w = Math.min(ctx.measureText(t).width, W - 260) + 120;
+        rr(-w / 2, -140, w, 260, 26); ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fill(); ctx.lineWidth = 18; ctx.strokeStyle = p.a; ctx.stroke();
+        txt(t, 0, -8, 170, { color: p.a, w: W - 260, base: "middle" });
+        ctx.restore();
+      }
+    } else {
+      sombraArriba(); etiquetaNegocio();
+    }
+  },
+  fotoPrecio: o => (lt, sd) => {
+    const p = P();
+    kenBurns(o.f || 0, lt, sd); sombraAbajo(.5, .8); sombraArriba(); etiquetaNegocio();
+    const a = eo(seg(lt, .1, .45));
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(0, 80 * (1 - a));
+    lineas(T(val("titulo")), 130, W - 160, fTit).slice(0, 2).forEach((l, i, arr) => txt(l, 80, H - 480 - (arr.length - 1 - i) * 140, 130, { align: "left", w: W - 160, sombra: true }));
+    ctx.restore();
+    const b = eb(seg(lt, .45, .45));
+    if (val("precio")) {
+      ctx.save(); ctx.translate(80, H - 340); ctx.scale(b, b);
+      ctx.font = fTit(120); const w = Math.min(ctx.measureText(S.precio).width, W - 230) + 70;
+      caja(0, 0, w, 160, 24, p.a);
+      txt(S.precio, 35, 126, 120, { align: "left", color: p.on, w: W - 230 });
+      ctx.restore();
+    }
+  },
+  grilla: o => (lt, sd) => {
+    const p = P();
+    fondo(p.f);
+    const g = 22, cw = (W - g * 3) / 2, ch = (H - g * 3) / 2;
+    for (let k = 0; k < 4; k++) {
+      const a = eo(seg(lt, k * .1, .4)), x = g + (k % 2) * (cw + g), y = g + Math.floor(k / 2) * (ch + g);
+      ctx.save(); ctx.globalAlpha = a; ctx.translate(x + cw / 2, y + ch / 2); ctx.scale(.85 + .15 * a, .85 + .15 * a);
+      rr(-cw / 2, -ch / 2, cw, ch, 26); ctx.clip();
+      cover(foto(k).img, -cw / 2, -ch / 2, cw, ch, 1.05 + .05 * (lt / sd));
+      ctx.restore();
+    }
+    const a = eb(seg(lt, .45, .45)), t = T(val(o.t) || S.negocio);
+    ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.05); ctx.scale(a, a);
+    ctx.font = fTit(120); const w = Math.min(ctx.measureText(t).width + 100, W - 40);
+    caja(-w / 2, -95, w, 170, 20, p.a);
+    txt(t, 0, 40, 120, { color: p.on, w: W - 140 });
+    ctx.restore();
+  },
+  texto: o => (lt, sd) => {
+    const p = P(), b = beat();
+    fondo(p.f);
+    const on = Math.floor(lt / b) % 2 === 0;
+    const ls = lineas(T(val(o.campo) || ""), 160, W - 160, fTit).slice(0, 5);
+    const y0 = H / 2 - (ls.length - 1) * 90 - 40;
+    ls.forEach((l, i) => {
+      const a = eo(seg(lt, i * .12, .35));
+      ctx.save(); ctx.translate(0, 80 * (1 - a));
+      txt(l, W / 2, y0 + i * 180, 160, { color: i === ls.length - 1 ? (on ? p.a : "#fff") : "#fff", alpha: a, w: W - 160 });
+      ctx.restore();
+    });
+    if (o.extra) txt(o.extra.replace("{desc}", num(S.desc) || 0), W / 2, y0 + ls.length * 180 + 50, 56, { font: z => fCue(z, 700), color: "rgba(255,255,255,.85)", alpha: eo(seg(lt, .5, .4)) });
+  },
+  chips: o => (lt, sd) => {
+    const p = P(), b = beat();
+    panelInferior(lt, sd, o.f ?? 1, o.titulo);
+    const its = coma(val(o.campo || "items")).slice(0, 8);
+    const z = 72, hh = 128, g = 22, maxW = W - 120;
+    ctx.font = fTit(z);
+    const filas = []; let fila = [], fw = 0;
+    its.forEach(t => {
+      const w = Math.max(140, Math.min(maxW, ctx.measureText(t).width + 80));
+      if (fila.length && fw + g + w > maxW) { filas.push({ fila, fw }); fila = []; fw = 0; }
+      fw += (fila.length ? g : 0) + w; fila.push({ t, w });
+    });
+    if (fila.length) filas.push({ fila, fw });
+    let k = 0;
+    filas.slice(0, 4).forEach((f, ri) => {
+      let x = W / 2 - f.fw / 2; const y = 1330 + ri * (hh + g);
+      f.fila.forEach(c => {
+        const a = eb(seg(lt, .3 + k * b / 2, .35));
+        ctx.save(); ctx.translate(x + c.w / 2, y + hh / 2); ctx.scale(a, a);
+        caja(-c.w / 2, -hh / 2, c.w, hh, 30, p.f);
+        txt(c.t, 0, 4, z, { color: p.c, w: c.w - 40, base: "middle" });
+        ctx.restore(); x += c.w + g; k++;
+      });
+    });
+  },
+  colores: o => (lt, sd) => {
+    const p = P(), b = beat();
+    panelInferior(lt, sd, o.f ?? 2, "Colores");
+    const cs = coma(S.colores).slice(0, 5);
+    const r = 82, g = 60, tot = cs.length * r * 2 + (cs.length - 1) * g;
+    cs.forEach((c, k) => {
+      const x = W / 2 - tot / 2 + r + k * (2 * r + g), y = 1470;
+      const a = eb(seg(lt, .3 + k * b / 2, .35));
+      ctx.save(); ctx.translate(x, y); ctx.scale(a, a);
+      ctx.fillStyle = COLORES[c.toLowerCase()] || "#9A9A9A"; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
+      ctx.lineWidth = 8; ctx.strokeStyle = p.f; ctx.stroke();
+      txt(c, 0, r + 70, 40, { font: z => fCue(z, 700), color: p.f, w: 2 * r + g - 10 });
+      ctx.restore();
+    });
+  },
+  lista: o => (lt, sd) => {
+    const p = P(), b = beat();
+    fondo(p.f);
+    ctx.fillStyle = p.a; ctx.fillRect(0, 0, W, 16);
+    etiquetaNegocio(1, "#fff", false);
+    txt(T(o.titulo), W / 2, 380, 130, { color: p.a, alpha: eo(seg(lt, 0, .35)) });
+    const its = parLista(val(o.campo)).slice(0, 7);
+    const paso = Math.min(190, (H - 760) / Math.max(1, its.length));
+    its.forEach(([a, c], i) => {
+      const y = 560 + i * paso, s = eo(seg(lt, .3 + i * b * .6, .4));
+      ctx.save(); ctx.globalAlpha = s; ctx.translate(-70 * (1 - s), 0);
+      caja(60, y, W - 120, paso - 24, 26, "rgba(255,255,255,.08)");
+      const yc = y + (paso - 24) / 2;
+      if (c) {
+        ctx.font = fTit(66); const cw = Math.min(ctx.measureText(c).width, 460);
+        txt(c, W - 100, yc + 2, 66, { align: "right", color: p.a, w: 460, base: "middle" });
+        txt(a, 100, yc, 50, { align: "left", font: z => fCue(z, 700), w: W - 260 - cw, base: "middle" });
+      } else txt(a, 100, yc, 54, { align: "left", font: z => fCue(z, 700), w: W - 200, base: "middle" });
+      ctx.restore();
+    });
+  },
+  antes: o => (lt, sd) => {
+    const p = P();
+    cover(foto(o.a).img, 0, 0, W, H, 1.06);
+    const pr = eo(seg(lt, sd * .3, sd * .35)), x = W * pr;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, x, H); ctx.clip(); cover(foto(o.b).img, 0, 0, W, H, 1.06); ctx.restore();
+    sombraArriba(.22, .5); etiquetaNegocio();
+    const pill = (t, xx, al) => {
+      ctx.save(); ctx.globalAlpha = al; ctx.font = fTit(60); const w = ctx.measureText(T(t)).width + 70;
+      const px = xx === "der" ? W - 70 - w : 70; caja(px, 260, w, 96, 48, xx === "der" ? "rgba(0,0,0,.6)" : p.a);
+      txt(T(t), px + w / 2, 308, 60, { color: xx === "der" ? "#fff" : p.on, base: "middle", w: w - 30 }); ctx.restore();
+    };
+    pill("Antes", "der", cl(1 - pr * 1.3));
+    pill("Después", "izq", cl(pr * 1.3 - .3));
+    if (pr > .01 && pr < .99) {
+      ctx.fillStyle = "#fff"; ctx.fillRect(x - 5, 0, 10, H);
+      ctx.beginPath(); ctx.arc(x, H / 2, 54, 0, 7); ctx.fill();
+      ctx.fillStyle = p.f; ctx.beginPath(); ctx.moveTo(x - 30, H / 2); ctx.lineTo(x - 10, H / 2 - 18); ctx.lineTo(x - 10, H / 2 + 18); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x + 30, H / 2); ctx.lineTo(x + 10, H / 2 - 18); ctx.lineTo(x + 10, H / 2 + 18); ctx.fill();
+    }
+  },
+  resena: o => (lt, sd) => {
+    const p = P(), b = beat();
+    fondo(p.c);
+    for (let k = 0; k < 5; k++) { const a = eb(seg(lt, .1 + k * b / 3, .3)); ctx.save(); ctx.translate(W / 2 + (k - 2) * 130, 470); ctx.scale(a, a); estrella(0, 0, 54, "#FFB800"); ctx.restore(); }
+    txt("“", W / 2, 790, 300, { color: p.a, font: z => `800 ${z}px "Playfair Display"`, alpha: eo(seg(lt, .2, .4)) });
+    const ls = lineas(val("resena"), 64, W - 200, z => fCue(z, 500)).slice(0, 7);
+    ls.forEach((l, i) => txt(l, W / 2, 860 + i * 86, 64, { font: z => fCue(z, 500), color: p.f, alpha: eo(seg(lt, .5 + i * .08, .4)) }));
+    if (val("autor")) txt("— " + val("autor"), W / 2, 900 + ls.length * 86 + 40, 52, { font: z => fCue(z, 700), color: p.d, alpha: eo(seg(lt, 1, .4)) });
+    etiquetaNegocio(1, p.f, false);
+  },
+  cuenta: o => (lt, sd) => {
+    const p = P(), b = beat();
+    fondo(p.f);
+    etiquetaNegocio(1, "#fff", false);
+    const d = Math.max(1, num(S.dias) || 1), paso = Math.floor(lt / b), mostrar = d + Math.max(0, 3 - paso);
+    txt(T("Faltan"), W / 2, 560, 150, { color: p.c, alpha: eo(seg(lt, 0, .3)) });
+    const pop = paso <= 3 ? eb(seg(lt - paso * b, 0, .28)) : 1;
+    ctx.save(); ctx.translate(W / 2, 970); ctx.scale(pop, pop);
+    ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(0, 0, 320, 0, 7); ctx.fill();
+    txt(String(mostrar), 0, 10, 400, { color: p.on, base: "middle", w: 560 });
+    ctx.restore();
+    txt(T(mostrar === 1 ? "día" : "días"), W / 2, 1450, 130, { color: p.c });
+    lineas(val("titulo"), 70, W - 200, z => fCue(z, 700)).slice(0, 2).forEach((l, i) => txt(l, W / 2, 1580 + i * 86, 70, { font: z => fCue(z, 700), color: p.a, alpha: eo(seg(lt, .4, .4)) }));
+  },
+  pasos: o => (lt, sd) => {
+    const p = P(), b = beat();
+    fondo(p.c);
+    etiquetaNegocio(1, p.f, false);
+    txt(T(o.titulo), W / 2, 400, 120, { color: p.f, alpha: eo(seg(lt, 0, .35)) });
+    renglones(val(o.campo)).slice(0, 5).forEach((t, i) => {
+      const y = 620 + i * 230, a = eb(seg(lt, .3 + i * b, .35));
+      ctx.save(); ctx.translate(0, y); ctx.globalAlpha = cl(a);
+      ctx.save(); ctx.translate(170, 0); ctx.scale(a, a); ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(0, 0, 72, 0, 7); ctx.fill();
+      txt(String(i + 1), 0, 4, 90, { color: p.on, base: "middle", w: 120 }); ctx.restore();
+      lineas(t, 56, W - 380, z => fCue(z, 700)).slice(0, 2).forEach((l, k, arr) => txt(l, 280, (k - (arr.length - 1) / 2) * 66, 56, { align: "left", font: z => fCue(z, 700), color: p.f, base: "middle", w: W - 380 }));
+      ctx.restore();
+    });
+  },
+  cierre: () => (lt, sd) => {
+    const p = P();
+    fondo(p.f);
+    const r0 = eo(seg(lt, 0, .8));
+    ctx.save(); ctx.globalAlpha = .18; ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(W / 2, 640, 120 + 620 * r0, 0, 7); ctx.fill(); ctx.restore();
+    const a1 = eb(seg(lt, .05, .45));
+    ctx.save(); ctx.translate(W / 2, 600); ctx.scale(a1, a1);
+    if (S.logo) {
+      ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.clip(); ctx.fillStyle = "#fff"; ctx.fillRect(-160, -160, 320, 320);
+      const s = Math.max(320 / S.logo.width, 320 / S.logo.height); ctx.drawImage(S.logo, -S.logo.width * s / 2, -S.logo.height * s / 2, S.logo.width * s, S.logo.height * s); ctx.restore();
+    } else {
+      ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.fill();
+      txt(T(S.negocio.trim()[0] || "D"), 0, 8, 170, { color: p.on, base: "middle" });
     }
     ctx.restore();
-  };
-}
-function escUrgencia(lt, sd) {
-  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
-  fondo(p.f);
-  const on = Math.floor(lt / b) % 2 === 0;
-  const ls = lineas(T(S.hasta || "Últimos días"), 170, W - 160, fTit).slice(0, 4);
-  const y0 = H / 2 - (ls.length - 1) * 95;
-  ls.forEach((l, i) => {
-    const a = eo(seg(lt, i * .12, .35));
-    ctx.save(); ctx.translate(0, 80 * (1 - a));
-    txt(l, W / 2, y0 + i * 190, 170, { color: (i === ls.length - 1) ? (on ? p.a : "#FFD60A") : "#fff", alpha: a, w: W - 160 });
+    const a2 = eo(seg(lt, .3, .5));
+    ctx.save(); ctx.translate(0, 40 * (1 - a2));
+    txt(T(S.negocio), W / 2, 920, 130, { alpha: a2 });
+    const usaFrase = plantilla().campos.some(c => (Array.isArray(c) ? c[0] : c) === "frase") && !plantilla().esc.some(e => e[0] === "texto" && e[1].campo === "frase");
+    if (usaFrase && val("frase")) lineas(S.frase, 54, W - 200, z => fCue(z, 500)).slice(0, 2).forEach((l, i) => txt(l, W / 2, 1010 + i * 66, 54, { font: z => fCue(z, 500), color: p.c, alpha: a2 * .85 }));
     ctx.restore();
-  });
-  txt(`-${num(S.desc) || 0}% en toda la tienda`, W / 2, y0 + ls.length * 190 + 60, 56, { font: z => fCue(z, 700), color: "rgba(255,255,255,.85)", alpha: eo(seg(lt, .5, .4)) });
-}
-
-function escTallesFoto(lt, sd) {
-  const p = P();
-  kenBurns(0, lt, sd); sombraAbajo(.5, .8); sombraArriba();
-  etiquetaNegocio();
-  const a = eo(seg(lt, .1, .45));
-  ctx.save(); ctx.globalAlpha = a; ctx.translate(0, 80 * (1 - a));
-  lineas(T(S.titulo || ""), 140, W - 160, fTit).slice(0, 2).forEach((l, i, arr) => txt(l, 80, H - 470 - (arr.length - 1 - i) * 150, 140, { align: "left", w: W - 160, sombra: true }));
-  ctx.restore();
-  const b = eb(seg(lt, .45, .45));
-  if (S.precio) {
-    ctx.save(); ctx.translate(80, H - 330); ctx.scale(b, b);
-    ctx.font = fTit(130); const w = Math.min(ctx.measureText(S.precio).width, W - 220) + 70;
-    caja(0, 0, w, 170, 24, p.a);
-    txt(S.precio, 35, 135, 130, { align: "left", color: p.on, w: W - 220 });
-    ctx.restore();
-  }
-}
+    const a3 = eb(seg(lt, .7, .5));
+    if (val("wa")) {
+      ctx.save(); ctx.translate(W / 2, 1290); ctx.scale(a3, a3);
+      caja(-430, -110, 860, 220, 40, p.a);
+      txt("Escribinos por WhatsApp", 0, -22, 46, { font: z => fCue(z, 700), color: p.on, w: 780 });
+      txt(S.wa, 0, 72, 92, { color: p.on, w: 780 });
+      ctx.restore();
+    }
+    if (val("ig")) txt(S.ig, W / 2, 1530, 58, { font: z => fCue(z, 700), alpha: eo(seg(lt, 1.0, .5)) });
+  },
+};
 function panelInferior(lt, sd, i, titulo) {
   const p = P();
   fondo(p.c);
@@ -547,42 +800,7 @@ function panelInferior(lt, sd, i, titulo) {
   caja(0, 1060, W, H - 1060 + 60, 60, p.c);
   txt(T(titulo), W / 2, 1250, 110, { color: p.f });
   ctx.restore();
-  return a;
 }
-function escTalles(lt, sd) {
-  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
-  panelInferior(lt, sd, 1, "Talles");
-  const ts = String(S.talles).split(",").map(s => s.trim()).filter(Boolean).slice(0, 8);
-  const cw = ts.length > 4 ? 190 : 210, g = 26, por = Math.min(ts.length, 4);
-  ts.forEach((t, k) => {
-    const fila = Math.floor(k / 4), col = k % 4, enFila = Math.min(4, ts.length - fila * 4);
-    const x = W / 2 - (enFila * cw + (enFila - 1) * g) / 2 + col * (cw + g), y = 1360 + fila * (cw + g);
-    const a = eb(seg(lt, .3 + k * b / 2, .35));
-    ctx.save(); ctx.translate(x + cw / 2, y + cw / 2); ctx.scale(a, a);
-    caja(-cw / 2, -cw / 2, cw, cw, 34, p.f);
-    txt(t, 0, 36, 100, { color: p.c, w: cw - 30 });
-    ctx.restore();
-  });
-}
-function escColores(lt, sd) {
-  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
-  panelInferior(lt, sd, 2, "Colores");
-  const cs = String(S.colores).split(",").map(s => s.trim()).filter(Boolean).slice(0, 5);
-  const r = 82, g = 60, tot = cs.length * r * 2 + (cs.length - 1) * g;
-  cs.forEach((c, k) => {
-    const x = W / 2 - tot / 2 + r + k * (2 * r + g), y = 1470;
-    const a = eb(seg(lt, .3 + k * b / 2, .35));
-    ctx.save(); ctx.translate(x, y); ctx.scale(a, a);
-    ctx.fillStyle = COLORES[c.toLowerCase()] || "#9A9A9A"; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
-    ctx.lineWidth = 8; ctx.strokeStyle = p.f; ctx.stroke();
-    txt(c, 0, r + 70, 40, { font: z => fCue(z, 700), color: p.f, w: 2 * r + g - 10 });
-    ctx.restore();
-  });
-}
-function escFotoSimple(i) {
-  return (lt, sd) => { kenBurns(i, lt, sd); sombraArriba(); etiquetaNegocio(); };
-}
-
 function marcaAgua() {
   if (!S.marca) return;
   ctx.save(); ctx.globalAlpha = .9;
@@ -590,33 +808,28 @@ function marcaAgua() {
   caja(W / 2 - w / 2, H - 150, w, 64, 32, "rgba(0,0,0,.45)");
   const x0 = W / 2 - w / 2 + 30, y0 = H - 133, q = 13, cols = ["#3E9BFF", "#FFC23D", "#26D6A0", "#FF5A6E"];
   cols.forEach((c, k) => { ctx.fillStyle = c; rr(x0 + (k % 2) * (q + 3), y0 + Math.floor(k / 2) * (q + 3), q, q, 3); ctx.fill(); });
-  ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText("hecho con dmith.app", x0 + 44, H - 117);
+  ctx.fillStyle = "#fff"; ctx.font = fCue(32, 700); ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText("hecho con dmith.app", x0 + 44, H - 117);
   ctx.restore();
 }
 
-/* ---------- línea de tiempo ---------- */
+/* ================= línea de tiempo ================= */
 let TL = null;
 function armar() {
-  const b = 60 / MUSICAS[S.musica].bpm, L = [], add = (beats, fn) => L.push({ d: beats * b, fn });
+  const b = beat(), L = [], add = (beats, fn) => L.push({ d: beats * b, fn });
   const nf = Math.max(1, Math.min(6, S.fotos.length || 1));
-  if (S.plantilla === "llego") {
-    add(4, escIntroLlego);
-    for (let i = 0; i < nf; i++) add(2, escFotoLlego(i));
-    if (S.fotos.length >= 3) add(4, escGrilla);
-  } else if (S.plantilla === "outfit") {
-    add(4, escIntroOutfit);
-    for (let i = 0; i < nf; i++) add(3, escFotoOutfit(i, nf));
-  } else if (S.plantilla === "liquida") {
-    add(4, escIntroLiq);
-    for (let i = 0; i < nf; i++) add(2, escFotoLiq(i));
-    add(4, escUrgencia);
-  } else {
-    add(4, escTallesFoto);
-    add(4, escTalles);
-    add(4, escColores);
-    for (let i = 3; i < Math.min(nf, 5); i++) add(2, escFotoSimple(i));
-  }
-  add(6, escCierre);
+  plantilla().esc.forEach(([k, o]) => {
+    if (o.si && S.fotos.length < o.si) return;
+    if (k === "fotos") {
+      const desde = Math.min(o.desde || 0, nf - 1), n = Math.max(1, Math.min(o.max || 6, nf - desde));
+      for (let i = desde; i < desde + n; i++) add(o.beats || 2, ESC.foto(o, i, n));
+      return;
+    }
+    const nItems = k === "lista" || k === "pasos" ? renglones(val(o.campo)).length : k === "chips" ? coma(val(o.campo || "items")).length : k === "colores" ? coma(S.colores).length : 0;
+    const dur = { introFoto: 4, introClaro: 4, introRayas: 4, fotoPrecio: 4, grilla: 4, texto: 4, antes: 6, resena: 6, cuenta: 5,
+      chips: Math.max(4, 3 + nItems * .5), colores: Math.max(4, 3 + nItems * .5), lista: Math.max(5, 2 + nItems * .75), pasos: Math.max(4, 2 + nItems) }[k] || 4;
+    add(dur, ESC[k](o));
+  });
+  add(6, ESC.cierre());
   let t = 0; L.forEach(s => { s.t0 = t; t += s.d; });
   TL = { L, dur: t, b };
   return TL;
@@ -637,12 +850,13 @@ function dibujar(t) {
     ctx.fillStyle = `rgba(255,255,255,${.35 * cl(1 - lt / .12)})`; ctx.fillRect(0, 0, W, H);
   } else s.fn(lt, s.d);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 1;
   marcaAgua();
   const fin = TL.dur - t;
   if (fin < .4) { ctx.fillStyle = `rgba(0,0,0,${cl(1 - fin / .4) * .9})`; ctx.fillRect(0, 0, W, H); }
 }
 
-/* ---------- música (sintetizada, sin derechos) ---------- */
+/* ================= música (sintetizada, sin derechos) ================= */
 function musica(ac, out, estilo, dur, t0) {
   const bpm = MUSICAS[estilo].bpm, b = 60 / bpm;
   const master = ac.createGain(); master.gain.value = 0;
@@ -685,7 +899,7 @@ function musica(ac, out, estilo, dur, t0) {
       if (enCompas === 0) bombo(t, .5);
       if (enCompas === 2) golpe(t, "bandpass", 2500, .12, .1);
       if (enCompas === 0) osc("sine", hz(ch[0] - 12), t, .05, .3, b * 3.6);
-      [0, 1, 2, 3].forEach(j => osc("triangle", hz(ch[(enCompas * 2 + j) % ch.length] + 12), t + j * b / 2 * (j < 2 ? 1 : 1), .005, .09, b * 1.6, master, 3000));
+      [0, 1, 2, 3].forEach(j => osc("triangle", hz(ch[(enCompas * 2 + j) % ch.length] + 12), t + j * b / 2, .005, .09, b * 1.6, master, 3000));
     } else {
       bombo(t, 1);
       if (enCompas === 1 || enCompas === 3) golpe(t, "bandpass", 1500, .5, .14);
@@ -697,7 +911,7 @@ function musica(ac, out, estilo, dur, t0) {
   }
 }
 
-/* ---------- reproducción y grabación ---------- */
+/* ================= reproducción y grabación ================= */
 let AC = null, corriendo = false, raf = 0;
 function parar() {
   corriendo = false; cancelAnimationFrame(raf);
@@ -725,7 +939,7 @@ function reproducir(alTerminar, alAvanzar, salida) {
 }
 const mmss = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
 function mostrarTiempo(t) {
-  $("tiempo").textContent = mmss(t) + " / " + mmss(TL.dur);
+  $("tiempo").textContent = mmss(Math.min(t, TL.dur)) + " / " + mmss(TL.dur);
   $("scrub").value = Math.round(t / TL.dur * 1000);
 }
 function quieto() {
@@ -756,14 +970,13 @@ async function crear() {
   const marca = document.createElement("div"); marca.className = "grabando"; marca.textContent = "Creando tu video… 0%";
   document.querySelector(".tel").appendChild(marca);
   document.querySelectorAll(".crear").forEach(b => b.disabled = true);
-  let destino;
   const vs = cv.captureStream(30);
   const partes = [];
   let rec;
   reproducir(() => { setTimeout(() => rec && rec.state !== "inactive" && rec.stop(), 150); },
     p => { marca.textContent = "Creando tu video… " + Math.min(99, Math.round(p * 100)) + "%"; },
     ac => {
-      destino = ac.createMediaStreamDestination();
+      const destino = ac.createMediaStreamDestination();
       const g = ac.createGain(); g.connect(destino); g.connect(ac.destination);
       const ms = new MediaStream([...vs.getVideoTracks(), ...destino.stream.getAudioTracks()]);
       rec = new MediaRecorder(ms, tipo ? { mimeType: tipo, videoBitsPerSecond: 8e6, audioBitsPerSecond: 160000 } : undefined);
@@ -773,8 +986,7 @@ async function crear() {
         vs.getTracks().forEach(t => t.stop());
         parar();
         const tipoReal = (rec.mimeType || tipo || "video/webm").split(";")[0];
-        const blob = new Blob(partes, { type: tipoReal });
-        listo(blob, tipoReal);
+        listo(new Blob(partes, { type: tipoReal }), tipoReal);
         $("scrub").value = 80; quieto();
       };
       rec.start(250);
@@ -799,7 +1011,7 @@ $("crearMovil").onclick = crear;
 $("verMovil").onclick = () => { $("vista").scrollIntoView({ behavior: "smooth", block: "start" }); if (!corriendo) $("play").click(); };
 $("capa").onclick = e => { if (e.target === $("capa")) cerrarModal(); };
 
-/* ---------- editor ---------- */
+/* ================= editor ================= */
 function botones(cont, lista, clave, pintar, alElegir) {
   const el = $(cont); el.innerHTML = "";
   Object.entries(lista).forEach(([k, v]) => {
@@ -810,22 +1022,49 @@ function botones(cont, lista, clave, pintar, alElegir) {
     el.appendChild(b);
   });
 }
+function elegirPlantilla(k) {
+  S.plantilla = k;
+  const r = RUBROS[S.rubro], pl = r.pl[k];
+  Object.assign(S, pl.datos || {});
+  S.paleta = pl.paleta ?? r.paleta;
+  plantillas(); campos(); botones("paletas", PALETAS, "paleta", pintarPaleta);
+  $("scrub").value = 80; cambio();
+}
+function elegirRubro(k) {
+  S.rubro = k;
+  const r = RUBROS[k];
+  Object.assign(S, r.datos);
+  rubros();
+  if (!S.fotos.length || S.fotos.every(f => f.ejemplo)) cargarEjemplos();
+  elegirPlantilla(Object.keys(r.pl)[0]);
+}
+function rubros() {
+  const el = $("rubros"); el.innerHTML = "";
+  Object.entries(RUBROS).forEach(([k, v]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "op"; b.textContent = v.n;
+    b.setAttribute("aria-pressed", String(S.rubro === k));
+    b.onclick = () => elegirRubro(k);
+    el.appendChild(b);
+  });
+}
 function plantillas() {
   const el = $("plantillas"); el.innerHTML = "";
-  Object.entries(PLANTILLAS).forEach(([k, v]) => {
+  Object.entries(RUBROS[S.rubro].pl).forEach(([k, v]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "pl"; b.setAttribute("aria-pressed", String(S.plantilla === k));
     b.innerHTML = `<strong>${v.n}</strong><small>${v.d}</small>`;
-    b.onclick = () => { S.plantilla = k; if (k === "liquida") S.paleta = 3; plantillas(); campos(); botones("paletas", PALETAS, "paleta", pintarPaleta); $("scrub").value = 80; cambio(); };
+    b.onclick = () => elegirPlantilla(k);
     el.appendChild(b);
   });
 }
 function campos() {
   const el = $("campos"); el.innerHTML = "";
-  PLANTILLAS[S.plantilla].campos.forEach(k => {
-    const [lab, , ayuda] = CAMPOS[k];
-    const l = document.createElement("label"); l.className = "c";
+  plantilla().campos.forEach(c => {
+    const [k, lab, ayuda] = Array.isArray(c) ? [c[0], c[1], c[2] ?? CAMPOS[c[0]][1]] : [c, CAMPOS[c][0], CAMPOS[c][1]];
+    const largo = CAMPOS[k][2];
+    const l = document.createElement("label"); l.className = "c" + (largo ? " ancho" : "");
     l.innerHTML = `${lab}${ayuda ? ` <small>${ayuda}</small>` : ""}`;
-    const i = document.createElement("input"); i.value = S[k]; i.inputMode = k === "desc" ? "numeric" : (k === "wa" ? "tel" : "text");
+    const i = document.createElement(largo ? "textarea" : "input"); i.value = S[k] ?? "";
+    if (largo) i.rows = 5; else i.inputMode = (k === "desc" || k === "dias") ? "numeric" : (k === "wa" ? "tel" : "text");
     i.oninput = () => { S[k] = i.value; cambio(); };
     l.appendChild(i); el.appendChild(l);
   });
@@ -843,7 +1082,7 @@ function fotos() {
     d.querySelector(".q").onclick = () => { S.fotos.splice(i, 1); fotos(); cambio(); };
     [["nombre", "Nombre"], ["precio", "Precio"]].forEach(([k, ph]) => {
       const inp = document.createElement("input"); inp.placeholder = ph; inp.value = f[k]; inp.setAttribute("aria-label", ph + " de la foto " + (i + 1));
-      inp.oninput = () => { f[k] = inp.value; cambio(); };
+      inp.oninput = () => { f[k] = inp.value; f.ejemplo = false; cambio(); };
       d.appendChild(inp);
     });
     el.appendChild(d);
@@ -856,17 +1095,23 @@ function fotos() {
   }
 }
 $("archivos").onchange = async e => {
+  if (S.fotos.length && S.fotos.every(f => f.ejemplo)) S.fotos = [];
   const fs = [...e.target.files].slice(0, 6 - S.fotos.length);
   for (const f of fs) {
     try { const url = URL.createObjectURL(f); const img = await cargarImg(url); S.fotos.push({ img: achicar(img), vista: url, nombre: "", precio: "" }); } catch (_) {}
   }
   e.target.value = ""; fotos(); cambio();
 };
+const CACHE = {};
+let cargaId = 0;
 async function cargarEjemplos() {
-  const arr = await Promise.all(EJEMPLOS.map(async ([id, n, p]) => {
-    try { const img = await cargarImg(`https://images.unsplash.com/${id}?w=1200&q=80`, true); return { img: achicar(img), vista: `https://images.unsplash.com/${id}?w=400&q=70`, nombre: n, precio: p }; } catch (_) { return null; }
+  const rubro = S.rubro, id = ++cargaId;
+  if (!CACHE[rubro]) CACHE[rubro] = Promise.all(RUBROS[rubro].fotos.map(async ([u, n, p]) => {
+    try { const img = await cargarImg(`https://images.unsplash.com/${u}?w=1200&q=80`, true); return { img: achicar(img), vista: `https://images.unsplash.com/${u}?w=400&q=70`, nombre: n, precio: p }; } catch (_) { return null; }
   }));
-  S.fotos = arr.filter(Boolean); fotos(); cambio();
+  const arr = await CACHE[rubro];
+  if (id !== cargaId) return;
+  S.fotos = arr.filter(Boolean).map(f => ({ ...f, ejemplo: true })); fotos(); cambio();
 }
 $("ejemplo").onclick = cargarEjemplos;
 $("logobtn").onclick = () => $("logofile").click();
@@ -890,7 +1135,6 @@ $("audioFile").onchange = async e => {
     const buf = await f.arrayBuffer();
     S.audio = await new Promise((res, rej) => tmp.decodeAudioData(buf, res, rej));
     tmp.close().catch(() => {});
-    S.audioNombre = f.name;
     $("audioNombre").textContent = f.name + " (" + mmss(S.audio.duration) + ")";
     $("desde").max = Math.max(0, Math.floor(S.audio.duration - 5));
   } catch (_) { $("audioNombre").textContent = "No se pudo leer ese archivo. Probá con un mp3."; }
@@ -900,17 +1144,15 @@ $("desde").oninput = e => { S.desde = Math.max(0, +e.target.value || 0); };
 $("marca").onchange = e => { S.marca = e.target.checked; cambio(); };
 
 let pend = 0;
-function cambio() { cancelAnimationFrame(pend); pend = requestAnimationFrame(() => { if (corriendo) { parar(); } TL = null; quieto(); }); }
+function cambio() { cancelAnimationFrame(pend); pend = requestAnimationFrame(() => { if (corriendo) parar(); TL = null; quieto(); }); }
 
 (async function inicio() {
-  plantillas(); campos(); fotos();
-  botones("paletas", PALETAS, "paleta", pintarPaleta);
   botones("fuentes", FUENTES, "fuente");
   botones("musicas", MUSICAS, "musica", null, elegirMusica);
   elegirMusica(S.musica);
-  try { await Promise.all(['400 80px "Anton"', 'italic 800 80px "Playfair Display"', '800 80px "Bricolage Grotesque"', '700 40px "DM Sans"', '500 40px "DM Sans"'].map(f => document.fonts.load(f))); } catch (_) {}
-  quieto();
-  await cargarEjemplos();
+  try { await Promise.all(['400 80px "Anton"', 'italic 800 80px "Playfair Display"', '800 80px "Playfair Display"', '800 80px "Bricolage Grotesque"', '700 40px "DM Sans"', '500 40px "DM Sans"'].map(f => document.fonts.load(f))); } catch (_) {}
+  fotos();
+  elegirRubro("ropa");
 })();
 </script>
 </body>
