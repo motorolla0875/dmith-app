@@ -439,6 +439,12 @@ const rutas = {
 
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");
+  // la app de Brotitos (Android/iPhone) pide los inventos desde su propio origen
+  if (u.pathname === "/api/sitios/colonia-invento") {
+    const o = String(req.headers.origin || "");
+    if (/^(https?:\/\/localhost|capacitor:\/\/localhost|ionic:\/\/localhost)$/.test(o)) { res.setHeader("Access-Control-Allow-Origin", o); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS"); res.setHeader("Vary", "Origin"); }
+    if (req.method === "OPTIONS") { res.writeHead(204); return res.end(); }
+  }
   // fotos subidas desde el panel de cada web
   const fm = req.method === "GET" && u.pathname.match(/^\/api\/sitios\/web\/foto\/([a-z0-9-]{2,40})\/([a-f0-9]{16}\.(jpg|png|webp))$/);
   if (fm) {

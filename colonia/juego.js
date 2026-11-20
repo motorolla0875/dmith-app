@@ -223,7 +223,7 @@ async function pedirInvento() {
   try {
     const ya = E.edificios.filter((e) => e.tipo === "inv").slice(-30).map((e) => e.inv.n).concat((E.colaInv || []).map((v) => v.n), CATALOGO.filter((c) => E.hechos[c.id]).slice(-10).map((c) => c.n));
     const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
-    const r = await fetch("/api/sitios/colonia-invento", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ era: E.era, pob: E.bichos.length, ya, idioma: IDIOMA }), signal: ctl.signal });
+    const r = await fetch((location.hostname === "localhost" || location.protocol === "capacitor:" ? "https://dmith.app" : "") + "/api/sitios/colonia-invento", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ era: E.era, pob: E.bichos.length, ya, idioma: IDIOMA }), signal: ctl.signal });
     clearTimeout(to);
     if (!r.ok) return;
     const v = await r.json();
