@@ -79,6 +79,8 @@
   .paleta[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--noche); }
   .check { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 15px; cursor: pointer; }
   .check input { width: 20px; height: 20px; accent-color: var(--noche); }
+  .propia { display: grid; gap: 10px; background: var(--papel); border-radius: 14px; padding: 12px 14px; }
+  .aviso { margin: 0; font-size: 13.5px; color: var(--suave); background: #FFF7E0; border-radius: 10px; padding: 9px 12px; }
   .logoprev { display: flex; align-items: center; gap: 10px; }
   .logoprev img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--linea); }
 
@@ -172,6 +174,13 @@
       <div class="opciones" id="fuentes"></div>
       <p class="sub">Música</p>
       <div class="opciones" id="musicas"></div>
+      <div class="propia" id="propia" hidden>
+        <div class="fila"><span id="audioNombre" style="font-size:14px;color:var(--suave)">Ninguna canción elegida</span><button class="op" id="audioBtn" type="button">Elegir canción</button></div>
+        <label class="c" style="max-width:220px">Empezar desde el segundo<input type="number" id="desde" min="0" step="1" value="0" inputmode="numeric"></label>
+        <p class="aviso">Si usás una canción conocida, Instagram puede silenciar el video. Para canciones de moda, elegí "Sin música" y agregala desde Instagram al subirlo.</p>
+        <input type="file" id="audioFile" accept="audio/*" hidden>
+      </div>
+      <p class="aviso" id="avisoNinguna" hidden>El video sale sin sonido. Cuando lo subas a Instagram o TikTok, tocá el ícono de música y elegí la canción que quieras.</p>
       <p class="sub">Logo <small style="font-weight:400;color:var(--suave)">(opcional)</small></p>
       <div class="logoprev"><img id="logoimg" alt="" hidden><button class="op" id="logobtn">Subir logo</button><button class="link" id="logoquitar" hidden>Quitar</button><input type="file" id="logofile" accept="image/*" hidden></div>
       <label class="check"><input type="checkbox" id="marca" checked>Marca "hecho con dmith" (plan gratis)</label>
@@ -230,7 +239,7 @@ const FUENTES = {
   elegante: { n: "Elegante", t: 'italic 800 SZpx "Playfair Display"', up: false },
   redonda:  { n: "Redonda",  t: '800 SZpx "Bricolage Grotesque"', up: false },
 };
-const MUSICAS = { alegre: { n: "Alegre", bpm: 112 }, tranquila: { n: "Tranquila", bpm: 84 }, energia: { n: "Con energía", bpm: 126 } };
+const MUSICAS = { alegre: { n: "Alegre", bpm: 112 }, tranquila: { n: "Tranquila", bpm: 84 }, energia: { n: "Con energía", bpm: 126 }, propia: { n: "Subir mi música", bpm: 110 }, ninguna: { n: "Sin música", bpm: 110 } };
 const EJEMPLOS = [
   ["photo-1515886657613-9f3515b0c78f", "Conjunto jogger", "$38.900"],
   ["photo-1509631179647-0177331693ae", "Pantalón rayado", "$32.500"],
@@ -241,7 +250,7 @@ const EJEMPLOS = [
 ];
 const COLORES = { negro: "#151515", blanco: "#F4F4F2", beige: "#D9C3A5", crema: "#EFE3C8", gris: "#8A8A8A", azul: "#2B4FA8", celeste: "#8EC5EF", rojo: "#D42A2A", bordo: "#6D1A2B", "bordó": "#6D1A2B", rosa: "#F4A3BF", fucsia: "#E0218A", verde: "#2F7D4A", oliva: "#6B6B2E", amarillo: "#F5CF2B", naranja: "#F07A1A", violeta: "#7B4BC4", lila: "#C3A6E8", "marrón": "#6B4428", marron: "#6B4428", camel: "#C08A4E", jean: "#3D5A80", nude: "#E3BC9A", coral: "#FF6F61", mostaza: "#D4A017", caqui: "#B5A77A", chocolate: "#4A2C1D", plateado: "#C0C0C8", dorado: "#D4AF37" };
 
-const S = { plantilla: "llego", paleta: 0, fuente: "moderna", musica: "alegre", marca: true, logo: null, fotos: [] };
+const S = { audio: null, audioNombre: "", desde: 0, plantilla: "llego", paleta: 0, fuente: "moderna", musica: "alegre", marca: true, logo: null, fotos: [] };
 Object.keys(CAMPOS).forEach(k => S[k] = CAMPOS[k][1]);
 
 /* ---------- utilidades ---------- */
@@ -641,6 +650,13 @@ function musica(ac, out, estilo, dur, t0) {
   master.gain.setValueAtTime(.8, t0 + Math.max(.1, dur - 1.2)); master.gain.linearRampToValueAtTime(0, t0 + dur);
   const comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
   master.connect(comp); comp.connect(out);
+  if (estilo === "ninguna") return;
+  if (estilo === "propia") {
+    if (!S.audio) return;
+    const src = ac.createBufferSource(); src.buffer = S.audio;
+    src.connect(master); src.start(t0, Math.min(S.desde || 0, Math.max(0, S.audio.duration - 1)), dur + .1);
+    return;
+  }
   const ruido = ac.createBuffer(1, ac.sampleRate, ac.sampleRate); const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   const hz = m => 440 * Math.pow(2, (m - 69) / 12);
   const env = (g, t, a, v, r) => { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + r); };
@@ -784,13 +800,13 @@ $("verMovil").onclick = () => { $("vista").scrollIntoView({ behavior: "smooth", 
 $("capa").onclick = e => { if (e.target === $("capa")) cerrarModal(); };
 
 /* ---------- editor ---------- */
-function botones(cont, lista, clave, pintar) {
+function botones(cont, lista, clave, pintar, alElegir) {
   const el = $(cont); el.innerHTML = "";
   Object.entries(lista).forEach(([k, v]) => {
     const b = document.createElement("button"); b.className = "op"; b.type = "button";
     b.setAttribute("aria-pressed", String(S[clave] == k));
     pintar ? pintar(b, k, v) : (b.textContent = v.n);
-    b.onclick = () => { S[clave] = isNaN(+k) ? k : +k; botones(cont, lista, clave, pintar); cambio(); };
+    b.onclick = () => { S[clave] = isNaN(+k) ? k : +k; botones(cont, lista, clave, pintar, alElegir); alElegir && alElegir(k); cambio(); };
     el.appendChild(b);
   });
 }
@@ -860,6 +876,27 @@ $("logofile").onchange = async e => {
   S.logo = achicar(img, 600); $("logoimg").src = url; $("logoimg").hidden = false; $("logoquitar").hidden = false; $("logobtn").textContent = "Cambiar logo"; cambio();
 };
 $("logoquitar").onclick = () => { S.logo = null; $("logoimg").hidden = true; $("logoquitar").hidden = true; $("logobtn").textContent = "Subir logo"; cambio(); };
+function elegirMusica(k) {
+  $("propia").hidden = k !== "propia";
+  $("avisoNinguna").hidden = k !== "ninguna";
+  if (k === "propia" && !S.audio) $("audioFile").click();
+}
+$("audioBtn").onclick = () => $("audioFile").click();
+$("audioFile").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  $("audioNombre").textContent = "Cargando…";
+  try {
+    const tmp = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = await f.arrayBuffer();
+    S.audio = await new Promise((res, rej) => tmp.decodeAudioData(buf, res, rej));
+    tmp.close().catch(() => {});
+    S.audioNombre = f.name;
+    $("audioNombre").textContent = f.name + " (" + mmss(S.audio.duration) + ")";
+    $("desde").max = Math.max(0, Math.floor(S.audio.duration - 5));
+  } catch (_) { $("audioNombre").textContent = "No se pudo leer ese archivo. Probá con un mp3."; }
+  e.target.value = ""; cambio();
+};
+$("desde").oninput = e => { S.desde = Math.max(0, +e.target.value || 0); };
 $("marca").onchange = e => { S.marca = e.target.checked; cambio(); };
 
 let pend = 0;
@@ -869,7 +906,8 @@ function cambio() { cancelAnimationFrame(pend); pend = requestAnimationFrame(() 
   plantillas(); campos(); fotos();
   botones("paletas", PALETAS, "paleta", pintarPaleta);
   botones("fuentes", FUENTES, "fuente");
-  botones("musicas", MUSICAS, "musica");
+  botones("musicas", MUSICAS, "musica", null, elegirMusica);
+  elegirMusica(S.musica);
   try { await Promise.all(['400 80px "Anton"', 'italic 800 80px "Playfair Display"', '800 80px "Bricolage Grotesque"', '700 40px "DM Sans"', '500 40px "DM Sans"'].map(f => document.fonts.load(f))); } catch (_) {}
   quieto();
   await cargarEjemplos();
