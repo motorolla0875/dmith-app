@@ -12,7 +12,8 @@
 <style>
   :root {
     --noche: #0B1430; --azul: #2457F5; --azul2: #DCE6FF; --cielo: #EEF3FF; --sol: #FFC83D; --blanco: #FFFFFF;
-    --tinta: #0B1430; --suave: #5A6585; --linea: #D6DEF0;
+    --tinta: #0B1430; --suave: #4A5578; --linea: #D6DEF0;
+    --vm-tinta: #0B1430; --vm-suave: #4A5578; --vm-linea: #D6DEF0; --vm-acento: #2457F5; --vm-acento-txt: #fff; --vm-caja: #fff; --vm-campo: #EEF3FF; --vm-radio: 20px;
     --f: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
@@ -143,7 +144,7 @@
   <div class="wrap">
     <a class="marca" href="#inicio"><i><svg><use href="#avion"/></svg></i>Pasaporte Viajes</a>
     <nav aria-label="Secciones"><a href="#destinos">Destinos</a><a href="#incluye">Qué incluye</a><a href="#pasos">Cómo funciona</a><a href="#contacto">Contacto</a></nav>
-    <a class="btn btn-sol" href="#armar">Cotizar</a>
+    <a class="btn btn-sol" href="#armar">Reservar</a>
   </div>
 </header>
 
@@ -152,9 +153,9 @@
     <div class="wrap">
       <div>
         <h1>¿A dónde <span>te vas?</span></h1>
-        <p>Destinos nacionales e internacionales. Te ayudamos a armar el viaje de tus sueños y cotizamos todos los destinos.</p>
+        <p>Buscá tu destino, elegí la salida y reservá online. Nacionales e internacionales, y si no está, te lo armamos a medida.</p>
         <div class="acc">
-          <a class="btn btn-sol" href="#armar">Cotizar mi viaje</a>
+          <a class="btn btn-sol" href="#armar">Buscar mi viaje</a>
           <a class="btn btn-sec" href="#destinos">Ver destinos</a>
         </div>
       </div>
@@ -178,24 +179,14 @@
 
   <section class="armar" id="armar">
     <div class="wrap">
-      <form class="form" id="form" aria-label="Pedir cotización">
-        <label>Salgo desde<input id="f-desde" value="Buenos Aires"></label>
-        <label>Quiero ir a<input id="f-dest" list="lista-dest" placeholder="Destino" required></label>
-        <label>Fecha aproximada<input id="f-cuando" placeholder="Ej: marzo 2027"></label>
-        <label>Pasajeros<select id="f-pax"><option>1 adulto</option><option selected>2 adultos</option><option>2 adultos + niños</option><option>Grupo</option></select></label>
-        <datalist id="lista-dest"></datalist>
-        <button class="btn btn-azul" type="submit"><svg><use href="#wa"/></svg>Cotizar</button>
-      </form>
+      <div id="buscador"></div>
     </div>
   </section>
 
   <section id="destinos">
     <div class="wrap">
-      <div class="cab">
-        <div><h2>Elegí tu pasaje</h2><p>Algunos destinos que más nos piden. Tocá uno y te mandamos la cotización.</p></div>
-        <div class="tabs" role="tablist" aria-label="Tipo de destino" id="tabs"></div>
-      </div>
-      <div class="pasajes" id="lista"></div>
+      <div class="cab"><div><h2>Salidas disponibles</h2><p>Elegí tu pasaje, mirá las fechas y los lugares que quedan, y reservá con una seña.</p></div></div>
+      <div id="resultados"></div>
     </div>
   </section>
 
@@ -210,9 +201,9 @@
     <div class="wrap">
       <div class="cab"><div><h2>Así de fácil</h2></div></div>
       <div class="pasos">
-        <div class="paso"><small>Paso 1</small><h3>Nos escribís</h3><p>Contanos a dónde querés ir, cuándo y cuántos viajan.</p></div>
-        <div class="paso"><small>Paso 2</small><h3>Te cotizamos</h3><p>Te mandamos las mejores opciones de vuelo, hotel y paquete.</p></div>
-        <div class="paso"><small>Paso 3</small><h3>Hacés la valija</h3><p>Reservamos todo y te acompañamos durante el viaje.</p></div>
+        <div class="paso"><small>Paso 1</small><h3>Buscás</h3><p>Elegí destino, mes y cuántos viajan.</p></div>
+        <div class="paso"><small>Paso 2</small><h3>Reservás</h3><p>Elegí la salida y asegurá tu lugar con una seña.</p></div>
+        <div class="paso"><small>Paso 3</small><h3>Hacés la valija</h3><p>Te mandamos todo confirmado y te acompañamos en el viaje.</p></div>
       </div>
     </div>
   </section>
@@ -234,17 +225,26 @@
 <a class="flota" href="#" data-wa aria-label="Escribinos por WhatsApp"><svg><use href="#wa"/></svg></a>
 
 <script src="../demo.js"></script>
+<script src="../viajes-motor.js"></script>
 <script>
-const destinos = DEMO.lista("destinos", [
-  { img: "-e5a-YQshKI", n: "Bariloche", cod: "BRC", z: "Nacional", d: "Nieve en invierno, lagos y trekking en verano.", desde: "Desde $450.000" },
-  { img: "9w92_FcDC1s", n: "Iguazú", cod: "IGR", z: "Nacional", d: "Cataratas, selva y la Garganta del Diablo.", desde: "Desde $370.000" },
-  { img: "vBMju66SvtQ", n: "El Calafate", cod: "FTE", z: "Nacional", d: "Glaciares, navegaciones y paisajes únicos.", desde: "Desde $510.000" },
-  { img: "GaTPFEdiLME", n: "Salta", cod: "SLA", z: "Nacional", d: "El norte con sus cerros de colores y su gente.", desde: "Desde $390.000" },
-  { img: "8nP6nTlNwoo", n: "Punta Cana", cod: "PUJ", z: "Internacional", d: "All inclusive frente al mar Caribe.", desde: "Desde US$ 1.350" },
-  { img: "d4B2KvbmHyM", n: "Río de Janeiro", cod: "GIG", z: "Internacional", d: "Copacabana, Ipanema y el Pan de Azúcar.", desde: "Desde US$ 760" },
-  { img: "RTiVDW3h5s8", n: "París", cod: "CDG", z: "Internacional", d: "La puerta de entrada para recorrer Europa.", desde: "Desde US$ 1.990" },
-  { img: "65c5xq7Qgdk", n: "Cusco", cod: "CUZ", z: "Internacional", d: "Machu Picchu y el Valle Sagrado de los Incas.", desde: "Desde US$ 1.090" }
-], { etiquetas: { cod: "Código del aeropuerto", z: "Tipo (Nacional o Internacional)", desde: "Precio desde" } });
+const paquetes = DEMO.lista("paquetes", [
+  { img: "-e5a-YQshKI", n: "Bariloche", cod: "BRC", z: "Nacional", noches: 5, p: 480000, moneda: "$", sena: 30, cupos: 12,
+    salidas: ["12/12/2026", "09/01/2027", "23/01/2027", "06/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Traslados", "Excursión Circuito Chico"] },
+  { img: "9w92_FcDC1s", n: "Cataratas del Iguazú", cod: "IGR", z: "Nacional", noches: 3, p: 390000, moneda: "$", sena: 30, cupos: 10,
+    salidas: ["05/12/2026", "16/01/2027", "13/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Traslados", "Entrada al parque lado argentino"] },
+  { img: "vBMju66SvtQ", n: "El Calafate", cod: "FTE", z: "Nacional", noches: 4, p: 520000, moneda: "$", sena: 30, cupos: 8,
+    salidas: ["19/12/2026", "30/01/2027", "27/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Excursión al glaciar Perito Moreno", "Traslados"] },
+  { img: "GaTPFEdiLME", n: "Salta y Jujuy", cod: "SLA", z: "Nacional", noches: 5, p: 410000, moneda: "$", sena: 30, cupos: 14,
+    salidas: ["26/12/2026", "20/02/2027", "13/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Excursión Quebrada de Humahuaca", "Traslados"] },
+  { img: "8nP6nTlNwoo", n: "Punta Cana", cod: "PUJ", z: "Internacional", noches: 7, p: 1390, moneda: "US$", sena: 20, cupos: 10,
+    salidas: ["03/01/2027", "17/01/2027", "14/02/2027"], incluye: ["Vuelo ida y vuelta", "Resort all inclusive", "Traslados", "Asistencia al viajero"] },
+  { img: "d4B2KvbmHyM", n: "Río de Janeiro", cod: "GIG", z: "Internacional", noches: 6, p: 790, moneda: "US$", sena: 20, cupos: 12,
+    salidas: ["08/01/2027", "05/02/2027", "05/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel frente a Copacabana", "City tour con Cristo Redentor", "Asistencia al viajero"] },
+  { img: "RTiVDW3h5s8", n: "Europa: Madrid, París y Roma", cod: "CDG", z: "Internacional", noches: 15, p: 2890, moneda: "US$", sena: 20, cupos: 6,
+    salidas: ["10/04/2027", "08/05/2027"], incluye: ["Vuelos internacionales", "Hoteles con desayuno", "Trenes entre ciudades", "Asistencia al viajero"] },
+  { img: "65c5xq7Qgdk", n: "Cusco y Machu Picchu", cod: "CUZ", z: "Internacional", noches: 6, p: 1150, moneda: "US$", sena: 20, cupos: 8,
+    salidas: ["15/01/2027", "12/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Tren y entrada a Machu Picchu", "Asistencia al viajero"] }
+], { etiquetas: { n: "Nombre del paquete", cod: "Código del aeropuerto", z: "Tipo (Nacional o Internacional)", noches: "Noches", p: "Precio por persona", moneda: "Moneda ($ o US$)", sena: "Seña %", cupos: "Lugares por salida", salidas: "Fechas de salida (dd/mm/aaaa, separadas por coma)", incluye: "Qué incluye (separado por coma)" } });
 const incluye = DEMO.lista("incluye", [
   { n: "Vuelos", d: "Buscamos la mejor tarifa y el mejor horario para vos." },
   { n: "Hoteles", d: "Para todos los presupuestos, de hostel a resort." },
@@ -253,27 +253,11 @@ const incluye = DEMO.lista("incluye", [
   { n: "Excursiones", d: "Reservadas antes de salir, sin perder tiempo allá." },
   { n: "Cuotas", d: "Financiá tu viaje y pagalo de a poco." }
 ]);
-let tipo = "Todos";
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const wa = t => "https://wa.me/?text=" + encodeURIComponent(t);
-function pintar() {
-  const tipos = ["Todos", ...new Set(destinos.map(d => d.z).filter(Boolean))];
-  document.getElementById("tabs").innerHTML = tipos.map(t => `<button type="button" role="tab" aria-selected="${t === tipo}" class="${t === tipo ? "on" : ""}">${esc(t === "Todos" ? "Todos" : t + "es")}</button>`).join("");
-  document.querySelectorAll("#tabs button").forEach((b, i) => b.onclick = () => { tipo = tipos[i]; pintar(); });
-  document.getElementById("lista").innerHTML = destinos.filter(d => tipo === "Todos" || d.z === tipo).map(d => `
-    <a class="pj" href="${wa("Hola! Quiero cotizar un viaje a " + d.n + ".")}" target="_blank" rel="noopener">
-      <img src="${DEMO.img(d.img, 700)}" alt="${esc(d.n)}" loading="lazy">
-      <div class="info"><small>${esc(d.z)}</small><h3>${esc(d.n)}</h3><p>${esc(d.d)}</p><b>${esc(d.desde)}</b></div>
-      <div class="talon"><span>EZE a</span><strong>${esc(d.cod)}</strong><em>Cotizar</em></div></a>`).join("");
-}
-pintar();
-document.getElementById("lista-dest").innerHTML = destinos.map(d => `<option value="${esc(d.n)}">`).join("");
+VM.iniciar({ buscador: "#buscador", resultados: "#resultados", paquetes, prefijo: "PV" });
 document.getElementById("items").innerHTML = incluye.map(s => `<div class="it"><i><svg><use href="#check"/></svg></i><div><h3>${esc(s.n)}</h3><p>${esc(s.d)}</p></div></div>`).join("");
-document.getElementById("form").addEventListener("submit", e => {
-  e.preventDefault();
-  const v = id => document.getElementById(id).value.trim();
-  window.open(wa(`Hola! Quiero cotizar un viaje desde ${v("f-desde")} a ${v("f-dest")}${v("f-cuando") ? " para " + v("f-cuando") : ""}. Somos ${document.getElementById("f-pax").value}.`), "_blank", "noopener");
-});
+
 document.querySelectorAll("[data-wa]").forEach(a => { a.href = wa("Hola! Quiero consultar por un viaje."); a.target = "_blank"; a.rel = "noopener"; });
 </script>
 </body>

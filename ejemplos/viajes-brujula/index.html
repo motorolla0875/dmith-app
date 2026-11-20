@@ -12,13 +12,14 @@
 <style>
   :root {
     --mar: #0F2A44; --mar2: #1C4266; --cielo: #8FC9E8; --atardecer: #F2784B; --arena: #F7F1E8; --papel: #FFFFFF;
-    --tinta: #12263A; --suave: #5F7183; --linea: #E3E8EE;
+    --tinta: #0E2033; --suave: #3E5266; --linea: #D9E0E8;
+    --vm-tinta: #0E2033; --vm-suave: #3E5266; --vm-linea: #D9E0E8; --vm-acento: #E8662F; --vm-acento-txt: #fff; --vm-caja: #fff; --vm-campo: #F3EEE6; --vm-radio: 20px;
     --titulo: "Fraunces", Georgia, serif; --cuerpo: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   html { scroll-behavior: smooth; scroll-padding-top: 76px; }
-  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.6 var(--cuerpo); -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 500 17.5px/1.6 var(--cuerpo); -webkit-font-smoothing: antialiased; }
   img { max-width: 100%; display: block; }
   :focus-visible { outline: 3px solid var(--atardecer); outline-offset: 3px; }
   .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
@@ -42,13 +43,14 @@
   /* portada */
   .hero { position: relative; min-height: min(92vh, 820px); display: flex; align-items: flex-end; color: #fff; padding-block: 120px 56px; overflow: hidden; }
   .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,42,68,.55) 0%, rgba(15,42,68,.15) 40%, rgba(15,42,68,.85) 100%); }
-  .hero .wrap { position: relative; z-index: 1; width: 100%; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: end; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,24,40,.78) 0%, rgba(8,24,40,.62) 45%, rgba(8,24,40,.92) 100%); }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); gap: 30px; align-items: end; }
   .hero h1 { font-size: clamp(42px, 7vw, 86px); }
   .hero h1 em { font-style: italic; font-weight: 500; color: #FFD3BF; }
-  .hero p { font-size: clamp(17px, 2vw, 20px); max-width: 36ch; margin: 18px 0 0; color: #E6EEF5; }
+  .hero p { font-size: clamp(18px, 2vw, 21px); max-width: 38ch; margin: 18px 0 0; color: #fff; font-weight: 500; text-shadow: 0 1px 12px rgba(0,0,0,.35); }
+  .hero h1 { text-shadow: 0 2px 24px rgba(0,0,0,.35); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
-  .chips span { font-size: 14px; font-weight: 600; padding: 7px 13px; border-radius: 999px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); }
+  .chips span { font-size: 14.5px; font-weight: 700; padding: 7px 13px; border-radius: 999px; background: rgba(8,24,40,.55); border: 1px solid rgba(255,255,255,.35); }
 
   .cotizar { background: #fff; color: var(--tinta); border-radius: 22px; padding: 22px; box-shadow: 0 30px 60px rgba(0,0,0,.3); display: grid; gap: 12px; }
   .cotizar h2 { font-size: 26px; }
@@ -74,7 +76,7 @@
   .dest > * { position: relative; z-index: 1; }
   .dest small { font-size: 13px; font-weight: 600; color: var(--cielo); }
   .dest h3 { font-size: 26px; margin: 2px 0 6px; }
-  .dest p { margin: 0 0 12px; font-size: 14.5px; color: #D5E1EA; line-height: 1.45; }
+  .dest p { margin: 0 0 12px; font-size: 14.5px; color: #fff; line-height: 1.45; }
   .dest .pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid rgba(255,255,255,.22); padding-top: 10px; font-size: 14px; }
   .dest .pie b { font-size: 16px; }
   .dest .pie span { font-weight: 600; color: #FFD3BF; }
@@ -125,7 +127,7 @@
   <div class="wrap">
     <a class="marca" href="#inicio"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="20" r="17"/><path d="M20 7l4.5 13L20 33l-4.5-13z" fill="#F2784B" stroke="none"/><path d="M20 7l-4.5 13h9z" fill="#fff" stroke="none"/></svg>Brújula Viajes</a>
     <nav aria-label="Secciones"><a href="#destinos">Destinos</a><a href="#servicios">Servicios</a><a href="#como">Cómo trabajamos</a><a href="#contacto">Contacto</a></nav>
-    <a class="btn btn-sol" href="#cotizar">Cotizar</a>
+    <a class="btn btn-sol" href="#destinos">Reservar</a>
   </div>
 </header>
 
@@ -135,30 +137,17 @@
     <div class="wrap">
       <div>
         <h1>El viaje de tus sueños, <em>armado a tu medida</em></h1>
-        <p>Destinos nacionales e internacionales. Te ayudamos a elegir, cotizamos todo y te acompañamos hasta que volvés.</p>
+        <p>Buscá tu destino, elegí la fecha de salida y reservá en minutos. Nacionales e internacionales, con todo incluido.</p>
         <div class="chips"><span>Vuelos</span><span>Hoteles</span><span>Paquetes</span><span>Asistencia al viajero</span><span>Cuotas</span></div>
       </div>
-      <form class="cotizar" id="cotizar" aria-label="Pedir cotización">
-        <h2>Pedí tu cotización</h2>
-        <p class="n">Sin costo. Te respondemos por WhatsApp.</p>
-        <label>¿A dónde querés viajar?<input id="c-dest" list="lista-dest" placeholder="Ej: Bariloche, Punta Cana, Europa" required></label>
-        <datalist id="lista-dest"></datalist>
-        <div class="fila">
-          <label>¿Cuándo?<input id="c-cuando" placeholder="Ej: enero 2027"></label>
-          <label>¿Cuántos viajan?<select id="c-pax"><option>1 persona</option><option selected>2 personas</option><option>3 personas</option><option>4 personas</option><option>5 o más</option></select></label>
-        </div>
-        <button class="btn btn-sol" type="submit"><svg><use href="#wa"/></svg>Quiero mi cotización</button>
-      </form>
+      <div id="buscador"></div>
     </div>
   </section>
 
   <section id="destinos">
     <div class="wrap">
-      <div class="cab">
-        <div><h2>Destinos que te esperan</h2><p>Algunos de los favoritos. Si el tuyo no está, también lo cotizamos.</p></div>
-        <div class="tabs" role="tablist" aria-label="Tipo de destino" id="tabs"></div>
-      </div>
-      <div class="destinos" id="lista"></div>
+      <div class="cab"><div><h2>Paquetes con salidas confirmadas</h2><p>Elegí uno, mirá las fechas y los lugares que quedan, y reservá. ¿Tu destino no está? Te lo armamos a medida.</p></div></div>
+      <div id="resultados"></div>
     </div>
   </section>
 
@@ -175,9 +164,9 @@
       <div>
         <h2>Así armamos tu viaje</h2>
         <ol class="pasos">
-          <li><div><b>Nos contás qué soñás</b><span>Destino, fechas, presupuesto y con quién viajás.</span></div></li>
-          <li><div><b>Te mandamos opciones</b><span>Comparamos vuelos, hoteles y paquetes, y te pasamos la cotización.</span></div></li>
-          <li><div><b>Reservás tranquilo</b><span>Te ayudamos con el pago, en cuotas si querés, y la documentación.</span></div></li>
+          <li><div><b>Buscás tu viaje</b><span>Elegí destino, mes y cuántos viajan.</span></div></li>
+          <li><div><b>Elegís la salida</b><span>Ves las fechas, los lugares que quedan y el precio final.</span></div></li>
+          <li><div><b>Reservás con una seña</b><span>Pagás la seña con Mercado Pago y tu lugar queda asegurado.</span></div></li>
           <li><div><b>Viajás acompañado</b><span>Estamos disponibles por WhatsApp durante todo tu viaje.</span></div></li>
         </ol>
       </div>
@@ -197,17 +186,26 @@
 <a class="flota" href="#" data-wa aria-label="Escribinos por WhatsApp"><svg><use href="#wa"/></svg></a>
 
 <script src="../demo.js"></script>
+<script src="../viajes-motor.js"></script>
 <script>
-const destinos = DEMO.lista("destinos", [
-  { img: "zsgJdHDP4IE", n: "Bariloche", z: "Nacional", d: "Lagos, montañas y chocolate. Ideal en invierno y en verano.", noches: "5 noches", desde: "Desde $480.000" },
-  { img: "MQwdwP7a-EE", n: "Cataratas del Iguazú", z: "Nacional", d: "Una de las maravillas naturales del mundo, a dos horas de vuelo.", noches: "3 noches", desde: "Desde $390.000" },
-  { img: "V34MPSwaK7k", n: "El Calafate", z: "Nacional", d: "El glaciar Perito Moreno de frente y la Patagonia más pura.", noches: "4 noches", desde: "Desde $520.000" },
-  { img: "GaTPFEdiLME", n: "Salta y Jujuy", z: "Nacional", d: "Cerros de colores, quebradas, empanadas y peñas.", noches: "5 noches", desde: "Desde $410.000" },
-  { img: "MihUZkpY874", n: "Punta Cana", z: "Internacional", d: "Caribe all inclusive: playa, sol y mar turquesa.", noches: "7 noches", desde: "Desde US$ 1.390" },
-  { img: "PyOlN0AVlMg", n: "Río de Janeiro", z: "Internacional", d: "Playas, Cristo Redentor y la alegría carioca.", noches: "6 noches", desde: "Desde US$ 790" },
-  { img: "PM4VZZn-YyM", n: "Europa", z: "Internacional", d: "París, Roma, Madrid: circuitos o viaje a tu ritmo.", noches: "15 noches", desde: "Desde US$ 2.890" },
-  { img: "e2Jiqrl4n_g", n: "Cusco y Machu Picchu", z: "Internacional", d: "La ciudad inca y una de las siete maravillas.", noches: "6 noches", desde: "Desde US$ 1.150" }
-], { etiquetas: { z: "Tipo (Nacional o Internacional)", noches: "Duración", desde: "Precio desde" } });
+const paquetes = DEMO.lista("paquetes", [
+  { img: "zsgJdHDP4IE", n: "Bariloche", cod: "BRC", z: "Nacional", noches: 5, p: 480000, moneda: "$", sena: 30, cupos: 12,
+    salidas: ["12/12/2026", "09/01/2027", "23/01/2027", "06/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Traslados", "Excursión Circuito Chico"] },
+  { img: "MQwdwP7a-EE", n: "Cataratas del Iguazú", cod: "IGR", z: "Nacional", noches: 3, p: 390000, moneda: "$", sena: 30, cupos: 10,
+    salidas: ["05/12/2026", "16/01/2027", "13/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Traslados", "Entrada al parque lado argentino"] },
+  { img: "V34MPSwaK7k", n: "El Calafate", cod: "FTE", z: "Nacional", noches: 4, p: 520000, moneda: "$", sena: 30, cupos: 8,
+    salidas: ["19/12/2026", "30/01/2027", "27/02/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Excursión al glaciar Perito Moreno", "Traslados"] },
+  { img: "GaTPFEdiLME", n: "Salta y Jujuy", cod: "SLA", z: "Nacional", noches: 5, p: 410000, moneda: "$", sena: 30, cupos: 14,
+    salidas: ["26/12/2026", "20/02/2027", "13/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Excursión Quebrada de Humahuaca", "Traslados"] },
+  { img: "MihUZkpY874", n: "Punta Cana", cod: "PUJ", z: "Internacional", noches: 7, p: 1390, moneda: "US$", sena: 20, cupos: 10,
+    salidas: ["03/01/2027", "17/01/2027", "14/02/2027"], incluye: ["Vuelo ida y vuelta", "Resort all inclusive", "Traslados", "Asistencia al viajero"] },
+  { img: "PyOlN0AVlMg", n: "Río de Janeiro", cod: "GIG", z: "Internacional", noches: 6, p: 790, moneda: "US$", sena: 20, cupos: 12,
+    salidas: ["08/01/2027", "05/02/2027", "05/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel frente a Copacabana", "City tour con Cristo Redentor", "Asistencia al viajero"] },
+  { img: "PM4VZZn-YyM", n: "Europa: Madrid, París y Roma", cod: "CDG", z: "Internacional", noches: 15, p: 2890, moneda: "US$", sena: 20, cupos: 6,
+    salidas: ["10/04/2027", "08/05/2027"], incluye: ["Vuelos internacionales", "Hoteles con desayuno", "Trenes entre ciudades", "Asistencia al viajero"] },
+  { img: "e2Jiqrl4n_g", n: "Cusco y Machu Picchu", cod: "CUZ", z: "Internacional", noches: 6, p: 1150, moneda: "US$", sena: 20, cupos: 8,
+    salidas: ["15/01/2027", "12/03/2027"], incluye: ["Vuelo ida y vuelta", "Hotel con desayuno", "Tren y entrada a Machu Picchu", "Asistencia al viajero"] }
+], { etiquetas: { n: "Nombre del paquete", cod: "Código del aeropuerto", z: "Tipo (Nacional o Internacional)", noches: "Noches", p: "Precio por persona", moneda: "Moneda ($ o US$)", sena: "Seña %", cupos: "Lugares por salida", salidas: "Fechas de salida (dd/mm/aaaa, separadas por coma)", incluye: "Qué incluye (separado por coma)" } });
 const servicios = DEMO.lista("servicios", [
   { n: "Vuelos", d: "Nacionales e internacionales, con las mejores tarifas y horarios." },
   { n: "Hoteles", d: "Desde opciones económicas hasta resorts all inclusive." },
@@ -220,27 +218,11 @@ const ICONOS = [
   '<path d="M4 18l24-8-6 18-5-8-8-2zM17 20l11-10"/>', '<path d="M5 27V11l11-6 11 6v16M12 27v-7h8v7M5 27h22"/>', '<rect x="6" y="9" width="20" height="16" rx="3"/><path d="M12 9V6h8v3M6 15h20"/>',
   '<path d="M16 4l10 4v7c0 6-4.5 10.5-10 13-5.5-2.5-10-7-10-13V8z"/><path d="M12 16l3 3 6-6"/>', '<circle cx="16" cy="16" r="11"/><path d="M20 12l-2.5 6.5L11 21l2.5-6.5z"/>', '<rect x="4" y="8" width="24" height="16" rx="3"/><path d="M4 14h24M9 20h5"/>'
 ];
-let tipo = "Todos";
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const wa = t => "https://wa.me/?text=" + encodeURIComponent(t);
-function pintar() {
-  const tipos = ["Todos", ...new Set(destinos.map(d => d.z).filter(Boolean))];
-  document.getElementById("tabs").innerHTML = tipos.map(t => `<button type="button" role="tab" aria-selected="${t === tipo}" class="${t === tipo ? "on" : ""}">${esc(t === "Todos" ? "Todos" : t + "es")}</button>`).join("");
-  document.querySelectorAll("#tabs button").forEach((b, i) => b.onclick = () => { tipo = tipos[i]; pintar(); });
-  document.getElementById("lista").innerHTML = destinos.filter(d => tipo === "Todos" || d.z === tipo).map(d => `
-    <a class="dest" href="${wa("Hola! Quiero cotizar un viaje a " + d.n + ".")}" target="_blank" rel="noopener">
-      <img src="${DEMO.img(d.img, 800)}" alt="${esc(d.n)}" loading="lazy">
-      <small>${esc(d.z)}${d.noches ? " · " + esc(d.noches) : ""}</small><h3>${esc(d.n)}</h3><p>${esc(d.d)}</p>
-      <div class="pie"><b>${esc(d.desde)}</b><span>Cotizar</span></div></a>`).join("");
-}
-pintar();
-document.getElementById("lista-dest").innerHTML = destinos.map(d => `<option value="${esc(d.n)}">`).join("");
+VM.iniciar({ buscador: "#buscador", resultados: "#resultados", paquetes, prefijo: "BV" });
 document.getElementById("serv").innerHTML = servicios.map((s, i) => `<div class="s"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONOS[i % ICONOS.length]}</svg><h3>${esc(s.n)}</h3><p>${esc(s.d)}</p></div>`).join("");
-document.getElementById("cotizar").addEventListener("submit", e => {
-  e.preventDefault();
-  const d = document.getElementById("c-dest").value.trim(), c = document.getElementById("c-cuando").value.trim(), p = document.getElementById("c-pax").value;
-  window.open(wa(`Hola! Quiero cotizar un viaje a ${d}${c ? " para " + c : ""}, somos ${p}.`), "_blank", "noopener");
-});
+
 document.querySelectorAll("[data-wa]").forEach(a => { a.href = wa("Hola! Quiero consultar por un viaje."); a.target = "_blank"; a.rel = "noopener"; });
 </script>
 </body>
