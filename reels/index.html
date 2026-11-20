@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>dmith Reels · Ropa</title>
+<meta name="description" content="Creá reels para tu tienda de ropa en un minuto: elegí una plantilla, subí tus fotos y descargá el video listo para Instagram.">
+<meta name="theme-color" content="#181B4A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Playfair+Display:ital,wght@1,800&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --noche: #181B4A; --tinta: #15172E; --papel: #F6F5FB; --sol: #FFC23D; --suave: #6A6C8A; --linea: #E3E2EF; --wa: #25D366; --azul: #3E9BFF; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.5 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  header { background: var(--noche); color: #fff; padding-block: 16px 30px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+  .logo { display: flex; align-items: center; gap: 9px; font: 700 20px Unbounded, system-ui, sans-serif; color: #fff; text-decoration: none; }
+  .logo span { color: var(--sol); }
+  .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 22px; }
+  .mark i { aspect-ratio: 1; border-radius: 3px; background: var(--azul); } .mark i:nth-child(2) { background: var(--sol); } .mark i:nth-child(3) { background: #26D6A0; } .mark i:nth-child(4) { background: #FF5A6E; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 12px 18px; font-weight: 700; font-size: 15px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn-wa { background: var(--wa); color: #fff; }
+  .chip { display: inline-block; background: rgba(255,255,255,.12); color: #fff; border-radius: 99px; padding: 4px 12px; font-size: 14px; margin-bottom: 12px; }
+  h1 { font: 800 clamp(26px, 4.2vw, 44px)/1.08 Unbounded, system-ui, sans-serif; margin: 0 0 10px; text-wrap: balance; max-width: 22ch; }
+  header p { color: #C9CAEE; margin: 0; max-width: 56ch; font-size: 17px; }
+
+  .app { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; padding-block: 28px 120px; }
+  .vista { position: sticky; top: 16px; display: grid; gap: 12px; grid-row: 1; grid-column: 2; }
+  .editor { display: grid; gap: 18px; grid-row: 1; grid-column: 1; min-width: 0; }
+  .tel { position: relative; background: #000; border-radius: 30px; padding: 10px; box-shadow: 0 18px 50px rgba(24,27,74,.22); }
+  .tel canvas { display: block; width: 100%; aspect-ratio: 9/16; border-radius: 22px; background: #111; }
+  .play { position: absolute; inset: 10px; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; border-radius: 22px; }
+  .play span { width: 84px; height: 84px; border-radius: 50%; background: rgba(0,0,0,.55); display: grid; place-items: center; transition: transform .15s; }
+  .play:hover span { transform: scale(1.06); }
+  .play svg { width: 34px; height: 34px; fill: #fff; margin-left: 5px; }
+  .play.on span { opacity: 0; }
+  .barra { display: flex; align-items: center; gap: 10px; }
+  .barra input { flex: 1; accent-color: var(--noche); }
+  .barra small { color: var(--suave); font-variant-numeric: tabular-nums; min-width: 74px; text-align: right; }
+  .crear { width: 100%; background: var(--sol); color: var(--tinta); font-size: 17px; padding: 16px; border-radius: 14px; }
+  .nota { color: var(--suave); font-size: 13px; text-align: center; margin: 0; }
+
+  .caja { background: #fff; border: 1px solid var(--linea); border-radius: 18px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+  .caja h2 { margin: 0; font: 700 19px/1.2 Unbounded, system-ui, sans-serif; display: flex; align-items: center; gap: 10px; }
+  .caja h2 b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--noche); color: #fff; font: 700 14px "DM Sans", sans-serif; flex: none; }
+  .plantillas { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .pl { text-align: left; background: var(--papel); border: 2px solid transparent; border-radius: 14px; padding: 12px 14px; cursor: pointer; display: grid; gap: 2px; }
+  .pl strong { font-size: 16px; }
+  .pl small { color: var(--suave); font-size: 13.5px; line-height: 1.35; }
+  .pl[aria-pressed="true"] { border-color: var(--noche); background: #fff; box-shadow: 0 0 0 3px rgba(24,27,74,.08); }
+  .fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .foto { position: relative; background: var(--papel); border-radius: 14px; overflow: hidden; display: grid; }
+  .foto img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+  .foto .q { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; display: grid; place-items: center; }
+  .foto .q svg { width: 14px; height: 14px; }
+  .foto .n { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 700; border-radius: 99px; padding: 2px 9px; }
+  .foto input { border: 0; border-top: 1px solid var(--linea); padding: 8px 10px; font-size: 14px; background: #fff; width: 100%; min-width: 0; }
+  .agregar { border: 2px dashed #C9C8DD; border-radius: 14px; display: grid; place-items: center; text-align: center; gap: 4px; padding: 16px; cursor: pointer; color: var(--suave); min-height: 150px; font-weight: 700; font-size: 14px; }
+  .agregar svg { width: 30px; height: 30px; color: var(--noche); }
+  .fila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+  .link { background: none; border: 0; color: var(--noche); text-decoration: underline; cursor: pointer; padding: 0; font-weight: 700; font-size: 14px; }
+  .campos { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  label.c { display: grid; gap: 5px; font-size: 14px; font-weight: 700; }
+  label.c input { border: 1.5px solid var(--linea); border-radius: 11px; padding: 11px 12px; font-weight: 400; background: #fff; width: 100%; min-width: 0; }
+  label.c input:focus { border-color: var(--noche); outline: none; }
+  label.c small { font-weight: 400; color: var(--suave); }
+  .sub { font-size: 14px; font-weight: 700; margin: 0 0 -6px; }
+  .opciones { display: flex; flex-wrap: wrap; gap: 8px; }
+  .op { border: 2px solid var(--linea); background: #fff; border-radius: 12px; padding: 9px 14px; cursor: pointer; font-weight: 700; font-size: 15px; }
+  .op[aria-pressed="true"] { border-color: var(--noche); background: var(--noche); color: #fff; }
+  .paleta { width: 52px; height: 52px; border-radius: 14px; border: 3px solid #fff; box-shadow: 0 0 0 1.5px var(--linea); cursor: pointer; padding: 0; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; }
+  .paleta i { display: block; }
+  .paleta[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--noche); }
+  .check { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 15px; cursor: pointer; }
+  .check input { width: 20px; height: 20px; accent-color: var(--noche); }
+  .logoprev { display: flex; align-items: center; gap: 10px; }
+  .logoprev img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--linea); }
+
+  .capa { position: fixed; inset: 0; background: rgba(15,17,40,.72); display: grid; place-items: center; padding: 16px; z-index: 20; }
+  .modal { background: #fff; border-radius: 22px; padding: 20px; width: min(420px, 100%); display: grid; gap: 12px; max-height: calc(100dvh - 32px); overflow: auto; }
+  .modal h3 { margin: 0; font: 700 20px Unbounded, system-ui, sans-serif; }
+  .modal video { width: 100%; max-height: 56dvh; border-radius: 14px; background: #000; }
+  .modal p { margin: 0; color: var(--suave); font-size: 14px; }
+  .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .b2 { background: var(--noche); color: #fff; }
+  .b3 { background: var(--papel); color: var(--tinta); }
+  .prog { height: 10px; border-radius: 99px; background: var(--linea); overflow: hidden; }
+  .prog i { display: block; height: 100%; width: 0; background: var(--sol); }
+  .grabando { position: absolute; left: 50%; top: 22px; transform: translateX(-50%); background: rgba(0,0,0,.7); color: #fff; border-radius: 99px; padding: 6px 14px; font-weight: 700; font-size: 14px; display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+  .grabando::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #FF4D4D; animation: tit 1s infinite; }
+  @keyframes tit { 50% { opacity: .2; } }
+  .final { background: var(--noche); color: #fff; border-radius: 18px; padding: 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; }
+  .final p { margin: 0; color: #C9CAEE; }
+  .final strong { font: 700 18px Unbounded, system-ui, sans-serif; display: block; margin-bottom: 4px; }
+  .barra-movil { display: none; }
+
+  @media (max-width: 860px) {
+    .app { grid-template-columns: minmax(0, 1fr); padding-top: 18px; }
+    .vista { position: static; grid-column: 1; grid-row: 1; justify-items: center; }
+    .editor { grid-column: 1; grid-row: 2; }
+    .tel { width: min(300px, 78vw); }
+    .vista .crear { display: none; }
+    .barra { width: min(300px, 78vw); }
+    .barra-movil { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff; border-top: 1px solid var(--linea); padding: 10px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+    .barra-movil .btn { flex: 1; }
+    .barra-movil .ver { flex: 0 0 auto; background: var(--papel); color: var(--tinta); }
+  }
+  @media (prefers-reduced-motion: reduce) { .grabando::before { animation: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-vid" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m16 10 5-3v10l-5-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="/sitios/"><span class="mark"><i></i><i></i><i></i><i></i></span>dmith <span>Reels</span></a>
+      <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Lo quiero</a>
+    </div>
+    <span class="chip">Ejemplo: rubro ropa</span>
+    <h1>Tu reel listo en un minuto</h1>
+    <p>Elegí una plantilla, cargá las fotos de tus prendas y tocá Crear video. Sale listo para subir a Instagram o TikTok.</p>
+  </div>
+</header>
+
+<main class="wrap app">
+  <div class="vista" id="vista">
+    <div class="tel">
+      <canvas id="cv" width="1080" height="1920" aria-label="Vista previa del reel"></canvas>
+      <button class="play" id="play" aria-label="Ver la vista previa"><span><svg><use href="#i-play"/></svg></span></button>
+    </div>
+    <div class="barra"><input type="range" id="scrub" min="0" max="1000" value="80" aria-label="Momento del video"><small id="tiempo">0:00 / 0:00</small></div>
+    <button class="btn crear" id="crear"><svg><use href="#i-vid"/></svg>Crear video</button>
+    <p class="nota">El video se arma en tu celular o compu, en el tiempo que dura.</p>
+  </div>
+
+  <div class="editor">
+    <section class="caja">
+      <h2><b>1</b>Elegí la plantilla</h2>
+      <div class="plantillas" id="plantillas"></div>
+    </section>
+
+    <section class="caja">
+      <h2><b>2</b>Subí tus fotos</h2>
+      <div class="fila"><small style="color:var(--suave)">Hasta 6 fotos. Ponele nombre y precio a cada prenda si querés que aparezcan.</small><button class="link" id="ejemplo">Usar fotos de ejemplo</button></div>
+      <div class="fotos" id="fotos"></div>
+      <input type="file" id="archivos" accept="image/*" multiple hidden>
+    </section>
+
+    <section class="caja">
+      <h2><b>3</b>Tus datos</h2>
+      <div class="campos" id="campos"></div>
+    </section>
+
+    <section class="caja">
+      <h2><b>4</b>Estilo</h2>
+      <p class="sub">Colores</p>
+      <div class="opciones" id="paletas"></div>
+      <p class="sub">Letra</p>
+      <div class="opciones" id="fuentes"></div>
+      <p class="sub">Música</p>
+      <div class="opciones" id="musicas"></div>
+      <p class="sub">Logo <small style="font-weight:400;color:var(--suave)">(opcional)</small></p>
+      <div class="logoprev"><img id="logoimg" alt="" hidden><button class="op" id="logobtn">Subir logo</button><button class="link" id="logoquitar" hidden>Quitar</button><input type="file" id="logofile" accept="image/*" hidden></div>
+      <label class="check"><input type="checkbox" id="marca" checked>Marca "hecho con dmith" (plan gratis)</label>
+    </section>
+
+    <div class="final">
+      <div><strong>¿Lo querés para tu negocio?</strong><p>Te lo armamos con tus colores, tu logo y las plantillas de tu rubro.</p></div>
+      <a class="btn btn-wa" data-wa target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>Escribinos</a>
+    </div>
+  </div>
+</main>
+
+<div class="barra-movil">
+  <button class="btn ver" id="verMovil"><svg><use href="#i-play"/></svg>Ver</button>
+  <button class="btn crear" id="crearMovil"><svg><use href="#i-vid"/></svg>Crear video</button>
+</div>
+
+<div class="capa" id="capa" hidden>
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+"use strict";
+const WA = "5491150540357";
+document.querySelectorAll("[data-wa]").forEach(a => a.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola Diego! Vi dmith Reels y lo quiero para mi negocio."));
+
+/* ---------- datos ---------- */
+const W = 1080, H = 1920;
+const PLANTILLAS = {
+  llego:   { n: "Llegó mercadería", d: "Tus prendas nuevas una tras otra, al ritmo de la música.", campos: ["negocio", "titulo", "frase", "wa", "ig"] },
+  outfit:  { n: "Outfit del día", d: "Cada prenda con su nombre y su precio.", campos: ["negocio", "frase", "wa", "ig"] },
+  liquida: { n: "Liquidación", d: "Descuento grande, precio de antes y de ahora, y urgencia.", campos: ["negocio", "desc", "hasta", "wa", "ig"] },
+  talles:  { n: "Talles y colores", d: "Un producto con su precio, sus talles y sus colores.", campos: ["negocio", "titulo", "precio", "talles", "colores", "wa", "ig"] },
+};
+const CAMPOS = {
+  negocio: ["Nombre del negocio", "Lirio Boutique"],
+  titulo:  ["Título", "Nueva colección"],
+  frase:   ["Frase corta", "Envíos a todo el país"],
+  precio:  ["Precio", "$45.000"],
+  desc:    ["Descuento (%)", "40", "Solo el número"],
+  hasta:   ["Hasta cuándo", "Solo hasta el domingo"],
+  talles:  ["Talles", "S, M, L, XL", "Separados por coma"],
+  colores: ["Colores", "negro, beige, verde", "Separados por coma"],
+  wa:      ["WhatsApp", "11 5555-1234"],
+  ig:      ["Instagram", "@lirioboutique"],
+};
+const PALETAS = [
+  { n: "Rosa",  a: "#FF4F8B", f: "#1C1020", c: "#FFF3F7", on: "#FFFFFF" },
+  { n: "Arena", a: "#D2A679", f: "#2A211B", c: "#F7F1EA", on: "#2A211B" },
+  { n: "Lima",  a: "#C6F432", f: "#111511", c: "#F3F7EC", on: "#111511" },
+  { n: "Rojo",  a: "#FF3B30", f: "#160B0B", c: "#FFF4E0", on: "#FFFFFF" },
+  { n: "Azul",  a: "#3E7BFF", f: "#0B1230", c: "#EEF2FF", on: "#FFFFFF" },
+];
+const FUENTES = {
+  moderna:  { n: "Moderna",  t: '400 SZpx "Anton"', up: true },
+  elegante: { n: "Elegante", t: 'italic 800 SZpx "Playfair Display"', up: false },
+  redonda:  { n: "Redonda",  t: '800 SZpx "Bricolage Grotesque"', up: false },
+};
+const MUSICAS = { alegre: { n: "Alegre", bpm: 112 }, tranquila: { n: "Tranquila", bpm: 84 }, energia: { n: "Con energía", bpm: 126 } };
+const EJEMPLOS = [
+  ["photo-1515886657613-9f3515b0c78f", "Conjunto jogger", "$38.900"],
+  ["photo-1509631179647-0177331693ae", "Pantalón rayado", "$32.500"],
+  ["photo-1539109136881-3be0616acf4b", "Tapado celeste", "$79.900"],
+  ["photo-1496747611176-843222e1e57c", "Vestido floral", "$45.000"],
+  ["photo-1485968579580-b6d095142e6e", "Saco cuadrillé", "$68.000"],
+  ["photo-1483985988355-763728e1935b", "Abrigo bordó", "$85.000"],
+];
+const COLORES = { negro: "#151515", blanco: "#F4F4F2", beige: "#D9C3A5", crema: "#EFE3C8", gris: "#8A8A8A", azul: "#2B4FA8", celeste: "#8EC5EF", rojo: "#D42A2A", bordo: "#6D1A2B", "bordó": "#6D1A2B", rosa: "#F4A3BF", fucsia: "#E0218A", verde: "#2F7D4A", oliva: "#6B6B2E", amarillo: "#F5CF2B", naranja: "#F07A1A", violeta: "#7B4BC4", lila: "#C3A6E8", "marrón": "#6B4428", marron: "#6B4428", camel: "#C08A4E", jean: "#3D5A80", nude: "#E3BC9A", coral: "#FF6F61", mostaza: "#D4A017", caqui: "#B5A77A", chocolate: "#4A2C1D", plateado: "#C0C0C8", dorado: "#D4AF37" };
+
+const S = { plantilla: "llego", paleta: 0, fuente: "moderna", musica: "alegre", marca: true, logo: null, fotos: [] };
+Object.keys(CAMPOS).forEach(k => S[k] = CAMPOS[k][1]);
+
+/* ---------- utilidades ---------- */
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+const cl = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const seg = (t, a, d) => cl((t - a) / d);
+const eo = t => 1 - Math.pow(1 - t, 3);
+const eb = t => { const c = 1.70158, c3 = c + 1; return 1 + c3 * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+const P = () => PALETAS[S.paleta];
+const FU = () => FUENTES[S.fuente];
+const T = s => FU().up ? String(s).toUpperCase() : String(s);
+const fTit = z => FU().t.replace("SZ", Math.round(z));
+const fCue = (z, w = 700) => `${w} ${Math.round(z)}px "DM Sans"`;
+const num = s => parseInt(String(s).replace(/\D/g, ""), 10);
+const pesos = n => "$" + n.toLocaleString("es-AR");
+
+function achicar(img, max = 1440) {
+  const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement("canvas");
+  c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+function cargarImg(src, cors) {
+  return new Promise((res, rej) => { const i = new Image(); if (cors) i.crossOrigin = "anonymous"; i.onload = () => res(i); i.onerror = rej; i.src = src; });
+}
+function cover(img, x, y, w, h, z = 1, px = 0, py = 0) {
+  if (!img) { ctx.fillStyle = "#333"; ctx.fillRect(x, y, w, h); return; }
+  const s = Math.max(w / img.width, h / img.height) * z;
+  const dw = img.width * s, dh = img.height * s;
+  const dx = x + (w - dw) / 2 + px * (dw - w) / 2, dy = y + (h - dh) / 2 + py * (dh - h) / 2;
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.drawImage(img, dx, dy, dw, dh); ctx.restore();
+}
+function rr(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function caja(x, y, w, h, r, color) { rr(x, y, w, h, r); ctx.fillStyle = color; ctx.fill(); }
+function txt(s, x, y, z, o = {}) {
+  const { color = "#fff", align = "center", w = W - 140, font = fTit, base = "alphabetic", sombra = false, alpha = 1 } = o;
+  s = String(s);
+  ctx.font = font(z);
+  while (ctx.measureText(s).width > w && z > 20) { z -= 3; ctx.font = font(z); }
+  ctx.save();
+  ctx.globalAlpha *= alpha; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = base;
+  if (sombra) { ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = 28; ctx.shadowOffsetY = 4; }
+  ctx.fillText(s, x, y);
+  ctx.restore();
+  return z;
+}
+function lineas(s, z, w, font) {
+  ctx.font = font(z);
+  const out = []; let l = "";
+  String(s).split(/\s+/).forEach(p => { const n = l ? l + " " + p : p; if (ctx.measureText(n).width > w && l) { out.push(l); l = p; } else l = n; });
+  if (l) out.push(l);
+  return out;
+}
+function fondo(c) { ctx.fillStyle = c; ctx.fillRect(0, 0, W, H); }
+function sombraAbajo(desde = .5, a = .75) {
+  const g = ctx.createLinearGradient(0, H * desde, 0, H);
+  g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${a})`);
+  ctx.fillStyle = g; ctx.fillRect(0, H * desde, W, H * (1 - desde));
+}
+function sombraArriba(hasta = .25, a = .45) {
+  const g = ctx.createLinearGradient(0, 0, 0, H * hasta);
+  g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H * hasta);
+}
+const foto = i => S.fotos.length ? S.fotos[i % S.fotos.length] : { img: null, nombre: "", precio: "" };
+function kenBurns(i, lt, sd) {
+  const k = lt / sd, m = i % 4;
+  const z = 1.04 + 0.1 * (m % 2 ? 1 - k : k);
+  const px = [-.5, .5, 0, 0][m] * (k * 2 - 1), py = [0, 0, -.5, .5][m] * (k * 2 - 1);
+  cover(foto(i).img, 0, 0, W, H, z, px, py);
+}
+function etiquetaNegocio(alpha = 1) {
+  txt(S.negocio, W / 2, 170, 44, { font: z => fCue(z, 700), alpha: .92 * alpha, sombra: true });
+}
+function precioLiq(p) {
+  const n = num(p), d = cl(num(S.desc) || 0, 0, 90);
+  if (!n || !d) return null;
+  return pesos(Math.round(n / (1 - d / 100) / 100) * 100);
+}
+
+/* ---------- escenas ---------- */
+function escCierre(lt, sd) {
+  const p = P();
+  fondo(p.f);
+  const r0 = eo(seg(lt, 0, .8));
+  ctx.save(); ctx.globalAlpha = .18; ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(W / 2, 640, 120 + 620 * r0, 0, 7); ctx.fill(); ctx.restore();
+  const a1 = eb(seg(lt, .05, .45));
+  ctx.save(); ctx.translate(W / 2, 600); ctx.scale(a1, a1);
+  if (S.logo) {
+    ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.clip(); ctx.fillStyle = "#fff"; ctx.fillRect(-160, -160, 320, 320);
+    const s = Math.max(320 / S.logo.width, 320 / S.logo.height); ctx.drawImage(S.logo, -S.logo.width * s / 2, -S.logo.height * s / 2, S.logo.width * s, S.logo.height * s); ctx.restore();
+  } else {
+    ctx.fillStyle = p.a; ctx.beginPath(); ctx.arc(0, 0, 160, 0, 7); ctx.fill();
+    txt(T(S.negocio.trim()[0] || "D"), 0, 8, 170, { color: p.on, base: "middle" });
+  }
+  ctx.restore();
+  const a2 = eo(seg(lt, .3, .5));
+  ctx.save(); ctx.translate(0, 40 * (1 - a2));
+  txt(T(S.negocio), W / 2, 920, 130, { alpha: a2 });
+  if (PLANTILLAS[S.plantilla].campos.includes("frase") && S.frase) {
+    lineas(S.frase, 54, W - 200, z => fCue(z, 500)).slice(0, 2).forEach((l, i) => txt(l, W / 2, 1010 + i * 66, 54, { font: z => fCue(z, 500), color: p.c, alpha: a2 * .85 }));
+  }
+  ctx.restore();
+  const a3 = eb(seg(lt, .7, .5));
+  if (S.wa) {
+    ctx.save(); ctx.translate(W / 2, 1290); ctx.scale(a3, a3);
+    caja(-430, -110, 860, 220, 40, p.a);
+    txt("Pedí por WhatsApp", 0, -22, 46, { font: z => fCue(z, 700), color: p.on, w: 780 });
+    txt(S.wa, 0, 72, 92, { color: p.on, w: 780 });
+    ctx.restore();
+  }
+  const a4 = eo(seg(lt, 1.0, .5));
+  if (S.ig) txt(S.ig, W / 2, 1530, 58, { font: z => fCue(z, 700), alpha: a4 });
+}
+
+function escIntroLlego(lt, sd) {
+  const p = P();
+  kenBurns(0, lt, sd * 1.6);
+  ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = p.f; ctx.globalAlpha = .35; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+  etiquetaNegocio(eo(seg(lt, .1, .4)));
+  const s1 = seg(lt, 0, .28), z = 1 + .9 * (1 - eo(s1));
+  ctx.save(); ctx.translate(W / 2, 860); ctx.scale(z, z);
+  txt(T("Llegó"), 0, 0, 300, { alpha: s1, sombra: true });
+  ctx.restore();
+  const b = 60 / MUSICAS[S.musica].bpm, s2 = eo(seg(lt, b, .45));
+  const ls = lineas(T(S.titulo || "Nueva colección"), 150, W - 180, fTit).slice(0, 2);
+  ls.forEach((l, i) => {
+    const y = 1080 + i * 170;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, y - 160, W, 190); ctx.clip();
+    ctx.translate(0, 190 * (1 - s2));
+    ctx.font = fTit(150); const w = Math.min(ctx.measureText(l).width, W - 180) + 70;
+    caja(W / 2 - w / 2, y - 140, w, 172, 18, p.a);
+    txt(l, W / 2, y, 150, { color: p.on, w: W - 180 });
+    ctx.restore();
+  });
+}
+function escFotoLlego(i) {
+  return (lt, sd) => {
+    const p = P(), f = foto(i);
+    kenBurns(i, lt, sd); sombraAbajo(.55, .75); sombraArriba();
+    etiquetaNegocio();
+    const a = eo(seg(lt, .08, .4));
+    ctx.save(); ctx.translate(-120 * (1 - a), 0); ctx.globalAlpha = a;
+    caja(80, H - 520, 230, 76, 38, p.a);
+    txt(T("Nuevo"), 195, H - 466, 46, { color: p.on, w: 200, font: FU().up ? fTit : z => fCue(z, 700) });
+    txt(T(f.nombre || S.titulo || ""), 80, H - 330, 120, { align: "left", w: W - 160, sombra: true });
+    ctx.restore();
+  };
+}
+function escGrilla(lt, sd) {
+  const p = P();
+  fondo(p.f);
+  const g = 22, cw = (W - g * 3) / 2, ch = (H - g * 3) / 2;
+  for (let k = 0; k < 4; k++) {
+    const a = eo(seg(lt, k * .1, .4)), x = g + (k % 2) * (cw + g), y = g + Math.floor(k / 2) * (ch + g);
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(x + cw / 2, y + ch / 2); ctx.scale(.85 + .15 * a, .85 + .15 * a);
+    rr(-cw / 2, -ch / 2, cw, ch, 26); ctx.clip();
+    cover(foto(k).img, -cw / 2, -ch / 2, cw, ch, 1.05 + .05 * (lt / sd));
+    ctx.restore();
+  }
+  const a = eb(seg(lt, .45, .45));
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.05); ctx.scale(a, a);
+  ctx.font = fTit(120); const w = Math.min(ctx.measureText(T(S.titulo)).width + 100, W - 40);
+  caja(-w / 2, -95, w, 170, 20, p.a);
+  txt(T(S.titulo || S.negocio), 0, 40, 120, { color: p.on, w: W - 140 });
+  ctx.restore();
+}
+
+function escIntroOutfit(lt, sd) {
+  const p = P();
+  fondo(p.c);
+  ctx.save(); ctx.globalAlpha = .9; ctx.fillStyle = p.a;
+  const r = eo(seg(lt, 0, .6)); ctx.beginPath(); ctx.arc(W * .82, H * .22, 380 * r, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * .1, H * .86, 260 * r, 0, 7); ctx.fill();
+  ctx.restore();
+  txt(S.negocio, W / 2, 230, 46, { font: z => fCue(z, 700), color: p.f, alpha: eo(seg(lt, .1, .4)) });
+  const a = eo(seg(lt, 0, .35));
+  ctx.save(); ctx.translate(-W * (1 - a), 0); txt(T("Outfit"), W / 2, 860, 290, { color: p.f }); ctx.restore();
+  const b = eo(seg(lt, .25, .35));
+  ctx.save(); ctx.translate(W * (1 - b), 0); txt(T("del día"), W / 2, 1110, 230, { color: p.a }); ctx.restore();
+  const hoy = new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "numeric" });
+  txt(hoy, W / 2, 1290, 54, { font: z => fCue(z, 500), color: p.f, alpha: eo(seg(lt, .6, .4)) });
+}
+function escFotoOutfit(i, total) {
+  return (lt, sd) => {
+    const p = P(), f = foto(i);
+    kenBurns(i, lt, sd); sombraAbajo(.6, .5); sombraArriba(.2, .35);
+    caja(W - 230, 110, 150, 76, 38, "rgba(0,0,0,.55)");
+    txt(`${i + 1}/${total}`, W - 155, 164, 44, { font: z => fCue(z, 700), w: 130 });
+    const a = eb(seg(lt, .15, .5));
+    ctx.save(); ctx.translate(-(W + 40) * (1 - a), 0);
+    caja(60, H - 560, W - 120, 330, 34, p.c);
+    ctx.fillStyle = p.a; ctx.fillRect(60, H - 560, 18, 330);
+    txt(f.nombre || "Prenda " + (i + 1), 120, H - 455, 62, { align: "left", w: W - 240, font: z => fCue(z, 700), color: p.f });
+    if (f.precio) txt(f.precio, 118, H - 300, 150, { align: "left", w: W - 240, color: p.f });
+    ctx.restore();
+  };
+}
+
+function rayas(lt, c1, c2) {
+  fondo(c1);
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.5); ctx.fillStyle = c2;
+  const off = (lt * 220) % 240;
+  for (let x = -2400; x < 2400; x += 240) ctx.fillRect(x + off, -2000, 90, 4000);
+  ctx.restore();
+}
+function escIntroLiq(lt, sd) {
+  const p = P();
+  rayas(lt, p.a, "rgba(0,0,0,.12)");
+  txt(S.negocio, W / 2, 200, 46, { font: z => fCue(z, 700), color: p.on, alpha: eo(seg(lt, .1, .4)) });
+  const s = seg(lt, 0, .25), z = 1 + 1.2 * (1 - eo(s));
+  const sh = lt < .5 ? Math.sin(lt * 90) * 14 * (1 - lt / .5) : 0;
+  ctx.save(); ctx.translate(W / 2 + sh, 720); ctx.scale(z, z);
+  txt(T("Liquidación"), 0, 0, 220, { color: p.on, alpha: s, w: W - 80, sombra: true });
+  ctx.restore();
+  const b = 60 / MUSICAS[S.musica].bpm, a = eb(seg(lt, b * 1.5, .5));
+  ctx.save(); ctx.translate(W / 2, 1180); ctx.scale(a, a); ctx.rotate(-.12 + .05 * Math.sin(lt * 5));
+  ctx.fillStyle = p.f; ctx.beginPath(); ctx.arc(0, 0, 300, 0, 7); ctx.fill();
+  txt(`-${num(S.desc) || 0}%`, 0, 70, 220, { color: "#FFD60A", w: 520 });
+  ctx.restore();
+}
+function escFotoLiq(i) {
+  return (lt, sd) => {
+    const p = P(), f = foto(i);
+    kenBurns(i, lt, sd); sombraAbajo(.55, .8); sombraArriba(.2, .4);
+    etiquetaNegocio();
+    const a = eb(seg(lt, .05, .45));
+    ctx.save(); ctx.translate(W - 210, 360); ctx.scale(a, a); ctx.rotate(.15 + .06 * Math.sin(lt * 6));
+    ctx.fillStyle = p.a; ctx.beginPath();
+    for (let k = 0; k < 24; k++) { const r = k % 2 ? 150 : 175, an = k / 24 * Math.PI * 2; ctx.lineTo(Math.cos(an) * r, Math.sin(an) * r); }
+    ctx.fill();
+    txt(`-${num(S.desc) || 0}%`, 0, 34, 104, { color: p.on, w: 260 });
+    ctx.restore();
+    const ahora = f.precio || "", antes = precioLiq(ahora);
+    const b = eo(seg(lt, .2, .4));
+    ctx.save(); ctx.globalAlpha = b; ctx.translate(0, 60 * (1 - b));
+    if (f.nombre) txt(f.nombre, 80, H - 520, 56, { align: "left", font: z => fCue(z, 700), w: W - 160, sombra: true });
+    if (antes) {
+      txt("Antes " + antes, 80, H - 420, 58, { align: "left", font: z => fCue(z, 500), color: "rgba(255,255,255,.8)", w: W - 160 });
+      ctx.font = fCue(58, 500); const tw = ctx.measureText("Antes " + antes).width;
+      ctx.fillStyle = p.a; ctx.fillRect(76, H - 442, tw + 8, 8);
+    }
+    if (ahora) {
+      ctx.font = fTit(170); const w = Math.min(ctx.measureText(ahora).width, W - 220) + 70;
+      caja(70, H - 380, w, 210, 26, "#FFD60A");
+      txt(ahora, 105, H - 215, 170, { align: "left", color: "#160B0B", w: W - 220 });
+    }
+    ctx.restore();
+  };
+}
+function escUrgencia(lt, sd) {
+  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
+  fondo(p.f);
+  const on = Math.floor(lt / b) % 2 === 0;
+  const ls = lineas(T(S.hasta || "Últimos días"), 170, W - 160, fTit).slice(0, 4);
+  const y0 = H / 2 - (ls.length - 1) * 95;
+  ls.forEach((l, i) => {
+    const a = eo(seg(lt, i * .12, .35));
+    ctx.save(); ctx.translate(0, 80 * (1 - a));
+    txt(l, W / 2, y0 + i * 190, 170, { color: (i === ls.length - 1) ? (on ? p.a : "#FFD60A") : "#fff", alpha: a, w: W - 160 });
+    ctx.restore();
+  });
+  txt(`-${num(S.desc) || 0}% en toda la tienda`, W / 2, y0 + ls.length * 190 + 60, 56, { font: z => fCue(z, 700), color: "rgba(255,255,255,.85)", alpha: eo(seg(lt, .5, .4)) });
+}
+
+function escTallesFoto(lt, sd) {
+  const p = P();
+  kenBurns(0, lt, sd); sombraAbajo(.5, .8); sombraArriba();
+  etiquetaNegocio();
+  const a = eo(seg(lt, .1, .45));
+  ctx.save(); ctx.globalAlpha = a; ctx.translate(0, 80 * (1 - a));
+  lineas(T(S.titulo || ""), 140, W - 160, fTit).slice(0, 2).forEach((l, i, arr) => txt(l, 80, H - 470 - (arr.length - 1 - i) * 150, 140, { align: "left", w: W - 160, sombra: true }));
+  ctx.restore();
+  const b = eb(seg(lt, .45, .45));
+  if (S.precio) {
+    ctx.save(); ctx.translate(80, H - 330); ctx.scale(b, b);
+    ctx.font = fTit(130); const w = Math.min(ctx.measureText(S.precio).width, W - 220) + 70;
+    caja(0, 0, w, 170, 24, p.a);
+    txt(S.precio, 35, 135, 130, { align: "left", color: p.on, w: W - 220 });
+    ctx.restore();
+  }
+}
+function panelInferior(lt, sd, i, titulo) {
+  const p = P();
+  fondo(p.c);
+  cover(foto(i).img, 0, 0, W, 1120, 1.05 + .05 * lt / sd);
+  const a = eo(seg(lt, 0, .35));
+  ctx.save(); ctx.translate(0, 300 * (1 - a));
+  caja(0, 1060, W, H - 1060 + 60, 60, p.c);
+  txt(T(titulo), W / 2, 1250, 110, { color: p.f });
+  ctx.restore();
+  return a;
+}
+function escTalles(lt, sd) {
+  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
+  panelInferior(lt, sd, 1, "Talles");
+  const ts = String(S.talles).split(",").map(s => s.trim()).filter(Boolean).slice(0, 8);
+  const cw = ts.length > 4 ? 190 : 210, g = 26, por = Math.min(ts.length, 4);
+  ts.forEach((t, k) => {
+    const fila = Math.floor(k / 4), col = k % 4, enFila = Math.min(4, ts.length - fila * 4);
+    const x = W / 2 - (enFila * cw + (enFila - 1) * g) / 2 + col * (cw + g), y = 1360 + fila * (cw + g);
+    const a = eb(seg(lt, .3 + k * b / 2, .35));
+    ctx.save(); ctx.translate(x + cw / 2, y + cw / 2); ctx.scale(a, a);
+    caja(-cw / 2, -cw / 2, cw, cw, 34, p.f);
+    txt(t, 0, 36, 100, { color: p.c, w: cw - 30 });
+    ctx.restore();
+  });
+}
+function escColores(lt, sd) {
+  const p = P(), b = 60 / MUSICAS[S.musica].bpm;
+  panelInferior(lt, sd, 2, "Colores");
+  const cs = String(S.colores).split(",").map(s => s.trim()).filter(Boolean).slice(0, 5);
+  const r = 82, g = 60, tot = cs.length * r * 2 + (cs.length - 1) * g;
+  cs.forEach((c, k) => {
+    const x = W / 2 - tot / 2 + r + k * (2 * r + g), y = 1470;
+    const a = eb(seg(lt, .3 + k * b / 2, .35));
+    ctx.save(); ctx.translate(x, y); ctx.scale(a, a);
+    ctx.fillStyle = COLORES[c.toLowerCase()] || "#9A9A9A"; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
+    ctx.lineWidth = 8; ctx.strokeStyle = p.f; ctx.stroke();
+    txt(c, 0, r + 70, 40, { font: z => fCue(z, 700), color: p.f, w: 2 * r + g - 10 });
+    ctx.restore();
+  });
+}
+function escFotoSimple(i) {
+  return (lt, sd) => { kenBurns(i, lt, sd); sombraArriba(); etiquetaNegocio(); };
+}
+
+function marcaAgua() {
+  if (!S.marca) return;
+  ctx.save(); ctx.globalAlpha = .9;
+  ctx.font = fCue(32, 700); const w = ctx.measureText("hecho con dmith.app").width + 100;
+  caja(W / 2 - w / 2, H - 150, w, 64, 32, "rgba(0,0,0,.45)");
+  const x0 = W / 2 - w / 2 + 30, y0 = H - 133, q = 13, cols = ["#3E9BFF", "#FFC23D", "#26D6A0", "#FF5A6E"];
+  cols.forEach((c, k) => { ctx.fillStyle = c; rr(x0 + (k % 2) * (q + 3), y0 + Math.floor(k / 2) * (q + 3), q, q, 3); ctx.fill(); });
+  ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText("hecho con dmith.app", x0 + 44, H - 117);
+  ctx.restore();
+}
+
+/* ---------- línea de tiempo ---------- */
+let TL = null;
+function armar() {
+  const b = 60 / MUSICAS[S.musica].bpm, L = [], add = (beats, fn) => L.push({ d: beats * b, fn });
+  const nf = Math.max(1, Math.min(6, S.fotos.length || 1));
+  if (S.plantilla === "llego") {
+    add(4, escIntroLlego);
+    for (let i = 0; i < nf; i++) add(2, escFotoLlego(i));
+    if (S.fotos.length >= 3) add(4, escGrilla);
+  } else if (S.plantilla === "outfit") {
+    add(4, escIntroOutfit);
+    for (let i = 0; i < nf; i++) add(3, escFotoOutfit(i, nf));
+  } else if (S.plantilla === "liquida") {
+    add(4, escIntroLiq);
+    for (let i = 0; i < nf; i++) add(2, escFotoLiq(i));
+    add(4, escUrgencia);
+  } else {
+    add(4, escTallesFoto);
+    add(4, escTalles);
+    add(4, escColores);
+    for (let i = 3; i < Math.min(nf, 5); i++) add(2, escFotoSimple(i));
+  }
+  add(6, escCierre);
+  let t = 0; L.forEach(s => { s.t0 = t; t += s.d; });
+  TL = { L, dur: t, b };
+  return TL;
+}
+function dibujar(t) {
+  if (!TL) armar();
+  const L = TL.L; let i = L.findIndex(s => t < s.t0 + s.d); if (i < 0) i = L.length - 1;
+  const s = L[i], lt = cl(t - s.t0, 0, s.d);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 1;
+  const suave = S.musica === "tranquila";
+  if (suave && i > 0 && lt < .45) {
+    const pr = L[i - 1]; pr.fn(pr.d, pr.d);
+    ctx.save(); ctx.globalAlpha = lt / .45; s.fn(lt, s.d); ctx.restore();
+  } else if (!suave && i > 0 && lt < .22) {
+    const z = 1 + .07 * (1 - lt / .22);
+    ctx.save(); ctx.setTransform(z, 0, 0, z, W / 2 * (1 - z), H / 2 * (1 - z)); s.fn(lt, s.d); ctx.restore();
+    ctx.fillStyle = `rgba(255,255,255,${.35 * cl(1 - lt / .12)})`; ctx.fillRect(0, 0, W, H);
+  } else s.fn(lt, s.d);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  marcaAgua();
+  const fin = TL.dur - t;
+  if (fin < .4) { ctx.fillStyle = `rgba(0,0,0,${cl(1 - fin / .4) * .9})`; ctx.fillRect(0, 0, W, H); }
+}
+
+/* ---------- música (sintetizada, sin derechos) ---------- */
+function musica(ac, out, estilo, dur, t0) {
+  const bpm = MUSICAS[estilo].bpm, b = 60 / bpm;
+  const master = ac.createGain(); master.gain.value = 0;
+  master.gain.setValueAtTime(0, t0); master.gain.linearRampToValueAtTime(.8, t0 + .05);
+  master.gain.setValueAtTime(.8, t0 + Math.max(.1, dur - 1.2)); master.gain.linearRampToValueAtTime(0, t0 + dur);
+  const comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+  master.connect(comp); comp.connect(out);
+  const ruido = ac.createBuffer(1, ac.sampleRate, ac.sampleRate); const d = ruido.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  const env = (g, t, a, v, r) => { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + r); };
+  const osc = (tipo, f, t, a, v, r, dest = master, filtro) => {
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = tipo; o.frequency.value = f;
+    if (filtro) { const fl = ac.createBiquadFilter(); fl.type = "lowpass"; fl.frequency.value = filtro; o.connect(fl); fl.connect(g); } else o.connect(g);
+    g.connect(dest); env(g, t, a, v, r); o.start(t); o.stop(t + a + r + .05);
+  };
+  const bombo = (t, v = 1) => { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + .14); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + .32); o.connect(g); g.connect(master); o.start(t); o.stop(t + .35); };
+  const golpe = (t, tipo, f, v, r) => { const s = ac.createBufferSource(); s.buffer = ruido; const fl = ac.createBiquadFilter(); fl.type = tipo; fl.frequency.value = f; const g = ac.createGain(); s.connect(fl); fl.connect(g); g.connect(master); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + r); s.start(t); s.stop(t + r + .02); };
+  const prog = estilo === "alegre" ? [[48, 52, 55], [43, 47, 50], [45, 48, 52], [41, 45, 48]]
+            : estilo === "tranquila" ? [[45, 48, 52, 55], [41, 45, 48, 52], [48, 52, 55, 59], [43, 47, 50, 55]]
+            : [[45, 48, 52], [41, 45, 48], [48, 52, 55], [43, 47, 50]];
+  const beats = Math.ceil(dur / b) + 1;
+  for (let k = 0; k < beats; k++) {
+    const t = t0 + k * b; if (t > t0 + dur) break;
+    const ch = prog[Math.floor(k / 4) % 4], enCompas = k % 4;
+    if (estilo === "alegre") {
+      if (enCompas === 0 || enCompas === 2) bombo(t, .9);
+      if (enCompas === 1 || enCompas === 3) golpe(t, "bandpass", 1800, .45, .16);
+      golpe(t + b / 2, "highpass", 7000, .16, .05);
+      osc("triangle", hz(ch[0] - 12), t, .01, .32, b * .45);
+      osc("triangle", hz(ch[0] - 12), t + b / 2, .01, .22, b * .3);
+      ch.forEach(n => osc("square", hz(n + 12), t + b / 2, .005, .035, .14, master, 2200));
+    } else if (estilo === "tranquila") {
+      if (enCompas === 0) bombo(t, .5);
+      if (enCompas === 2) golpe(t, "bandpass", 2500, .12, .1);
+      if (enCompas === 0) osc("sine", hz(ch[0] - 12), t, .05, .3, b * 3.6);
+      [0, 1, 2, 3].forEach(j => osc("triangle", hz(ch[(enCompas * 2 + j) % ch.length] + 12), t + j * b / 2 * (j < 2 ? 1 : 1), .005, .09, b * 1.6, master, 3000));
+    } else {
+      bombo(t, 1);
+      if (enCompas === 1 || enCompas === 3) golpe(t, "bandpass", 1500, .5, .14);
+      for (let j = 0; j < 4; j++) golpe(t + j * b / 4, "highpass", 8000, j === 2 ? .2 : .08, .035);
+      osc("sawtooth", hz(ch[0] - 12), t + b / 2, .01, .26, b * .4, master, 900);
+      osc("sawtooth", hz(ch[0] - 24), t + b * .75, .01, .18, b * .2, master, 600);
+      if (enCompas % 2 === 0) ch.forEach(n => osc("sawtooth", hz(n + 12), t + b / 2, .01, .03, b * .4, master, 2600));
+    }
+  }
+}
+
+/* ---------- reproducción y grabación ---------- */
+let AC = null, corriendo = false, raf = 0;
+function parar() {
+  corriendo = false; cancelAnimationFrame(raf);
+  if (AC) { AC.close().catch(() => {}); AC = null; }
+  $("play").classList.remove("on");
+}
+function reproducir(alTerminar, alAvanzar, salida) {
+  armar();
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  const t0 = AC.currentTime + .12;
+  const dest = salida ? salida(AC) : AC.destination;
+  musica(AC, dest, S.musica, TL.dur, t0);
+  corriendo = true;
+  const paso = () => {
+    if (!corriendo || !AC) return;
+    const t = Math.max(0, AC.currentTime - t0);
+    dibujar(Math.min(t, TL.dur - .001));
+    mostrarTiempo(t);
+    if (alAvanzar) alAvanzar(t / TL.dur);
+    if (t >= TL.dur) { corriendo = false; alTerminar && alTerminar(); return; }
+    raf = requestAnimationFrame(paso);
+  };
+  raf = requestAnimationFrame(paso);
+  return AC;
+}
+const mmss = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+function mostrarTiempo(t) {
+  $("tiempo").textContent = mmss(t) + " / " + mmss(TL.dur);
+  $("scrub").value = Math.round(t / TL.dur * 1000);
+}
+function quieto() {
+  if (corriendo) return;
+  armar();
+  const t = $("scrub").value / 1000 * TL.dur;
+  dibujar(Math.min(t, TL.dur - .001)); mostrarTiempo(t);
+}
+$("play").onclick = () => {
+  if (corriendo) { parar(); quieto(); return; }
+  $("play").classList.add("on");
+  reproducir(() => { parar(); $("scrub").value = 80; quieto(); });
+};
+$("scrub").oninput = () => { if (corriendo) parar(); quieto(); };
+
+function tipoVideo() {
+  const tipos = ["video/mp4;codecs=avc1.42E01F,mp4a.40.2", "video/mp4;codecs=avc1,mp4a.40.2", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
+  return tipos.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || "";
+}
+function modal(html) { $("modal").innerHTML = html; $("capa").hidden = false; }
+function cerrarModal() { $("capa").hidden = true; $("modal").innerHTML = ""; }
+
+async function crear() {
+  if (!window.MediaRecorder || !cv.captureStream) { modal(`<h3>No se puede en este navegador</h3><p>Probá con Chrome o con Safari actualizado.</p><button class="btn b2" onclick="cerrarModal()">Cerrar</button>`); return; }
+  parar();
+  if (innerWidth <= 860) $("vista").scrollIntoView({ behavior: "smooth", block: "start" });
+  const tipo = tipoVideo();
+  const marca = document.createElement("div"); marca.className = "grabando"; marca.textContent = "Creando tu video… 0%";
+  document.querySelector(".tel").appendChild(marca);
+  document.querySelectorAll(".crear").forEach(b => b.disabled = true);
+  let destino;
+  const vs = cv.captureStream(30);
+  const partes = [];
+  let rec;
+  reproducir(() => { setTimeout(() => rec && rec.state !== "inactive" && rec.stop(), 150); },
+    p => { marca.textContent = "Creando tu video… " + Math.min(99, Math.round(p * 100)) + "%"; },
+    ac => {
+      destino = ac.createMediaStreamDestination();
+      const g = ac.createGain(); g.connect(destino); g.connect(ac.destination);
+      const ms = new MediaStream([...vs.getVideoTracks(), ...destino.stream.getAudioTracks()]);
+      rec = new MediaRecorder(ms, tipo ? { mimeType: tipo, videoBitsPerSecond: 8e6, audioBitsPerSecond: 160000 } : undefined);
+      rec.ondataavailable = e => e.data.size && partes.push(e.data);
+      rec.onstop = () => {
+        marca.remove(); document.querySelectorAll(".crear").forEach(b => b.disabled = false);
+        vs.getTracks().forEach(t => t.stop());
+        parar();
+        const tipoReal = (rec.mimeType || tipo || "video/webm").split(";")[0];
+        const blob = new Blob(partes, { type: tipoReal });
+        listo(blob, tipoReal);
+        $("scrub").value = 80; quieto();
+      };
+      rec.start(250);
+      return g;
+    });
+}
+function listo(blob, tipo) {
+  const ext = tipo.includes("mp4") ? "mp4" : "webm";
+  const nombre = "reel-" + (S.negocio || "dmith").toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "." + ext;
+  const url = URL.createObjectURL(blob);
+  const archivo = new File([blob], nombre, { type: tipo });
+  const compartir = navigator.canShare && navigator.canShare({ files: [archivo] });
+  modal(`<h3>¡Tu reel está listo!</h3>
+    <video src="${url}" controls playsinline autoplay></video>
+    ${ext === "webm" ? "<p>Este navegador lo guarda en formato .webm. En iPhone o en Chrome actualizado sale en .mp4, que es el que pide Instagram.</p>" : ""}
+    <div class="btns"><a class="btn b2" href="${url}" download="${nombre}">Descargar</a>${compartir ? '<button class="btn b2" id="compartir">Compartir</button>' : '<button class="btn b3" onclick="cerrarModal()">Cerrar</button>'}</div>
+    ${compartir ? '<button class="btn b3" onclick="cerrarModal()">Cerrar</button>' : ""}`);
+  if (compartir) $("compartir").onclick = () => navigator.share({ files: [archivo] }).catch(() => {});
+}
+$("crear").onclick = crear;
+$("crearMovil").onclick = crear;
+$("verMovil").onclick = () => { $("vista").scrollIntoView({ behavior: "smooth", block: "start" }); if (!corriendo) $("play").click(); };
+$("capa").onclick = e => { if (e.target === $("capa")) cerrarModal(); };
+
+/* ---------- editor ---------- */
+function botones(cont, lista, clave, pintar) {
+  const el = $(cont); el.innerHTML = "";
+  Object.entries(lista).forEach(([k, v]) => {
+    const b = document.createElement("button"); b.className = "op"; b.type = "button";
+    b.setAttribute("aria-pressed", String(S[clave] == k));
+    pintar ? pintar(b, k, v) : (b.textContent = v.n);
+    b.onclick = () => { S[clave] = isNaN(+k) ? k : +k; botones(cont, lista, clave, pintar); cambio(); };
+    el.appendChild(b);
+  });
+}
+function plantillas() {
+  const el = $("plantillas"); el.innerHTML = "";
+  Object.entries(PLANTILLAS).forEach(([k, v]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "pl"; b.setAttribute("aria-pressed", String(S.plantilla === k));
+    b.innerHTML = `<strong>${v.n}</strong><small>${v.d}</small>`;
+    b.onclick = () => { S.plantilla = k; if (k === "liquida") S.paleta = 3; plantillas(); campos(); botones("paletas", PALETAS, "paleta", pintarPaleta); $("scrub").value = 80; cambio(); };
+    el.appendChild(b);
+  });
+}
+function campos() {
+  const el = $("campos"); el.innerHTML = "";
+  PLANTILLAS[S.plantilla].campos.forEach(k => {
+    const [lab, , ayuda] = CAMPOS[k];
+    const l = document.createElement("label"); l.className = "c";
+    l.innerHTML = `${lab}${ayuda ? ` <small>${ayuda}</small>` : ""}`;
+    const i = document.createElement("input"); i.value = S[k]; i.inputMode = k === "desc" ? "numeric" : (k === "wa" ? "tel" : "text");
+    i.oninput = () => { S[k] = i.value; cambio(); };
+    l.appendChild(i); el.appendChild(l);
+  });
+}
+function pintarPaleta(b, k, v) {
+  b.className = "paleta"; b.title = v.n; b.setAttribute("aria-label", "Colores " + v.n);
+  b.innerHTML = `<i style="background:${v.a}"></i><i style="background:${v.f}"></i><i style="background:${v.c}"></i><i style="background:${v.a}"></i>`;
+}
+function fotos() {
+  const el = $("fotos"); el.innerHTML = "";
+  S.fotos.forEach((f, i) => {
+    const d = document.createElement("div"); d.className = "foto";
+    d.innerHTML = `<img alt=""><span class="n">${i + 1}</span><button class="q" aria-label="Quitar foto"><svg><use href="#i-x"/></svg></button>`;
+    d.querySelector("img").src = f.vista;
+    d.querySelector(".q").onclick = () => { S.fotos.splice(i, 1); fotos(); cambio(); };
+    [["nombre", "Nombre"], ["precio", "Precio"]].forEach(([k, ph]) => {
+      const inp = document.createElement("input"); inp.placeholder = ph; inp.value = f[k]; inp.setAttribute("aria-label", ph + " de la foto " + (i + 1));
+      inp.oninput = () => { f[k] = inp.value; cambio(); };
+      d.appendChild(inp);
+    });
+    el.appendChild(d);
+  });
+  if (S.fotos.length < 6) {
+    const a = document.createElement("button"); a.type = "button"; a.className = "agregar";
+    a.innerHTML = `<svg><use href="#i-mas"/></svg>Agregar fotos`;
+    a.onclick = () => $("archivos").click();
+    el.appendChild(a);
+  }
+}
+$("archivos").onchange = async e => {
+  const fs = [...e.target.files].slice(0, 6 - S.fotos.length);
+  for (const f of fs) {
+    try { const url = URL.createObjectURL(f); const img = await cargarImg(url); S.fotos.push({ img: achicar(img), vista: url, nombre: "", precio: "" }); } catch (_) {}
+  }
+  e.target.value = ""; fotos(); cambio();
+};
+async function cargarEjemplos() {
+  const arr = await Promise.all(EJEMPLOS.map(async ([id, n, p]) => {
+    try { const img = await cargarImg(`https://images.unsplash.com/${id}?w=1200&q=80`, true); return { img: achicar(img), vista: `https://images.unsplash.com/${id}?w=400&q=70`, nombre: n, precio: p }; } catch (_) { return null; }
+  }));
+  S.fotos = arr.filter(Boolean); fotos(); cambio();
+}
+$("ejemplo").onclick = cargarEjemplos;
+$("logobtn").onclick = () => $("logofile").click();
+$("logofile").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const url = URL.createObjectURL(f); const img = await cargarImg(url);
+  S.logo = achicar(img, 600); $("logoimg").src = url; $("logoimg").hidden = false; $("logoquitar").hidden = false; $("logobtn").textContent = "Cambiar logo"; cambio();
+};
+$("logoquitar").onclick = () => { S.logo = null; $("logoimg").hidden = true; $("logoquitar").hidden = true; $("logobtn").textContent = "Subir logo"; cambio(); };
+$("marca").onchange = e => { S.marca = e.target.checked; cambio(); };
+
+let pend = 0;
+function cambio() { cancelAnimationFrame(pend); pend = requestAnimationFrame(() => { if (corriendo) { parar(); } TL = null; quieto(); }); }
+
+(async function inicio() {
+  plantillas(); campos(); fotos();
+  botones("paletas", PALETAS, "paleta", pintarPaleta);
+  botones("fuentes", FUENTES, "fuente");
+  botones("musicas", MUSICAS, "musica");
+  try { await Promise.all(['400 80px "Anton"', 'italic 800 80px "Playfair Display"', '800 80px "Bricolage Grotesque"', '700 40px "DM Sans"', '500 40px "DM Sans"'].map(f => document.fonts.load(f))); } catch (_) {}
+  quieto();
+  await cargarEjemplos();
+})();
+</script>
+</body>
+</html>
