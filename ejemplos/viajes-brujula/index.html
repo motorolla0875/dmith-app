@@ -96,8 +96,8 @@
   /* cómo trabajamos */
   .como .wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; }
   .como h2 { font-size: clamp(32px, 4.6vw, 50px); }
-  .como .foto { border-radius: 26px; overflow: hidden; aspect-ratio: 4/5; }
-  .como .foto img { width: 100%; height: 100%; object-fit: cover; }
+  .como .foto { position: relative; border-radius: 26px; overflow: hidden; aspect-ratio: 4/5; }
+  .como .foto img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
   .pasos { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 18px; counter-reset: p; }
   .pasos li { display: grid; grid-template-columns: 48px 1fr; gap: 14px; counter-increment: p; }
   .pasos li::before { content: counter(p); width: 48px; height: 48px; border-radius: 50%; background: var(--mar); color: #fff; display: grid; place-items: center; font: 700 20px var(--titulo); }

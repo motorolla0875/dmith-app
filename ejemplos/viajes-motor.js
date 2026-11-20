@@ -39,8 +39,8 @@ window.VM = (function () {
 .vm-res-cab b{color:var(--vm-tinta)}\
 .vm-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px}\
 .vm-card{background:var(--vm-caja,#fff);border-radius:var(--vm-radio,18px);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--vm-linea);color:var(--vm-tinta);min-width:0}\
-.vm-card .vm-foto{position:relative;aspect-ratio:16/10;background:var(--vm-campo,#E8EDF3)}\
-.vm-card .vm-foto img{width:100%;height:100%;object-fit:cover;display:block}\
+.vm-card .vm-foto{position:relative;flex:none;width:100%;height:0;padding-bottom:62.5%;overflow:hidden;background:var(--vm-campo,#E8EDF3)}\
+.vm-card .vm-foto img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;display:block}\
 .vm-card .vm-cod{position:absolute;right:12px;top:12px;background:var(--vm-acento);color:var(--vm-acento-txt,#fff);font-weight:900;border-radius:10px;padding:6px 10px;font-size:15px;letter-spacing:.04em}\
 .vm-card .vm-zona{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.95);color:#12263A;font-weight:700;border-radius:999px;padding:5px 11px;font-size:13px}\
 .vm-card .vm-cuerpo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}\
