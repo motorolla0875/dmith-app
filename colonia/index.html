@@ -54,6 +54,7 @@
   .energia i { width: 70px; height: 7px; background: #0001; border-radius: 9px; overflow: hidden; display: block; }
   .energia i span { display: block; height: 100%; background: #FFC23D; }
   .esquina { position: fixed; right: 10px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 96px); display: flex; flex-direction: column; gap: 6px; pointer-events: auto; }
+  #b-idioma { font-size: 12px !important; font-weight: 700; }
   .esquina button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: #ffffffd9; font-size: 17px; cursor: pointer; box-shadow: 0 2px 8px #0001; }
   .aviso { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 38px); transform: translate(-50%, -12px); opacity: 0; background: #2E2440c8; color: #fff; padding: 5px 12px; border-radius: 12px; font-size: 13px; transition: .35s; pointer-events: none; max-width: 68vw; text-align: center; z-index: 5; }
   .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
@@ -160,10 +161,28 @@
   @media (orientation: portrait) and (max-width: 600px) and (pointer: coarse) { #girar.activo { display: flex; } }
 </style>
 <script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
+<script>
+// ===== idioma: el que elegiste, si no el del celular, y si no el del país (zona horaria). Si no se sabe: inglés =====
+(function () {
+  var I = ["es", "en", "pt"], g = null;
+  try { g = localStorage.getItem("brotitos-idioma"); } catch (e) {}
+  function detectar() {
+    if (I.indexOf(g) >= 0) return g;
+    var ls = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"]);
+    for (var i = 0; i < ls.length; i++) { var l = String(ls[i]).toLowerCase(); if (l.indexOf("es") === 0) return "es"; if (l.indexOf("pt") === 0) return "pt"; if (l.indexOf("en") === 0) break; }
+    var tz = ""; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+    if (/^America\/(Sao_Paulo|Fortaleza|Recife|Bahia|Belem|Manaus|Cuiaba|Campo_Grande|Porto_Velho|Boa_Vista|Rio_Branco|Araguaina|Maceio|Santarem|Noronha|Eirunepe)|^Europe\/Lisbon|^Atlantic\/(Azores|Madeira)|^Africa\/(Luanda|Maputo)/.test(tz)) return "pt";
+    if (/^America\/(Argentina|Buenos_Aires|Montevideo|Santiago|Asuncion|La_Paz|Lima|Bogota|Caracas|Guayaquil|Mexico_City|Monterrey|Cancun|Merida|Chihuahua|Hermosillo|Mazatlan|Matamoros|Tijuana|Guatemala|El_Salvador|Tegucigalpa|Managua|Costa_Rica|Panama|Havana|Santo_Domingo|Puerto_Rico)|^Europe\/Madrid|^Atlantic\/Canary|^Africa\/(Ceuta|Malabo)/.test(tz)) return "es";
+    return "en";
+  }
+  window.IDIOMA = detectar();
+  document.documentElement.lang = window.IDIOMA;
+})();
+</script>
 </head>
 <body>
-<div id="cargando">🌱 Cargando la colonia…</div>
-<div id="girar" class="activo"><div class="ic">📱</div><b>Girá el celular</b><span>Brotitos se juega acostado 🌱</span><button onclick="this.parentNode.classList.remove('activo')">Jugar igual parado</button></div>
+<div id="cargando" data-t="cargando">🌱 Cargando la colonia…</div>
+<div id="girar" class="activo"><div class="ic">📱</div><b data-t="girarT">Girá el celular</b><span data-t="girarS">Brotitos se juega acostado 🌱</span><button data-t="girarB" onclick="this.parentNode.classList.remove('activo')">Jugar igual parado</button></div>
 <div id="lienzo"></div>
 <div id="globos"></div>
 
@@ -185,6 +204,7 @@
   <button id="b-sonido" title="Sonido">🔊</button>
   <button id="b-ver" title="Ver toda la colonia">🔭</button>
   <button id="b-salir" title="Salir">🚪</button>
+  <button id="b-idioma" title="Idioma / Language">ES</button>
   <button id="b-info" title="Cómo se juega">❔</button>
 </div>
 
@@ -192,57 +212,100 @@
   <div class="pedido" id="pedido"><span id="pedido-txt"></span><i><span id="pedido-t"></span></i></div>
   <div class="energia">⚡<i><span id="h-energia"></span></i></div>
   <div class="botones">
-    <button id="d-comida"><b>🍎</b>Comida <small>+1</small></button>
-    <button id="d-madera"><b>🪵</b>Madera <small>+1</small></button>
-    <button id="d-piedra"><b>🪨</b>Piedra <small>+1</small></button>
-    <button id="d-entrar" class="entrar"><b>🚪</b>Entrar</button>
+    <button id="d-comida"><b>🍎</b><span data-t="comida">Comida</span> <small>+1</small></button>
+    <button id="d-madera"><b>🪵</b><span data-t="madera">Madera</span> <small>+1</small></button>
+    <button id="d-piedra"><b>🪨</b><span data-t="piedra">Piedra</span> <small>+1</small></button>
+    <button id="d-entrar" class="entrar"><b>🚪</b><span data-t="entrar">Entrar</span></button>
   </div>
 </div>
 
 <div id="joy"><i></i></div>
-<div id="acciones-izq"><button id="a-atacar" style="display:none">⚔️ ¡Ataquen!</button><button id="a-siganme">🚩 Síganme</button><button id="a-bailar">💃 Bailar</button></div>
+<div id="acciones-izq"><button id="a-atacar" style="display:none" data-t="atacar">⚔️ ¡Ataquen!</button><button id="a-siganme" data-t="siganme">🚩 Síganme</button><button id="a-bailar" data-t="bailar">💃 Bailar</button></div>
 <div id="acciones">
-  <button id="a-hacer">✋ Juntar</button>
-  <div class="fila2" id="fila-bicho" style="display:none"><button id="a-abrazar">🤗 Abrazar</button><button id="a-alzar">✋ Alzar</button></div>
-  <div class="fila2"><button id="a-saludar">👋 Saludar</button><button id="a-saltar">⬆️ Saltar</button></div>
+  <button id="a-hacer" data-t="juntar">✋ Juntar</button>
+  <div class="fila2" id="fila-bicho" style="display:none"><button id="a-abrazar" data-t="abrazar">🤗 Abrazar</button><button id="a-alzar" data-t="alzar">✋ Alzar</button></div>
+  <div class="fila2"><button id="a-saludar" data-t="saludar">👋 Saludar</button><button id="a-saltar" data-t="saltar">⬆️ Saltar</button></div>
 </div>
 <div class="aviso" id="aviso"></div>
-<div id="mision"><span id="mision-txt"></span><button id="mision-ir">🧭 Ir</button></div>
+<div id="mision"><span id="mision-txt"></span><button id="mision-ir" data-t="ir">🧭 Ir</button></div>
 <div class="logro" id="logro"><div class="g" id="logro-g"></div><div class="tx"><b id="logro-t"></b><span id="logro-s"></span></div></div>
 
 <div class="capa" id="c-info">
   <div class="caja">
-    <h2>🌱 Tus Brotitos</h2>
-    <p>Empezás con <b>uno solo</b>. Juntan comida, madera y piedra, construyen casitas y, cuando hay lugar y comida, <b>nacen más</b>.</p>
+    <h2 data-t="infoT">🌱 Tus Brotitos</h2>
+    <p data-t="infoP">Empezás con <b>uno solo</b>. Juntan comida, madera y piedra, construyen casitas y, cuando hay lugar y comida, <b>nacen más</b>.</p>
     <ul>
-      <li>Un dedo: mover la vista. Dos dedos: girar y acercar. En la compu: arrastrá, clic derecho para girar y la ruedita para el zoom.</li>
-      <li>El mundo es infinito: cuando se quedan sin lugar, <b>agrandan la tierra</b> para seguir construyendo.</li>
-      <li>🏗️ A medida que son más construyen <b>calles</b> y cada vez más cosas: plaza, mercado, hospital, estadio, aeropuerto… Cada una les da una mejora.</li>
-      <li>⚡ Cuantos más son, más <b>poder</b>: cada nivel les da una mejora, y los niveles no se terminan nunca.</li>
-      <li>💡 Cuando ya construyeron todo, <b>inventan cosas nuevas</b> que nunca viste, y a veces los más sabios crean algo único con inteligencia artificial.</li>
-      <li>🧠 Con el tiempo ganan <b>sabiduría</b> y pasan de era: chozas → ladrillo → máquinas → electricidad → espacial.</li>
-      <li>Cada Brotito tiene su oficio: 🪓 leñador, 🌾 granjero, ⛏️ minero, 🔨 constructor.</li>
-      <li>Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.</li>
-      <li>De noche se van a dormir a sus casas.</li>
-      <li>Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.</li>
-      <li>🚪 <b>Entrar</b>: sos un Brotito más (el dorado 👑). Caminá con el joystick, juntá cosas y llevalas a una casa, ayudá en las obras y saludalos. Si los chocás se caen y se asustan; si saltás encima de uno… 😵. Con 🚪 salís.</li>
-      <li>👑 Adentro podés hacer que te sigan 🚩, abrazarlos 🤗, alzarlos y tirarlos ✋, mandarlos al ataque ⚔️, bailar 💃 y cumplir <b>misiones</b> 📜 cuando alguno tiene un ❗.</li>
-      <li>Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.</li>
-      <li>La colonia sigue creciendo aunque cierres la página.</li>
+      <li data-t="i1">Un dedo: mover la vista. Dos dedos: girar y acercar. En la compu: arrastrá, clic derecho para girar y la ruedita para el zoom.</li>
+      <li data-t="i2">El mundo es infinito: cuando se quedan sin lugar, <b>agrandan la tierra</b> para seguir construyendo.</li>
+      <li data-t="i3">🏗️ A medida que son más construyen <b>calles</b> y cada vez más cosas: plaza, mercado, hospital, estadio, aeropuerto… Cada una les da una mejora.</li>
+      <li data-t="i4">⚡ Cuantos más son, más <b>poder</b>: cada nivel les da una mejora, y los niveles no se terminan nunca.</li>
+      <li data-t="i5">💡 Cuando ya construyeron todo, <b>inventan cosas nuevas</b> que nunca viste, y a veces los más sabios crean algo único con inteligencia artificial.</li>
+      <li data-t="i6">🧠 Con el tiempo ganan <b>sabiduría</b> y pasan de era: chozas → ladrillo → máquinas → electricidad → espacial.</li>
+      <li data-t="i7">Cada Brotito tiene su oficio: 🪓 leñador, 🌾 granjero, ⛏️ minero, 🔨 constructor.</li>
+      <li data-t="i8">Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.</li>
+      <li data-t="i9">De noche se van a dormir a sus casas.</li>
+      <li data-t="i10">Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.</li>
+      <li data-t="i11">🚪 <b>Entrar</b>: sos un Brotito más (el dorado 👑). Caminá con el joystick, juntá cosas y llevalas a una casa, ayudá en las obras y saludalos. Si los chocás se caen y se asustan; si saltás encima de uno… 😵. Con 🚪 salís.</li>
+      <li data-t="i12">👑 Adentro podés hacer que te sigan 🚩, abrazarlos 🤗, alzarlos y tirarlos ✋, mandarlos al ataque ⚔️, bailar 💃 y cumplir <b>misiones</b> 📜 cuando alguno tiene un ❗.</li>
+      <li data-t="i13">Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.</li>
+      <li data-t="i14">La colonia sigue creciendo aunque cierres la página.</li>
     </ul>
-    <button class="btn" id="info-ok">¡A jugar!</button>
-    <button class="btn gris" id="reiniciar">Empezar una colonia nueva</button>
+    <button class="btn" id="info-ok" data-t="jugar">¡A jugar!</button>
+    <button class="btn gris" id="reiniciar" data-t="reiniciar">Empezar una colonia nueva</button>
   </div>
 </div>
 
 <div class="capa" id="c-vuelta">
   <div class="caja">
-    <h2>¡Volviste! 🌱</h2>
+    <h2 data-t="volviste">¡Volviste! 🌱</h2>
     <p id="vuelta-txt"></p>
-    <button class="btn" id="vuelta-ok">Ver la colonia</button>
+    <button class="btn" id="vuelta-ok" data-t="verColonia">Ver la colonia</button>
   </div>
 </div>
 
-<script type="module" src="juego.js?v=29"></script>
+<script>
+// ===== textos fijos de la página en los 3 idiomas =====
+(function () {
+  var k = { es: 0, en: 1, pt: 2 }[window.IDIOMA] || 0;
+  var TX = {
+    cargando: ["🌱 Cargando la colonia…", "🌱 Loading the colony…", "🌱 Carregando a colônia…"],
+    girarT: ["Girá el celular", "Turn your phone sideways", "Gire o celular"],
+    girarS: ["Brotitos se juega acostado 🌱", "Brotitos is played in landscape 🌱", "Brotitos se joga na horizontal 🌱"],
+    girarB: ["Jugar igual parado", "Play in portrait anyway", "Jogar na vertical mesmo assim"],
+    comida: ["Comida", "Food", "Comida"], madera: ["Madera", "Wood", "Madeira"], piedra: ["Piedra", "Stone", "Pedra"], entrar: ["Entrar", "Enter", "Entrar"],
+    infoT: ["🌱 Tus Brotitos", "🌱 Your Brotitos", "🌱 Seus Brotitos"],
+    infoP: ["Empezás con <b>uno solo</b>. Juntan comida, madera y piedra, construyen casitas y, cuando hay lugar y comida, <b>nacen más</b>.",
+      "You start with <b>just one</b>. They gather food, wood and stone, build little houses and, when there is room and food, <b>more are born</b>.",
+      "Você começa com <b>um só</b>. Eles juntam comida, madeira e pedra, constroem casinhas e, quando há espaço e comida, <b>nascem mais</b>."],
+    i1: ["Un dedo: mover la vista. Dos dedos: girar y acercar. En la compu: arrastrá, clic derecho para girar y la ruedita para el zoom.", "One finger: move the view. Two fingers: rotate and zoom. On a computer: drag, right-click to rotate and the mouse wheel to zoom.", "Um dedo: mover a vista. Dois dedos: girar e aproximar. No computador: arraste, clique direito para girar e a rodinha para o zoom."],
+    i2: ["El mundo es infinito: cuando se quedan sin lugar, <b>agrandan la tierra</b> para seguir construyendo.", "The world is endless: when they run out of room, they <b>expand the land</b> to keep building.", "O mundo é infinito: quando ficam sem espaço, eles <b>aumentam a terra</b> para continuar construindo."],
+    i3: ["🏗️ A medida que son más construyen <b>calles</b> y cada vez más cosas: plaza, mercado, hospital, estadio, aeropuerto… Cada una les da una mejora.", "🏗️ As they grow they build <b>streets</b> and more and more things: square, market, hospital, stadium, airport… Each one gives them a bonus.", "🏗️ Conforme crescem constroem <b>ruas</b> e cada vez mais coisas: praça, mercado, hospital, estádio, aeroporto… Cada uma dá um bônus."],
+    i4: ["⚡ Cuantos más son, más <b>poder</b>: cada nivel les da una mejora, y los niveles no se terminan nunca.", "⚡ The more there are, the more <b>power</b>: every level gives a bonus, and levels never end.", "⚡ Quanto mais são, mais <b>poder</b>: cada nível dá um bônus, e os níveis nunca acabam."],
+    i5: ["💡 Cuando ya construyeron todo, <b>inventan cosas nuevas</b> que nunca viste, y a veces los más sabios crean algo único con inteligencia artificial.", "💡 Once they have built everything, they <b>invent new things</b> you have never seen, and sometimes the wisest create something unique with artificial intelligence.", "💡 Quando já construíram tudo, eles <b>inventam coisas novas</b> que você nunca viu, e às vezes os mais sábios criam algo único com inteligência artificial."],
+    i6: ["🧠 Con el tiempo ganan <b>sabiduría</b> y pasan de era: chozas → ladrillo → máquinas → electricidad → espacial.", "🧠 Over time they gain <b>wisdom</b> and move through eras: huts → brick → machines → electricity → space.", "🧠 Com o tempo ganham <b>sabedoria</b> e mudam de era: cabanas → tijolo → máquinas → eletricidade → espacial."],
+    i7: ["Cada Brotito tiene su oficio: 🪓 leñador, 🌾 granjero, ⛏️ minero, 🔨 constructor.", "Every Brotito has a job: 🪓 woodcutter, 🌾 farmer, ⛏️ miner, 🔨 builder.", "Cada Brotito tem uma profissão: 🪓 lenhador, 🌾 fazendeiro, ⛏️ mineiro, 🔨 construtor."],
+    i8: ["Arriba ves la <b>próxima meta</b>: al llegar se desbloquean edificios nuevos.", "At the top you see the <b>next goal</b>: reaching it unlocks new buildings.", "Em cima você vê a <b>próxima meta</b>: ao chegar, novos prédios são desbloqueados."],
+    i9: ["De noche se van a dormir a sus casas.", "At night they go to sleep in their houses.", "À noite eles vão dormir em suas casas."],
+    i10: ["Usá los botones de abajo para darles cosas. A veces te <b>piden</b> algo.", "Use the buttons below to give them things. Sometimes they <b>ask</b> you for something.", "Use os botões de baixo para dar coisas a eles. Às vezes eles <b>pedem</b> algo."],
+    i11: ["🚪 <b>Entrar</b>: sos un Brotito más (el dorado 👑). Caminá con el joystick, juntá cosas y llevalas a una casa, ayudá en las obras y saludalos. Si los chocás se caen y se asustan; si saltás encima de uno… 😵. Con 🚪 salís.", "🚪 <b>Enter</b>: you become one more Brotito (the golden one 👑). Walk with the joystick, gather things and take them to a house, help build and say hi. Bump into them and they fall and get scared; jump on one… 😵. Tap 🚪 to leave.", "🚪 <b>Entrar</b>: você vira mais um Brotito (o dourado 👑). Ande com o joystick, junte coisas e leve para uma casa, ajude nas obras e cumprimente. Se esbarrar neles, caem e se assustam; se pular em cima de um… 😵. Com 🚪 você sai."],
+    i12: ["👑 Adentro podés hacer que te sigan 🚩, abrazarlos 🤗, alzarlos y tirarlos ✋, mandarlos al ataque ⚔️, bailar 💃 y cumplir <b>misiones</b> 📜 cuando alguno tiene un ❗.", "👑 Inside you can make them follow you 🚩, hug them 🤗, pick them up and throw them ✋, send them to attack ⚔️, dance 💃 and complete <b>quests</b> 📜 when one has a ❗.", "👑 Lá dentro você pode fazer eles te seguirem 🚩, abraçar 🤗, levantar e jogar ✋, mandar atacar ⚔️, dançar 💃 e cumprir <b>missões</b> 📜 quando alguém tem um ❗."],
+    i13: ["Tocá un Brotito y… lo aplastás 😵. Los demás gritan y se asustan. Vos decidís.", "Tap a Brotito and… you squash it 😵. The others scream and get scared. It's up to you.", "Toque num Brotito e… você o esmaga 😵. Os outros gritam e se assustam. Você decide."],
+    i14: ["La colonia sigue creciendo aunque cierres la página.", "The colony keeps growing even when you close the game.", "A colônia continua crescendo mesmo se você fechar o jogo."],
+    jugar: ["¡A jugar!", "Let's play!", "Vamos jogar!"],
+    reiniciar: ["Empezar una colonia nueva", "Start a new colony", "Começar uma colônia nova"],
+    volviste: ["¡Volviste! 🌱", "Welcome back! 🌱", "Você voltou! 🌱"],
+    verColonia: ["Ver la colonia", "See the colony", "Ver a colônia"],
+    siganme: ["🚩 Síganme", "🚩 Follow me", "🚩 Me sigam"], bailar: ["💃 Bailar", "💃 Dance", "💃 Dançar"], atacar: ["⚔️ ¡Ataquen!", "⚔️ Attack!", "⚔️ Ataquem!"],
+    juntar: ["✋ Juntar", "✋ Gather", "✋ Juntar"], abrazar: ["🤗 Abrazar", "🤗 Hug", "🤗 Abraçar"], alzar: ["✋ Alzar", "✋ Pick up", "✋ Levantar"],
+    saludar: ["👋 Saludar", "👋 Say hi", "👋 Cumprimentar"], saltar: ["⬆️ Saltar", "⬆️ Jump", "⬆️ Pular"], ir: ["🧭 Ir", "🧭 Go", "🧭 Ir"],
+  };
+  document.title = ["Brotitos: Simulador de Vida", "Brotitos: Life Simulator", "Brotitos: Simulador de Vida"][k];
+  window.TXP = function (c) { return TX[c] ? TX[c][k] : c; };
+  var els = document.querySelectorAll("[data-t]");
+  for (var i = 0; i < els.length; i++) { var t = TX[els[i].getAttribute("data-t")]; if (t) els[i].innerHTML = t[k]; }
+  var b = document.getElementById("b-idioma"); if (b) b.textContent = window.IDIOMA.toUpperCase();
+})();
+</script>
+<script type="module" src="juego.js?v=30"></script>
 </body>
 </html>

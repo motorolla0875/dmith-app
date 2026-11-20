@@ -2,6 +2,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "./lib/OrbitControls.js";
 
+// ======================= Idioma =======================
+const IDIOMA = window.IDIOMA || "es", LI = { es: 0, en: 1, pt: 2 }[IDIOMA] ?? 0;
+const T = (es, en, pt) => LI === 1 ? en : LI === 2 ? pt : es;
+
 // ======================= Utilidades =======================
 const $ = (id) => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -143,6 +147,60 @@ const TIPOS_INV = [
   { n: "Laboratorio", g: ["🧬", "⚗️"], techo: ["cupula", "plano"], p: [2, 5], w: [3.6, 4.4] },
 ];
 const EF_INV = [["comida", "comida"], ["madera", "madera"], ["piedra", "piedra"], ["sab", "sabiduría"], ["obra", "construcción"], ["vel", "velocidad"], ["nacer", "nacimientos"], ["gemas", "gemas"], ["animo", "ánimo"]];
+// ---- los nombres de metas, eras, construcciones y mejoras en el idioma elegido ----
+const TR = {
+  "Huerta": ["Garden", "Horta"], "Comida sin tener que buscar arbustos": ["Food without searching for bushes", "Comida sem procurar arbustos"],
+  "Mina": ["Mine", "Mina"], "Cavan hondo: piedra y gemas 💎": ["They dig deep: stone and gems 💎", "Cavam fundo: pedra e gemas 💎"],
+  "Casas de 3 pisos": ["3-story houses", "Casas de 3 andares"], "Entran más Brotitos en cada casa": ["More Brotitos fit in each house", "Cabem mais Brotitos em cada casa"],
+  "Escuela": ["School", "Escola"], "Los bebés crecen el doble y suma sabiduría 🧠": ["Babies grow twice as fast, plus wisdom 🧠", "Os bebês crescem o dobro e ganham sabedoria 🧠"],
+  "Torre": ["Tower", "Torre"], "Desde arriba se ve todo y están más contentos": ["They can see everything from up there and are happier", "Lá de cima se vê tudo e eles ficam mais felizes"],
+  "Casas de 4 pisos": ["4-story houses", "Casas de 4 andares"], "Necesitan gemas 💎 para el último piso": ["They need gems 💎 for the top floor", "Precisam de gemas 💎 para o último andar"],
+  "Segunda huerta": ["Second garden", "Segunda horta"], "Más comida para más Brotitos": ["More food for more Brotitos", "Mais comida para mais Brotitos"],
+  "Biblioteca": ["Library", "Biblioteca"], "Mucha más sabiduría 🧠": ["Much more wisdom 🧠", "Muito mais sabedoria 🧠"],
+  "Tercera huerta": ["Third garden", "Terceira horta"], "Para una colonia gigante": ["For a giant colony", "Para uma colônia gigante"],
+  "Universidad": ["University", "Universidade"], "Todavía más sabiduría 🧠": ["Even more wisdom 🧠", "Ainda mais sabedoria 🧠"],
+  "Segunda torre": ["Second tower", "Segunda torre"], "La colonia se ve desde lejos": ["The colony can be seen from far away", "A colônia é vista de longe"],
+  "Chozas": ["Huts", "Cabanas"], "Ladrillo": ["Brick", "Tijolo"], "Máquinas": ["Machines", "Máquinas"], "Electricidad": ["Electricity", "Eletricidade"], "Espacial": ["Space", "Espacial"],
+  "Molino 🌾 + carretillas: llevan el doble": ["Mill 🌾 + wheelbarrows: they carry twice as much", "Moinho 🌾 + carrinhos: levam o dobro"],
+  "Fábrica 🏭: más madera y piedra, caminan más rápido": ["Factory 🏭: more wood and stone, they walk faster", "Fábrica 🏭: mais madeira e pedra, andam mais rápido"],
+  "Central ⚡: luces de noche y turno nocturno": ["Power plant ⚡: lights at night and a night shift", "Usina ⚡: luzes à noite e turno da noite"],
+  "Base espacial: cohetes que traen gemas del cielo": ["Space base: rockets that bring gems from the sky", "Base espacial: foguetes que trazem gemas do céu"],
+  "Pozo de agua": ["Water well", "Poço d'água"], "Agua fresca: están más contentos": ["Fresh water: they are happier", "Água fresca: ficam mais felizes"],
+  "Granero": ["Barn", "Celeiro"], "+10% comida": ["+10% food", "+10% comida"], "Leñera": ["Woodshed", "Depósito de lenha"], "+10% madera": ["+10% wood", "+10% madeira"],
+  "Cantera": ["Quarry", "Pedreira"], "+10% piedra": ["+10% stone", "+10% pedra"], "Tótem de la colonia": ["Colony totem", "Totem da colônia"], "Los une: más ánimo y sabiduría": ["It unites them: more happiness and wisdom", "Une todos: mais ânimo e sabedoria"],
+  "Cocina comunal": ["Community kitchen", "Cozinha comunitária"], "Comen juntos: nacen más rápido": ["They eat together: born faster", "Comem juntos: nascem mais rápido"],
+  "Plaza con fuente": ["Square with fountain", "Praça com fonte"], "El centro del pueblo: mucho más ánimo": ["The heart of town: much more happiness", "O centro da cidade: muito mais ânimo"],
+  "Mercado": ["Market", "Mercado"], "+5% de todo": ["+5% of everything", "+5% de tudo"], "Panadería": ["Bakery", "Padaria"], "+15% comida": ["+15% food", "+15% comida"],
+  "Herrería": ["Blacksmith", "Ferraria"], "Mejores herramientas: construyen +15% rápido": ["Better tools: build 15% faster", "Ferramentas melhores: constroem 15% mais rápido"],
+  "Carpintería": ["Carpentry", "Carpintaria"], "+15% madera": ["+15% wood", "+15% madeira"], "Correo": ["Post office", "Correio"], "Se organizan mejor: caminan +5% rápido": ["Better organized: walk 5% faster", "Mais organizados: andam 5% mais rápido"],
+  "Teatro": ["Theater", "Teatro"], "Funciones todas las noches: más ánimo": ["Shows every night: more happiness", "Shows toda noite: mais ânimo"],
+  "Estación de tren": ["Train station", "Estação de trem"], "Viajan más rápido: +10% velocidad": ["They travel faster: +10% speed", "Viajam mais rápido: +10% velocidade"],
+  "Aserradero": ["Sawmill", "Serraria"], "+20% madera": ["+20% wood", "+20% madeira"], "Hospital": ["Hospital", "Hospital"], "Bebés sanos: nacen +15% rápido": ["Healthy babies: born 15% faster", "Bebês saudáveis: nascem 15% mais rápido"],
+  "Banco": ["Bank", "Banco"], "Guardan bien las gemas: +15%": ["They keep gems safe: +15%", "Guardam bem as gemas: +15%"], "Museo": ["Museum", "Museu"], "Aprenden del pasado: +15% sabiduría": ["They learn from the past: +15% wisdom", "Aprendem com o passado: +15% sabedoria"],
+  "Puerto": ["Harbor", "Porto"], "Pescado fresco: +20% comida": ["Fresh fish: +20% food", "Peixe fresco: +20% comida"], "Torre del reloj": ["Clock tower", "Torre do relógio"], "Llegan puntuales: construyen +10% rápido": ["Always on time: build 10% faster", "Chegam pontuais: constroem 10% mais rápido"],
+  "Estadio": ["Stadium", "Estádio"], "¡Partidos! Mucho más ánimo": ["Matches! Much more happiness", "Partidas! Muito mais ânimo"], "Parque de diversiones": ["Amusement park", "Parque de diversões"], "Más ánimo y más bebés": ["More happiness and more babies", "Mais ânimo e mais bebês"],
+  "Cine": ["Cinema", "Cinema"], "Pochoclo y películas: más ánimo": ["Popcorn and movies: more happiness", "Pipoca e filmes: mais ânimo"], "Laboratorio": ["Laboratory", "Laboratório"], "Experimentos: +20% sabiduría": ["Experiments: +20% wisdom", "Experimentos: +20% sabedoria"],
+  "Rascacielos": ["Skyscraper", "Arranha-céu"], "Casas de 2 pisos más": ["Houses get 2 more floors", "Casas com 2 andares a mais"], "Aeropuerto": ["Airport", "Aeroporto"], "Vuelan de un lado al otro: +10% velocidad": ["They fly everywhere: +10% speed", "Voam de um lado ao outro: +10% velocidade"],
+  "Antena de radio": ["Radio tower", "Antena de rádio"], "Se enteran de todo: +10% sabiduría": ["They hear about everything: +10% wisdom", "Ficam sabendo de tudo: +10% sabedoria"],
+  "Observatorio": ["Observatory", "Observatório"], "Miran las estrellas: +20% sabiduría": ["Stargazing: +20% wisdom", "Olham as estrelas: +20% sabedoria"], "Granja vertical": ["Vertical farm", "Fazenda vertical"], "Huertas en el aire: +25% comida": ["Gardens in the sky: +25% food", "Hortas no ar: +25% comida"],
+  "Taller de robots": ["Robot workshop", "Oficina de robôs"], "Robots que ayudan: +25% construcción": ["Helper robots: +25% building", "Robôs ajudantes: +25% construção"], "Teletransportador": ["Teleporter", "Teletransportador"], "Aparecen donde quieren: +15% velocidad": ["They appear wherever they want: +15% speed", "Aparecem onde querem: +15% velocidade"],
+  "Domo de cristal": ["Crystal dome", "Domo de cristal"], "Jardín bajo el vidrio: mucho ánimo": ["Garden under glass: lots of happiness", "Jardim sob o vidro: muito ânimo"], "Ascensor espacial": ["Space elevator", "Elevador espacial"], "Suben al espacio: +30% gemas": ["Up to space: +30% gems", "Sobem ao espaço: +30% gemas"],
+  "Caminan +4% más rápido": ["Walk 4% faster", "Andam 4% mais rápido"], "+5% comida": ["+5% food", "+5% comida"], "Construyen +5% más rápido": ["Build 5% faster", "Constroem 5% mais rápido"], "+5% madera": ["+5% wood", "+5% madeira"],
+  "+5% sabiduría": ["+5% wisdom", "+5% sabedoria"], "+5% piedra": ["+5% stone", "+5% pedra"], "Nacen +5% más rápido": ["Born 5% faster", "Nascem 5% mais rápido"], "Están más contentos": ["They are happier", "Ficam mais felizes"], "+5% gemas": ["+5% gems", "+5% gemas"],
+  "Las casas pueden tener 1 piso más": ["Houses can have 1 more floor", "As casas podem ter 1 andar a mais"],
+  "Salón": ["Hall", "Salão"], "Taller": ["Workshop", "Oficina"], "Palacio": ["Palace", "Palácio"], "Templo": ["Temple", "Templo"], "Club": ["Club", "Clube"], "Fábrica": ["Factory", "Fábrica"], "Faro": ["Lighthouse", "Farol"],
+  "Academia": ["Academy", "Academia"], "Mirador": ["Lookout", "Mirante"], "Galería": ["Gallery", "Galeria"], "Casa de juegos": ["Playhouse", "Casa de jogos"], "Invernadero": ["Greenhouse", "Estufa"],
+  "comida": ["food", "comida"], "madera": ["wood", "madeira"], "piedra": ["stone", "pedra"], "sabiduría": ["wisdom", "sabedoria"], "construcción": ["building", "construção"], "velocidad": ["speed", "velocidade"], "nacimientos": ["births", "nascimentos"], "gemas": ["gems", "gemas"], "ánimo": ["happiness", "ânimo"],
+};
+const tx = (s) => (LI && TR[s] ? TR[s][LI - 1] : s);
+if (LI) {
+  for (const m of METAS) { m.t = tx(m.t); m.s = tx(m.s); }
+  for (const e of ERAS) { e.n = tx(e.n); if (e.s) e.s = tx(e.s); }
+  for (const c of CATALOGO) { c.n = tx(c.n); c.s = tx(c.s); }
+  for (const m of MEJORAS) m.t = tx(m.t);
+  for (const t of TIPOS_INV) t.n = tx(t.n);
+  for (const e of EF_INV) e[1] = tx(e[1]);
+}
 const PARTES_INV = ["columnas", "chimenea", "toldo", "antena", "bandera", "reloj", "torre", "arboles", "esfera", "neon", "vidrio"];
 function inventar(sem) {
   const rd = semilla(sem), en = (a) => a[rd() * a.length | 0], entre = (a, b) => a + rd() * (b - a);
@@ -154,7 +212,7 @@ function inventar(sem) {
   for (let i = 0; i < np; i++) { const p = en(PARTES_INV); if ((p === "neon" || p === "vidrio") && E.era < 3) continue; if (!partes.includes(p)) partes.push(p); }
   const w = entre(...t.w);
   return {
-    g: en(t.g), n: `${t.n} ${nom[0].toUpperCase() + nom.slice(1)}`, s: k === "animo" ? "Están más contentos" : `+${Math.round(v * 100)}% ${txt}`, ef: { [k]: v },
+    g: en(t.g), n: `${t.n} ${nom[0].toUpperCase() + nom.slice(1)}`, s: k === "animo" ? T("Están más contentos", "They are happier", "Ficam mais felizes") : `+${Math.round(v * 100)}% ${txt}`, ef: { [k]: v },
     r: { w, d: w * entre(.8, 1.1), pisos: Math.round(entre(t.p[0], t.p[1] + extra)), h: entre(1.9, 2.5), color: `hsl(${rd() * 360 | 0},${35 + rd() * 30 | 0}%,${62 + rd() * 22 | 0}%)`, ct: `hsl(${rd() * 360 | 0},${40 + rd() * 30 | 0}%,${38 + rd() * 20 | 0}%)`, techo: en(t.techo), partes },
   };
 }
@@ -165,13 +223,13 @@ async function pedirInvento() {
   try {
     const ya = E.edificios.filter((e) => e.tipo === "inv").slice(-30).map((e) => e.inv.n).concat((E.colaInv || []).map((v) => v.n), CATALOGO.filter((c) => E.hechos[c.id]).slice(-10).map((c) => c.n));
     const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
-    const r = await fetch("/api/sitios/colonia-invento", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ era: E.era, pob: E.bichos.length, ya }), signal: ctl.signal });
+    const r = await fetch("/api/sitios/colonia-invento", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ era: E.era, pob: E.bichos.length, ya, idioma: IDIOMA }), signal: ctl.signal });
     clearTimeout(to);
     if (!r.ok) return;
     const v = await r.json();
     if (!v || !v.n || !v.r || !v.ef) return;
     (E.colaInv = E.colaInv || []).push(v);
-    aviso(`💡 A los más sabios se les ocurrió algo: ${v.g} ${v.n}`);
+    aviso(T(`💡 A los más sabios se les ocurrió algo: ${v.g} ${v.n}`, `💡 The wisest had an idea: ${v.g} ${v.n}`, `💡 Os mais sábios tiveram uma ideia: ${v.g} ${v.n}`));
   } catch (e) {} finally { pensando = false; }
 }
 function construirInvento() {
@@ -407,7 +465,7 @@ function paso(dt, offline) {
     E.madera -= 20; E.piedra -= 10; if (nuevoPuente()) eventos.push({ tipo: "tierra" });
   }
   if (!offline) {
-    if (E.pedido) { E.pedido.t -= dt; if (E.pedido.t <= 0) { E.pedido = null; E.animo = clamp(E.animo - 8, 0, 100); aviso("No llegaste a tiempo… 😕"); E.proxPedido = rnd(30, 60); } }
+    if (E.pedido) { E.pedido.t -= dt; if (E.pedido.t <= 0) { E.pedido = null; E.animo = clamp(E.animo - 8, 0, 100); aviso(T("No llegaste a tiempo… 😕", "You didn't make it in time… 😕", "Não deu tempo… 😕")); E.proxPedido = rnd(30, 60); } }
     else if (!noche) { E.proxPedido -= dt; if (E.proxPedido <= 0 && E.bichos.length) nuevoPedido(); }
   }
 }
@@ -463,7 +521,7 @@ function actualizarBicho(b, dt, offline, noche) {
   if (b.caida > 0) { // lo chocó el rey: se cae para atrás, se levanta asustado y se va
     b.caida -= dt; const k = Math.max(0, b.caida - 1.1) * 4;
     b.x += b.kx * k * dt; b.z += b.kz * k * dt; dentro(b, isla);
-    if (b.caida <= 0) { b.caida = 0; b.susto = rnd(3, 5); b.dx = b.kx; b.dz = b.kz; b.est = "quieto"; b.quieto = 1; hablar(b, elegir(["¡no no!", "😨", "¡ayyy!", "¡" + balbuceo(1) + "!"]), true); }
+    if (b.caida <= 0) { b.caida = 0; b.susto = rnd(3, 5); b.dx = b.kx; b.dz = b.kz; b.est = "quieto"; b.quieto = 1; hablar(b, elegir(["¡no no!", "😨", T("¡ayyy!", "owww!", "aiii!"), "¡" + balbuceo(1) + "!"]), true); }
     return;
   }
   const adulto = b.edad > GRANDE, vel = (adulto ? VEL : VEL_BEBE) * (E.animo < 30 ? .7 : 1) * (E.era >= 2 ? 1.3 : 1) * bono("vel");
@@ -567,7 +625,7 @@ function nuevoPedido() {
   hablar(pide, ICONO[tipo] + "? " + balbuceo(1), true);
 }
 function dar(tipo) {
-  if (E.energia < 1) { aviso("Sin energía ⚡ esperá un poquito"); return; }
+  if (E.energia < 1) { aviso(T("Sin energía ⚡ esperá un poquito", "No energy ⚡ wait a moment", "Sem energia ⚡ espere um pouquinho")); return; }
   const k = porToque(); E.energia -= 1; E[tipo] += k;
   const cerca = cercano(E.bichos.filter((b) => !b.adentro && b.y === 0 && activas.has(b.isla)), controles.target);
   if (cerca) { corazones(cerca); if (Math.random() < .4) hablar(cerca, "¡" + ICONO[tipo] + "!"); }
@@ -575,8 +633,8 @@ function dar(tipo) {
     E.pedido.dado = Math.min(E.pedido.cant, E.pedido.dado + k);
     if (E.pedido.dado >= E.pedido.cant) {
       E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
-      for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false);
-      festejo(controles.target); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
+      for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir([T("¡yei!", "yay!", "eba!"), "¡bu bu!", "¡riii!", "💚"]), false);
+      festejo(controles.target); aviso(T("¡Pedido cumplido! Están felices 💚", "Request done! They're happy 💚", "Pedido cumprido! Estão felizes 💚")); sonido("festejo");
     }
   }
   pintarHUD();
@@ -597,11 +655,11 @@ function explotar(b, porSoldado) {
   for (const o of E.bichos) {
     if (o.adentro || o.y !== 0 || o.isla !== b.isla || o.est === "cruzar" || o.sigue) continue;
     const d = dist(o, b);
-    if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", "¡ayyy!", "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
+    if (d < 10) { o.susto = rnd(6, 10); o.dx = (o.x - b.x) / (d || 1); o.dz = (o.z - b.z) / (d || 1); o.carga = null; o.est = "quieto"; o.quieto = 1; if (Math.random() < .75) setTimeout(() => hablar(o, elegir(["¡no no!", T("¡ayyy!", "owww!", "aiii!"), "¡no no no!", "😱", "¡aaay!"]), true), rnd(150, 700)); }
   }
   if (!muestra("aplastar", .55, rnd(.96, 1.06))) { sonido("aplastar"); sonido("ay", b); }
   if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
-  if (!E.bichos.length) setTimeout(() => { aviso("No queda ninguno… nace uno nuevo 🌱"); const i = E.islas.find((x) => x.capital); E.bichos.push(crearBicho(i.x + 1.5, i.z + 1.5, true, i.id)); }, 1500);
+  if (!E.bichos.length) setTimeout(() => { aviso(T("No queda ninguno… nace uno nuevo 🌱", "None left… a new one is born 🌱", "Não sobrou nenhum… nasce um novo 🌱")); const i = E.islas.find((x) => x.capital); E.bichos.push(crearBicho(i.x + 1.5, i.z + 1.5, true, i.id)); }, 1500);
 }
 
 // ======================= Sonido =======================
@@ -678,10 +736,14 @@ function sonido(tipo, b) {
 }
 let ultimaVoz = 0;
 function hablar(b, txt, fuerte) {
+  if (LI) txt = String(txt).replace(/[¡¿]/g, ""); // en inglés y portugués no se usan ¡ ¿
   b.charla = txt; b.charlaT = 2.6;
   if (activas.has(b.isla) && enPantalla(b) && (fuerte || performance.now() - ultimaVoz > 900)) { ultimaVoz = performance.now(); sonido(b.susto > 0 ? "susto" : "habla", b); }
 }
 $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈";
+// botón de idioma: ES → EN → PT, se recuerda y recarga
+$("b-idioma").textContent = IDIOMA.toUpperCase();
+$("b-idioma").onclick = () => { const sig = { es: "en", en: "pt", pt: "es" }[IDIOMA]; try { localStorage.setItem("brotitos-idioma", sig); } catch (e) {} guardar && guardar(); location.reload(); };
 $("b-sonido").onclick = () => { sonidoOn = !sonidoOn; $("b-sonido").textContent = sonidoOn ? "🔊" : "🔈"; try { localStorage.setItem("brotitos-sonido", sonidoOn ? "1" : "0"); } catch (e) {} };
 
 let avisoT, logroT;
@@ -1402,7 +1464,7 @@ $("b-info").onclick = () => $("c-info").classList.add("ver");
 $("info-ok").onclick = () => { $("c-info").classList.remove("ver"); audio(); };
 $("reiniciar").onclick = () => {
   const b = $("reiniciar");
-  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = "¿Seguro? Se pierde esta colonia"; return; }
+  if (!b.dataset.ok) { b.dataset.ok = "1"; b.textContent = T("¿Seguro? Se pierde esta colonia", "Sure? This colony will be lost", "Certeza? Esta colônia será perdida"); return; }
   try { localStorage.removeItem(CLAVE); } catch (e) {} location.reload();
 };
 
@@ -1417,7 +1479,7 @@ function pintarHUD() {
   $("h-era").textContent = era.g;
   $("h-pob").textContent = "👥 " + num(E.bichos.length);
   $("h-poder").textContent = "⚡" + (E.poder || 0);
-  { const t = $("poder-txt"), n = E.poder || 0, txt = `⚡ Poder nivel ${n} → nivel ${n + 1} con ${num(pobParaNivel(n + 1))} Brotitos (${mejoraDe(n + 1).t.toLowerCase()})`; if (t.textContent !== txt) t.textContent = txt; }
+  { const t = $("poder-txt"), n = E.poder || 0, txt = T(`⚡ Poder nivel ${n} → nivel ${n + 1} con ${num(pobParaNivel(n + 1))} Brotitos`, `⚡ Power level ${n} → level ${n + 1} at ${num(pobParaNivel(n + 1))} Brotitos`, `⚡ Poder nível ${n} → nível ${n + 1} com ${num(pobParaNivel(n + 1))} Brotitos`) + ` (${mejoraDe(n + 1).t.toLowerCase()})`; if (t.textContent !== txt) t.textContent = txt; }
   $("h-comida").textContent = "🍎 " + num(E.comida); $("h-madera").textContent = "🪵 " + num(E.madera); $("h-piedra").textContent = "🪨 " + num(E.piedra);
   $("h-gemas").hidden = !E.mina && !E.gemas; $("h-gemas").textContent = "💎 " + num(E.gemas);
   $("h-hora").textContent = esNoche() ? "🌙" : "☀️";
@@ -1430,42 +1492,44 @@ function pintarHUD() {
     $("meta-txt").textContent = `🎯 ${E.bichos.length}/${m.pob} Brotitos → ${m.g} ${m.t}`; $("meta-sub").textContent = m.s;
     $("meta-bar").style.width = clamp((E.bichos.length - antes) / (m.pob - antes), 0, 1) * 100 + "%";
     $("anillo").style.setProperty("--p", $("meta-bar").style.width); $("anillo-g").textContent = m.g;
-  } else { $("anillo").style.setProperty("--p", "100%"); $("anillo-g").textContent = "🌟"; $("meta-txt").textContent = `🌟 Colonia legendaria: ${E.bichos.length} Brotitos`; $("meta-sub").textContent = `el mundo ya creció ${E.islas.filter((i) => i.colonizada).length - 1} veces`; $("meta-bar").style.width = "100%"; }
-  if (sig) { $("era-txt").textContent = `🧠 Sabiduría → ${sig.g} Era de ${sig.n}`; $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; $("anillo").style.setProperty("--s", $("era-bar").style.width); }
-  else { $("era-txt").textContent = "🧠 ¡Llegaron a la era espacial!"; $("era-bar").style.width = "100%"; $("anillo").style.setProperty("--s", "100%"); }
+  } else { $("anillo").style.setProperty("--p", "100%"); $("anillo-g").textContent = "🌟"; $("meta-txt").textContent = T(`🌟 Colonia legendaria: ${E.bichos.length} Brotitos`, `🌟 Legendary colony: ${E.bichos.length} Brotitos`, `🌟 Colônia lendária: ${E.bichos.length} Brotitos`); { const n = E.islas.filter((i) => i.colonizada).length - 1; $("meta-sub").textContent = T(`el mundo ya creció ${n} veces`, `the world has grown ${n} times`, `o mundo já cresceu ${n} vezes`); } $("meta-bar").style.width = "100%"; }
+  if (sig) { $("era-txt").textContent = T(`🧠 Sabiduría → ${sig.g} Era de ${sig.n}`, `🧠 Wisdom → ${sig.g} ${sig.n} Era`, `🧠 Sabedoria → ${sig.g} Era ${sig.n}`); $("era-bar").style.width = clamp((E.sab - era.sab) / (sig.sab - era.sab), 0, 1) * 100 + "%"; $("anillo").style.setProperty("--s", $("era-bar").style.width); }
+  else { $("era-txt").textContent = T("🧠 ¡Llegaron a la era espacial!", "🧠 They reached the Space Era!", "🧠 Chegaram à era espacial!"); $("era-bar").style.width = "100%"; $("anillo").style.setProperty("--s", "100%"); }
   { const c = siguienteCat(), t = $("cat-txt");
-    const txt = (c ? `🏗️ Próxima construcción: ${c.g} ${c.n} (${E.era < c.era ? "Era de " + ERAS[c.era].n : c.pob + " Brotitos"})` : `🏗️ ¡Catálogo completo! Ahora inventan cosas nuevas`) + (E.inventos ? ` · 💡 ${E.inventos} creaciones propias` : "");
+    const txt = (c ? T("🏗️ Próxima construcción: ", "🏗️ Next building: ", "🏗️ Próxima construção: ") + `${c.g} ${c.n} (${E.era < c.era ? T("Era de " + ERAS[c.era].n, ERAS[c.era].n + " Era", "Era " + ERAS[c.era].n) : c.pob + " Brotitos"})` : T("🏗️ ¡Catálogo completo! Ahora inventan cosas nuevas", "🏗️ Catalog complete! Now they invent new things", "🏗️ Catálogo completo! Agora inventam coisas novas")) + (E.inventos ? ` · 💡 ${E.inventos} ` + T("creaciones propias", "own creations", "criações próprias") : "");
     if (t.textContent !== txt) t.textContent = txt; }
   { const k = "+" + porToque(); for (const t of ["comida", "madera", "piedra"]) { const sp = $("d-" + t).querySelector("small"); if (sp && sp.textContent !== k) sp.textContent = k; } }
   const p = $("pedido");
-  if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = `Te piden ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
+  if (E.pedido) { p.classList.add("ver"); $("pedido-txt").textContent = T("Te piden", "They ask for", "Eles pedem") + ` ${ICONO[E.pedido.tipo]} ${E.pedido.dado}/${E.pedido.cant}`; $("pedido-t").style.width = E.pedido.t / E.pedido.total * 100 + "%"; }
   else p.classList.remove("ver");
 }
 let eraNoche = null;
 function mostrarEventos() {
   for (const ev of eventos) {
-    if (ev.tipo === "nace") aviso(`🌱 ¡Nació ${ev.b.n}! (${E.bichos.length} en la colonia)`);
-    if (ev.tipo === "meta") { logro(ev.m.g, "¡Desbloqueaste: " + ev.m.t + "!", ev.m.s); festejo(controles.target); }
-    if (ev.tipo === "era") { const e = ERAS[E.era]; logro(e.g, `¡Era de ${e.n}!`, e.s || ""); festejo(controles.target); }
-    if (ev.tipo === "listo" && ev.e.tipo === "cat") { const c = CAT[ev.e.cat]; logro(c.g, `¡Construyeron ${c.n}!`, c.s); festejo(ev.e); continue; }
-    if (ev.tipo === "listo" && ev.e.tipo === "inv") { const v = ev.e.inv; logro(v.g, v.ia ? `💡 ¡Inventaron ${v.n}!` : `¡Terminaron ${v.n}!`, v.s); festejo(ev.e); continue; }
+    if (ev.tipo === "nace") aviso(T(`🌱 ¡Nació ${ev.b.n}! (${E.bichos.length} en la colonia)`, `🌱 ${ev.b.n} was born! (${E.bichos.length} in the colony)`, `🌱 Nasceu ${ev.b.n}! (${E.bichos.length} na colônia)`));
+    if (ev.tipo === "meta") { logro(ev.m.g, T("¡Desbloqueaste: ", "Unlocked: ", "Desbloqueou: ") + ev.m.t + "!", ev.m.s); festejo(controles.target); }
+    if (ev.tipo === "era") { const e = ERAS[E.era]; logro(e.g, T(`¡Era de ${e.n}!`, `${e.n} Era!`, `Era ${e.n}!`), e.s || ""); festejo(controles.target); }
+    if (ev.tipo === "listo" && ev.e.tipo === "cat") { const c = CAT[ev.e.cat]; logro(c.g, T(`¡Construyeron ${c.n}!`, `They built the ${c.n}!`, `Construíram: ${c.n}!`), c.s); festejo(ev.e); continue; }
+    if (ev.tipo === "listo" && ev.e.tipo === "inv") { const v = ev.e.inv; logro(v.g, v.ia ? T(`💡 ¡Inventaron ${v.n}!`, `💡 They invented ${v.n}!`, `💡 Inventaram ${v.n}!`) : T(`¡Terminaron ${v.n}!`, `${v.n} is finished!`, `Terminaram ${v.n}!`), v.s); festejo(ev.e); continue; }
     if (ev.tipo === "listo") {
-      const nom = { casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", tierra: "tierra nueva 🌱 ¡El mundo creció!" }[ev.e.tipo] || ev.e.tipo;
-      aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? `🏢 ¡Terminaron el piso ${ev.e.nivel}!` : `🎉 Terminaron ${nom}`); sonido("festejo");
+      const nom = T({ casa: "una casa", huerta: "la huerta", mina: "la mina ⛏️ ¡Ya pueden cavar!", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", central: "la central eléctrica ⚡", base: "la base espacial 🚀", tierra: "tierra nueva 🌱 ¡El mundo creció!" },
+        { casa: "a house", huerta: "the garden", mina: "the mine ⛏️ Now they can dig!", escuela: "the school 🏫", torre: "the tower 🗼", biblioteca: "the library 📚", molino: "the mill 🌾", fabrica: "the factory 🏭", central: "the power plant ⚡", base: "the space base 🚀", tierra: "new land 🌱 The world grew!" },
+        { casa: "uma casa", huerta: "a horta", mina: "a mina ⛏️ Já podem cavar!", escuela: "a escola 🏫", torre: "a torre 🗼", biblioteca: "a biblioteca 📚", molino: "o moinho 🌾", fabrica: "a fábrica 🏭", central: "a usina ⚡", base: "a base espacial 🚀", tierra: "terra nova 🌱 O mundo cresceu!" })[ev.e.tipo] || ev.e.tipo;
+      aviso(ev.e.tipo === "casa" && ev.e.nivel > 1 ? T(`🏢 ¡Terminaron el piso ${ev.e.nivel}!`, `🏢 Floor ${ev.e.nivel} is done!`, `🏢 Terminaram o andar ${ev.e.nivel}!`) : T(`🎉 Terminaron ${nom}`, `🎉 Finished ${nom}`, `🎉 Terminaram ${nom}`)); sonido("festejo");
     }
-    if (ev.tipo === "obra") aviso("🔨 Empezaron una casa nueva");
-    if (ev.tipo === "poder") { logro("⚡", `¡Poder nivel ${ev.n}!`, ev.m.t); continue; }
-    if (ev.tipo === "obraInv") aviso(ev.ia ? `💡 ¡Inventaron algo nuevo! ${ev.g} ${ev.n}` : `🏗️ Construyen algo nunca visto: ${ev.g} ${ev.n}`);
+    if (ev.tipo === "obra") aviso(T("🔨 Empezaron una casa nueva", "🔨 They started a new house", "🔨 Começaram uma casa nova"));
+    if (ev.tipo === "poder") { logro("⚡", T(`¡Poder nivel ${ev.n}!`, `Power level ${ev.n}!`, `Poder nível ${ev.n}!`), ev.m.t); continue; }
+    if (ev.tipo === "obraInv") aviso(ev.ia ? T("💡 ¡Inventaron algo nuevo! ", "💡 They invented something new! ", "💡 Inventaram algo novo! ") + `${ev.g} ${ev.n}` : T("🏗️ Construyen algo nunca visto: ", "🏗️ Building something never seen: ", "🏗️ Constroem algo nunca visto: ") + `${ev.g} ${ev.n}`);
     if (ev.tipo === "obraCat" || ev.tipo === "obraInv") muestra("desbloqueo", .45);
-    if (ev.tipo === "obraCat") aviso(`🏗️ Empezaron a construir: ${ev.g} ${ev.n}`);
-    if (ev.tipo === "piso") aviso("🏗️ Están subiendo un piso");
-    if (ev.tipo === "tierra") aviso("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!");
-    if (ev.tipo === "nivelMina") aviso(`⛏️ ¡La mina ya tiene ${E.mina.prof} niveles! Más hondo, más gemas`);
-    if (ev.tipo === "cohete") { aviso("🚀 ¡Despegó un cohete! Trajo 5 💎"); despegar(); }
+    if (ev.tipo === "obraCat") aviso(T("🏗️ Empezaron a construir: ", "🏗️ Now building: ", "🏗️ Começaram a construir: ") + `${ev.g} ${ev.n}`);
+    if (ev.tipo === "piso") aviso(T("🏗️ Están subiendo un piso", "🏗️ Adding a floor", "🏗️ Estão subindo um andar"));
+    if (ev.tipo === "tierra") aviso(T("🌱 Se quedaron sin lugar: ¡están agrandando el mundo!", "🌱 Out of room: they're expanding the world!", "🌱 Ficaram sem espaço: estão aumentando o mundo!"));
+    if (ev.tipo === "nivelMina") aviso(T(`⛏️ ¡La mina ya tiene ${E.mina.prof} niveles! Más hondo, más gemas`, `⛏️ The mine has ${E.mina.prof} levels! Deeper means more gems`, `⛏️ A mina já tem ${E.mina.prof} níveis! Mais fundo, mais gemas`));
+    if (ev.tipo === "cohete") { aviso(T("🚀 ¡Despegó un cohete! Trajo 5 💎", "🚀 A rocket launched! It brought 5 💎", "🚀 Um foguete decolou! Trouxe 5 💎")); despegar(); }
   }
   eventos = [];
   const n = esNoche();
-  if (eraNoche !== null && n !== eraNoche) aviso(n ? (E.era >= 3 ? "🌙 De noche: la mitad sigue trabajando con luz ⚡" : "🌙 Se hizo de noche: a dormir") : "☀️ ¡Buen día! A trabajar");
+  if (eraNoche !== null && n !== eraNoche) aviso(n ? (E.era >= 3 ? T("🌙 De noche: la mitad sigue trabajando con luz ⚡", "🌙 Night: half keep working under the lights ⚡", "🌙 Noite: metade continua trabalhando com luz ⚡") : T("🌙 Se hizo de noche: a dormir", "🌙 Night time: off to bed", "🌙 Anoiteceu: hora de dormir")) : T("☀️ ¡Buen día! A trabajar", "☀️ Good morning! Back to work", "☀️ Bom dia! Ao trabalho"));
   eraNoche = n;
 }
 
@@ -1513,7 +1577,7 @@ function entrar() {
   controles.minDistance = 5; controles.maxDistance = 34;
   controles.maxPolarAngle = 1.05; controles.target.set(yo.x, 0, yo.z); { const k = camara.aspect < 1 ? 1.6 : 1; camara.position.set(yo.x, 11 * k, yo.z + 8 * k); }
   syncT = 1;
-  aviso("👑 ¡Entraste! Sos el Brotito dorado");
+  aviso(T("👑 ¡Entraste! Sos el Brotito dorado", "👑 You're in! You are the golden Brotito", "👑 Você entrou! Você é o Brotito dourado"));
   for (const b of E.bichos) if (b._m && !b.adentro && dist(b, yo) < 8 && b.susto <= 0 && Math.random() < .6) hablar(b, elegir(["¿¿" + balbuceo(1) + "??", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]));
 }
 // pasos del rey: uno por cada pisada, al ritmo de la caminata
@@ -1542,24 +1606,24 @@ function sumarPedido(tipo, k) {
   E.pedido.dado += k;
   if (E.pedido.dado >= E.pedido.cant) {
     E.pedido = null; E.proxPedido = rnd(35, 70); E.animo = clamp(E.animo + 20, 0, 100);
-    for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir(["¡yei!", "¡bu bu!", "¡riii!", "💚"]), false);
-    festejo(yo); aviso("¡Pedido cumplido! Están felices 💚"); sonido("festejo");
+    for (const b of E.bichos) if (!b.adentro && activas.has(b.isla) && Math.random() < .5) hablar(b, elegir([T("¡yei!", "yay!", "eba!"), "¡bu bu!", "¡riii!", "💚"]), false);
+    festejo(yo); aviso(T("¡Pedido cumplido! Están felices 💚", "Request done! They're happy 💚", "Pedido cumprido! Estão felizes 💚")); sonido("festejo");
   }
 }
 const cercaDeMi = (lista, max) => { let m = null, d = max; for (const o of lista) { const dd = Math.hypot(o.x - yo.x, o.z - yo.z); if (dd < d) { d = dd; m = o; } } return m; };
 function elegirAccion() {
   // ¿hay una obra cerca? ayudar
   const obra = cercaDeMi(E.edificios.concat(E.puentes).filter((o) => !listo(o)), 5.5);
-  if (obra) return { tipo: "ayudar", o: obra, txt: "🔨 Ayudar" };
+  if (obra) return { tipo: "ayudar", o: obra, txt: T("🔨 Ayudar", "🔨 Help", "🔨 Ajudar") };
   const objs = E.recursos.filter((r) => r.cant > 0).concat(E.edificios.filter((e) => e.tipo === "huerta" && listo(e) && e.cant > 0));
   const r = cercaDeMi(objs, 3.6);
   if (r) {
     const tipo = TIPO_RECURSO[r.tipo];
-    if (!yo.carga || (yo.carga === tipo && yo.cant < 6)) return { tipo: "juntar", o: r, txt: "✋ Juntar " + ICONO[tipo] };
-    return { tipo: "lleno", txt: yo.carga === tipo ? "🎒 Lleno: llevalo a una casa" : "🎒 Primero llevá lo que tenés" };
+    if (!yo.carga || (yo.carga === tipo && yo.cant < 6)) return { tipo: "juntar", o: r, txt: T("✋ Juntar ", "✋ Gather ", "✋ Juntar ") + ICONO[tipo] };
+    return { tipo: "lleno", txt: yo.carga === tipo ? T("🎒 Lleno: llevalo a una casa", "🎒 Full: take it to a house", "🎒 Cheio: leve para uma casa") : T("🎒 Primero llevá lo que tenés", "🎒 First drop off what you carry", "🎒 Primeiro leve o que você tem") };
   }
-  if (yo.carga && mision && mision.tipo === "traer" && mision.estado === "activa" && yo.carga === mision.recurso) return { tipo: "lleno", txt: yo.cant >= mision.falta ? `📜 Llevale ${ICONO[yo.carga]} a ${mision.b.n}` : `📜 Juntá ${mision.falta - yo.cant} ${ICONO[yo.carga]} más` };
-  if (yo.carga) return { tipo: "lleno", txt: `🏠 Llevá ${yo.cant} ${ICONO[yo.carga]} a una casa` };
+  if (yo.carga && mision && mision.tipo === "traer" && mision.estado === "activa" && yo.carga === mision.recurso) return { tipo: "lleno", txt: yo.cant >= mision.falta ? T(`📜 Llevale ${ICONO[yo.carga]} a ${mision.b.n}`, `📜 Bring ${ICONO[yo.carga]} to ${mision.b.n}`, `📜 Leve ${ICONO[yo.carga]} para ${mision.b.n}`) : T(`📜 Juntá ${mision.falta - yo.cant} ${ICONO[yo.carga]} más`, `📜 Gather ${mision.falta - yo.cant} more ${ICONO[yo.carga]}`, `📜 Junte mais ${mision.falta - yo.cant} ${ICONO[yo.carga]}`) };
+  if (yo.carga) return { tipo: "lleno", txt: T(`🏠 Llevá ${yo.cant} ${ICONO[yo.carga]} a una casa`, `🏠 Take ${yo.cant} ${ICONO[yo.carga]} to a house`, `🏠 Leve ${yo.cant} ${ICONO[yo.carga]} para uma casa`) };
   return null;
 }
 function hacer() {
@@ -1572,7 +1636,7 @@ function hacer() {
   } else if (a.tipo === "juntar") {
     yo.golpe = .28; a.o.cant--; yo.carga = TIPO_RECURSO[a.o.tipo]; yo.cant++; sonido("dar");
     yo.dx = a.o.x - yo.x; yo.dz = a.o.z - yo.z;
-    if (yo.cant === 1 && avisoCarga++ < 2) aviso("Juntá varios y llevalos a una casa 🏠");
+    if (yo.cant === 1 && avisoCarga++ < 2) aviso(T("Juntá varios y llevalos a una casa 🏠", "Gather a few and take them to a house 🏠", "Junte vários e leve para uma casa 🏠"));
   }
   accionT = 0;
 }
@@ -1580,7 +1644,7 @@ function saludar() {
   audio();
   const cerca = E.bichos.filter((b) => b._m && !b.adentro && b.y === 0 && dist(b, yo) < 6).slice(0, 5);
   hablar(yo, "¡" + balbuceo(1) + "!", true);
-  if (!cerca.length) { aviso("No hay nadie cerca para saludar"); return; }
+  if (!cerca.length) { aviso(T("No hay nadie cerca para saludar", "Nobody nearby to say hi to", "Não há ninguém perto para cumprimentar")); return; }
   for (const b of cerca) {
     if (b.susto > 0) { hablar(b, elegir(["😨", "¡no no!"])); continue; }
     b.dx = yo.x - b.x; b.dz = yo.z - b.z; b.est = "quieto"; b.quieto = rnd(1.5, 3);
@@ -1594,19 +1658,19 @@ function siganme() {
   audio();
   if (fila.length) { soltarFila(true); return; }
   const cerca = E.bichos.filter((b) => !b.adentro && b.y === 0 && !(b.caida > 0) && !b.alzado && b.edad > GRANDE && dist(b, yo) < 10).sort((a, b) => dist(a, yo) - dist(b, yo)).slice(0, 8);
-  if (!cerca.length) { aviso("No hay nadie cerca para que te siga"); return; }
+  if (!cerca.length) { aviso(T("No hay nadie cerca para que te siga", "Nobody nearby to follow you", "Não há ninguém perto para te seguir")); return; }
   hablar(yo, "¡" + balbuceo(1) + "!", true);
   for (const b of cerca) {
     if (b.susto > 0) { hablar(b, "😨"); continue; }
     b.sigue = true; b.est = "seguir"; b.oficio = null; b.adentro = false; fila.push(b);
-    setTimeout(() => hablar(b, elegir(["¡sí!", "🚩", "¡" + balbuceo(1) + "!", "¡bu bu!"])), rnd(100, 800));
+    setTimeout(() => hablar(b, elegir([T("¡sí!", "yes!", "sim!"), "🚩", "¡" + balbuceo(1) + "!", "¡bu bu!"])), rnd(100, 800));
   }
-  if (fila.length) aviso(`🚩 ${fila.length} Brotitos te siguen. Llevalos a donde quieras`);
+  if (fila.length) aviso(T(`🚩 ${fila.length} Brotitos te siguen. Llevalos a donde quieras`, `🚩 ${fila.length} Brotitos follow you. Lead them anywhere`, `🚩 ${fila.length} Brotitos te seguem. Leve-os aonde quiser`));
 }
 function soltarFila(avisar) {
   if (ataque) { ataque = null; for (const b of fila) { b.ataque = null; b.alto = 0; b.oficio = null; } }
   for (const b of fila) { b.sigue = false; if (b.est === "seguir" || b.est === "esperar") { b.est = "quieto"; b.quieto = rnd(.3, 1.2); } const z = zonaEn(b.x, b.z); if (z) b.isla = z.id; }
-  if (avisar && fila.length) { aviso("✋ ¡A trabajar acá!"); for (const b of fila) if (Math.random() < .5) hablar(b, "¡" + balbuceo(1) + "!"); }
+  if (avisar && fila.length) { aviso(T("✋ ¡A trabajar acá!", "✋ Work here!", "✋ Trabalhem aqui!")); for (const b of fila) if (Math.random() < .5) hablar(b, "¡" + balbuceo(1) + "!"); }
   fila = [];
 }
 // ---- ⚔️ ¡Ataquen!: los que te siguen saltan encima de los demás y los aplastan ----
@@ -1615,16 +1679,16 @@ function atacar() {
   audio();
   if (ataque) { pararAtaque(); return; }
   const soldados = fila.filter((b) => !b.mision);
-  if (!soldados.length) { aviso("Primero hacé que te sigan con 🚩"); return; }
+  if (!soldados.length) { aviso(T("Primero hacé que te sigan con 🚩", "First make them follow you with 🚩", "Primeiro faça eles te seguirem com 🚩")); return; }
   ataque = { t: 25 }; ponerseMalo();
-  for (const b of soldados) { b.ataque = { obj: null, salto: null, muertes: 0 }; b.oficio = "soldado"; setTimeout(() => hablar(b, elegir(["¡¡" + balbuceo(1) + "!!", "⚔️", "¡grrr!", "¡a la carga!"]), true), rnd(50, 500)); }
+  for (const b of soldados) { b.ataque = { obj: null, salto: null, muertes: 0 }; b.oficio = "soldado"; setTimeout(() => hablar(b, elegir(["¡¡" + balbuceo(1) + "!!", "⚔️", "¡grrr!", T("¡a la carga!", "charge!", "ao ataque!")]), true), rnd(50, 500)); }
   hablar(yo, "¡⚔️!", true);
-  aviso(`⚔️ ¡${soldados.length} soldados al ataque!`);
+  aviso(T(`⚔️ ¡${soldados.length} soldados al ataque!`, `⚔️ ${soldados.length} soldiers attack!`, `⚔️ ${soldados.length} soldados ao ataque!`));
 }
 function pararAtaque() {
   if (!ataque) return; ataque = null;
   for (const b of fila) if (b.ataque) { b.ataque = null; b.alto = 0; b.oficio = null; }
-  aviso("🛑 ¡Alto! Vuelven con vos");
+  aviso(T("🛑 ¡Alto! Vuelven con vos", "🛑 Stop! They come back to you", "🛑 Parem! Voltam para você"));
 }
 function victimaPara(b) {
   let m = null, d = 16;
@@ -1642,7 +1706,7 @@ function soldado(b, dt) {
     b.x = s.x0 + (v.x - s.x0) * p; b.z = s.z0 + (v.z - s.z0) * p; b.alto = Math.sin(p * Math.PI) * 2.4; b.fase += dt * 20;
     if (p >= 1) {
       b.alto = 0; a.salto = null;
-      if (a.obj && E.bichos.includes(a.obj) && dist(a.obj, b) < 1.8) { explotar(a.obj, true); a.muertes++; if (Math.random() < .6) hablar(b, elegir(["¡ja!", "💪", "¡" + balbuceo(1) + "!"]), true); }
+      if (a.obj && E.bichos.includes(a.obj) && dist(a.obj, b) < 1.8) { explotar(a.obj, true); a.muertes++; if (Math.random() < .6) hablar(b, elegir([T("¡ja!", "ha!", "há!"), "💪", "¡" + balbuceo(1) + "!"]), true); }
       else onda(b);
       a.obj = null;
     }
@@ -1658,7 +1722,7 @@ function soldado(b, dt) {
 function seguirAlRey(b, dt) {
   const i = fila.indexOf(b);
   if (i < 0 || !dentroMundo) { b.sigue = false; b.est = "quieto"; b.quieto = .5; return; }
-  if (b.amigoT !== undefined) { b.amigoT -= dt; if (b.amigoT <= 0) { delete b.amigoT; fila.splice(i, 1); b.sigue = false; b.est = "quieto"; b.quieto = 1; hablar(b, "¡chau " + balbuceo(1) + "!"); return; } }
+  if (b.amigoT !== undefined) { b.amigoT -= dt; if (b.amigoT <= 0) { delete b.amigoT; fila.splice(i, 1); b.sigue = false; b.est = "quieto"; b.quieto = 1; hablar(b, T("¡chau ", "bye ", "tchau ") + balbuceo(1) + "!"); return; } }
   if (b.susto > 0 && !b.ataque) { fila.splice(i, 1); b.sigue = false; return; } // si lo asustaste, se va
   if (b.ataque) { if (!ataque) { b.ataque = null; b.alto = 0; b.oficio = null; } else if (soldado(b, dt) !== false) { const z = zonaEn(b.x, b.z); if (z) b.isla = z.id; return; } }
   const lider = i === 0 ? yo : fila[i - 1], dx = lider.x - b.x, dz = lider.z - b.z, d = Math.hypot(dx, dz) || .01;
@@ -1673,19 +1737,19 @@ const libreParaTocar = (b) => E.bichos.includes(b) && !b.adentro && b.y === 0 &&
 function bichoCerca() { return cercaDeMi(E.bichos.filter(libreParaTocar), 2.6); }
 function abrazar() {
   audio();
-  const b = bichoCerca(); if (!b) { aviso("Acercate a un Brotito"); return; }
+  const b = bichoCerca(); if (!b) { aviso(T("Acercate a un Brotito", "Get closer to a Brotito", "Chegue perto de um Brotito")); return; }
   if (b.susto > 0) { hablar(b, elegir(["😨", "¡no no!"]), true); return; }
   b.abrazo = 1.3; yo.abrazo = 1.3; b.isla = yo.isla; b.dx = yo.x - b.x; b.dz = yo.z - b.z; yo.dx = -b.dx; yo.dz = -b.dz;
   corazones(b); setTimeout(() => corazones(b), 400);
   hablar(b, elegir(["💚", "¡" + balbuceo(1) + "!", "🥰"]), true);
   E.animo = clamp(E.animo + 2, 0, 100);
   // se hace tu amigo y te sigue un rato
-  if (!b.sigue && fila.length < 12) { b.sigue = true; b.amigoT = 40; b.oficio = null; fila.push(b); setTimeout(() => aviso(`💚 ${b.n} se hizo tu amigo y te sigue un rato`), 900); }
+  if (!b.sigue && fila.length < 12) { b.sigue = true; b.amigoT = 40; b.oficio = null; fila.push(b); setTimeout(() => aviso(T(`💚 ${b.n} se hizo tu amigo y te sigue un rato`, `💚 ${b.n} is your friend now and follows you for a while`, `💚 ${b.n} virou seu amigo e te segue um pouco`)), 900); }
 }
 function alzar() {
   audio();
   if (alzado) { tirar(); return; }
-  const b = bichoCerca(); if (!b) { aviso("Acercate a un Brotito"); return; }
+  const b = bichoCerca(); if (!b) { aviso(T("Acercate a un Brotito", "Get closer to a Brotito", "Chegue perto de um Brotito")); return; }
   const i = fila.indexOf(b); if (i >= 0) fila.splice(i, 1);
   b.sigue = false; b.alzado = true; b.carga = null; b.est = "alzado"; b.isla = yo.isla; alzado = b;
   hablar(b, elegir(["¡wiii!", "¡oh!", "😮", "¡" + balbuceo(1) + "!"]), true);
@@ -1738,7 +1802,7 @@ function bailar() {
   baile = { t: 10, nota: 0, notaT: 0, n: cerca.length, base: rnd(0, 6) };
   cerca.forEach((b, i) => { const anillo = i < 7 ? 0 : 1, k = anillo ? i - 7 : i, tot = anillo ? cerca.length - 7 : Math.min(7, cerca.length); b.baile = { ang: k / tot * Math.PI * 2 + anillo * .4, r: anillo ? 5.6 : 3.4 }; b.isla = yo.isla; b.est = "bailar"; b.carga = null; });
   hablar(yo, "🎵", true);
-  aviso(cerca.length ? `💃 ¡A bailar! ${cerca.length} Brotitos se suman` : "💃 Bailás solito… ¡llamá a alguien!");
+  aviso(cerca.length ? T(`💃 ¡A bailar! ${cerca.length} Brotitos se suman`, `💃 Dance time! ${cerca.length} Brotitos join in`, `💃 Hora de dançar! ${cerca.length} Brotitos entram na roda`) : T("💃 Bailás solito… ¡llamá a alguien!", "💃 Dancing alone… call someone!", "💃 Dançando sozinho… chame alguém!"));
 }
 function musicaBaile(dt) {
   if (!baile || !sonidoOn) return;
@@ -1759,8 +1823,8 @@ function actualizarBaile(dt) {
   if (yo.est !== "pasear") { yo.fase += dt * 10; yo.dx = Math.sin(baile.t * 5); yo.dz = Math.cos(baile.t * 5); }
   if (Math.random() < dt * 1.5) corazones(yo);
   if (baile.t <= 0) {
-    for (const b of E.bichos) if (b.baile) { b.baile = null; b.bailando = false; b.est = "quieto"; b.quieto = rnd(.5, 2); if (Math.random() < .6) hablar(b, elegir(["¡yei!", "💚", "¡otra!", "¡" + balbuceo(1) + "!"])); }
-    if (baile.n) { festejo(yo); E.animo = clamp(E.animo + 5, 0, 100); aviso("🎉 ¡Qué fiesta! Están felices"); muestra("desbloqueo", .5); }
+    for (const b of E.bichos) if (b.baile) { b.baile = null; b.bailando = false; b.est = "quieto"; b.quieto = rnd(.5, 2); if (Math.random() < .6) hablar(b, elegir([T("¡yei!", "yay!", "eba!"), "💚", T("¡otra!", "again!", "de novo!"), "¡" + balbuceo(1) + "!"])); }
+    if (baile.n) { festejo(yo); E.animo = clamp(E.animo + 5, 0, 100); aviso(T("🎉 ¡Qué fiesta! Están felices", "🎉 What a party! They're happy", "🎉 Que festa! Estão felizes")); muestra("desbloqueo", .5); }
     baile = null;
   }
 }
@@ -1776,27 +1840,29 @@ function bailarAlRey(b, dt) {
 }
 // ---- 📜 Misiones del rey: un Brotito te pide algo y si lo hacés te da un premio ----
 let mision = null, misionT = 12, flecha = null;
-const NOMBRE_EDIF = { fogata: "la fogata 🔥", mina: "la mina ⛏️", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", huerta: "la huerta 🥕" };
+const NOMBRE_EDIF = T({ fogata: "la fogata 🔥", mina: "la mina ⛏️", escuela: "la escuela 🏫", torre: "la torre 🗼", biblioteca: "la biblioteca 📚", molino: "el molino 🌾", fabrica: "la fábrica 🏭", huerta: "la huerta 🥕" },
+  { fogata: "the campfire 🔥", mina: "the mine ⛏️", escuela: "the school 🏫", torre: "the tower 🗼", biblioteca: "the library 📚", molino: "the mill 🌾", fabrica: "the factory 🏭", huerta: "the garden 🥕" },
+  { fogata: "a fogueira 🔥", mina: "a mina ⛏️", escuela: "a escola 🏫", torre: "a torre 🗼", biblioteca: "a biblioteca 📚", molino: "o moinho 🌾", fabrica: "a fábrica 🏭", huerta: "a horta 🥕" });
 const nombreEdif = (e) => e.tipo === "cat" ? `${CAT[e.cat].n} ${CAT[e.cat].g}` : e.tipo === "inv" ? `${e.inv.n} ${e.inv.g}` : NOMBRE_EDIF[e.tipo];
 function nuevaMision() {
   const cands = E.bichos.filter((b) => libreParaTocar(b) && b.edad > GRANDE && !b.sigue && !b.baile && !(b.susto > 0) && dist(b, yo) > 6 && dist(b, yo) < 24);
   const b = elegir(cands); if (!b) return;
   const tipos = ["traer", "gorro", "acompañar"], tipo = elegir(tipos);
   const m = { b, tipo, estado: "esperando" };
-  if (tipo === "traer") { m.recurso = elegir(["comida", "madera", "piedra"]); m.falta = 3 + (Math.random() * 3 | 0); m.txt = () => `Traele ${m.falta} ${ICONO[m.recurso]} a ${b.n}`; m.pide = ICONO[m.recurso] + "?"; }
+  if (tipo === "traer") { m.recurso = elegir(["comida", "madera", "piedra"]); m.falta = 3 + (Math.random() * 3 | 0); m.txt = () => T(`Traele ${m.falta} ${ICONO[m.recurso]} a ${b.n}`, `Bring ${m.falta} ${ICONO[m.recurso]} to ${b.n}`, `Leve ${m.falta} ${ICONO[m.recurso]} para ${b.n}`); m.pide = ICONO[m.recurso] + "?"; }
   else if (tipo === "gorro") {
     let p = null;
     for (let i = 0; i < 40 && !p; i++) { const a = Math.random() * 6.28, r = rnd(12, 26), x = b.x + Math.cos(a) * r, z = b.z + Math.sin(a) * r; obsT = 1; if (tierraEn(x, z) && !E.edificios.some((e) => Math.hypot(e.x - x, e.z - z) < radioDe(e) + 1.2)) p = { x, z }; }
     if (!p) return;
-    m.obj = p; m.txt = () => yo.objeto ? `Llevale el gorro a ${b.n} 🎩` : `Buscá el gorro perdido de ${b.n} 🎩`; m.pide = "🎩?";
+    m.obj = p; m.txt = () => yo.objeto ? T(`Llevale el gorro a ${b.n} 🎩`, `Bring the hat back to ${b.n} 🎩`, `Leve o chapéu para ${b.n} 🎩`) : T(`Buscá el gorro perdido de ${b.n} 🎩`, `Find ${b.n}'s lost hat 🎩`, `Procure o chapéu perdido de ${b.n} 🎩`); m.pide = "🎩?";
   } else {
     const dest = E.edificios.filter((e) => listo(e) && nombreEdif(e) && dist(e, b) > 15 && dist(e, b) < 45);
     const e = elegir(dest); if (!e) return;
-    m.destino = e; m.txt = () => `Acompañá a ${b.n} hasta ${nombreEdif(e)}`; m.pide = "📍?";
+    m.destino = e; m.txt = () => T(`Acompañá a ${b.n} hasta ${nombreEdif(e)}`, `Walk ${b.n} to ${nombreEdif(e)}`, `Acompanhe ${b.n} até ${nombreEdif(e)}`); m.pide = "📍?";
   }
   b.mision = true; b.est = "esperar"; b.isla = (zonaEn(b.x, b.z) || {}).id ?? b.isla;
   mision = m;
-  aviso(`❗ ${b.n} quiere hablar con vos`);
+  aviso(T(`❗ ${b.n} quiere hablar con vos`, `❗ ${b.n} wants to talk to you`, `❗ ${b.n} quer falar com você`));
 }
 function marcas() {
   const m = mision; if (!m) return;
@@ -1811,7 +1877,7 @@ function marcas() {
 const altoDe = (e) => e.tipo === "cat" ? altoReceta(CAT[e.cat].r) : e.tipo === "inv" ? altoReceta(e.inv.r) : e.tipo === "casa" ? e.nivel * PISO + 2 : 6;
 // ---- 🧭 Ir solo: el rey camina solo hasta donde marca la misión ----
 let autoIr = false, autoAtasco = 0, autoDesvio = 0, autoLado = 1, autoUlt = null;
-function irSolo() { audio(); autoIr = !autoIr; autoAtasco = autoDesvio = 0; autoUlt = null; if (autoIr) aviso("🧭 Vamos para allá…"); }
+function irSolo() { audio(); autoIr = !autoIr; autoAtasco = autoDesvio = 0; autoUlt = null; if (autoIr) aviso(T("🧭 Vamos para allá…", "🧭 On our way…", "🧭 Indo pra lá…")); }
 function direccionAuto(dt) {
   const m = mision, obj = m && m.meta;
   if (!autoIr || !obj) { autoIr = false; return null; }
@@ -1839,14 +1905,14 @@ function terminarMision(ok) {
   const premio = 3 + E.era;
   E.gemas += premio; E.animo = clamp(E.animo + 10, 0, 100); E.misiones = (E.misiones || 0) + 1;
   corazones(m.b); setTimeout(() => corazones(m.b), 300); festejo(m.b);
-  hablar(m.b, elegir(["¡gracias!", "💚", "¡yei " + balbuceo(1) + "!"]), true);
-  logro("📜", "¡Misión cumplida!", `+${premio} 💎 · ${m.b.n} está feliz`);
+  hablar(m.b, elegir([T("¡gracias!", "thanks!", "obrigado!"), "💚", "¡yei " + balbuceo(1) + "!"]), true);
+  logro("📜", T("¡Misión cumplida!", "Quest complete!", "Missão cumprida!"), T(`+${premio} 💎 · ${m.b.n} está feliz`, `+${premio} 💎 · ${m.b.n} is happy`, `+${premio} 💎 · ${m.b.n} está feliz`));
 }
 function actualizarMision(dt) {
   if (!dentroMundo) return;
   if (!mision) { misionT -= dt; if (misionT <= 0) { misionT = 20; nuevaMision(); } }
   const m = mision; if (!m) { if (flecha) flecha.visible = false; $("mision").classList.remove("ver"); return; }
-  if (!E.bichos.includes(m.b)) { aviso("La misión se canceló 😢"); terminarMision(false); return; }
+  if (!E.bichos.includes(m.b)) { aviso(T("La misión se canceló 😢", "The quest was canceled 😢", "A missão foi cancelada 😢")); terminarMision(false); return; }
   marcas();
   const db = dist(m.b, yo);
   if (m.estado === "esperando") {
@@ -1860,7 +1926,7 @@ function actualizarMision(dt) {
   } else if (m.tipo === "gorro") {
     if (!yo.objeto && Math.hypot(m.obj.x - yo.x, m.obj.z - yo.z) < 1.8) {
       yo.objeto = true; if (m.obj.m) { escena.remove(m.obj.m); m.obj.m = null; }
-      yo._gorro = cartel("🎩", 0, 3.3, yo._m.g, .9); muestra("boton", .7); aviso("🎩 ¡Lo encontraste! Llevaselo a " + m.b.n);
+      yo._gorro = cartel("🎩", 0, 3.3, yo._m.g, .9); muestra("boton", .7); aviso(T("🎩 ¡Lo encontraste! Llevaselo a ", "🎩 You found it! Bring it to ", "🎩 Você achou! Leve para ") + m.b.n);
     }
     if (yo.objeto && db < 2.8) { terminarMision(true); return; }
   } else if (m.tipo === "acompañar") {
@@ -1870,18 +1936,18 @@ function actualizarMision(dt) {
     if (dist(m.b, m.destino) < rd + 6.5 || (dist(yo, m.destino) < rd + 4 && dist(m.b, yo) < 6)) { terminarMision(true); return; }
   }
   // tarjetita y flecha
-  const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? `${m.b.n} quiere hablar con vos ❗` : m.txt()); if ($("mision-txt").textContent !== txt) $("mision-txt").textContent = txt;
+  const c = $("mision"); c.classList.add("ver"); const txt = "📜 " + (m.estado === "esperando" ? T(`${m.b.n} quiere hablar con vos ❗`, `${m.b.n} wants to talk to you ❗`, `${m.b.n} quer falar com você ❗`) : m.txt()); if ($("mision-txt").textContent !== txt) $("mision-txt").textContent = txt;
   let obj = m.b;
   if (m.estado === "activa") { if (m.tipo === "gorro" && !yo.objeto) obj = m.obj; else if (m.tipo === "acompañar") obj = m.destino; else if (m.tipo === "traer" && yo.carga !== m.recurso) obj = null; }
   if (!flecha) { flecha = new THREE.Group(); const p = malla(G.cono, mat("#FFC23D"), .55, 1.1, .3, 0, 0, 0, false); p.rotation.x = Math.PI / 2; flecha.add(p); escena.add(flecha); }
   m.meta = obj;
-  { const ir = $("mision-ir"), t = !obj ? "" : autoIr ? "⏹ Parar" : "🧭 Ir"; ir.style.display = obj ? "" : "none"; if (ir.textContent !== t) ir.textContent = t; }
+  { const ir = $("mision-ir"), t = !obj ? "" : autoIr ? T("⏹ Parar", "⏹ Stop", "⏹ Parar") : T("🧭 Ir", "🧭 Go", "🧭 Ir"); ir.style.display = obj ? "" : "none"; if (ir.textContent !== t) ir.textContent = t; }
   flecha.visible = !!obj && Math.hypot(obj.x - yo.x, obj.z - yo.z) > 3;
   if (flecha.visible) { const a = Math.atan2(obj.x - yo.x, obj.z - yo.z); flecha.position.set(yo.x + Math.sin(a) * 1.9, .35 + yo.alto, yo.z + Math.cos(a) * 1.9); flecha.rotation.y = a; }
 }
 // ---- 😠 el rey se pone malo cuando ataca o pisa a alguien, y después se le pasa ----
 function ponerseMalo() {
-  if (!(yo.malo > 0)) { aviso("😠 ¡El Rey Brotito se puso malo!"); hablar(yo, elegir(["¡grrr!", "😠", "¡hmpf!"]), true); }
+  if (!(yo.malo > 0)) { aviso(T("😠 ¡El Rey Brotito se puso malo!", "😠 King Brotito got angry!", "😠 O Rei Brotito ficou bravo!")); hablar(yo, elegir(["¡grrr!", "😠", "¡hmpf!"]), true); }
   yo.malo = 8;
 }
 function caraDelRey(dt) {
@@ -1889,7 +1955,7 @@ function caraDelRey(dt) {
   if (ataque) yo.malo = Math.max(yo.malo || 0, 3); // mientras sus soldados atacan, sigue malo
   if (yo.malo > 0) {
     yo.malo -= dt;
-    if (yo.malo <= 0) { yo.malo = 0; aviso("😊 Al Rey Brotito ya se le pasó"); hablar(yo, elegir(["¡" + balbuceo(1) + "!", "😊"]), true); }
+    if (yo.malo <= 0) { yo.malo = 0; aviso(T("😊 Al Rey Brotito ya se le pasó", "😊 King Brotito calmed down", "😊 O Rei Brotito já se acalmou")); hablar(yo, elegir(["¡" + balbuceo(1) + "!", "😊"]), true); }
   }
   const malo = yo.malo > 0;
   m.cejas.visible = malo; m.enojo.visible = malo;
@@ -1922,7 +1988,7 @@ function chocarBichos(mx, mz) {
     // lo empujás solo si vas hacia él
     if (!(b.caida > 0) && (dx * mx + dz * mz) / d > .3) {
       b.caida = 1.8; b.kx = dx / d; b.kz = dz / d; b.dx = -b.kx; b.dz = -b.kz; b.carga = null; b.adentro = false;
-      if (Math.random() < .7) setTimeout(() => hablar(b, elegir(["¡ay!", "¡ayyy!", "¡uy!", "😵"]), true), 80);
+      if (Math.random() < .7) setTimeout(() => hablar(b, elegir([T("¡ay!", "ow!", "ai!"), T("¡ayyy!", "owww!", "aiii!"), T("¡uy!", "oops!", "ui!"), "😵"]), true), 80);
       if (!muestra("rebotar", .8, rnd(.96, 1.08))) sonido("ay", b);
       for (const o of E.bichos) if (o !== b && !o.adentro && o.y === 0 && !o.caida && dist(o, b) < 6) { o.susto = rnd(2, 4); const dd = dist(o, yo) || 1; o.dx = (o.x - yo.x) / dd; o.dz = (o.z - yo.z) / dd; }
       E.animo = clamp(E.animo - .5, 0, 100);
@@ -1985,7 +2051,7 @@ function actualizarYo(dt, ahora) {
   if (yo.carga && !(mision && mision.tipo === "traer" && mision.estado === "activa" && yo.carga === mision.recurso)) {
     const casa = cercaDeMi(todosAlmacenes(), 3.8);
     if (casa) {
-      sumar(yo.carga, yo.cant * bono(yo.carga)); aviso(`+${yo.cant} ${ICONO[yo.carga]} ¡Gracias! 💚`); sonido("dar");
+      sumar(yo.carga, yo.cant * bono(yo.carga)); aviso(`+${yo.cant} ${ICONO[yo.carga]} ` + T("¡Gracias! 💚", "Thanks! 💚", "Obrigado! 💚")); sonido("dar");
       sumarPedido(yo.carga, yo.cant);
       const b = cercaDeMi(E.bichos.filter((x) => !x.adentro && x.y === 0), 7); if (b) { hablar(b, "¡" + ICONO[yo.carga] + "!"); corazones(b); }
       E.animo = clamp(E.animo + 1, 0, 100); yo.carga = null; yo.cant = 0; accionT = 1;
@@ -1996,10 +2062,10 @@ function actualizarYo(dt, ahora) {
   if (accionT > .15) {
     accionT = 0; accion = elegirAccion();
     fila = fila.filter((b) => E.bichos.includes(b) && b.sigue);
-    { const ba = $("a-atacar"), hay = fila.some((b) => !b.mision); ba.style.display = hay ? "" : "none"; const t = ataque ? "🛑 ¡Alto!" : "⚔️ ¡Ataquen!"; if (ba.textContent !== t) ba.textContent = t; }
-    { const bs = $("a-siganme"), t = fila.length ? `✋ Suéltenme (${fila.length})` : "🚩 Síganme"; if (bs.textContent !== t) bs.textContent = t; }
+    { const ba = $("a-atacar"), hay = fila.some((b) => !b.mision); ba.style.display = hay ? "" : "none"; const t = ataque ? T("🛑 ¡Alto!", "🛑 Stop!", "🛑 Parem!") : T("⚔️ ¡Ataquen!", "⚔️ Attack!", "⚔️ Ataquem!"); if (ba.textContent !== t) ba.textContent = t; }
+    { const bs = $("a-siganme"), t = fila.length ? T("✋ Suéltenme", "✋ Let go", "✋ Me soltem") + ` (${fila.length})` : T("🚩 Síganme", "🚩 Follow me", "🚩 Me sigam"); if (bs.textContent !== t) bs.textContent = t; }
     { const cerca = !alzado && bichoCerca(), fb = $("fila-bicho"); fb.style.display = alzado || cerca ? "flex" : "none";
-      const ta = alzado ? "🫳 Dejar" : "🤗 Abrazar", tb = alzado ? "🤾 Tirar" : "✋ Alzar";
+      const ta = alzado ? T("🫳 Dejar", "🫳 Put down", "🫳 Soltar") : T("🤗 Abrazar", "🤗 Hug", "🤗 Abraçar"), tb = alzado ? T("🤾 Tirar", "🤾 Throw", "🤾 Jogar") : T("✋ Alzar", "✋ Pick up", "✋ Levantar");
       if ($("a-abrazar").textContent !== ta) $("a-abrazar").textContent = ta; if ($("a-alzar").textContent !== tb) $("a-alzar").textContent = tb; }
     const bt = $("a-hacer");
     bt.style.visibility = accion ? "visible" : "hidden";
@@ -2066,13 +2132,13 @@ if (!primeraVez) {
     for (let t = 0; t < sim; t += 2) paso(2, true);
     eventos = [];
     const nacieron = E.bichos.length - antes.n, lugar = capacidad() - antes.c, partes = [];
-    if (nacieron > 0) partes.push(`nacieron <b>${nacieron}</b> Brotitos`);
-    if (lugar > 0) partes.push(`hicieron lugar para <b>${lugar}</b> más`);
-    if (E.meta > antes.m) partes.push(`desbloquearon <b>${METAS.slice(antes.m, E.meta).map((m) => m.g + " " + m.t).join(", ")}</b>`);
+    if (nacieron > 0) partes.push(T(`nacieron <b>${nacieron}</b> Brotitos`, `<b>${nacieron}</b> Brotitos were born`, `nasceram <b>${nacieron}</b> Brotitos`));
+    if (lugar > 0) partes.push(T(`hicieron lugar para <b>${lugar}</b> más`, `they made room for <b>${lugar}</b> more`, `abriram espaço para mais <b>${lugar}</b>`));
+    if (E.meta > antes.m) partes.push(T("desbloquearon ", "they unlocked ", "desbloquearam ") + `<b>${METAS.slice(antes.m, E.meta).map((m) => m.g + " " + m.t).join(", ")}</b>`);
     const islasN = E.islas.filter((i) => i.colonizada).length - antes.islas;
-    if (islasN > 0) partes.push(`agrandaron el mundo <b>${islasN}</b> ${islasN === 1 ? "vez" : "veces"} 🌱`);
-    if (E.era > antes.era) partes.push(`¡pasaron a la <b>Era de ${ERAS[E.era].n}</b> ${ERAS[E.era].g}!`);
-    $("vuelta-txt").innerHTML = partes.length ? "Mientras no estabas " + partes.join(", ") + ". 🎉" : "Tus Brotitos estuvieron juntando cosas mientras no estabas.";
+    if (islasN > 0) partes.push(T(`agrandaron el mundo <b>${islasN}</b> ${islasN === 1 ? "vez" : "veces"} 🌱`, `they expanded the world <b>${islasN}</b> ${islasN === 1 ? "time" : "times"} 🌱`, `aumentaram o mundo <b>${islasN}</b> ${islasN === 1 ? "vez" : "vezes"} 🌱`));
+    if (E.era > antes.era) partes.push(T(`¡pasaron a la <b>Era de ${ERAS[E.era].n}</b> ${ERAS[E.era].g}!`, `they reached the <b>${ERAS[E.era].n} Era</b> ${ERAS[E.era].g}!`, `chegaram à <b>Era ${ERAS[E.era].n}</b> ${ERAS[E.era].g}!`));
+    $("vuelta-txt").innerHTML = partes.length ? T("Mientras no estabas ", "While you were away ", "Enquanto você não estava ") + partes.join(", ") + ". 🎉" : T("Tus Brotitos estuvieron juntando cosas mientras no estabas.", "Your Brotitos kept gathering things while you were away.", "Seus Brotitos ficaram juntando coisas enquanto você não estava.");
     $("c-vuelta").classList.add("ver");
   }
 }

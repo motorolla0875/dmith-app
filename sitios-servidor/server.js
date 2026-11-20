@@ -140,11 +140,15 @@ async function coloniaInvento(b) {
   const key = groqKey(); if (!key) throw err(503, "Sin IA");
   const txt = (x, n) => String(x || "").replace(/\s+/g, " ").trim().slice(0, n);
   const era = Math.max(0, Math.min(4, b.era | 0)), pob = Math.max(1, Math.min(1e7, b.pob | 0));
+  const idi = ["es", "en", "pt"].includes(b.idioma) ? b.idioma : "es";
+  const LENGUA = { es: "español rioplatense", en: "English", pt: "português do Brasil" }[idi];
+  const EFT = { es: EF_TXT, en: { comida: "food", madera: "wood", piedra: "stone", sab: "wisdom", obra: "building", vel: "speed", nacer: "births", gemas: "gems", animo: "happiness" }, pt: { comida: "comida", madera: "madeira", piedra: "pedra", sab: "sabedoria", obra: "construção", vel: "velocidade", nacer: "nascimentos", gemas: "gemas", animo: "ânimo" } }[idi];
+  const MAS_ANIMO = { es: "más ánimo", en: "more happiness", pt: "mais ânimo" }[idi];
   const ya = (Array.isArray(b.ya) ? b.ya : []).slice(-40).map((x) => txt(x, 40)).filter(Boolean).join(", ") || "(nada todavía)";
   const sistema = `Inventás construcciones para un juego de una colonia de bichitos tiernos llamados Brotitos. Están en la era de ${ERAS_COL[era]} y son ${pob}.
 Inventá UNA construcción nueva, original y graciosa, que tenga sentido para esa era y ese tamaño de colonia. NO repitas ni te parezcas a estas que ya tienen: ${ya}.
 Respondé SOLO con JSON:
-{"nombre":"2 a 4 palabras en español, creativo","emoji":"un solo emoji que la represente","descripcion":"qué hace, en español rioplatense, máximo 60 caracteres","efecto":"uno de: ${EF_COL.join(", ")}","techo":"dos|plano|cupula|cono","pisos":1-10,"ancho":3-5.5,"color":"#rrggbb pared","colorTecho":"#rrggbb","partes":["hasta 3 de: ${PARTES_COL.join(", ")}"]}
+{"nombre":"2 a 4 palabras en ${LENGUA}, creativo","emoji":"un solo emoji que la represente","descripcion":"qué hace, en ${LENGUA}, máximo 60 caracteres","efecto":"uno de: ${EF_COL.join(", ")}","techo":"dos|plano|cupula|cono","pisos":1-10,"ancho":3-5.5,"color":"#rrggbb pared","colorTecho":"#rrggbb","partes":["hasta 3 de: ${PARTES_COL.join(", ")}"]}
 Nada violento, feo ni de adultos.`;
   for (const model of ["openai/gpt-oss-20b", "llama-3.1-8b-instant"]) {
     const oss = model.startsWith("openai/");
@@ -159,7 +163,7 @@ Nada violento, feo ni de adultos.`;
       const hex = (c, d) => /^#[0-9a-f]{6}$/i.test(c) ? c : d;
       const num = (x, a, z, d) => { x = +x; return isFinite(x) ? Math.max(a, Math.min(z, x)) : d; };
       const g = [...txt(j.emoji, 8)][0] || "💡";
-      return { ia: true, g, n, s: `${txt(j.descripcion, 70)}${txt(j.descripcion, 70) ? " · " : ""}${ef === "animo" ? "más ánimo" : "+8% " + EF_TXT[ef]}`, ef: { [ef]: v },
+      return { ia: true, g, n, s: `${txt(j.descripcion, 70)}${txt(j.descripcion, 70) ? " · " : ""}${ef === "animo" ? MAS_ANIMO : "+8% " + EFT[ef]}`, ef: { [ef]: v },
         r: { techo: ["dos", "plano", "cupula", "cono"].includes(j.techo) ? j.techo : "dos", pisos: Math.round(num(j.pisos, 1, 10, 2)), w: num(j.ancho, 3, 5.5, 4), d: num(j.ancho, 3, 5.5, 4), h: 2.2,
           color: hex(j.color, "#E0C9A6"), ct: hex(j.colorTecho, "#8E3B2E"), partes: (Array.isArray(j.partes) ? j.partes : []).filter((p) => PARTES_COL.includes(p)).slice(0, 3) } };
     } catch (e) { console.log("colonia: respuesta rara", e.message); continue; }
