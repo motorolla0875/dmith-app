@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brújula Viajes · Agencia de viajes</title>
+<meta name="description" content="Viajes nacionales e internacionales a medida. Cotizamos todos los destinos: vuelos, hoteles, paquetes y asistencia al viajero.">
+<meta name="theme-color" content="#0F2A44">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mar: #0F2A44; --mar2: #1C4266; --cielo: #8FC9E8; --atardecer: #F2784B; --arena: #F7F1E8; --papel: #FFFFFF;
+    --tinta: #12263A; --suave: #5F7183; --linea: #E3E8EE;
+    --titulo: "Fraunces", Georgia, serif; --cuerpo: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.6 var(--cuerpo); -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 3px solid var(--atardecer); outline-offset: 3px; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+  h1, h2, h3 { font-family: var(--titulo); font-weight: 700; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+  section { padding-block: clamp(56px, 8vw, 100px); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; padding: 15px 26px; font: 600 16px var(--cuerpo); text-decoration: none; cursor: pointer; white-space: nowrap; }
+  .btn svg { width: 19px; height: 19px; }
+  .btn-sol { background: var(--atardecer); color: #fff; }
+  .btn-sol:hover { background: #DE6235; }
+  .btn-claro { background: rgba(255,255,255,.14); color: #fff; border: 1.5px solid rgba(255,255,255,.5); }
+
+  header { position: absolute; inset: 0 0 auto; z-index: 10; color: #fff; }
+  header .wrap { display: flex; align-items: center; gap: 18px; height: 76px; }
+  .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; margin-right: auto; font: 700 22px var(--titulo); }
+  .marca svg { width: 34px; height: 34px; }
+  nav { display: flex; gap: 24px; }
+  nav a { color: #fff; text-decoration: none; font-weight: 500; font-size: 15px; opacity: .9; }
+  header .btn { padding: 11px 20px; font-size: 15px; }
+  @media (max-width: 880px) { nav { display: none; } }
+
+  /* portada */
+  .hero { position: relative; min-height: min(92vh, 820px); display: flex; align-items: flex-end; color: #fff; padding-block: 120px 56px; overflow: hidden; }
+  .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,42,68,.55) 0%, rgba(15,42,68,.15) 40%, rgba(15,42,68,.85) 100%); }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: end; }
+  .hero h1 { font-size: clamp(42px, 7vw, 86px); }
+  .hero h1 em { font-style: italic; font-weight: 500; color: #FFD3BF; }
+  .hero p { font-size: clamp(17px, 2vw, 20px); max-width: 36ch; margin: 18px 0 0; color: #E6EEF5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .chips span { font-size: 14px; font-weight: 600; padding: 7px 13px; border-radius: 999px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); }
+
+  .cotizar { background: #fff; color: var(--tinta); border-radius: 22px; padding: 22px; box-shadow: 0 30px 60px rgba(0,0,0,.3); display: grid; gap: 12px; }
+  .cotizar h2 { font-size: 26px; }
+  .cotizar p.n { margin: -4px 0 4px; color: var(--suave); font-size: 15px; }
+  .cotizar label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 600; color: var(--suave); }
+  .cotizar input, .cotizar select { width: 100%; min-width: 0; border: 1.5px solid var(--linea); border-radius: 12px; padding: 12px 13px; font: 500 16px var(--cuerpo); color: var(--tinta); background: var(--arena); }
+  .cotizar .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cotizar .btn { width: 100%; margin-top: 4px; }
+  @media (max-width: 880px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } .hero { min-height: auto; padding-top: 110px; } }
+
+  /* destinos */
+  .cab { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
+  .cab h2 { font-size: clamp(34px, 5vw, 56px); }
+  .cab p { margin: 10px 0 0; color: var(--suave); max-width: 44ch; }
+  .tabs { display: inline-flex; background: var(--arena); border-radius: 999px; padding: 5px; }
+  .tabs button { border: 0; background: none; border-radius: 999px; padding: 10px 18px; font: 600 15px var(--cuerpo); color: var(--suave); cursor: pointer; }
+  .tabs button.on { background: var(--mar); color: #fff; }
+  .destinos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .dest { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 3/4; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; padding: 18px; text-decoration: none; background: var(--mar2); }
+  .dest img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .dest::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(10,25,40,.88)); }
+  .dest:hover img { transform: scale(1.04); }
+  .dest > * { position: relative; z-index: 1; }
+  .dest small { font-size: 13px; font-weight: 600; color: var(--cielo); }
+  .dest h3 { font-size: 26px; margin: 2px 0 6px; }
+  .dest p { margin: 0 0 12px; font-size: 14.5px; color: #D5E1EA; line-height: 1.45; }
+  .dest .pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid rgba(255,255,255,.22); padding-top: 10px; font-size: 14px; }
+  .dest .pie b { font-size: 16px; }
+  .dest .pie span { font-weight: 600; color: #FFD3BF; }
+  @media (max-width: 1000px) { .destinos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .destinos { grid-template-columns: minmax(0, 1fr); } .dest { aspect-ratio: 4/5; } }
+
+  /* servicios */
+  .servicios { background: var(--arena); }
+  .serv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .s { background: #fff; border-radius: 20px; padding: 22px; border: 1px solid #EDE4D6; }
+  .s svg { width: 32px; height: 32px; color: var(--atardecer); }
+  .s h3 { font-size: 22px; margin: 12px 0 6px; }
+  .s p { margin: 0; color: var(--suave); font-size: 15.5px; }
+  @media (max-width: 900px) { .serv { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .serv { grid-template-columns: minmax(0, 1fr); } }
+
+  /* cómo trabajamos */
+  .como .wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; }
+  .como h2 { font-size: clamp(32px, 4.6vw, 50px); }
+  .como .foto { border-radius: 26px; overflow: hidden; aspect-ratio: 4/5; }
+  .como .foto img { width: 100%; height: 100%; object-fit: cover; }
+  .pasos { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 18px; counter-reset: p; }
+  .pasos li { display: grid; grid-template-columns: 48px 1fr; gap: 14px; counter-increment: p; }
+  .pasos li::before { content: counter(p); width: 48px; height: 48px; border-radius: 50%; background: var(--mar); color: #fff; display: grid; place-items: center; font: 700 20px var(--titulo); }
+  .pasos b { display: block; font-size: 18px; }
+  .pasos span { color: var(--suave); font-size: 15.5px; }
+  @media (max-width: 880px) { .como .wrap { grid-template-columns: minmax(0, 1fr); } .como .foto { aspect-ratio: 16/10; } }
+
+  /* cierre */
+  .final { background: var(--mar); color: #fff; text-align: center; }
+  .final h2 { font-size: clamp(34px, 5vw, 60px); max-width: 18ch; margin: 0 auto; }
+  .final h2 em { font-style: italic; font-weight: 500; color: #FFD3BF; }
+  .final p { color: #C9D6E2; margin: 16px auto 26px; max-width: 46ch; }
+  .datos { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin-top: 34px; color: #C9D6E2; font-size: 15px; }
+  footer { background: #0A1E31; color: #8DA2B6; font-size: 14px; padding-block: 22px calc(22px + env(safe-area-inset-bottom)); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+  .flota { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 58px; height: 58px; border-radius: 50%; background: #25D366; color: #fff; display: grid; place-items: center; z-index: 15; box-shadow: 0 12px 26px rgba(37,211,102,.35); }
+  .flota svg { width: 28px; height: 28px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .dest img { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8S23.2 3 16 3Zm0 23.4c-2.1 0-4.1-.6-5.9-1.7l-.4-.3-3.8 1.2 1.2-3.7-.3-.4a10.6 10.6 0 0 1-1.7-5.7C5.1 10 10 5.2 16 5.2S26.9 10 26.9 15.9 22 26.4 16 26.4Zm6-7.8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <a class="marca" href="#inicio"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="20" r="17"/><path d="M20 7l4.5 13L20 33l-4.5-13z" fill="#F2784B" stroke="none"/><path d="M20 7l-4.5 13h9z" fill="#fff" stroke="none"/></svg>Brújula Viajes</a>
+    <nav aria-label="Secciones"><a href="#destinos">Destinos</a><a href="#servicios">Servicios</a><a href="#como">Cómo trabajamos</a><a href="#contacto">Contacto</a></nav>
+    <a class="btn btn-sol" href="#cotizar">Cotizar</a>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <img src="https://unsplash.com/photos/yRtJ_-fQvpU/download?w=1800" alt="Ala de avión sobre las nubes vista desde la ventanilla">
+    <div class="wrap">
+      <div>
+        <h1>El viaje de tus sueños, <em>armado a tu medida</em></h1>
+        <p>Destinos nacionales e internacionales. Te ayudamos a elegir, cotizamos todo y te acompañamos hasta que volvés.</p>
+        <div class="chips"><span>Vuelos</span><span>Hoteles</span><span>Paquetes</span><span>Asistencia al viajero</span><span>Cuotas</span></div>
+      </div>
+      <form class="cotizar" id="cotizar" aria-label="Pedir cotización">
+        <h2>Pedí tu cotización</h2>
+        <p class="n">Sin costo. Te respondemos por WhatsApp.</p>
+        <label>¿A dónde querés viajar?<input id="c-dest" list="lista-dest" placeholder="Ej: Bariloche, Punta Cana, Europa" required></label>
+        <datalist id="lista-dest"></datalist>
+        <div class="fila">
+          <label>¿Cuándo?<input id="c-cuando" placeholder="Ej: enero 2027"></label>
+          <label>¿Cuántos viajan?<select id="c-pax"><option>1 persona</option><option selected>2 personas</option><option>3 personas</option><option>4 personas</option><option>5 o más</option></select></label>
+        </div>
+        <button class="btn btn-sol" type="submit"><svg><use href="#wa"/></svg>Quiero mi cotización</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="destinos">
+    <div class="wrap">
+      <div class="cab">
+        <div><h2>Destinos que te esperan</h2><p>Algunos de los favoritos. Si el tuyo no está, también lo cotizamos.</p></div>
+        <div class="tabs" role="tablist" aria-label="Tipo de destino" id="tabs"></div>
+      </div>
+      <div class="destinos" id="lista"></div>
+    </div>
+  </section>
+
+  <section class="servicios" id="servicios">
+    <div class="wrap">
+      <div class="cab"><div><h2>Todo para tu viaje</h2><p>Nos ocupamos de cada detalle para que vos solo disfrutes.</p></div></div>
+      <div class="serv" id="serv"></div>
+    </div>
+  </section>
+
+  <section class="como" id="como">
+    <div class="wrap">
+      <div class="foto"><img src="https://unsplash.com/photos/V63oM8OPJSo/download?w=1000" alt="Playa con palmeras y cielo nublado" loading="lazy"></div>
+      <div>
+        <h2>Así armamos tu viaje</h2>
+        <ol class="pasos">
+          <li><div><b>Nos contás qué soñás</b><span>Destino, fechas, presupuesto y con quién viajás.</span></div></li>
+          <li><div><b>Te mandamos opciones</b><span>Comparamos vuelos, hoteles y paquetes, y te pasamos la cotización.</span></div></li>
+          <li><div><b>Reservás tranquilo</b><span>Te ayudamos con el pago, en cuotas si querés, y la documentación.</span></div></li>
+          <li><div><b>Viajás acompañado</b><span>Estamos disponibles por WhatsApp durante todo tu viaje.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="contacto">
+    <div class="wrap">
+      <h2>¿A dónde te <em>llevamos</em>?</h2>
+      <p>Escribinos y empezamos a armar tu próximo viaje. La cotización no tiene costo.</p>
+      <a class="btn btn-sol" href="#" data-wa><svg><use href="#wa"/></svg>Escribinos por WhatsApp</a>
+      <div class="datos"><span>Atención de lunes a sábado</span><span>Av. Corrientes 1234, CABA</span><span>@brujulaviajes</span></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>Brújula Viajes · Agencia de viajes</span><span>Legajo EVT 00000 (ejemplo)</span></div></footer>
+<a class="flota" href="#" data-wa aria-label="Escribinos por WhatsApp"><svg><use href="#wa"/></svg></a>
+
+<script src="../demo.js"></script>
+<script>
+const destinos = DEMO.lista("destinos", [
+  { img: "zsgJdHDP4IE", n: "Bariloche", z: "Nacional", d: "Lagos, montañas y chocolate. Ideal en invierno y en verano.", noches: "5 noches", desde: "Desde $480.000" },
+  { img: "MQwdwP7a-EE", n: "Cataratas del Iguazú", z: "Nacional", d: "Una de las maravillas naturales del mundo, a dos horas de vuelo.", noches: "3 noches", desde: "Desde $390.000" },
+  { img: "V34MPSwaK7k", n: "El Calafate", z: "Nacional", d: "El glaciar Perito Moreno de frente y la Patagonia más pura.", noches: "4 noches", desde: "Desde $520.000" },
+  { img: "GaTPFEdiLME", n: "Salta y Jujuy", z: "Nacional", d: "Cerros de colores, quebradas, empanadas y peñas.", noches: "5 noches", desde: "Desde $410.000" },
+  { img: "MihUZkpY874", n: "Punta Cana", z: "Internacional", d: "Caribe all inclusive: playa, sol y mar turquesa.", noches: "7 noches", desde: "Desde US$ 1.390" },
+  { img: "PyOlN0AVlMg", n: "Río de Janeiro", z: "Internacional", d: "Playas, Cristo Redentor y la alegría carioca.", noches: "6 noches", desde: "Desde US$ 790" },
+  { img: "PM4VZZn-YyM", n: "Europa", z: "Internacional", d: "París, Roma, Madrid: circuitos o viaje a tu ritmo.", noches: "15 noches", desde: "Desde US$ 2.890" },
+  { img: "e2Jiqrl4n_g", n: "Cusco y Machu Picchu", z: "Internacional", d: "La ciudad inca y una de las siete maravillas.", noches: "6 noches", desde: "Desde US$ 1.150" }
+], { etiquetas: { z: "Tipo (Nacional o Internacional)", noches: "Duración", desde: "Precio desde" } });
+const servicios = DEMO.lista("servicios", [
+  { n: "Vuelos", d: "Nacionales e internacionales, con las mejores tarifas y horarios." },
+  { n: "Hoteles", d: "Desde opciones económicas hasta resorts all inclusive." },
+  { n: "Paquetes", d: "Vuelo, hotel y traslados en un solo precio." },
+  { n: "Asistencia al viajero", d: "Viajá cubierto ante cualquier imprevisto." },
+  { n: "Excursiones", d: "Las mejores salidas en cada destino, reservadas antes de llegar." },
+  { n: "Pagá en cuotas", d: "Financiamos tu viaje para que lo disfrutes sin apuro." }
+]);
+const ICONOS = [
+  '<path d="M4 18l24-8-6 18-5-8-8-2zM17 20l11-10"/>', '<path d="M5 27V11l11-6 11 6v16M12 27v-7h8v7M5 27h22"/>', '<rect x="6" y="9" width="20" height="16" rx="3"/><path d="M12 9V6h8v3M6 15h20"/>',
+  '<path d="M16 4l10 4v7c0 6-4.5 10.5-10 13-5.5-2.5-10-7-10-13V8z"/><path d="M12 16l3 3 6-6"/>', '<circle cx="16" cy="16" r="11"/><path d="M20 12l-2.5 6.5L11 21l2.5-6.5z"/>', '<rect x="4" y="8" width="24" height="16" rx="3"/><path d="M4 14h24M9 20h5"/>'
+];
+let tipo = "Todos";
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const wa = t => "https://wa.me/?text=" + encodeURIComponent(t);
+function pintar() {
+  const tipos = ["Todos", ...new Set(destinos.map(d => d.z).filter(Boolean))];
+  document.getElementById("tabs").innerHTML = tipos.map(t => `<button type="button" role="tab" aria-selected="${t === tipo}" class="${t === tipo ? "on" : ""}">${esc(t === "Todos" ? "Todos" : t + "es")}</button>`).join("");
+  document.querySelectorAll("#tabs button").forEach((b, i) => b.onclick = () => { tipo = tipos[i]; pintar(); });
+  document.getElementById("lista").innerHTML = destinos.filter(d => tipo === "Todos" || d.z === tipo).map(d => `
+    <a class="dest" href="${wa("Hola! Quiero cotizar un viaje a " + d.n + ".")}" target="_blank" rel="noopener">
+      <img src="${DEMO.img(d.img, 800)}" alt="${esc(d.n)}" loading="lazy">
+      <small>${esc(d.z)}${d.noches ? " · " + esc(d.noches) : ""}</small><h3>${esc(d.n)}</h3><p>${esc(d.d)}</p>
+      <div class="pie"><b>${esc(d.desde)}</b><span>Cotizar</span></div></a>`).join("");
+}
+pintar();
+document.getElementById("lista-dest").innerHTML = destinos.map(d => `<option value="${esc(d.n)}">`).join("");
+document.getElementById("serv").innerHTML = servicios.map((s, i) => `<div class="s"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONOS[i % ICONOS.length]}</svg><h3>${esc(s.n)}</h3><p>${esc(s.d)}</p></div>`).join("");
+document.getElementById("cotizar").addEventListener("submit", e => {
+  e.preventDefault();
+  const d = document.getElementById("c-dest").value.trim(), c = document.getElementById("c-cuando").value.trim(), p = document.getElementById("c-pax").value;
+  window.open(wa(`Hola! Quiero cotizar un viaje a ${d}${c ? " para " + c : ""}, somos ${p}.`), "_blank", "noopener");
+});
+document.querySelectorAll("[data-wa]").forEach(a => { a.href = wa("Hola! Quiero consultar por un viaje."); a.target = "_blank"; a.rel = "noopener"; });
+</script>
+</body>
+</html>
