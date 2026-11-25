@@ -84,9 +84,13 @@ http.createServer(async (req, res) => {
   let r;
   try {
     r = await pedir(e.GROQ_API_KEY, e.UMA_MODELO || "openai/gpt-oss-120b", mensajes);
-    if (r.status === 429 || r.status >= 500) r = await pedir(e.GROQ_API_KEY, RESERVA, mensajes);
-  } catch (x) { return json(res, 502, { error: "ia" }); }
-  if (!r.ok) { console.error("Groq", r.status, (await r.text()).slice(0, 300)); return json(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? "cupo" : "ia" }); }
+    if (!r.ok) {
+      console.error("Groq (modelo principal)", r.status, (await r.text()).slice(0, 400));
+      if (r.status === 401) return json(res, 502, { error: "clave" });
+      r = await pedir(e.GROQ_API_KEY, RESERVA, mensajes);
+    }
+  } catch (x) { console.error("No pude conectar con Groq:", x.message); return json(res, 502, { error: "ia" }); }
+  if (!r.ok) { console.error("Groq (reserva)", r.status, (await r.text()).slice(0, 400)); return json(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? "cupo" : r.status === 401 ? "clave" : "ia" }); }
 
   // reenvía solo el texto de la respuesta, a medida que llega
   res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Accel-Buffering": "no" });
