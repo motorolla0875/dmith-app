@@ -2,257 +2,31 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Vero G · Masoterapia · Turnos por WhatsApp</title>
-<meta name="description" content="Masoterapia con Vero: descontracturante, drenaje linfático, reflexología, circulatorio, piedras calientes, cervicalgia y piernas cansadas. Reservá tu turno por WhatsApp.">
-<meta name="theme-color" content="#1F3B36">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vero G. Masoterapia · Sitio pausado</title>
+<meta name="robots" content="noindex">
 <style>
-  :root {
-    --eucalipto: #1F3B36; --salvia: #8FAE9B; --bruma: #EEF2EE; --hoja: #DCE6DE;
-    --piedra: #B9824A; --texto: #23302D; --suave: #5E6E69; --blanco: #FFFFFF;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bruma); color: var(--texto); font: 400 18px/1.6 Karla, system-ui, sans-serif; }
-  a { color: inherit; }
-  button { font: inherit; color: inherit; }
-  :focus-visible { outline: 3px solid var(--piedra); outline-offset: 3px; }
-  #dm-volver { display: none !important; }
-  .ancho { max-width: 1060px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-left)); }
-  h1, h2, h3 { font-family: Fraunces, Georgia, serif; font-weight: 600; margin: 0; line-height: 1.08; letter-spacing: -.01em; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
-  header { position: sticky; top: 0; z-index: 20; background: rgba(238,242,238,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hoja); }
-  header .ancho { display: flex; justify-content: space-between; align-items: center; height: 66px; }
-  .marca { font-family: Fraunces, serif; font-size: 23px; font-weight: 600; text-decoration: none; color: var(--eucalipto); }
-  .marca span { font-family: Karla, sans-serif; font-weight: 500; font-size: 15px; color: var(--suave); margin-left: 6px; }
-  .reservar-chico { text-decoration: none; background: var(--eucalipto); color: #fff; font-weight: 700; font-size: 16px; padding: 9px 18px; border-radius: 999px; }
-
-  .portada { background: var(--eucalipto); color: #EAF1EC; overflow: hidden; position: relative; }
-  .portada .ancho { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding-top: 64px; padding-bottom: 76px; }
-  .portada h1 { font-size: clamp(42px, 6vw, 72px); color: #fff; font-weight: 400; }
-  .portada p { font-size: 20px; color: #C8D8CE; max-width: 34ch; margin: 22px 0 30px; }
-  .boton { display: inline-flex; align-items: center; gap: 9px; min-height: 54px; padding: 0 26px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 18px; border: 0; cursor: pointer; }
-  .boton.claro { background: #fff; color: var(--eucalipto); }
-  .boton.linea { color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.4); }
-  .boton svg { width: 20px; height: 20px; }
-  .botones { display: flex; gap: 12px; flex-wrap: wrap; }
-  .piedras { justify-self: center; width: min(360px, 100%); }
-  .piedras svg { width: 100%; height: auto; display: block; }
-
-  section.bloque { padding: 80px 0; }
-  .cabeza { max-width: 600px; margin-bottom: 34px; }
-  .cabeza h2 { font-size: clamp(34px, 4.4vw, 50px); color: var(--eucalipto); }
-  .cabeza p { margin: 12px 0 0; color: var(--suave); font-size: 19px; }
-
-  .servicios { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; border-top: 2px solid var(--eucalipto); }
-  .serv { display: grid; grid-template-columns: 1fr auto; gap: 4px 18px; padding: 22px 0; border-bottom: 1px solid #CFDAD2; }
-  .serv h3 { font-size: 26px; color: var(--eucalipto); }
-  .serv .precio { font-weight: 700; font-size: 20px; text-align: right; white-space: nowrap; }
-  .serv p { grid-column: 1 / -1; margin: 2px 0 6px; color: var(--suave); font-size: 17px; }
-  .serv .dur { color: var(--suave); font-size: 15px; font-weight: 500; }
-  .serv .elegir { grid-column: 1 / -1; justify-self: start; border: 0; cursor: pointer; background: transparent; color: var(--eucalipto); font-weight: 700; font-size: 16.5px; padding: 0; text-decoration: underline; text-underline-offset: 4px; }
-
-  .pack { background: var(--piedra); color: #fff; }
-  .pack .ancho { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: center; padding-top: 50px; padding-bottom: 50px; }
-  .pack h2 { font-size: clamp(30px, 4vw, 44px); color: #fff; }
-  .pack p { margin: 10px 0 0; font-size: 19px; color: #FBEBDC; max-width: 44ch; }
-  .pack .boton { background: #fff; color: #7A4F22; }
-
-  .reserva { background: var(--blanco); }
-  .reserva .ancho { display: grid; grid-template-columns: .9fr 1.1fr; gap: 50px; align-items: start; }
-  .pasos { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 16px; }
-  .pasos li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; color: var(--suave); }
-  .pasos b { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--hoja); color: var(--eucalipto); font-family: Fraunces, serif; font-size: 19px; }
-  .pasos strong { color: var(--texto); display: block; }
-  form { background: var(--bruma); border-radius: 24px; padding: 26px; display: grid; gap: 16px; }
-  form label, form fieldset { display: grid; gap: 7px; font-weight: 700; font-size: 16.5px; border: 0; padding: 0; margin: 0; }
-  form legend { font-weight: 700; font-size: 16.5px; margin-bottom: 7px; padding: 0; }
-  form select, form input { font: 500 17px Karla, sans-serif; color: var(--texto); padding: 12px 14px; border-radius: 14px; border: 2px solid #CFDAD2; background: #fff; }
-  .opciones { display: flex; flex-wrap: wrap; gap: 8px; }
-  .opciones button { border: 2px solid #CFDAD2; background: #fff; border-radius: 999px; padding: 8px 16px; cursor: pointer; font-weight: 700; font-size: 16px; }
-  .opciones button[aria-pressed="true"] { background: var(--eucalipto); border-color: var(--eucalipto); color: #fff; }
-  .mensaje { background: #DCF8C6; border-radius: 14px; padding: 12px 14px; font-size: 16px; white-space: pre-line; }
-  .mensaje small { display: block; color: var(--suave); font-size: 13.5px; margin-bottom: 3px; }
-  .enviar { justify-content: center; background: #1FAF5A; color: #fff; }
-
-  .sobre .ancho { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
-  .inicial { width: 180px; height: 180px; border-radius: 50%; background: var(--salvia); display: grid; place-items: center; font-family: Fraunces, serif; font-size: 84px; color: #fff; }
-  .sobre h2 { font-size: clamp(30px, 4vw, 44px); color: var(--eucalipto); }
-  .sobre p { color: var(--suave); max-width: 56ch; margin: 14px 0 0; font-size: 19px; }
-
-  footer { background: var(--eucalipto); color: #C8D8CE; padding: 30px 0 100px; font-size: 16px; }
-  footer .ancho { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  .flotante { position: fixed; z-index: 30; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); width: 60px; height: 60px; border-radius: 50%; background: #1FAF5A; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
-  .flotante svg { width: 30px; height: 30px; }
-
-  @media (max-width: 860px) {
-    .portada .ancho, .reserva .ancho, .pack .ancho { grid-template-columns: minmax(0,1fr); }
-    .portada .ancho { padding-top: 40px; }
-    .piedras { width: 230px; order: -1; justify-self: start; }
-    .servicios { grid-template-columns: 1fr; }
-    .sobre .ancho { grid-template-columns: 1fr; }
-    .inicial { width: 120px; height: 120px; font-size: 56px; }
-    section.bloque { padding: 60px 0; }
-    .marca span { display: none; }
-  }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #F4F4F2; color: #222; font: 400 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 24px; text-align: center; }
+  main { max-width: 460px; background: #fff; border: 2px solid #E0A100; border-radius: 18px; padding: 32px 26px; }
+  img { width: 88px; height: 88px; object-fit: contain; margin: 0 auto 16px; display: block; }
+  .aviso { display: inline-block; background: #FFF3CC; color: #7A5500; font-weight: 700; border-radius: 999px; padding: 4px 14px; font-size: 14px; margin-bottom: 14px; }
+  h1 { font-size: 27px; line-height: 1.25; margin: 0 0 12px; }
+  p { margin: 0 0 22px; color: #555; }
+  a { display: inline-block; background: #1FA855; color: #fff; text-decoration: none; font-weight: 700; padding: 14px 24px; border-radius: 12px; }
+  a:focus-visible { outline: 3px solid #222; outline-offset: 3px; }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></symbol></svg>
-
-<header>
-  <div class="ancho">
-    <a class="marca" href="#">Vero G.<span>Masoterapia</span></a>
-    <a class="reservar-chico" href="#reservar">Reservar turno</a>
-  </div>
-</header>
-
-<section class="portada">
-  <div class="ancho">
-    <div>
-      <h1>Soltá las tensiones y volvé a sentirte liviana</h1>
-      <p>Masajes terapéuticos y de relajación, pensados para lo que tu cuerpo necesita hoy. Reservá tu turno en un minuto.</p>
-      <div class="botones">
-        <a class="boton claro" href="#reservar">Reservar mi turno</a>
-        <a class="boton linea" href="#servicios">Ver los masajes</a>
-      </div>
-    </div>
-    <div class="piedras" aria-hidden="true">
-      <svg viewBox="0 0 360 300">
-        <ellipse cx="180" cy="262" rx="150" ry="22" fill="#17302B"/>
-        <ellipse cx="180" cy="226" rx="132" ry="40" fill="#2E2A27"/>
-        <ellipse cx="172" cy="214" rx="104" ry="18" fill="#47403A" opacity=".55"/>
-        <ellipse cx="182" cy="160" rx="100" ry="32" fill="#3A3430"/>
-        <ellipse cx="174" cy="150" rx="74" ry="12" fill="#57504A" opacity=".55"/>
-        <ellipse cx="186" cy="104" rx="70" ry="25" fill="#45403B"/>
-        <ellipse cx="180" cy="96" rx="48" ry="9" fill="#655D56" opacity=".55"/>
-        <path d="M252 70c22-30 58-36 86-22-18 30-52 42-86 22Z" fill="#8FAE9B"/>
-        <path d="M252 70c30-12 56-18 86-22" stroke="#1F3B36" stroke-width="2" fill="none"/>
-        <path d="M236 60c-4-30 14-52 40-58 4 30-14 50-40 58Z" fill="#A9C2B0"/>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<section class="bloque" id="servicios">
-  <div class="ancho">
-    <div class="cabeza">
-      <h2>Masajes</h2>
-      <p>Elegí el que necesitás. Si no sabés cuál te conviene, escribime y lo vemos juntas.</p>
-    </div>
-    <div class="servicios" id="lista"></div>
-  </div>
-</section>
-
-<section class="pack">
-  <div class="ancho">
-    <div>
-      <h2>Pack de 4 sesiones</h2>
-      <p>Ideal para drenaje linfático o piernas cansadas, donde el resultado se nota con la constancia. Pagás 4 y ahorrás una parte.</p>
-    </div>
-    <a class="boton" id="packBtn" target="_blank" rel="noopener">Consultar el pack</a>
-  </div>
-</section>
-
-<section class="bloque reserva" id="reservar">
-  <div class="ancho">
-    <div>
-      <div class="cabeza" style="margin-bottom:0">
-        <h2>Reservá tu turno</h2>
-        <p>Completá esto y me llega tu pedido por WhatsApp. Te respondo con los horarios libres.</p>
-      </div>
-      <ol class="pasos">
-        <li><b>1</b><div><strong>Elegí el masaje</strong>Y el momento del día que te queda mejor.</div></li>
-        <li><b>2</b><div><strong>Mandá el mensaje</strong>Se abre WhatsApp con todo ya escrito.</div></li>
-        <li><b>3</b><div><strong>Confirmamos el turno</strong>Te paso día y horario disponibles.</div></li>
-      </ol>
-    </div>
-    <form id="form" onsubmit="return false">
-      <label>¿Qué masaje querés?<select id="servicio"></select></label>
-      <fieldset><legend>¿Qué días te quedan mejor?</legend>
-        <div class="opciones" id="dias">
-          <button type="button" aria-pressed="false">Lunes</button><button type="button" aria-pressed="false">Martes</button><button type="button" aria-pressed="false">Miércoles</button>
-          <button type="button" aria-pressed="false">Jueves</button><button type="button" aria-pressed="false">Viernes</button><button type="button" aria-pressed="false">Sábado</button>
-        </div>
-      </fieldset>
-      <fieldset><legend>¿En qué horario?</legend>
-        <div class="opciones" id="horario">
-          <button type="button" aria-pressed="false">Mañana</button><button type="button" aria-pressed="false">Tarde</button><button type="button" aria-pressed="false">Me da igual</button>
-        </div>
-      </fieldset>
-      <label>Tu nombre<input id="nombre" autocomplete="given-name" placeholder="Para saber con quién hablo"></label>
-      <div class="mensaje"><small>Tu mensaje</small><span id="vista"></span></div>
-      <a class="boton enviar" id="enviar" target="_blank" rel="noopener"><svg><use href="#wa"/></svg>Pedir turno por WhatsApp</a>
-    </form>
-  </div>
-</section>
-
-<section class="bloque sobre">
-  <div class="ancho">
-    <div class="inicial" aria-hidden="true">V</div>
-    <div>
-      <h2>Hola, soy Vero</h2>
-      <p>Soy masoterapeuta. Trabajo con cada persona según lo que le pasa: contracturas, dolor de cuello, retención de líquidos, cansancio o simplemente ganas de desconectar un rato. Te atiendo con tiempo, sin apuro.</p>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="ancho"><span>Vero G. Masoterapia</span><span>Turnos por WhatsApp</span></div>
-</footer>
-<a class="flotante" id="flotante" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg><use href="#wa"/></svg></a>
-
-<script src="../demo.js"></script>
+<main>
+  
+  <span class="aviso">Sitio pausado</span>
+  <h1>Este sitio está pausado</h1>
+  <p>Para restaurarlo, comunicate con nosotros y lo volvemos a activar.</p>
+  <a href="https://wa.me/5491150540357?text=Hola%21%20Quiero%20restaurar%20mi%20sitio%3A%20https%3A//dmith.app/ejemplos/vero-masoterapia/">Comunicarme para restaurar</a>
+</main>
 <script>
-const WA = ""; // número de Vero (falta)
-const servicios = DEMO.lista("masajes", [
-  { n: "Descontracturante", d: "Para la espalda cargada, los hombros duros y las contracturas de todos los días.", min: 60, p: 25000 },
-  { n: "Drenaje linfático", d: "Movimientos suaves que ayudan a eliminar líquidos y desinflamar. Ideal en pack.", min: 60, p: 28000 },
-  { n: "Reflexología", d: "Trabajo en los pies que relaja todo el cuerpo y mejora el descanso.", min: 45, p: 20000 },
-  { n: "Circulatorio", d: "Activa la circulación y alivia la pesadez del cuerpo.", min: 60, p: 25000 },
-  { n: "Piedras calientes", d: "El calor de las piedras afloja la musculatura profunda. Relajación total.", min: 75, p: 32000 },
-  { n: "Cervicalgia", d: "Enfocado en cuello y nuca, para el dolor y la rigidez cervical.", min: 40, p: 20000 },
-  { n: "Piernas cansadas", d: "Alivio para las piernas pesadas e hinchadas al final del día.", min: 45, p: 22000 },
-]);
-const $ = id => document.getElementById(id);
-const plata = n => "$" + Math.round(Number(n || 0)).toLocaleString("es-AR");
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const wsp = t => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
-
-$("lista").innerHTML = servicios.map((s, i) => `<div class="serv"><div><h3>${esc(s.n)}</h3><span class="dur">${s.min ? esc(s.min) + " minutos" : ""}</span></div>
-  <span class="precio">${s.p ? plata(s.p) : ""}</span><p>${esc(s.d)}</p><button class="elegir" type="button" data-i="${i}">Reservar este masaje</button></div>`).join("");
-$("servicio").innerHTML = servicios.map((s, i) => `<option value="${i}">${esc(s.n)}${s.p ? " · " + plata(s.p) : ""}</option>`).join("") + `<option value="x">No sé, quiero que me asesores</option>`;
-
-$("lista").addEventListener("click", e => {
-  const b = e.target.closest("[data-i]"); if (!b) return;
-  $("servicio").value = b.dataset.i; actualizar(); $("reservar").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-});
-["dias", "horario"].forEach(id => $(id).addEventListener("click", e => {
-  const b = e.target.closest("button"); if (!b) return;
-  if (id === "horario") $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
-  else b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true");
-  actualizar();
-}));
-function actualizar() {
-  const v = $("servicio").value, s = servicios[v];
-  const dias = [...$("dias").querySelectorAll('[aria-pressed="true"]')].map(b => b.textContent.toLowerCase());
-  const hor = $("horario").querySelector('[aria-pressed="true"]')?.textContent.toLowerCase();
-  const nom = $("nombre").value.trim();
-  let t = `Hola Vero!${nom ? " Soy " + nom + "." : ""} `;
-  t += s ? `Quiero reservar un turno de ${s.n.toLowerCase()}.` : "Quiero un turno pero no sé qué masaje me conviene.";
-  if (dias.length) t += `\nMe quedan bien: ${dias.join(", ")}.`;
-  if (hor) t += `\nHorario: ${hor}.`;
-  t += "\n¿Qué turnos tenés?";
-  $("vista").textContent = t; $("enviar").href = wsp(t);
-}
-$("servicio").addEventListener("change", actualizar); $("nombre").addEventListener("input", actualizar);
-$("packBtn").href = wsp("Hola Vero! Quería consultar por el pack de 4 sesiones.");
-$("flotante").href = wsp("Hola Vero! Quería hacerte una consulta.");
-actualizar();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
+  if (window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k))).catch(() => {});
 </script>
 </body>
 </html>
