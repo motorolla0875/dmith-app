@@ -14,8 +14,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --crema: #FFF8F3; --durazno: #FBE9DF; --coral: #D9826A; --terracota: #B8664E; --dorado: #C9A15F;
-    --cafe: #4A2E25; --suave: #7D655C; --linea: #EED9CD; --blanco: #FFFFFF;
+    --crema: #FFF6F1; --durazno: #FADBCB; --coral: #F2A385; --terracota: #A8673F; --dorado: #B48B3C;
+    --cafe: #5A3A26; --suave: #86664F; --linea: #F1D3C3; --blanco: #FFFFFF;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -26,12 +26,12 @@
   .wrap { max-width: 1140px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
   #dm-volver { display: none !important; }
   .script { font-family: "Great Vibes", cursive; font-weight: 400; color: var(--terracota); }
-  h1, h2, h3 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; margin: 0; line-height: 1.1; }
+  h1, h2, h3 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; margin: 0; line-height: 1.1; color: var(--dorado); }
 
   .aviso { background: var(--cafe); color: #F6E4D8; text-align: center; font-size: 14px; padding: 8px 12px; letter-spacing: .02em; }
   .aviso b { color: #F0C99A; font-weight: 600; }
 
-  header { position: sticky; top: 0; z-index: 20; background: rgba(255,248,243,.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
+  header { position: sticky; top: 0; z-index: 20; background: rgba(255,246,241,.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
   header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 14px; }
   .marca { text-decoration: none; display: flex; flex-direction: column; line-height: 1; }
   .marca .script { font-size: 34px; }
@@ -43,7 +43,7 @@
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-weight: 500; border-radius: 999px; padding: 12px 22px; border: 1.5px solid transparent; cursor: pointer; font-size: 15.5px; }
   .btn svg { width: 18px; height: 18px; }
   .btn.prim { background: var(--terracota); color: #fff; }
-  .btn.prim:hover { background: #A2563F; }
+  .btn.prim:hover { background: #8E5432; }
   .btn.sec { border-color: var(--terracota); color: var(--terracota); background: transparent; }
   .btn.sm { padding: 9px 16px; font-size: 14.5px; }
   .carrito-btn { position: relative; background: #fff; border: 1.5px solid var(--linea); border-radius: 999px; width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer; color: var(--cafe); }
@@ -53,7 +53,7 @@
   .hero { background: linear-gradient(180deg, var(--durazno), var(--crema)); overflow: hidden; }
   .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding-top: 48px; padding-bottom: 56px; }
   .hero .script { font-size: clamp(34px, 4.5vw, 48px); display: block; margin-bottom: 4px; }
-  .hero h1 { font-size: clamp(40px, 5.6vw, 66px); color: var(--cafe); text-wrap: balance; }
+  .hero h1 { font-size: clamp(40px, 5.6vw, 66px); color: var(--dorado); text-wrap: balance; }
   .hero h1 em { font-style: italic; color: var(--terracota); }
   .hero p { font-size: 18.5px; color: var(--suave); max-width: 46ch; margin: 18px 0 26px; }
   .botones { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -86,9 +86,10 @@
   .precio.chico { font-family: Jost, sans-serif; font-size: 14px; color: var(--suave); font-weight: 500; }
 
   .promo { background: var(--cafe); color: #F6E4D8; }
+  .promo h2, .promo h3 { color: #E9C77F; }
   .promo .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
   .promo .script { color: #F0C99A; font-size: 42px; }
-  .promo h2 { font-size: clamp(36px, 4.6vw, 54px); color: #fff; }
+  .promo h2 { font-size: clamp(36px, 4.6vw, 54px); color: #E9C77F; }
   .promo ul { list-style: none; padding: 0; margin: 20px 0; display: grid; gap: 8px; }
   .promo li { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(246,228,216,.25); padding-bottom: 8px; }
   .promo .total { display: flex; align-items: baseline; gap: 16px; margin: 8px 0 22px; flex-wrap: wrap; }
@@ -238,9 +239,9 @@
         <li><span>Facial con radiofrecuencia</span><span>$49.900</span></li>
         <li><span>Rejuvenecimiento de manos</span><span>$34.900</span></li>
         <li><span>Dermopulido corporal</span><span>$34.900</span></li>
-        <li><span>Masaje de espalda o piernas</span><span>$24.900</span></li>
+        <li><span>Masaje de espalda o piernas</span><span>$34.990</span></li>
       </ul>
-      <div class="total"><s>Por separado $144.600</s><b>$99.900</b></div>
+      <div class="total"><s>Por separado $154.690</s><b>$99.900</b></div>
       <a class="btn prim" href="https://wa.me/5491127464784?text=Hola%20Adri!%20Quiero%20la%20promo%20verano%20de%20%2499.900" target="_blank" rel="noopener">Quiero la promo</a>
     </div>
     <div class="fotos">
@@ -337,7 +338,7 @@ const servicios = DEMO.lista("tratamientos", [
   { n: "Facial con radiofrecuencia", d: "Reafirma, hidrata y devuelve la luminosidad a tu piel.", p: 49900, img: IMG + "facial.jpg" },
   { n: "Rejuvenecimiento de manos", d: "Suaviza, nutre y mejora la apariencia de tus manos.", p: 34900, img: IMG + "manos.jpg" },
   { n: "Dermopulido corporal", d: "Renueva, suaviza y mejora la textura de la piel.", p: 34900, img: IMG + "dermopulido.jpg" },
-  { n: "Masaje de espalda o piernas", d: "Relaja, descontractura y devuelve la energía.", p: 24900, img: IMG + "masaje.jpg" },
+  { n: "Masaje de espalda o piernas", d: "Relaja, descontractura y devuelve la energía.", p: 34990, img: IMG + "masaje.jpg" },
   { n: "Limpieza facial profunda", d: "Limpieza, hidratación y luminosidad para tu rostro.", p: 0, img: "" },
   { n: "Microblading de cejas", d: "Diseño natural que realza tu mirada.", p: 0, img: "" },
   { n: "Micropigmentación de cejas y labios", d: "Color, forma y armonía para tu rostro.", p: 0, img: "" },
