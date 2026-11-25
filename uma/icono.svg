@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="60" fill="#EFEAFF"/>
+    <ellipse cx="60" cy="24" rx="17" ry="15" fill="#3A2340"/>
+    <path d="M22 70c-6-30 10-50 38-50s44 20 38 50c-3 16-6 30-14 40H36c-8-10-11-24-14-40Z" fill="#3A2340"/>
+    <path d="M40 104c2-8 10-12 20-12s18 4 20 12v16H40Z" fill="#6B4EFF"/>
+    <rect x="53" y="82" width="14" height="14" rx="6" fill="#D99A74"/>
+    <ellipse cx="60" cy="62" rx="27" ry="29" fill="#E9AE86"/>
+    <path d="M33 56c2-17 14-26 29-26 13 0 24 8 26 22-10-1-19-6-25-14-5 9-17 16-30 18Z" fill="#3A2340"/>
+    <circle cx="33.5" cy="69" r="3" fill="#FFB48A"/><circle cx="86.5" cy="69" r="3" fill="#FFB48A"/>
+    <g class="cejas"><path d="M43 55q6-4 12 0" stroke="#3A2340" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M65 55q6-4 12 0" stroke="#3A2340" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+    <g class="ojos"><ellipse cx="49" cy="63" rx="4.6" ry="5.4" fill="#fff"/><ellipse cx="71" cy="63" rx="4.6" ry="5.4" fill="#fff"/>
+      <g class="pupilas"><circle cx="49" cy="64" r="3.4" fill="#24152B"/><circle cx="71" cy="64" r="3.4" fill="#24152B"/><circle cx="50.2" cy="62.6" r="1.1" fill="#fff"/><circle cx="72.2" cy="62.6" r="1.1" fill="#fff"/></g></g>
+    <ellipse cx="42" cy="73" rx="5" ry="3" fill="#F08F7A" opacity=".45"/><ellipse cx="78" cy="73" rx="5" ry="3" fill="#F08F7A" opacity=".45"/>
+    <g fill="#B97A5A" opacity=".55"><circle cx="45" cy="70" r=".9"/><circle cx="48" cy="72" r=".9"/><circle cx="75" cy="70" r=".9"/><circle cx="72" cy="72" r=".9"/></g>
+    <g class="boca"><path d="M52 78q8 8 16 0q-8 3-16 0Z" fill="#B3404E"/></g>
+  </svg>
