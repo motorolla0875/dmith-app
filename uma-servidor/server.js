@@ -8,6 +8,7 @@ const DIR = process.env.UMA_DIR || "/root/uma-datos";
 const PORT = +process.env.PORT || 8840;
 const GROQ = process.env.GROQ_URL || "https://api.groq.com/openai/v1/chat/completions";
 const RESERVA = "llama-3.3-70b-versatile"; // si el modelo principal se queda sin cupo
+const VISION = ["meta-llama/llama-4-scout-17b-16e-instruct", "meta-llama/llama-4-maverick-17b-128e-instruct"]; // modelos que ven fotos
 
 function env() {
   const o = {};
@@ -63,16 +64,16 @@ function sistema(lang, nombre, contexto) {
 
 // límite simple por IP y por día, para cuidar el cupo gratis
 const usos = new Map(); let diaUsos = new Date().toDateString();
-function permitir(ip, limite) {
+function permitir(clave, limite) {
   const hoy = new Date().toDateString();
   if (hoy !== diaUsos) { usos.clear(); diaUsos = hoy; }
-  const n = (usos.get(ip) || 0) + 1;
+  const n = (usos.get(clave) || 0) + 1;
   if (n > limite) return false;
-  usos.set(ip, n); return true;
+  usos.set(clave, n); return true;
 }
 
 const leer = (req) => new Promise((ok, mal) => {
-  let b = ""; req.on("data", (c) => { b += c; if (b.length > 60000) { mal(new Error("grande")); req.destroy(); } });
+  let b = ""; req.on("data", (c) => { b += c; if (b.length > 1500000) { mal(new Error("grande")); req.destroy(); } });
   req.on("end", () => { try { ok(JSON.parse(b || "{}")); } catch (e) { mal(e); } });
 });
 const json = (res, code, o) => { res.writeHead(code, { "Content-Type": "application/json; charset=utf-8" }); res.end(JSON.stringify(o)); };
@@ -97,23 +98,32 @@ http.createServer(async (req, res) => {
   try { datos = await leer(req); } catch (x) { return json(res, 400, { error: "pedido" }); }
   const lang = ["es", "en", "pt"].includes(datos.lang) ? datos.lang : "es";
   const nombre = String(datos.nombre || "").replace(/[^\p{L} '-]/gu, "").slice(0, 30);
-  const historia = (Array.isArray(datos.mensajes) ? datos.mensajes : []).slice(-14)
-    .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
-    .map((m) => ({ role: m.role, content: m.content.slice(0, 3000) }));
+  const lista = (Array.isArray(datos.mensajes) ? datos.mensajes : []).slice(-14)
+    .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string");
+  // el último mensaje puede traer un PDF largo; los anteriores se acortan para no gastar cupo
+  const historia = lista.map((m, i) => ({ role: m.role, content: m.content.slice(0, i === lista.length - 1 ? 9000 : 2500) }));
   if (!historia.length || historia[historia.length - 1].role !== "user") return json(res, 400, { error: "pedido" });
+  // foto: solo en el último mensaje, como imagen JPEG/PNG/WebP en base64
+  const foto = typeof datos.imagen === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(datos.imagen) && datos.imagen.length < 1400000 ? datos.imagen : null;
+  if (foto) {
+    if (!permitir("foto:" + ip, +e.UMA_FOTOS_DIA || 10)) return json(res, 429, { error: "limite_fotos" });
+    const ult = historia[historia.length - 1];
+    ult.content = [{ type: "text", text: ult.content || "¿Qué ves en esta foto?" }, { type: "image_url", image_url: { url: foto } }];
+  }
   const contexto = datos.contexto === "sitios" ? "sitios" : "";
   const mensajes = [{ role: "system", content: sistema(lang, nombre, contexto) }, ...historia];
 
   let r;
+  const modelos = foto ? [e.UMA_MODELO_VISION || VISION[0], VISION[1]] : [e.UMA_MODELO || "openai/gpt-oss-120b", RESERVA];
   try {
-    r = await pedir(e.GROQ_API_KEY, e.UMA_MODELO || "openai/gpt-oss-120b", mensajes);
+    r = await pedir(e.GROQ_API_KEY, modelos[0], mensajes);
     if (!r.ok) {
-      console.error("Groq (modelo principal)", r.status, (await r.text()).slice(0, 400));
+      console.error("Groq (" + modelos[0] + ")", r.status, (await r.text()).slice(0, 400));
       if (r.status === 401) return json(res, 502, { error: "clave" });
-      r = await pedir(e.GROQ_API_KEY, RESERVA, mensajes);
+      r = await pedir(e.GROQ_API_KEY, modelos[1], mensajes);
     }
   } catch (x) { console.error("No pude conectar con Groq:", x.message); return json(res, 502, { error: "ia" }); }
-  if (!r.ok) { console.error("Groq (reserva)", r.status, (await r.text()).slice(0, 400)); return json(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? "cupo" : r.status === 401 ? "clave" : "ia" }); }
+  if (!r.ok) { console.error("Groq (" + modelos[1] + ")", r.status, (await r.text()).slice(0, 400)); return json(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? "cupo" : r.status === 401 ? "clave" : "ia" }); }
 
   // reenvía solo el texto de la respuesta, a medida que llega
   res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Accel-Buffering": "no" });
