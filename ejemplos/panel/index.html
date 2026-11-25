@@ -167,7 +167,7 @@ const fmt = n => n ? Number(n).toLocaleString("es-AR") : "";
 const copia = x => JSON.parse(JSON.stringify(x));
 
 function waLink() {
-  return "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola Diego! Probé el panel de muestra" + (nombreWeb ? " de " + nombreWeb : "") + " y quiero mi web así.");
+  return "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hola! Probé el panel de muestra" + (nombreWeb ? " de " + nombreWeb : "") + " y quiero mi web así.");
 }
 
 if (!slug) { $("editor").innerHTML = '<p>Elegí un ejemplo desde <a href="../">la lista de ejemplos</a>.</p>'; }

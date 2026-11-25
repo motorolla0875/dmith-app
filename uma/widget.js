@@ -98,7 +98,7 @@
       else { cerrar(); out += `<p>${inl(l.replace(/^#+\s*/, ""))}</p>`; }
     }
     cerrar();
-    if (wsp && WA) out += `<a class="uma-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(wsp)}" target="_blank" rel="noopener">${WSVG}Hablar con Diego por WhatsApp</a>`;
+    if (wsp && WA) out += `<a class="uma-wa" href="https://wa.me/${WA}?text=${encodeURIComponent(wsp)}" target="_blank" rel="noopener">${WSVG}Hablar por WhatsApp</a>`;
     return out;
   }
   function fila(role, html) { const d = document.createElement("div"); d.className = "uma-m " + (role === "user" ? "yo" : "ella"); const c = document.createElement("div"); if (role === "user") c.textContent = html; else c.innerHTML = html; d.appendChild(c); lista.appendChild(d); lista.scrollTop = lista.scrollHeight; return c; }
