@@ -8,7 +8,7 @@ const DIR = process.env.UMA_DIR || "/root/uma-datos";
 const PORT = +process.env.PORT || 8840;
 const GROQ = process.env.GROQ_URL || "https://api.groq.com/openai/v1/chat/completions";
 const RESERVA = "llama-3.3-70b-versatile"; // si el modelo principal se queda sin cupo
-const VISION = ["meta-llama/llama-4-scout-17b-16e-instruct", "meta-llama/llama-4-maverick-17b-128e-instruct"]; // modelos que ven fotos
+const VISION = ["qwen/qwen3.8-27b", "meta-models/muse-spark-open", "qwen/qwen3.6-27b", "meta-llama/llama-4-scout-17b-16e-instruct"]; // modelos que ven fotos (se prueban en orden)
 
 function env() {
   const o = {};
@@ -78,8 +78,8 @@ const leer = (req) => new Promise((ok, mal) => {
 });
 const json = (res, code, o) => { res.writeHead(code, { "Content-Type": "application/json; charset=utf-8" }); res.end(JSON.stringify(o)); };
 
-async function pedir(clave, modelo, mensajes) {
-  const cuerpo = { model: modelo, messages: mensajes, stream: true, temperature: 0.8, max_completion_tokens: 1200 };
+async function pedir(clave, modelo, mensajes, extra) {
+  const cuerpo = { model: modelo, messages: mensajes, stream: true, temperature: 0.8, max_completion_tokens: 1200, ...(extra || {}) };
   if (modelo.startsWith("openai/gpt-oss")) cuerpo.reasoning_effort = "low";
   return fetch(GROQ, { method: "POST", headers: { Authorization: "Bearer " + clave, "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) });
 }
@@ -106,37 +106,53 @@ http.createServer(async (req, res) => {
   // foto: solo en el último mensaje, como imagen JPEG/PNG/WebP en base64
   const foto = typeof datos.imagen === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(datos.imagen) && datos.imagen.length < 1400000 ? datos.imagen : null;
   if (foto) {
-    if (!permitir("foto:" + ip, +e.UMA_FOTOS_DIA || 10)) return json(res, 429, { error: "limite_fotos" });
+    if (datos.fotoNueva !== false && !permitir("foto:" + ip, +e.UMA_FOTOS_DIA || 10)) return json(res, 429, { error: "limite_fotos" });
     const ult = historia[historia.length - 1];
     ult.content = [{ type: "text", text: ult.content || "¿Qué ves en esta foto?" }, { type: "image_url", image_url: { url: foto } }];
   }
   const contexto = datos.contexto === "sitios" ? "sitios" : "";
-  const mensajes = [{ role: "system", content: sistema(lang, nombre, contexto) }, ...historia];
+  const mensajes = [{ role: "system", content: sistema(lang, nombre, contexto) + (foto ? "\nLa persona te mandó una foto y la estás viendo: describila, leé el texto que tenga y respondé sobre ella con seguridad." : "") }, ...historia];
 
-  let r;
-  const modelos = foto ? [e.UMA_MODELO_VISION || VISION[0], VISION[1]] : [e.UMA_MODELO || "openai/gpt-oss-120b", RESERVA];
+  // prueba los modelos en orden hasta que uno responda
+  const modelos = foto ? [e.UMA_MODELO_VISION, ...VISION].filter(Boolean) : [e.UMA_MODELO || "openai/gpt-oss-120b", RESERVA];
+  let r = null, ultimo = 0;
   try {
-    r = await pedir(e.GROQ_API_KEY, modelos[0], mensajes);
-    if (!r.ok) {
-      console.error("Groq (" + modelos[0] + ")", r.status, (await r.text()).slice(0, 400));
-      if (r.status === 401) return json(res, 502, { error: "clave" });
-      r = await pedir(e.GROQ_API_KEY, modelos[1], mensajes);
+    for (const m of modelos) {
+      const intentos = m.startsWith("qwen/") ? [{ reasoning_format: "hidden" }, {}] : [{}];
+      for (const extra of intentos) {
+        r = await pedir(e.GROQ_API_KEY, m, mensajes, extra);
+        if (r.ok) break;
+        ultimo = r.status; console.error("Groq (" + m + ")", r.status, (await r.text()).slice(0, 300));
+        if (r.status === 401) return json(res, 502, { error: "clave" });
+        if (r.status !== 400) break; // 400 puede ser por el parámetro extra: se reintenta sin él
+      }
+      if (r.ok) break;
     }
   } catch (x) { console.error("No pude conectar con Groq:", x.message); return json(res, 502, { error: "ia" }); }
-  if (!r.ok) { console.error("Groq (" + modelos[1] + ")", r.status, (await r.text()).slice(0, 400)); return json(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? "cupo" : r.status === 401 ? "clave" : "ia" }); }
+  if (!r || !r.ok) return json(res, ultimo === 429 ? 429 : 502, { error: ultimo === 429 ? "cupo" : "ia" });
 
   // reenvía solo el texto de la respuesta, a medida que llega
   res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache", "X-Accel-Buffering": "no" });
-  const dec = new TextDecoder(); let resto = "";
+  const dec = new TextDecoder(); let resto = "", pensando = false, buf = "";
+  const escribir = (t) => {
+    buf += t;
+    for (;;) {
+      if (pensando) { const k = buf.indexOf("</think>"); if (k < 0) { buf = buf.slice(-10); return; } buf = buf.slice(k + 8); pensando = false; }
+      const k = buf.indexOf("<think>");
+      if (k >= 0) { res.write(buf.slice(0, k)); buf = buf.slice(k + 7); pensando = true; continue; }
+      const seguro = buf.length - 7; if (seguro > 0) { res.write(buf.slice(0, seguro)); buf = buf.slice(seguro); } return;
+    }
+  };
   try {
     for await (const trozo of r.body) {
       resto += dec.decode(trozo, { stream: true });
       const lineas = resto.split("\n"); resto = lineas.pop();
       for (const l of lineas) {
         if (!l.startsWith("data: ") || l === "data: [DONE]") continue;
-        try { const t = JSON.parse(l.slice(6)).choices?.[0]?.delta?.content; if (t) res.write(t); } catch (x) {}
+        try { const t = JSON.parse(l.slice(6)).choices?.[0]?.delta?.content; if (t) escribir(t); } catch (x) {}
       }
     }
   } catch (x) {}
+  if (!pensando && buf) res.write(buf);
   res.end();
 }).listen(PORT, "127.0.0.1", () => console.log("Uma escuchando en", PORT));

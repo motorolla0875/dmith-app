@@ -250,7 +250,10 @@ async function enviar(texto) {
   if (!mensajes.length) $("charla").innerHTML = "";
   const m = { role: "user", content: texto };
   if (adj && adj.tipo === "pdf") { m.doc = adj.nombre; m.ver = texto; m.content = `${texto}\n\n[Documento PDF "${adj.nombre}"${adj.cortado ? " (solo la primera parte)" : ""}]:\n${adj.texto}`; }
-  if (adj && adj.tipo === "foto") { m.miniatura = adj.mini; m.ver = texto; m.content = texto + " [la persona mandó una foto]"; }
+  if (adj && adj.tipo === "foto") { m.miniatura = adj.mini; m.ver = texto; m.content = texto + " [la persona mandó una foto]"; ultimaFoto = { imagen: adj.imagen, idx: mensajes.length }; }
+  // si la foto se mandó hace poco (últimos 6 mensajes), va de nuevo para que Uma la siga viendo
+  const fotoParaEnviar = adj && adj.tipo === "foto" ? adj.imagen : (ultimaFoto && mensajes.length - ultimaFoto.idx <= 6 && !(adj && adj.tipo === "pdf") ? ultimaFoto.imagen : undefined);
+  const fotoNueva = !!(adj && adj.tipo === "foto");
   mensajes.push(m); $("charla").appendChild(burbuja(m));
   $("entrada").value = ""; quitarAdjunto(); ajustar();
   ocupada = true; $("enviar").disabled = true; estado(t().piensa, true); caras("pensando");
@@ -260,7 +263,7 @@ async function enviar(texto) {
   const caja = fila.querySelector(".texto");
   let respuesta = "";
   try {
-    const r = await fetch("/api/uma/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mensajes: mensajes.map(x => ({ role: x.role, content: x.content })), lang, nombre, imagen: adj && adj.tipo === "foto" ? adj.imagen : undefined }) });
+    const r = await fetch("/api/uma/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mensajes: mensajes.map(x => ({ role: x.role, content: x.content })), lang, nombre, imagen: fotoParaEnviar, fotoNueva }) });
     if (!r.ok) { let e = "red"; try { e = (await r.json()).error; } catch (x) {} throw Object.assign(new Error(e), { tipo: e }); }
     const lector = r.body.getReader(), dec = new TextDecoder();
     estado(t().escribe, true); caras("hablando");
@@ -281,7 +284,7 @@ async function enviar(texto) {
 function ajustar() { const e = $("entrada"); e.style.height = "auto"; e.style.height = Math.min(e.scrollHeight, 160) + "px"; $("enviar").disabled = ocupada || (!e.value.trim() && !adjunto); }
 
 /* ---------- adjuntos: foto y PDF ---------- */
-let adjunto = null;
+let adjunto = null, ultimaFoto = null; // ultimaFoto: se reenvía si seguís preguntando sobre ella
 function quitarAdjunto() { adjunto = null; $("adjunto").classList.remove("visible"); $("adjunto").innerHTML = ""; ajustar(); }
 function mostrarAdjunto(html) {
   $("adjunto").innerHTML = html + `<button type="button" id="quitarAdj" aria-label="Quitar">×</button>`; $("adjunto").classList.add("visible");
@@ -346,7 +349,7 @@ $("charla").addEventListener("click", async e => {
   }
 });
 $("idioma").addEventListener("change", e => { lang = e.target.value; guardar("uma-idioma", lang); textos(); if (!mensajes.length) pintarInicio(); });
-$("nuevo").addEventListener("click", () => { if (ocupada) return; mensajes = []; guardar("uma-chat", []); pintarInicio(); $("entrada").focus(); });
+$("nuevo").addEventListener("click", () => { if (ocupada) return; mensajes = []; ultimaFoto = null; guardar("uma-chat", []); pintarInicio(); $("entrada").focus(); });
 
 textos(); pintarTodo();
 </script>
