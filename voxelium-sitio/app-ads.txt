@@ -1,4 +1,6 @@
 # app-ads.txt de dmith.builds (Unity Ads)
+# Google AdMob (cuenta propia de dmith.builds)
+google.com, pub-2217401957684585, DIRECT, f08c47fec0942fa0
 adwmg.com, 159512, RESELLER, c9688a22012618e7
 appads.in, 106246, RESELLER
 appnexus.com, 11826, RESELLER, f5ab79cb980f11d1
